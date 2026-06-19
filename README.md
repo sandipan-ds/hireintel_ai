@@ -1,1 +1,1 @@
-# HireIntel AI\n\nProject scaffold for the TalentLens AI candidate intelligence platform.
+# HireIntel AI Project scaffold for the candidate intelligence platform.
