@@ -6,6 +6,27 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-06-19 (PM) — Phase 5
+
+### Added
+- Candidate comparison engine (`scripts/compare_two.py`) for side-by-side recruiter-friendly candidate analysis.
+  - Loads scored candidate profiles from `data/processed/<role>/<id>.json`.
+  - Retrieves hybrid scores from `data/scores/hybrid/<role>_ranked.json`.
+  - Generates deterministic "Why A ranked above B" narratives using score deltas and component breakdowns.
+  - Displays component-level evidence: matched requirement counts, top strengths by category.
+- Integration tests for comparison workflow (`tests/integration/test_candidate_comparison.py`, 6 tests passing).
+- Evidence-based ranking explanations (no LLM black-box scoring, LLM reserved for future explanation enhancement).
+
+### Changed
+- Comparison output format: side-by-side table with normalized scores, score deltas, component breakdowns.
+- Phase 5 completes the candidate ranking & comparison pillar of the end-to-end workflow.
+
+### Decision
+- **No LLM in scoring chain (Phase 5)** — Explanations are deterministic and auditable. LLM integration deferred to Phase 6+ for enhanced summaries.
+- **Candidate ID resolution** — Script auto-resolves user input (file stem or candidate_id) to internal identifiers by searching scores and profiles.
+
+---
+
 ## 2026-06-19
 
 ### Added

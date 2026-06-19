@@ -9,11 +9,12 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 ## Unreleased
 
 ### Added
-- Added foundational architecture documentation for system design, AI architecture, and AI design rationale.
-- Added documentation placeholders for model registry, prompt library, evaluation, recruiter workflows, decisions, changelog, troubleshooting, and environment notes.
-- Added production package foundation under `src/hireintel_ai/`.
-- Added shared configuration, typed schemas, API/UI entry points, and initial test coverage for foundation helpers.
-- Added `.env.example` for local runtime configuration.
+- **Phase 5: Candidate Ranking & Comparison** — `scripts/compare_two.py` generates recruiter-friendly side-by-side candidate comparisons.
+  - Loads two candidate profiles and hybrid scores.
+  - Displays component breakdown (matched requirements count, top strengths).
+  - Generates deterministic "Why A ranked above B" narrative.
+  - Evidence-backed explanations with no LLM black-box ranking.
+  - 6 integration tests passing; handles invalid candidates gracefully.
 
 ### Changed
 - Documentation requirements now align with the current source-of-truth documents in `docs/`.

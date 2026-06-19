@@ -84,17 +84,30 @@ This roadmap defines the step-by-step execution plan for HireIntel AI, aligned w
 
 ---
 
-## Phase 5: Candidate Ranking & Comparison
-1. Rank candidates
-   - Based on structured scores and weights.
-2. Build comparison engine
-   - Support questions such as:
-     - Strongest React experience
-     - Longest similar-role tenure
-     - Most relevant projects
-     - Why A ranked above B
-3. Generate recruiter-friendly summaries
-   - Concise, evidence-based, requirement-aligned.
+## Phase 5: Candidate Ranking & Comparison ✅ Shipped 2026-06-19
+1. Build candidate comparison engine
+   - Load two candidates' profiles and scores ✅
+   - Diff the two side by side ✅ (matched components, top strengths)
+   - Generate recruiter-friendly "Why A ranked above B" narrative ✅
+2. Produce determinis side-by-side comparison tables
+   - Score values ✅
+   - Matched requirement counts ✅
+   - Component breakdowns ✅
+3. Avoid LLM-driven final rankings (LLM supports explanation only)
+   - Scores computed by deterministic engine ✅
+
+**Artifacts:**
+- `scripts/compare_two.py` — CLI: `python scripts/compare_two.py --candidate-a <id_a> --candidate-b <id_b> --role <R> --strategy hybrid`
+- `tests/integration/test_candidate_comparison.py` — 6 integration tests passing.
+
+**Example output:**
+```
+Hybrid Score:           58.39        vs 37.07
+Matched Requirements:   10           vs 4
+Top Strengths:          Requirements Gathering, Stakeholder Management, Process Mapping
+Why A ranked above B:   [SCORE] BUSINESS ANALYST RESUME ranked HIGHER by 21.3 points.
+                        [MATCH] Matched 10 requirements vs 4 for John Wood.
+```
 
 ---
 
