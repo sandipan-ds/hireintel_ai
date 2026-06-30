@@ -210,3 +210,53 @@ class TestCertificateTierLookup:
         assert get_certificate_tier_points("AWS Solutions Architect Associate") == 1.0
         assert get_certificate_tier_points("Coursera Specialization") == 0.75
         assert get_certificate_tier_points("Unknown Certificate") == 0.50
+
+    def test_red_hat_rhcsa_is_tier_2(self):
+        tier, points = lookup_certificate_tier("RHCSA - Red Hat Certified System Administrator")
+        assert tier == "tier_2"
+        assert points == 0.75
+
+    def test_cka_kubernetes_is_tier_1(self):
+        tier, points = lookup_certificate_tier("Certified Kubernetes Administrator (CKA)")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_prince2_is_tier_1(self):
+        tier, points = lookup_certificate_tier("PRINCE2 Foundation Certification")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_cfa_level_1_is_tier_1(self):
+        tier, points = lookup_certificate_tier("CFA Level 1")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_sap_certified_is_tier_1(self):
+        tier, points = lookup_certificate_tier("SAP HANA Certified")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_salesforce_admin_is_tier_1(self):
+        tier, points = lookup_certificate_tier("Salesforce Certified Administrator")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_rhce_is_tier_2(self):
+        tier, points = lookup_certificate_tier("RHCE - Red Hat Certified Engineer")
+        assert tier == "tier_2"
+        assert points == 0.75
+
+    def test_tensorflow_certificate_is_tier_2(self):
+        tier, points = lookup_certificate_tier("TensorFlow Developer Certificate")
+        assert tier == "tier_2"
+        assert points == 0.75
+
+    def test_chartered_accountant_is_tier_1(self):
+        tier, points = lookup_certificate_tier("Chartered Accountant India")
+        assert tier == "tier_1"
+        assert points == 1.0
+
+    def test_kaggle_is_tier_2(self):
+        tier, points = lookup_certificate_tier("Kaggle Learn Certificate")
+        assert tier == "tier_2"
+        assert points == 0.75

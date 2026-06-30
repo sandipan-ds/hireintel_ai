@@ -90,10 +90,12 @@ HireIntel AI follows a modular, service-oriented architecture designed to suppor
 - Active model: `sentence-transformers/all-MiniLM-L6-v2` (384-dim, CPU-runnable).
 
 #### Scoring Engine
-- Single canonical deterministic scorer: `src/scoring/graded_scorer.py`.
-- Per-item score: `min(importance, candidate_years / expected_years × importance)`, with partial credit for mention-only matches.
+- Two-mode scoring engine per `WORKING_LOGIC.md` "Fundamental Rule":
+  - **Code-only mode** (`src/scoring/graded_scorer.py` + `src/scoring/unified_scorer.py`): synonym match, regex years detection, institute/cert tier lookup. No LLM. `min(importance, candidate_years / expected_years × importance)` with partial credit.
+  - **Rubric-bound LLM mode** (`src/scoring/rubric_scorer.py` + `src/scoring/rubrics.py`): LLM scores against anchored rubric scales (0.0/0.25/0.5/0.75/1.0). LLM never sees weight, never computes aggregation. `CachedScoringTrace` frozen at scoring time.
 - Total normalized to 0–100 via `scale_factor = 100 / max_score`.
-- Produces explainable, reproducible scores with per-item evidence (section, snippet, years, reason).
+- Produces explainable, reproducible scores with per-item evidence (section, snippet, cited text, anchor description, scoring trace).
+- Institute and certificate tier databases (`data/Institutes/`, `data/Certificates/`) are recruiter-editable JSON files consumed by `src/scoring/tier_lookup.py`.
 
 #### RAG Engine
 - Retrieves relevant resume chunks based on recruiter queries (dense cosine over in-memory index).

@@ -8,39 +8,43 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
-### Added
-- **Phase 5: Candidate Ranking & Comparison** — `scripts/compare_two.py` generates recruiter-friendly side-by-side candidate comparisons.
-  - Loads two candidate profiles and the canonical graded scores.
-  - Displays component breakdown (matched items, top strengths, biggest gaps).
-  - Generates deterministic "Why A ranked above B" narrative; LLM narration is optional.
-  - Evidence-backed explanations with no LLM black-box ranking.
-  - 6 integration tests passing; handles invalid candidates gracefully.
-- **Phase 4: Canonical Scorer (`src/scoring/graded_scorer.py`)** — single deterministic, evidence-backed scorer that implements `docs/WORKING_LOGIC.md` end to end.
-  - Per-item `min(importance, candidate_years / expected_years × importance)` with 0.3 partial credit for mention-only matches.
-  - Searches the **structured** profile (experience → skills → education → certifications → projects → summary), not raw-text regex.
-  - Summary-years fallback only for experience-style categories, so credentials (BE/BTech, CBAP) aren't contaminated by total tenure.
-  - Per-item output includes matched section, exact snippet, years detected, and recruiter-readable reason.
-  - CLI: `python scripts/evaluate_one.py --candidate <id> --role <role>` prints the report in the format shown in `docs/PROJECT_OVERVIEW.md` Phase 4.
-  - 23 unit tests passing; 46/46 total tests green.
-- **`docs/CURRENT_PROGRESS.md`** — single status doc mapping every step of `WORKING_LOGIC.md` to ✅ / 🟡 / ⬜.
-- **`docs/WORKING_LOGIC.md` is now the canonical scoring/evaluation spec** (DEC-011). All other docs defer to it for scoring details.
+### Added — 2026-06-30: Two-mode scoring engine + foundation modules
 
-### Changed
-- **Doc alignment sweep 2026-06-19 (PM)** — `PROJECT_OVERVIEW.md`, `SYSTEM_ARCHITECTURE.md`, `AI_ARCHITECTURE.md`, `RECRUITER_WORKFLOWS.md`, `EVALUATION.md`, `PROMPT_LIBRARY.md`, `IMPLEMENTATION_ROADMAP.md`, `DECISIONS.md` all updated to defer to `WORKING_LOGIC.md` and reflect the single canonical scorer. Added Phase 4.5 (clarification loop + quality tiers) to the roadmap.
-- `AI_DESIGN_RATIONALE.md` §5 rewritten to describe the single-scorer design (the old keyword/semantic/hybrid triad is deprecated per the spec: *"you don't need so many different scoring or ranking systems, just one is enough."*).
-- `MODEL_REGISTRY.md` updated to mark the legacy scorers as deprecated and to register the new `graded_scorer` configuration (expected years, partial credit, section priority, summary-years heuristic).
-- `tests/integration/test_candidate_comparison.py` now uses `sys.executable` for its subprocess, so the test inherits the venv's site-packages regardless of system Python on PATH.
-- **Phase 4 cleanup 2026-06-19 (PM)** — removed legacy `keyword_scorer.py`, `semantic_scorer.py`, `hybrid_scorer.py`, plus the `evidence.py` / `evaluate.py` shims and their tests. Renamed the canonical output to `data/scores/graded/`. Updated `batch_score`, `compare_scores`, `compare_two`, and `demo_scoring` to read from the graded output. Legacy `--strategy` names print a `DeprecationWarning` and forward to `graded`. Test suite is 46/46 green.
-- Documentation requirements now align with the current source-of-truth documents in `docs/`.
-- Implementation roadmap now includes a foundation code structure phase before feature work.
-- Standardized product-facing naming on `HireIntel AI`.
+- **Header Normalization** (`src/resume_parsing/header_normalization.py`) — Layer 1 synonym table + Layer 2 LLM fallback for 7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages). 24 tests.
+- **Chunk Metadata Schema** (`src/rag/chunker.py` updated) — `section_type`, `parent_structure` (organization, role_title, location, temporal_context with `calculated_duration_months`), `skills_asserted`, `experience_type`. Deterministic date parsing. 33 tests.
+- **Structured Candidate Profile** (`src/resume_parsing/structured_profile.py`) — Degrees, institutions, certifications, total experience (no double-counting of overlapping roles), companies, roles, employment dates. Separate deterministic record. 14 tests.
+- **Section-Routed Evidence Retrieval** (`src/rag/section_routed.py`) — Fixed requirement→section mapping table, exact label match, no embeddings/cosine, metadata filtering for long sections. 44 tests.
+- **Rubric Templates** (`src/scoring/rubrics.py`) — 12 templates with anchored scales (0.0/0.25/0.5/0.75/1.0), sub-questions, formulas per dimension type. 47 tests.
+- **Rubric-Bound LLM Scorer** (`src/scoring/rubric_scorer.py`) — RUBRIC-SCORE-001 prompt (weight excluded, extract-before-score, anchored scales), `CachedScoringTrace`, `explain_score_from_cache`. 27 tests.
+- **Unified Scorer** (`src/scoring/unified_scorer.py`) — Routes each requirement to code-only or rubric-bound LLM, produces `UnifiedCandidateEvaluation` with per-item `scoring_mode` + `scoring_trace`. 14 tests.
+- **Tier Databases** — `data/Institutes/institute_tiers.json` (115 Tier 1, 54 Tier 2, 155 Tier 3), `data/Certificates/certificate_tiers.json` (115 Tier 1, 45 Tier 2, 10 Tier 3), `src/scoring/tier_lookup.py`. 49 tests.
+- **279 unit tests total** across all new modules.
+- `pyproject.toml` dependencies populated (numpy, sentence-transformers, pdfplumber, pypdfium2, pytesseract, Pillow, reportlab, pydantic, pydantic-settings, httpx, streamlit, fastapi).
 
-### Fixed
-- Removed `docs/` from `.gitignore` so documentation can be tracked as required by `AGENTS.md`.
-- Over-broad aliases (e.g. ``\bbe\b``) no longer false-positive in unrelated text thanks to word-boundary regex wrapping in `graded_scorer._aliases_for`.
+### Changed — 2026-06-30
+- `WORKING_LOGIC.md` — tier system updated from 4 tiers (A/B/C/D) to 3 tiers (1/2/3) + not-listed=0.50.
+- `CURRENT_PROGRESS.md` — all foundation modules and scoring modes marked ✅.
+- `MODEL_REGISTRY.md` — registered all new modules.
+- `PROMPT_LIBRARY.md` — RUBRIC-SCORE-001 marked Active (v1.0).
+- `IMPLEMENTATION_ROADMAP.md` — Phase 4 updated with two-mode design, Phase 4.6 added for foundation modules, Phase 4.5 refocused on pipeline rewiring.
+- `ARCHITECTURE_CHANGELOG.md` — 2026-06-30 entry added.
+- `SYSTEM_ARCHITECTURE.md` — Scoring Engine section updated.
+- 21 stub/duplicate files deleted (see ARCHITECTURE_CHANGELOG.md).
+- `data/processed`, `data/chunks`, `data/embeddings`, `data/scores` deleted for fresh regeneration.
+- `data/original/` role folders renamed (Sales→SalesManager, PythonDeveloper→SrPythonDeveloper).
 
-### Breaking Changes
-- None.
+### Added — 2026-06-19 (earlier unreleased)
+
+### Added — 2026-06-30: Doc-code alignment fixes
+- **PROMPT_LIBRARY.md** — RESUME-CHAT-001 status corrected from "Active" to "Planned" (no chat method implemented in code).
+- **CURRENT_PROGRESS.md** — Resume Chat section corrected: fallback ✅→⬜, RAG grounding 🟡→⬜. Score Explanation 🟡→⬜. Candidate Comparison LLM ✅→🟡.
+- **MODEL_REGISTRY.md** — Active LLM purpose corrected: removed "rubric-bound evidence scoring" attribution from `service.py` (not implemented there; implemented in `rubric_scorer.py`).
+- **PROJECT_OVERVIEW.md** — Trimmed duplicated sections (How Scorer Works, Eval Framework, RAG Architecture). Added two-mode scoring summary. Fixed RAG/cosine distinction.
+- **AI_ARCHITECTURE.md** — Added §2a Structured Profile, §5 two-mode design with dimension table, §5.2 rubric-bound LLM scoring, §9a Header Normalization, §11 split into §11a Section-Routed + §11b Dense Cosine, §12a cached reasoning. Removed stale `semantic_scorer.py` reference.
+- **AI_DESIGN_RATIONALE.md** — Fixed §1 (semantic chunking→deterministic metadata filtering), §2 (stale semantic scorer ref), §4 (LLM identity: minimax-m3 active, GPT-4 proposed), §6 (hybrid search is pool-level only).
+- **EVALUATION.md** — Added rubric-bound LLM evidence scoring metrics (rubric adherence, LLM judge consistency, weight blindness, no-aggregation compliance, double-count detection, sub-score calibration).
+- **DECISIONS.md** — DEC-010 updated with two-mode scoring design.
+- **ARCHITECTURE_CHANGELOG.md** — Fixed stale `data/scores/hybrid/` reference.
 
 ---
 

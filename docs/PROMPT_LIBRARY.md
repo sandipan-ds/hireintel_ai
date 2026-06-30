@@ -18,7 +18,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 | --- | --- | --- |
 | JD-EXTRACT-001 | Extract structured hiring requirements from a job description | Planned |
 | RESUME-PARSE-001 | Extract a structured candidate profile from resume content | Planned (current parser is rule-based; LLM extraction is the upgrade path) |
-| RUBRIC-SCORE-001 | Score candidate evidence against a recruiter-defined rubric | Planned |
+| RUBRIC-SCORE-001 | Score candidate evidence against a recruiter-defined rubric | Active (`src/scoring/rubric_scorer.py`) |
 | CANDIDATE-SUMMARY-001 | Generate an evidence-based recruiter summary | Planned |
 | CANDIDATE-COMPARE-001 | Compare candidates using structured evidence | Active (used by `scripts/compare_two.py` when LLM is configured) |
 | RESUME-CHAT-001 | Answer recruiter questions using retrieved resume chunks | Planned (LLM service scaffolded; no chat method or strict-grounding fallback implemented yet) |
@@ -91,6 +91,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 **Version History:**
 - v0.1: Initial planned prompt specification per `WORKING_LOGIC.md` "Scoring Rubrics" and "Transforming the JD based requirements into sub-questions".
+- v1.0: Adopted as production prompt in `src/scoring/rubric_scorer.py`. Weight excluded from prompt; anchored scales enforced; extraction-before-scoring; cached scoring trace (`CachedScoringTrace`) frozen at scoring time.
 
 ---
 

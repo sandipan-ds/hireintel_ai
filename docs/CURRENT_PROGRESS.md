@@ -46,11 +46,11 @@ left" when planning the next session.
 | Resume Upload (PDF, DOCX, text) | Multiple formats | ✅ | `src/resume_parsing/parser.py`, OCR fallback via `pypdfium2` |
 | Resume Cleaning (headers, footers, templates, noise, duplicates) | Strip noise | 🟡 | Implicit via section parsing; no dedicated cleaning step |
 | Document-Aware Chunking | One chunk per experience/education/project entry | ✅ | `src/rag/chunker.py` |
-| Header Normalization | Synonym lookup + fallback classification → 7 canonical sections | ⬜ | Not yet implemented — current parser uses heading-anchored detection |
-| Chunk Metadata Schema | `calculated_duration_months`, `experience_type`, `skills_asserted`, `parent_structure` | ⬜ | Not yet implemented — current metadata is simpler (title, company, dates, location) |
-| Structured Candidate Profile Extraction | Deterministic extraction of degrees, certs, total exp, companies, dates | 🟡 | Partially handled by parser; not separated as its own deterministic record |
+| Header Normalization | Synonym lookup + fallback classification → 7 canonical sections | ✅ | `src/resume_parsing/header_normalization.py` — Layer 1 synonym table + Layer 2 LLM fallback |
+| Chunk Metadata Schema | `calculated_duration_months`, `experience_type`, `skills_asserted`, `parent_structure` | ✅ | `src/rag/chunker.py` — full schema implemented, dates parsed deterministically |
+| Structured Candidate Profile Extraction | Deterministic extraction of degrees, certs, total exp, companies, dates | ✅ | `src/resume_parsing/structured_profile.py` — separate record, no double-counting of overlapping experience |
 | Evidence Extraction | Linked to source text | ✅ | `char_span` in chunk records |
-| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | 🟡 | Per-item evidence exists in `graded_scorer`; no aggregated "report" file |
+| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | 🟡 | Per-item evidence exists in scorers; no aggregated "report" file |
 
 ---
 
@@ -58,28 +58,30 @@ left" when planning the next session.
 
 | Step | Spec | Status | Where |
 |---|---|---|---|
-| Skill Presence | Boolean match | ✅ | `graded_scorer._search_profile` |
-| Skill Years of Experience (total) | Years near alias | ✅ | `graded_scorer._detect_years_in_text` |
-| Skill Depth (rubric-bound LLM) | LLM judge against recruiter rubric | ⬜ | Not yet implemented — code-only synonym match is the current fallback |
-| Relevant Experience (rubric-bound LLM) | Same-role / industry / leadership via LLM judge | ⬜ | Not yet implemented — synonym+regex is the current fallback |
-| Same Role Experience | Role-specific | 🟡 | Alias match only (`business analyst`, `business analysis`); rubric-bound LLM scoring planned |
-| Education (Degree Match) | Binary or tier-based | 🟡 | Binary only; tier-based planned |
-| Education (Institution Quality) | IIT / NIT / Tier-1 / regional | ⬜ | — |
-| Certifications (Match) | Name match | ✅ | Synonym dict |
-| Certifications (Provider Reputation) | AWS / Microsoft / Google vs unknown | ⬜ | — |
-| Projects (rubric-bound LLM) | Relevance + depth via LLM judge | ⬜ | Not yet implemented — mention-only heuristic is the current fallback |
-| Location | Location match | 🟡 | Alias exists in profile but no scorer rule yet |
-| Languages | Language match | 🟡 | Same |
-| Communication Quality | Resume structure signals | ⬜ | Documented in `AI_ARCHITECTURE.md`, no rule |
-| Resume Organization | Same | ⬜ | Documented in `AI_ARCHITECTURE.md`, no rule |
-| Section-Routed Evidence Retrieval | Exact label match on canonical sections | ⬜ | Not yet implemented — current scorer uses structured-profile search, not section-routed chunks |
-| Header Normalization | Synonym lookup + fallback classification | ⬜ | Not yet implemented — current parser uses heading-anchored detection |
+| Skill Presence (code-only) | Boolean match | ✅ | `graded_scorer._search_profile` |
+| Skill Years of Experience (code-only) | Years near alias | ✅ | `graded_scorer._detect_years_in_text` |
+| Skill Depth (rubric-bound LLM) | LLM judge against recruiter rubric | ✅ | `src/scoring/rubric_scorer.py` + `src/scoring/rubrics.py` SKILL_RUBRIC |
+| Relevant Experience (rubric-bound LLM) | Same-role / industry / leadership via LLM judge | ✅ | `src/scoring/rubric_scorer.py` + EXPERIENCE/LEADERSHIP/DOMAIN rubrics |
+| Same Role Experience | Similar-role via rubric LLM | ✅ | `src/scoring/rubrics.py` SAME_ROLE_RUBRIC — "Has served in a similar role?" |
+| Education (Degree Match + Institute Tier) | Code-only: degree match + tier lookup | ✅ | `src/scoring/unified_scorer._score_education_code_only` + `src/scoring/tier_lookup.py` |
+| Education (Institution Quality) | IIT / NIT / Tier-1 / Tier-2 / Tier-3 / not-listed | ✅ | `data/Institutes/institute_tiers.json` + `tier_lookup.py` |
+| Certifications (Match + Provider Tier) | Code-only: cert match + tier lookup | ✅ | `src/scoring/unified_scorer._score_certification_code_only` + `tier_lookup.py` |
+| Certifications (Provider Reputation) | AWS / Microsoft / Google / Coursera / local | ✅ | `data/Certificates/certificate_tiers.json` + `tier_lookup.py` |
+| Projects (rubric-bound LLM) | Relevance + depth via LLM judge | ✅ | `src/scoring/rubrics.py` PROJECT_RUBRIC |
+| Location | Code-only binary match | ✅ | `src/scoring/unified_scorer._score_location_code_only` |
+| Languages (rubric-bound LLM) | Presence + proficiency via LLM judge | ✅ | `src/scoring/rubrics.py` LANGUAGE_RUBRIC |
+| Communication Quality | LLM judge against anchored scale | ✅ | `src/scoring/rubrics.py` COMMUNICATION_RUBRIC |
+| Resume Organization | LLM judge against anchored scale | ✅ | `src/scoring/rubrics.py` RESUME_ORGANIZATION_RUBRIC |
+| Section-Routed Evidence Retrieval | Exact label match on canonical sections | ✅ | `src/rag/section_routed.py` — fixed mapping table, no embeddings |
+| Rubric Templates | Fixed sub-questions + anchored scales per dimension | ✅ | `src/scoring/rubrics.py` — 12 templates registered |
 | Per-item raw score = `min(importance, years / expected × importance)` | Years-proportional (code-only mode) | ✅ | `graded_scorer.evaluate_candidate` |
 | Partial credit (mentioned, no years) | `importance × 0.3` | ✅ | `graded_scorer.evaluate_candidate` |
-| Total normalized to 100 | `total_raw × scale_factor` | ✅ | `graded_scorer.evaluate_candidate` |
-| Per-item evidence (section, snippet, years, reason) | Mandatory | ✅ | `ItemEvaluation` dataclass |
-| Cached rubric reasoning for score explanation | Store sub-scores + cited evidence at scoring time | ⬜ | Not yet implemented |
-| Score Explanation Using RAG | Retrieve → ground → narrate | ⬜ | LLM service scaffolded (`hireintel_ai/llm/service.py`) but only candidate-comparison narrative exists; no per-item score explanation method implemented |
+| Total normalized to 100 | `total_raw × scale_factor` | ✅ | `graded_scorer.evaluate_candidate` + `unified_scorer.evaluate_candidate_unified` |
+| Per-item evidence (section, snippet, years, reason) | Mandatory | ✅ | `ItemEvaluation` + `UnifiedItemEvaluation` dataclass |
+| Cached rubric reasoning for score explanation | Store sub-scores + cited evidence at scoring time | ✅ | `src/scoring/rubric_scorer.py` CachedScoringTrace — frozen at scoring time |
+| Score explanation from cache | Narrate cached trace without re-scoring | ✅ | `src/scoring/rubric_scorer.explain_score_from_cache` |
+| Unified scoring (code-only + rubric LLM) | Both modes in one engine | ✅ | `src/scoring/unified_scorer.py` — routes per dimension type |
+| Score Explanation Using RAG | Retrieve → ground → narrate | 🟡 | LLM service scaffolded; per-item explanation from cache implemented in `rubric_scorer.py`; full RAG follow-up not yet wired |
 
 ---
 
@@ -125,11 +127,13 @@ left" when planning the next session.
 
 ## Quality-Based Evaluation (Spec §"Quality-Based Evaluation")
 
-| Tier | Status |
-|---|---|
-| Institution quality tiers | ⬜ (planned) |
-| Certification provider reputation | ⬜ (planned) |
-| Recruiter-controlled tier definitions | ⬜ (planned) |
+| Tier | Status | Where |
+|---|---|---|
+| Institution quality tiers | ✅ | `data/Institutes/institute_tiers.json` — 115 Tier 1, 54 Tier 2, 155 Tier 3, not-listed=0.50 |
+| Certification provider reputation | ✅ | `data/Certificates/certificate_tiers.json` — 115 Tier 1, 45 Tier 2, 10 Tier 3, not-listed=0.50 |
+| Recruiter-controlled tier definitions | ✅ | JSON files are recruiter-editable; `reload_tier_databases()` clears cache |
+| Tier lookup code | ✅ | `src/scoring/tier_lookup.py` — word-boundary matching, `lru_cache` |
+| Tier integration in scorer | ✅ | `src/scoring/unified_scorer.py` — education + certification code-only scoring |
 
 ---
 
@@ -148,15 +152,19 @@ left" when planning the next session.
 
 ## Next Recommended Unit of Work
 
-**Phase 4.5 — Clarification loop + Quality tiers** (closes the biggest spec gaps):
+**Phase 4.5 — Wire the unified scorer into the batch pipeline + clarification loop**:
 
-1. Per-item `expected_years` field in weight-config (UI-exposed).
-2. `clarifications.json` per role listing Green / Yellow / Red items and auto-generated questions.
-3. Recruiter UI to answer questions before scoring policy is locked.
-4. Tier dictionary for institutions and certification providers; scorer consumes it.
-5. Aggregate `candidate_intelligence_report.json` from `graded_scorer` output.
+1. Re-parse all 721 resumes with Header Normalization → produce new `data/processed/` with canonical sections.
+2. Re-chunk with the updated chunker → produce new `data/chunks/` with full metadata schema.
+3. Extract structured profiles → produce `data/processed/<role>/<id>_structured_profile.json`.
+4. Run `unified_scorer.evaluate_candidate_unified` with a configured LLM caller → produce `data/scores/graded/<role>_ranked.json` with scoring traces.
+5. Wire `explain_score_from_cache` into the recruiter UI for per-item score explanations.
+6. Per-item `expected_years` field in weight-config (UI-exposed).
+7. `clarifications.json` per role listing Green / Yellow / Red items and auto-generated questions.
+8. Recruiter UI to answer questions before scoring policy is locked.
+9. Aggregate `candidate_intelligence_report.json` from unified scorer output.
 
-This unblocks **Phase 7 — Evaluation** (we can finally ground-truth the scorer against recruiter-confirmed expectations) and **Phase 8 — Deployment** (the UI has a complete data flow to wire up).
+This unblocks **Phase 7 — Evaluation** (ground-truth the scorer against recruiter-confirmed expectations) and **Phase 8 — Deployment** (the UI has a complete data flow to wire up).
 
 ---
 

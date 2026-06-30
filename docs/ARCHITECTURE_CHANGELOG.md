@@ -6,6 +6,34 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-06-30 — Two-mode scoring engine + foundation modules
+
+### Added
+- `src/resume_parsing/header_normalization.py` — Layer 1 synonym table + Layer 2 LLM fallback for 7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages).
+- `src/resume_parsing/structured_profile.py` — deterministic Structured Candidate Profile extraction (degrees, institutions, certifications, total experience with no double-counting, companies, roles, employment dates).
+- `src/rag/section_routed.py` — Section-Routed Evidence Retrieval: fixed requirement→section mapping table, exact label match, metadata filtering for long sections. No embeddings, no cosine.
+- `src/scoring/rubrics.py` — 12 rubric templates with anchored scales (0.0/0.25/0.5/0.75/1.0), sub-questions, and formulas per dimension type. Code-only vs rubric-bound LLM classification.
+- `src/scoring/rubric_scorer.py` — RUBRIC-SCORE-001 prompt construction, LLM response parsing, formula evaluation in code, `CachedScoringTrace` frozen at scoring time, `explain_score_from_cache` for score explanation.
+- `src/scoring/unified_scorer.py` — Unified scoring engine: routes each requirement to code-only or rubric-bound LLM mode, produces `UnifiedCandidateEvaluation` with per-item scoring traces.
+- `src/scoring/tier_lookup.py` — code-only tier lookup for institutes and certificates with word-boundary matching.
+- `data/Institutes/institute_tiers.json` — 115 Tier 1, 54 Tier 2, 155 Tier 3 institutes; not-listed=0.50.
+- `data/Certificates/certificate_tiers.json` — 115 Tier 1, 45 Tier 2, 10 Tier 3 certificates; not-listed=0.50.
+- `src/rag/chunker.py` updated — chunk metadata schema: `section_type`, `parent_structure` (organization, role_title, location, temporal_context with `calculated_duration_months`), `skills_asserted`, `experience_type`.
+- 279 unit tests across all new modules.
+
+### Changed
+- `WORKING_LOGIC.md` — tier system updated from 4 tiers (A/B/C/D) to 3 tiers (1/2/3) + not-listed=0.50.
+- `CURRENT_PROGRESS.md` — all foundation modules and scoring modes marked ✅.
+- `MODEL_REGISTRY.md` — registered all new modules (header normalization, section-routed retrieval, rubric templates, rubric scorer, unified scorer, tier databases, structured profile).
+- `PROMPT_LIBRARY.md` — RUBRIC-SCORE-001 marked Active (v1.0).
+
+### Decision
+- **Two-mode scoring engine implemented.** Code-only mode scores education, certification, and location using tier databases and structured profiles (no LLM). Rubric-bound LLM mode scores skill depth, experience, leadership, projects, languages, and communication quality using anchored rubric scales (LLM never sees weight or computes aggregation).
+- **Section-Routed Evidence Retrieval replaces cosine for per-candidate scoring.** Dense cosine remains only for cross-candidate pool search and resume chat.
+- **Tier databases are recruiter-editable JSON files.** Not-listed institutes/certs default to 0.50 (same as Tier 3) unless evidence places them in Tier 1 or Tier 2.
+
+---
+
 ## 2026-06-19 (PM) — Doc alignment sweep (WORKING_LOGIC.md as canonical)
 
 ### Added

@@ -23,6 +23,8 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-009 | 2026-06-19 | Use `pypdfium2` (no Poppler required) as the primary OCR fallback renderer for image-only PDFs. | Accepted | `AI_ARCHITECTURE.md`, `MODEL_REGISTRY.md` |
 | DEC-010 | 2026-06-19 | Ship a **single canonical deterministic scorer** (`src/scoring/graded_scorer.py`) in two modes (code-only + rubric-bound LLM evidence scoring); retire the keyword / semantic / hybrid triad. Code-only: per-item `min(importance, candidate_years / expected_years × importance)` with partial credit. Rubric-bound LLM: scores against recruiter-defined rubric, weight application in code. | Accepted | `WORKING_LOGIC.md`, `AI_DESIGN_RATIONALE.md`, `AI_ARCHITECTURE.md`, `MODEL_REGISTRY.md` |
 | DEC-011 | 2026-06-19 | Make `WORKING_LOGIC.md` the canonical scoring/evaluation spec; all other docs defer to it for scoring details. | Accepted | `WORKING_LOGIC.md`, `CURRENT_PROGRESS.md`, all docs |
+| DEC-012 | 2026-06-30 | Use Section-Routed Evidence Retrieval (exact label match on canonical sections) for per-candidate scoring, replacing cosine similarity. Dense cosine remains only for cross-candidate pool search and resume chat. | Accepted | `AI_ARCHITECTURE.md`, `AI_DESIGN_RATIONALE.md`, `MODEL_REGISTRY.md`, `WORKING_LOGIC.md` |
+| DEC-013 | 2026-06-30 | Ship recruiter-editable tier databases for institutes and certifications. 3 tiers (1.0/0.75/0.50) + not-listed default 0.50. Code-only lookup, no LLM, no web search at scoring time. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_ARCHITECTURE.md` |
 
 ---
 
@@ -113,6 +115,28 @@ legacy strategy names only as deprecated aliases.
 
 ---
 
+## DEC-009: pypdfium2 as primary OCR fallback renderer
+
+**Date:** 2026-06-19
+**Status:** Accepted
+
+**Context:** Image-only PDFs in `data/original/WebDesigning/` failed to extract text via `pdfplumber`. OCR fallback via `pdf2image` requires Poppler to be installed on the host — fragile for local dev.
+
+**Decision:** Use `pypdfium2` (which bundles PDFium) as the primary PDF→image renderer for the OCR fallback. Keep `pdf2image` as a secondary fallback when `pypdfium2` is unavailable.
+
+**Alternatives Considered:**
+- `pdf2image` only (requires Poppler install).
+- `PyMuPDF` (mupdf-based; similar trade-offs to pdfium but heavier dependency).
+
+**Consequences:**
+- Zero host-system dependencies for OCR fallback in most cases.
+- Same `pytesseract` text extraction layer regardless of renderer.
+- Documented in `src/resume_parsing/ocr.py`.
+
+**Related Documents:** `AI_ARCHITECTURE.md`, `MODEL_REGISTRY.md`
+
+---
+
 ## DEC-010: Single canonical deterministic scorer (`graded_scorer.py`)
 
 **Date:** 2026-06-19
@@ -172,24 +196,75 @@ The legacy `keyword_scorer.py`, `semantic_scorer.py`, `hybrid_scorer.py` modules
 
 ---
 
-## DEC-009: pypdfium2 as primary OCR fallback renderer
+## DEC-012: Section-Routed Evidence Retrieval for per-candidate scoring
 
-**Date:** 2026-06-19
+**Date:** 2026-06-30
 **Status:** Accepted
 
-**Context:** Image-only PDFs in `data/original/WebDesigning/` failed to extract text via `pdfplumber`. OCR fallback via `pdf2image` requires Poppler to be installed on the host — fragile for local dev.
+**Context:** The original design used dense cosine similarity to retrieve resume chunks for per-candidate scoring. This was the wrong tool: a single resume is a short document (1,000–3,000 tokens) that should be read, not searched. Cosine retrieval risks silently dropping relevant chunks (e.g. a second Python role falling below the top-K cutoff), and produces non-deterministic evidence depending on the embedding model's ranking.
 
-**Decision:** Use `pypdfium2` (which bundles PDFium) as the primary PDF→image renderer for the OCR fallback. Keep `pdf2image` as a secondary fallback when `pypdfium2` is unavailable.
+`WORKING_LOGIC.md` ("Section-Routed Evidence Retrieval") specifies that each requirement should be mapped to canonical section(s) by a fixed table, and retrieval should be an exact label match — fetch every chunk tagged with the mapped section(s), never a ranked top-K subset.
+
+**Decision:** Implement Section-Routed Evidence Retrieval (`src/rag/section_routed.py`) as the sole retrieval strategy for per-candidate scoring. Dense cosine retrieval remains only for:
+- Cross-candidate pool search (JD ↔ resume triage via `jd_match.py`)
+- Resume chat (RAG via `retriever.py`)
+
+The fixed routing table maps requirement types to canonical sections:
+- Skill → Experience + Projects + Skills
+- Education → Education
+- Certification → Certifications
+- Experience → Experience
+- etc.
+
+For unusually long sections, deterministic metadata filtering (`skills_asserted contains "Python"`) narrows the content — still an exact filter, not a similarity rank.
 
 **Alternatives Considered:**
-- `pdf2image` only (requires Poppler install).
-- `PyMuPDF` (mupdf-based; similar trade-offs to pdfium but heavier dependency).
+- Keep cosine for per-candidate scoring (rejected — non-deterministic, risks silent chunk drops, wrong tool for a single short document).
+- Hybrid: cosine + section routing (rejected — adds complexity without benefit; section routing is strictly better for per-candidate evidence).
+- LLM decides which sections to read (rejected — the routing must be fixed and auditable, not a model decision).
 
 **Consequences:**
-- Zero host-system dependencies for OCR fallback in most cases.
-- Same `pytesseract` text extraction layer regardless of renderer.
-- Documented in `src/resume_parsing/ocr.py`.
+- Same requirement against same resume always returns the same content — fully deterministic.
+- No relevant chunk can be silently missed (no top-K cutoff).
+- No embeddings or cosine needed for scoring — only for pool search and chat.
+- Fields that belong together (institute, branch, CGPA) can never be split across retrieval calls.
 
-**Related Documents:** `AI_ARCHITECTURE.md`, `MODEL_REGISTRY.md`
+**Related Documents:** `AI_ARCHITECTURE.md`, `AI_DESIGN_RATIONALE.md`, `MODEL_REGISTRY.md`, `WORKING_LOGIC.md`
 
+---
 
+## DEC-013: Recruiter-editable tier databases for institutes and certifications
+
+**Date:** 2026-06-30
+**Status:** Accepted
+
+**Context:** `WORKING_LOGIC.md` ("Institute and Certification Tier Lookup") requires the platform to maintain a recruiter-editable tier database for institutions and certification providers. The original spec defined 4 tiers (A/B/C/D) with 100%/80%/60%/40% point multipliers. The user requested a simpler 3-tier system with a 0.50 default for unlisted institutes/certs (same as Tier 3), since verifying whether an unknown institute is legitimate would require either a database or a web search — and web search at scoring time introduces non-determinism.
+
+**Decision:** Ship two recruiter-editable JSON tier databases:
+
+1. `data/Institutes/institute_tiers.json` — 115 Tier 1 (1.0), 54 Tier 2 (0.75), 155 Tier 3 (0.50), not-listed (0.50). Sources: Wikipedia "List of state universities in India" (459 state universities), Wikipedia "List of deemed universities" (124 deemed universities), world top 100 universities.
+
+2. `data/Certificates/certificate_tiers.json` — 115 Tier 1 (1.0), 45 Tier 2 (0.75), 10 Tier 3 (0.50), not-listed (0.50). Sources: Wikipedia "Professional certification", industry knowledge.
+
+Scoring rules:
+- Tier 1 → 1.0 × allotted points (premier/renowned)
+- Tier 2 → 0.75 × allotted points (recognized/second-grade)
+- Tier 3 → 0.50 × allotted points (regional/local)
+- Not listed → 0.50 × allotted points (same as Tier 3 — innocent until proven guilty)
+
+Lookup is code-only (`src/scoring/tier_lookup.py`) with word-boundary regex matching. No LLM, no web search at scoring time. Web search may be used only to enrich the tier databases offline.
+
+**Alternatives Considered:**
+- 4 tiers (A/B/C/D) per original WORKING_LOGIC.md (rejected — user requested 3 tiers for simplicity).
+- Not-listed = 0.0 (rejected — penalizes legitimate but unlisted institutes; user requested 0.50 default).
+- Not-listed = 0.25 (rejected — user changed to 0.50 after further consideration).
+- LLM classifies institute tier at scoring time (rejected — non-deterministic, violates code-only principle).
+- Web search at scoring time (rejected — non-deterministic, adds latency, PII concern).
+
+**Consequences:**
+- Fully deterministic tier lookup — same institute always gets the same tier.
+- Recruiter can edit JSON files to move institutes/certs between tiers or add new ones.
+- Unlisted institutes get 0.50 (same as Tier 3) — no penalty for being unrecognized.
+- `reload_tier_databases()` clears the `lru_cache` after edits.
+
+**Related Documents:** `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_ARCHITECTURE.md`
