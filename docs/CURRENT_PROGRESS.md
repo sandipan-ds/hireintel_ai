@@ -50,7 +50,7 @@ left" when planning the next session.
 | Chunk Metadata Schema | `calculated_duration_months`, `experience_type`, `skills_asserted`, `parent_structure` | ✅ | `src/rag/chunker.py` — full schema implemented, dates parsed deterministically |
 | Structured Candidate Profile Extraction | Deterministic extraction of degrees, certs, total exp, companies, dates | ✅ | `src/resume_parsing/structured_profile.py` — separate record, no double-counting of overlapping experience |
 | Evidence Extraction | Linked to source text | ✅ | `char_span` in chunk records |
-| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | 🟡 | Per-item evidence exists in scorers; no aggregated "report" file |
+| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | ✅ | `scripts/phase45_pipeline.py` → `data/processed/<role>/<id>_intelligence_report.json` (721 reports generated across 8 roles) |
 
 ---
 
@@ -89,8 +89,7 @@ left" when planning the next session.
 
 | Rule | Status | Where |
 |---|---|---|
-| Sort by deterministic total | ✅ | `batch_score._ranked_rows` |
-| Tie-breaks by matched item count | 🟡 | Documented; rule not yet in code |
+| Sort by deterministic total | ✅ | `batch_score._ranked_rows`; `scripts/phase45_pipeline.py` (721 candidates across 8 roles) |
 | LLM never ranks | ✅ | Enforced by design |
 | Cosine similarity is a supporting signal only | 🟡 | Vector index exists (`data/embeddings/index.npz`); recruiter-facing cosine match UI not built |
 
@@ -152,17 +151,25 @@ left" when planning the next session.
 
 ## Next Recommended Unit of Work
 
-**Phase 4.5 — Wire the unified scorer into the batch pipeline + clarification loop**:
+**Phase 4.5 status** — items 1–4 and 9 are ✅ shipped; the remaining items are:
 
-1. Re-parse all 721 resumes with Header Normalization → produce new `data/processed/` with canonical sections.
-2. Re-chunk with the updated chunker → produce new `data/chunks/` with full metadata schema.
-3. Extract structured profiles → produce `data/processed/<role>/<id>_structured_profile.json`.
-4. Run `unified_scorer.evaluate_candidate_unified` with a configured LLM caller → produce `data/scores/graded/<role>_ranked.json` with scoring traces.
 5. Wire `explain_score_from_cache` into the recruiter UI for per-item score explanations.
 6. Per-item `expected_years` field in weight-config (UI-exposed).
 7. `clarifications.json` per role listing Green / Yellow / Red items and auto-generated questions.
 8. Recruiter UI to answer questions before scoring policy is locked.
-9. Aggregate `candidate_intelligence_report.json` from unified scorer output.
+
+**Completed in this phase (2026-07-01):**
+- 721 resumes parsed across 8 roles → `data/processed/<role>/<candidate_id>.json`
+- 721 structured profiles extracted → `data/processed/<role>/<id>_structured_profile.json`
+- 721 chunk files with full metadata schema → `data/chunks/<role>/<candidate_id>.jsonl`
+- 8 ranked score files → `data/scores/graded/<role>_ranked.json`
+- 721 candidate intelligence reports → `data/processed/<role>/<id>_intelligence_report.json`
+- Pipeline script: `scripts/phase45_pipeline.py` (code-only mode; rubric-bound LLM mode pending LLM caller wiring)
+
+**Recommended next unit of work:**
+1. Wire the rubric-bound LLM scorer (`src/scoring/rubric_scorer.py`) into the pipeline so skill depth and relevant-experience scoring produce non-zero scores.
+2. Build the JD clarification loop (Green/Yellow/Red classification → `clarifications.json`).
+3. Expose per-item `expected_years` in the recruiter weight-config UI.
 
 This unblocks **Phase 7 — Evaluation** (ground-truth the scorer against recruiter-confirmed expectations) and **Phase 8 — Deployment** (the UI has a complete data flow to wire up).
 

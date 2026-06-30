@@ -6,6 +6,25 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-07-01 — Phase 4.5 pipeline (parse + chunk + score 721 resumes)
+
+### Added
+- `scripts/phase45_pipeline.py` — end-to-end batch pipeline: parse → header normalization → structured profile → chunk → score → intelligence report. Accepts `--role`, `--all-roles`, `--skip-scoring`.
+- 721 parsed profiles in `data/processed/<role>/` (8 role folders, one JSON per candidate).
+- 721 structured profile records in `data/processed/<role>/<id>_structured_profile.json`.
+- 721 chunk files in `data/chunks/<role>/<candidate_id>.jsonl` (Document-Aware chunking with full metadata schema: `section_type`, `parent_structure`, `temporal_context.calculated_duration_months`, `skills_asserted`, `experience_type`).
+- 8 ranked score files in `data/scores/graded/<role>_ranked.json` with per-item evidence (matched, years_detected, snippet, reason, section).
+- 721 Candidate Intelligence Reports in `data/processed/<role>/<id>_intelligence_report.json`.
+
+### Changed
+- `CURRENT_PROGRESS.md` — Candidate Intelligence Report status 🟡→✅; Next Recommended Unit of Work reframed around remaining Phase 4.5 items.
+- `RELEASE_NOTES.md` — 2026-07-01 entry added.
+
+### Decision
+- The pipeline currently scores in **code-only mode** (`graded_scorer.evaluate_candidate`) because the `unified_scorer` routes skill items to rubric-bound LLM mode, which returns zero when no LLM caller is provided. The code-only graded scorer handles skill presence + years detection with synonym match and regex, producing non-zero evidence-backed scores. Wiring the rubric-bound LLM scorer (which scores skill depth, relevant experience, project complexity) requires an LLM caller and is the next step.
+
+---
+
 ## 2026-06-30 — Two-mode scoring engine + foundation modules
 
 ### Added

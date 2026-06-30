@@ -8,6 +8,19 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
+### Added — 2026-07-01: Phase 4.5 pipeline (parse + chunk + score all 721 resumes)
+
+- **`scripts/phase45_pipeline.py`** — End-to-end batch pipeline that parses resumes, applies Header Normalization, extracts Structured Candidate Profiles, chunks with full metadata schema, scores with the canonical deterministic scorer, and aggregates Candidate Intelligence Reports.
+- **721 parsed profiles** → `data/processed/<role>/<candidate_id>.json` (8 role folders: BusinessAnalyst 133, DataScience 42, JavaDeveloper 72, ReactDeveloper 18, SalesManager 164, SQLDeveloper 82, SrPythonDeveloper 98, WebDesigning 112).
+- **721 structured profiles** → `data/processed/<role>/<id>_structured_profile.json` (degrees, certifications, total experience years, companies, roles, employment history).
+- **721 chunk files** → `data/chunks/<role>/<candidate_id>.jsonl` (Document-Aware Chunking: one chunk per experience/education/project entry; full metadata schema with `calculated_duration_months`, `experience_type`, `skills_asserted`, `parent_structure`).
+- **8 ranked score files** → `data/scores/graded/<role>_ranked.json` (deterministic 0–100 normalized scores, per-item evidence with matched section, snippet, years detected, reason).
+- **721 Candidate Intelligence Reports** → `data/processed/<role>/<id>_intelligence_report.json` (aggregated skills, experience, education, certifications, projects, objective scores, scoring summary).
+- Scoring runs in **code-only mode** (graded_scorer: synonym + regex + years-proportional). Rubric-bound LLM mode pending LLM caller wiring.
+
+### Changed — 2026-07-01
+- `CURRENT_PROGRESS.md` — Candidate Intelligence Report ✅; Candidate Ranking updated with pipeline reference; Next Recommended Unit of Work section reframed around remaining Phase 4.5 items (LLM wiring, clarification loop, expected_years UI).
+
 ### Added — 2026-06-30: Two-mode scoring engine + foundation modules
 
 - **Header Normalization** (`src/resume_parsing/header_normalization.py`) — Layer 1 synonym table + Layer 2 LLM fallback for 7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages). 24 tests.
