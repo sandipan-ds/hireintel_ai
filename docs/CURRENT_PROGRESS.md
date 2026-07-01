@@ -24,6 +24,38 @@ left" when planning the next session.
 
 ---
 
+## Role-Specific Documentation & Operational Readiness
+
+| Role | Status | Files | SubQuery Audit |
+|---|---|---|---|
+| BusinessAnalyst (template) | ✅ | 8/8 | ✅ Pass |
+| DataScience | ✅ | 8/8 | ✅ Pass |
+| JavaDeveloper | ✅ | 8/8 | ✅ Pass |
+| ReactDeveloper | ✅ | 8/8 | ✅ Pass |
+| SalesManager | ✅ | 8/8 | ✅ Pass |
+| SQLDeveloper | ✅ | 8/8 | ✅ Pass |
+| SrPythonDeveloper | ✅ | 8/8 | ✅ Pass |
+| WebDesigning | ✅ | 8/8 | ✅ Pass |
+
+**8-file template per role:**
+1. `<Role>_JD.md` — Job Description
+2. `<Role>_SubQuery.md` — Sub-query decomposition with scoring formulas
+3. `<Role>_ScoringGuide.md` — Percentage-based weighting guide
+4. `<Role>_WeightConfiguration_Guide.md` — Weight configuration instructions
+5. `<Role>_RecruiterWeights_EXAMPLE.json` — Example weight configuration
+6. `QUICK_START.md` — Quick start guide
+7. `README_SETUP.md` — Detailed setup instructions
+8. `recruiter_weight_input.py` — Interactive CLI for weight configuration
+
+**SubQuery audit criteria (all passed):**
+- Every JD requirement has corresponding REQ in SubQuery
+- Core Skills, Preferred Skills, Experience, Education sections map correctly
+- Binary gates × Float evidence scoring pattern consistent
+- Scoring formula documented for each requirement
+- recruiter_weight_input.py REQUIREMENTS lists match SubQuery REQ-IDs
+
+---
+
 ## JD Pipeline (Steps 0–5 of `WORKING_LOGIC.md`)
 
 | Step | Spec | Status | Where |
@@ -158,13 +190,15 @@ left" when planning the next session.
 7. `clarifications.json` per role listing Green / Yellow / Red items and auto-generated questions.
 8. Recruiter UI to answer questions before scoring policy is locked.
 
-**Completed in this phase (2026-07-01):**
+**Completed (2026-07-01):**
 - 721 resumes parsed across 8 roles → `data/processed/<role>/<candidate_id>.json`
 - 721 structured profiles extracted → `data/processed/<role>/<id>_structured_profile.json`
 - 721 chunk files with full metadata schema → `data/chunks/<role>/<candidate_id>.jsonl`
 - 8 ranked score files → `data/scores/graded/<role>_ranked.json`
 - 721 candidate intelligence reports → `data/processed/<role>/<id>_intelligence_report.json`
 - Pipeline script: `scripts/phase45_pipeline.py` (code-only mode; rubric-bound LLM mode pending LLM caller wiring)
+- **Role documentation complete** — 8 roles × 8 files = 64 files created/audited
+- **SubQuery audit complete** — all 8 roles verified for JD alignment
 
 **Recommended next unit of work:**
 1. Wire the rubric-bound LLM scorer (`src/scoring/rubric_scorer.py`) into the pipeline so skill depth and relevant-experience scoring produce non-zero scores.

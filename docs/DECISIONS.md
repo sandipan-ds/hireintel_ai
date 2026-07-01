@@ -25,6 +25,7 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-011 | 2026-06-19 | Make `WORKING_LOGIC.md` the canonical scoring/evaluation spec; all other docs defer to it for scoring details. | Accepted | `WORKING_LOGIC.md`, `CURRENT_PROGRESS.md`, all docs |
 | DEC-012 | 2026-06-30 | Use Section-Routed Evidence Retrieval (exact label match on canonical sections) for per-candidate scoring, replacing cosine similarity. Dense cosine remains only for cross-candidate pool search and resume chat. | Accepted | `AI_ARCHITECTURE.md`, `AI_DESIGN_RATIONALE.md`, `MODEL_REGISTRY.md`, `WORKING_LOGIC.md` |
 | DEC-013 | 2026-06-30 | Ship recruiter-editable tier databases for institutes and certifications. 3 tiers (1.0/0.75/0.50) + not-listed default 0.50. Code-only lookup, no LLM, no web search at scoring time. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_ARCHITECTURE.md` |
+| DEC-014 | 2026-07-01 | Role-specific documentation template and SubQuery audit. Each role folder contains 8 files (JD, SubQuery, ScoringGuide, WeightConfig, JSON example, QUICK_START, README_SETUP, recruiter_weight_input.py). SubQuery files audited for complete JD requirement coverage. | Accepted | `AGENTS.md`, `CURRENT_PROGRESS.md`, all role folders |
 
 ---
 
@@ -268,3 +269,43 @@ Lookup is code-only (`src/scoring/tier_lookup.py`) with word-boundary regex matc
 - `reload_tier_databases()` clears the `lru_cache` after edits.
 
 **Related Documents:** `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_ARCHITECTURE.md`
+
+---
+
+## DEC-014: Role-specific documentation template and SubQuery audit
+
+**Date:** 2026-07-01
+**Status:** Accepted
+
+**Context:** Each role folder needed a consistent set of documents for recruiter onboarding and operational use. The BusinessAnalyst role served as the template with 8 complete files. The remaining 7 roles (DataScience, JavaDeveloper, ReactDeveloper, SalesManager, SQLDeveloper, SrPythonDeveloper, WebDesigning) needed matching documentation. SubQuery files required auditing against their corresponding JDs to ensure complete requirement coverage before the scoring system could be trusted for production use.
+
+**Decision:** Each role folder shall contain 8 files:
+
+1. `<Role>_JD.md` — Job Description (source of requirements)
+2. `<Role>_SubQuery.md` — Sub-query decomposition with scoring formulas
+3. `<Role>_ScoringGuide.md` — Percentage-based weighting guide for recruiters
+4. `<Role>_WeightConfiguration_Guide.md` — Weight configuration instructions
+5. `<Role>_RecruiterWeights_EXAMPLE.json` — Example weight configuration
+6. `QUICK_START.md` — Quick start guide for recruiters
+7. `README_SETUP.md` — Detailed setup instructions
+8. `recruiter_weight_input.py` — Interactive CLI for weight configuration
+
+**SubQuery audit criteria:**
+- Every JD requirement must have at least one REQ in SubQuery
+- Core Skills, Preferred Skills, Experience, Education sections must map correctly
+- Binary gates × Float evidence scoring pattern must be consistent
+- Scoring formula documented for each requirement
+- recruiter_weight_input.py REQUIREMENTS lists must match SubQuery REQ-IDs
+
+**Alternatives Considered:**
+- Fewer files per role (rejected — reduces recruiter self-sufficiency)
+- More files per role (rejected — increases maintenance burden)
+- Skip SubQuery audit (rejected — misaligned requirements would produce incorrect scores)
+
+**Consequences:**
+- All 8 roles now have complete, audited documentation
+- SubQuery alignment verified for all roles — scoring system can be trusted
+- New roles can be created by copying the 8-file template from BusinessAnalyst
+- Recruiters have self-service documentation for each role
+
+**Related Documents:** `AGENTS.md`, `CURRENT_PROGRESS.md`, all role folders in `data/job_descriptions/`
