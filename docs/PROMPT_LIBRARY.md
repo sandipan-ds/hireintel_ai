@@ -162,8 +162,8 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 **Purpose:** Narrate a per-item score from the deterministic scorer using the candidate's retrieved evidence.
 
 **Inputs:**
-- The candidate's `ItemEvaluation` (item_name, importance, expected_years, raw_score, score, matched, section, snippet, reason).
-- The recruiter's question (e.g. "Why did this candidate receive 6/10 for Power BI?").
+- The candidate's `ItemEvaluation` (item_name, weight_percentage, expected_years, raw_score, score, matched, section, snippet, reason).
+- The recruiter's question (e.g. "Why did this candidate receive 10% for Power BI?").
 
 **Outputs:**
 - A short paragraph that combines the scorer's reason with the cited snippet.

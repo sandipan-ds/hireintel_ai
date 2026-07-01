@@ -149,7 +149,7 @@ Per `WORKING_LOGIC.md` ("Structured Candidate Profile Extraction"), facts that a
 ```
 
 **Components of a Scoring Policy:**
-- Point-based or percentage-based weights for each requirement
+- Percentage-based weights for each requirement (0–100%, must sum to exactly 100%)
 - Objective vs. subjective metric weighting
 - Custom scoring rules (e.g., bonus for product company experience)
 
@@ -221,12 +221,12 @@ For every recruiter-defined item handled by this mode:
 1. **Expand the item name** into a synonym dictionary (e.g. `Power BI → powerbi, pbi, dax, power query`), compiled as word-boundary regex patterns.
 2. **Search the structured profile** in priority order: `experience.entries[*].details` → `skills` → `education.entries` → `certifications` → `projects` → `summary`. Raw-text regex is never used.
 3. **Detect years of experience** near the matched alias (`X year(s)` / `X+ yr(s)` within 80 chars). For experience-style items, fall back to the summary's "X+ years of experience as …" line.
-4. **Compute the per-item raw score** on the recruiter's 0–10 scale:
+4. **Compute the per-item raw score** on the recruiter's percentage scale:
 
     * **No evidence** → `0`
-    * **Mentioned, no years measured** → `importance × 0.3` (partial credit)
-    * **Years measured** → `min(importance, candidate_years / expected_years × importance)` (proportional)
-5. **Normalize to 0–100** using the config's `scale_factor = 100 / max_score` and `normalized_importance` per item.
+    * **Mentioned, no years measured** → `weight_percentage × 0.3` (partial credit)
+    * **Years measured** → `min(weight_percentage, candidate_years / expected_years × weight_percentage)` (proportional)
+5. **Normalize to 0–100** using the sum of all weight percentages (which must equal 100%).
 
 ### 5.2 Rubric-Bound LLM Evidence Scoring
 
@@ -277,7 +277,7 @@ filter, not a similarity rank.
 
 ### 5.3 Why Years-Proportional Scoring
 
-A candidate with 1 year of Power BI does not receive the same score as a candidate with 6 years. The score is proportional to `candidate_years / expected_years × importance`, capped at the item's `importance`. The default `expected_years = 10` (configurable per item) means recruiters can tune the depth required for any criterion.
+A candidate with 1 year of Power BI does not receive the same score as a candidate with 6 years. The score is proportional to `candidate_years / expected_years × weight_percentage`, capped at the item's `weight_percentage`. The default `expected_years = 10` (configurable per item) means recruiters can tune the depth required for any criterion.
 
 ### 5.4 Output Contract
 
@@ -286,25 +286,25 @@ A candidate with 1 year of Power BI does not receive the same score as a candida
   "candidate_id": "cand_xxx",
   "role": "Business Analyst Lead",
   "total_raw": 56.8,
-  "total_max": 103.0,
-  "total": 40.6,
+  "total_max": 100.0,
+  "total": 56.8,
   "rank": 1,
   "categories": [
     {
       "name": "Core Skills",
       "score": 21.5,
-      "max_score": 43.0,
+      "max_score": 45.0,
       "items": [
         {
           "category": "Core Skills",
           "item_name": "Requirements Gathering",
           "description": "...",
-          "importance": 8,
+          "weight_percentage": 12,
           "expected_years": 6,
           "matched": true,
           "years_detected": 5.0,
-          "raw_score": 6.7,
-          "score": 5.0,
+          "raw_score": 10.0,
+          "score": 10.0,
           "section": "experience",
           "snippet": "Gather business requirements and translate them into user stories.",
           "reason": "5 year(s) of Requirements Gathering experience identified in the experience section — below the recruiter target of 6 year(s)."

@@ -40,10 +40,10 @@ The cardinal rule: **the platform must not assume what isn't stated**. When a JD
 
 1. The platform presents Green requirements to the recruiter. **Yellow and Red items block this workflow until clarified.**
 2. Recruiter assigns two values per item:
-   - **Importance** 0–10 (how much this criterion matters).
+   - **Weight percentage** 0–100% (how much this criterion matters). All percentages must sum to exactly **100%**.
    - **Expected years** (target years of experience for this criterion; defaults to 10 if recruiter omits).
 3. The platform validates that weights are non-negative and that all Green items have either an explicit or default `expected_years`.
-4. The platform computes `scale_factor = 100 / sum(importance)` so the candidate total normalizes to 0–100.
+4. The platform validates that all percentages sum to exactly 100%.
 5. The finalized scoring policy is locked and applied consistently to all candidates for the job.
 
 ---

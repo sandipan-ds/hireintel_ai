@@ -172,26 +172,42 @@ Instead of AI deciding candidate importance, recruiters assign weights.
 Each item in the recruiter's scoring policy carries:
 
 * `name` — the criterion.
-* `importance` — recruiter weight 0–10.
+* `weight_percentage` — recruiter weight 0–100% (all percentages must sum to exactly 100%).
 * `expected_years` — target years of experience for this item (configurable,
   default `10` when omitted).
 
-The total is normalized to a 0–100 scale via `scale_factor = 100 / max_score`,
-so cross-role comparisons work.
+The total candidate score is the sum of (weight_percentage × sub-score) for each requirement.
 
 ## Example
 
 ```text
-HTML                10 Points    Expected: 6+ years
-CSS                  5 Points    Expected: 3+ years
-JavaScript          10 Points    Expected: 5+ years
-React               10 Points    Expected: 5+ years
+Core Skills (Required):
+├─ Business Analysis & Req Gathering    → 12%
+├─ SQL                                  → 8%
+├─ Process Mapping                      → 7%
+├─ Stakeholder Management               → 10%
+└─ Documentation & User Stories         → 8%
+   Subtotal: 45%
 
-Same Role Experience 10 Points    Expected: 6+ years
-Industry Experience  5 Points    Expected: 4+ years
+Preferred Skills:
+├─ BI Tools (Power BI, Tableau)         → 6%
+├─ CRM/ERP/Data Warehouse               → 5%
+├─ Agile & Scrum                        → 4%
+└─ Product-Led / Digital Transformation → 3%
+   Subtotal: 18%
 
-Education            3 Points
-Certifications       2 Points
+Experience (Required):
+├─ 6+ Years BA Experience               → 12%
+├─ Leadership or Senior Analyst Role    → 8%
+└─ Cross-Functional & Fast-Paced        → 5%
+   Subtotal: 25%
+
+Education & Certifications:
+├─ Bachelor's Degree                    → 8%
+└─ Advanced Degree / Certification      → 4%
+   Subtotal: 12%
+
+TOTAL: 100% ✅
 ```
 
 These weights + expected years become the hiring policy for candidate evaluation.

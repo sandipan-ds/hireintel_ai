@@ -29,7 +29,7 @@ All model changes must be documented here before implementation, and significant
 | **Keyword Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
 | **Semantic Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
 | **Hybrid Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
-| **Code-Only Scoring** | **`src/scoring/graded_scorer.py` + `src/scoring/unified_scorer.py`**: per-item `min(importance, candidate_years / expected_years × importance)`, education/cert tier lookup, normalized to 0-100 | **Active** | **Scores total experience, skill presence/years, degree match + institute tier, cert match + provider tier, location — no LLM** |
+| **Code-Only Scoring** | **`src/scoring/graded_scorer.py` + `src/scoring/unified_scorer.py`**: per-item `min(weight_percentage, candidate_years / expected_years × weight_percentage)`, education/cert tier lookup, normalized to 0-100 | **Active** | **Scores total experience, skill presence/years, degree match + institute tier, cert match + provider tier, location — no LLM** |
 | **Rubric-Bound LLM Evidence Scoring** | **`src/scoring/rubric_scorer.py` + `src/scoring/rubrics.py`: LLM judge scores against recruiter-defined rubric; weight application in code** | **Active** | **Scores skill depth, relevant/same-role/leadership experience, project complexity, language proficiency, communication quality; LLM never sees weight or computes aggregation** |
 | **Rubric Templates** | **`src/scoring/rubrics.py`: 12 templates with anchored scales (0.0/0.25/0.5/0.75/1.0)** | **Active** | **Fixed sub-questions + formulas per dimension type; recruiter-visible, LLM cannot invent rubrics** |
 | **Section-Routed Evidence Retrieval** | **`src/rag/section_routed.py`: exact label match on canonical sections** | **Active** | **Fixed requirement→section mapping table; no embeddings, no cosine, no top-K; metadata filtering for long sections** |
@@ -58,9 +58,9 @@ All model changes must be documented here before implementation, and significant
 | Parameter | Value | Source |
 | --- | --- | --- |
 | Default expected years (when config omits) | 10 | `src/scoring/graded_scorer.DEFAULT_EXPECTED_YEARS` |
-| Per-item score rule | `min(importance, candidate_years / expected_years × importance)` | `src/scoring/graded_scorer.evaluate_candidate` |
-| Partial credit (mentioned, no years) | `importance × 0.3` | `src/scoring/graded_scorer.evaluate_candidate` |
-| Total normalization | `total_raw × (100 / max_score)` from the weight config's `scale_factor` | `src/scoring/graded_scorer.evaluate_candidate` |
+| Per-item score rule | `min(weight_percentage, candidate_years / expected_years × weight_percentage)` | `src/scoring/graded_scorer.evaluate_candidate` |
+| Partial credit (mentioned, no years) | `weight_percentage × 0.3` | `src/scoring/graded_scorer.evaluate_candidate` |
+| Total normalization | Sum of all weight percentages (must equal 100%) | `src/scoring/graded_scorer.evaluate_candidate` |
 | Section priority | experience.entries → skills → education.entries → certifications → projects → summary | `src/scoring/graded_scorer._search_profile` |
 | Summary-years fallback | only for items in non-Education / non-Certification categories | `src/scoring/graded_scorer._is_experience_item` |
 | Synonym dictionary | `src/scoring/graded_scorer._SYNONYMS` (curated, with regex word boundaries) | `src/scoring/graded_scorer._aliases_for` |
