@@ -147,18 +147,36 @@ The system should process each candidate in the following order:
 
 ## Requirement blocks
 
-A JD should be transformed into a small number of non-overlapping requirement blocks. The exact blocks would depend on the roles, for instance for a Data Science role the canonical blocks may look like this:
+A JD should be transformed into a small number of non-overlapping requirement blocks. Each requirement is assigned a unique REQ-ID and categorized into one of five groups.
 
-1. Core programming and DS stack
-2. Statistical and analytical foundation
-3. Data wrangling and transformation
-4. Machine learning modeling capability
-5. Model evaluation and debugging
-6. Productionization and engineering maturity
-7. Communication and stakeholder translation
-8. Preferred tools and domain extensions
-9. Overall relevant experience
-10. Education fit
+**Categories:**
+1. **Core Skills** — Essential technical skills required for the role
+2. **Preferred Skills** — Nice-to-have skills that add value
+3. **Experience** — Years of experience and role-level requirements
+4. **Education & Certifications** — Degree and certification requirements
+5. **Key Responsibilities** — Evidence of capability through demonstrated responsibilities
+
+**Example (Business Analyst Lead):**
+
+| REQ-ID | Requirement Name | Category | Type |
+|--------|------------------|----------|------|
+| REQ-001 | Business Analysis & Requirement Gathering | Core Skill | Required |
+| REQ-002 | SQL for Data Validation & Analysis | Technology Skill | Required |
+| REQ-003 | Process Mapping & Business Process Improvement | Core Skill | Required |
+| REQ-004 | Stakeholder Management & Communication | Core Skill | Required |
+| REQ-005 | Documentation, User Stories & Acceptance Criteria | Core Skill | Required |
+| REQ-006 | Business Intelligence Tools (Power BI, Tableau, Looker) | Preferred Skill | Preferred |
+| REQ-007 | CRM, ERP, or Data Warehouse Systems | Preferred Skill | Preferred |
+| REQ-008 | Agile & Scrum Methodologies | Preferred Skill | Preferred |
+| REQ-009 | Product-Led or Digital Transformation Environment | Preferred Skill | Preferred |
+| REQ-010 | 6+ Years Business Analysis or Related Domain | Experience | Required |
+| REQ-011 | Leadership or Senior Analyst Role | Experience | Required |
+| REQ-012 | Cross-Functional Team Collaboration | Experience | Required |
+| REQ-013 | Bachelor's Degree (BA/IS/CS/Related) | Education | Required |
+| REQ-014 | Advanced Degree or Certification (CBAP/PMI-PBA) | Certification | Preferred |
+| REQ-015 | Demonstrated Responsibility Execution | Responsibilities | Required |
+
+**Total: 15 requirements (12 Required, 3 Preferred)**
 
 This prevents double counting and keeps the scoring logic interpretable.
 
@@ -396,37 +414,50 @@ This becomes the final scoring policy input.
 
 # Recruiter Weight Assignment
 
-The recruiter assigns importance weights.
+The recruiter assigns importance weights to each requirement.
 
-Scale:
+**Scale:** Percentage (0-100%)
 
-0-10
+**Constraint:** All percentages must sum to exactly **100%**
 
-Example:
+**Categories:**
+- Core Skills (Required)
+- Preferred Skills (Optional but valued)
+- Experience (Required)
+- Education & Certifications (Required/Preferred)
+- Key Responsibilities (Required)
 
-Power BI:
-9
+**Example:**
 
-Tableau:
-10
+```
+Core Skills (Required):
+├─ Business Analysis & Req Gathering    → 12%
+├─ SQL                                  → 8%
+├─ Process Mapping                      → 7%
+├─ Stakeholder Management               → 10%
+└─ Documentation & User Stories         → 8%
+   Subtotal: 45%
 
-Excel:
-10
+Preferred Skills:
+├─ BI Tools (Power BI, Tableau)         → 6%
+├─ CRM/ERP/Data Warehouse               → 5%
+├─ Agile & Scrum                        → 4%
+└─ Product-Led / Digital Transformation → 3%
+   Subtotal: 18%
 
-Project Management:
-10
+Experience (Required):
+├─ 6+ Years BA Experience               → 12%
+├─ Leadership or Senior Analyst Role    → 8%
+└─ Cross-Functional & Fast-Paced        → 5%
+   Subtotal: 25%
 
-Microsoft Power BI Certification:
-8
+Education & Certifications:
+├─ Bachelor's Degree                    → 8%
+└─ Advanced Degree / Certification      → 4%
+   Subtotal: 12%
 
-Graduation:
-6
-
-Location:
-8
-
-Project Management Experience:
-8
+TOTAL: 100% ✅
+```
 
 The platform must not assume recruiter priorities.
 
@@ -742,6 +773,50 @@ The scoring engine is the source of truth.
 # Scoring Rubrics
 
 Every scoring dimension must resolve to an explicit, recruiter-visible rule before it is used. The system must never let the LLM invent a rubric at evaluation time.
+
+## Sub-Query Decomposition Pattern
+
+Each requirement is broken down into atomic sub-queries (2-6 per requirement depending on complexity). Sub-queries follow a consistent pattern:
+
+**Pattern:** Binary gates × Float evidence scores
+
+```
+REQ-001: Requirement Name
+├─ SQ001: Binary gate (0 or 1) — Does evidence exist?
+├─ SQ002: Binary gate (0 or 1) — Is it used for the right purpose?
+├─ SQ003: Float evidence (0.0 - 1.0) — How strong is the evidence?
+└─ SQ004: Float years-proportional (0.0 - 1.0) — min(years / expected, 1.0)
+```
+
+**Formula for each requirement:**
+```
+Sub-Score = SQ001 × SQ002 × SQ003 × SQ004
+```
+
+**Final contribution:**
+```
+Contribution = Recruiter_Weight% × Sub-Score
+```
+
+**Total candidate score:**
+```
+Total = SUM of all contributions
+```
+
+**Example:**
+
+For a Business Analyst role requiring SQL skills:
+
+```
+REQ-002: SQL for Data Validation & Analysis (Weight: 8%)
+├─ SQ004: Does candidate know SQL? → Binary (0 or 1)
+├─ SQ005: Has candidate used SQL for data validation? → Binary (0 or 1)
+├─ SQ006: Years of SQL experience (relative to 4 years expected) → Float (0.0 - 1.0)
+└─ SQ007: Complexity level of SQL work → Float (0.0 - 1.0)
+
+Sub-Score = SQ004 × SQ005 × SQ006 × SQ007
+Contribution = 8% × Sub-Score
+```
 
 ## Experience Scoring (Code-Only Formula)
 
