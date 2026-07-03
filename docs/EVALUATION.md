@@ -12,6 +12,64 @@ Evaluation is required before promoting AI behavior, model changes, prompt chang
 
 ---
 
+## Test Dataset
+
+The platform is evaluated against a real-world dataset of **721 resumes** across **8 roles** (extracted 2026-07-01).
+
+### Resumes by Role
+
+| Role | Count |
+|------|-------|
+| BusinessAnalyst | 133 |
+| SalesManager | 164 |
+| WebDesigning | 112 |
+| SrPythonDeveloper | 98 |
+| SQLDeveloper | 82 |
+| JavaDeveloper | 72 |
+| DataScience | 42 |
+| ReactDeveloper | 18 |
+| **Total** | **721** |
+
+### Geographic Distribution (Top 7 Countries)
+
+| Country | Resume Count |
+|---------|--------------|
+| USA | 41 |
+| UK | 7 |
+| Germany | 4 |
+| Canada | 2 |
+| Finland | 1 |
+| Mexico | 1 |
+| South Korea | 1 |
+
+### Top US Locations
+
+| Location | Count |
+|----------|-------|
+| New York, NY | 4 |
+| Los Angeles, CA | 3 |
+| San Francisco, CA | 3 |
+| Chicago, IL | 3 |
+| Phoenix, AZ | 3 |
+| Pittsburgh, PA | 3 |
+| San Antonio, TX | 3 |
+
+### Most Common Institutions (extracted)
+
+Simmons College (8), Singapore University (7), Mohave Community College (7), California State University (3), Stanford University (3), Academy of Art University (3), University of Chicago (2), University of Pittsburgh (2), University of California (2), Grand Valley State University (2), MIT (1), Wharton School of Business (1).
+
+### Most Common Certifications (extracted)
+
+Adobe Certified Expert (ACE) (6), Microsoft Professional Program Certificate in Data Science (4), OCA - Oracle Database SQL Certified Associate (3), Adobe Creative Suite (3), Level 3 CBAP (2), Spring Professional Certification (2), Oracle Certified Professional: Java SE (2), NLP Practitioner Certification (2), Python Developer Certification (2), AWS Solutions Architect (1), Azure Solutions Architect (1), Google Cloud Professional (1), PMP (1), CISSP (1), CCNA (1), Scrum Master (1), Tableau Certified (1), Power BI Certified (1).
+
+### Data Quality Notes
+
+- Some location entries contain noise (e.g., `"9 London, UK"`, `"@ New York, USA"`) — extraction filters this out.
+- Some institution entries contain extra text (e.g., `"Singapore University\nSKILLS & OTHER"`) — multi-line parsing handles it.
+- 13 **flagged/fake universities** were identified (XYZ University, Cowell University, etc.) — see `AI_DESIGN_RATIONALE.md` §11 for the flagging system and penalty rules.
+
+---
+
 ## Resume Parsing Evaluation
 
 **Goal:** Measure whether unstructured resumes are converted into accurate structured candidate profiles.

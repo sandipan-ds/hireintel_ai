@@ -6,6 +6,47 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-07-01 — Tier database expansion (international institutes + certs + fake flagging)
+
+### Changed
+- **`data/Institutes/institute_tiers.json`** expanded from ~356 to **466 institutes**:
+  - Tier 1: 137 → **192** (+55 international universities: USA, UK, Germany, Canada, Finland, Mexico, South Korea per QS World Rankings 2025).
+  - Tier 2: 54 → **98** (+44 international universities).
+  - Tier 3: 165 → **176** (+11 new + 13 fake/unknown flagged).
+- **`data/Certificates/certificate_tiers.json`** expanded to **223 certificates**:
+  - Tier 2 additions: Spring Professional, Oracle Academy, Cloudera, SAS, SQL Server, Adobe Expert, Python Institute.
+  - Tier 3 additions: NLP Practitioner, Django, Python Developer, FreeCodeCamp, CNPR, Certified Sales Rep, Salesforce, Java SE, Tableau Desktop/Server, Microsoft Data Analyst, Google Cloud PE, Certified Data Scientist.
+
+### Added
+- **Flagged institute detection** in `src/scoring/tier_lookup.py`:
+  - `is_institute_flagged(name)` — returns True for fake/unknown universities.
+  - `get_flagged_institutes()` — returns full list of flagged entries.
+  - 13 flagged institutes marked with `_note` field in `institute_tiers.json`.
+- **Flagged penalty** in `src/scoring/unified_scorer.py`: flagged institutes receive a **50% penalty** on education score.
+  - Formula: `degree_match × institute_tier_points × 0.5` (vs. `× 1.0` for non-flagged).
+- **Structured profile fields** in `src/resume_parsing/structured_profile.py`:
+  - `flagged_institutes: List[str]`
+  - `has_flagged_institute: bool`
+
+### Decision
+- Flagged institutes are placed in **Tier 3 (0.5 points)** — same as unlisted. This ensures they don't get penalized excessively but also don't get undue credit.
+- The 50% penalty is applied **multiplicatively on top of** the tier points, so a flagged Tier 3 entry contributes 0.25 effective points instead of 0.5.
+- See `AI_DESIGN_RATIONALE.md` §11 for the full rationale.
+
+### Countries covered in tier database
+
+| Country | Tier 1 | Tier 2 | Tier 3 | Total |
+|---------|--------|--------|--------|-------|
+| USA | 30+ | 15+ | 5+ | 50+ |
+| UK | 8 | 10 | 2 | 20 |
+| Germany | 3 | 7 | 3 | 13 |
+| Canada | 3 | 7 | 7 | 17 |
+| Finland | 2 | 3 | 4 | 9 |
+| Mexico | 1 | 4 | 3 | 8 |
+| South Korea | 3 | 6 | 8 | 17 |
+
+---
+
 ## 2026-07-01 — Phase 4.5 pipeline (parse + chunk + score 721 resumes)
 
 ### Added

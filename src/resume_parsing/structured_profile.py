@@ -156,6 +156,8 @@ class StructuredCandidateProfile:
         companies: List of company names.
         roles: List of job titles.
         employment_history: List of employment entries with computed durations.
+        flagged_institutes: List of institutes flagged as fake/unknown.
+        has_flagged_institute: Whether any institute is flagged.
     """
 
     candidate_id: str = ""
@@ -165,6 +167,8 @@ class StructuredCandidateProfile:
     companies: List[str] = field(default_factory=list)
     roles: List[str] = field(default_factory=list)
     employment_history: List[EmploymentEntry] = field(default_factory=list)
+    flagged_institutes: List[str] = field(default_factory=list)
+    has_flagged_institute: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -175,6 +179,8 @@ class StructuredCandidateProfile:
             "companies": self.companies,
             "roles": self.roles,
             "employment_history": [e.to_dict() for e in self.employment_history],
+            "flagged_institutes": self.flagged_institutes,
+            "has_flagged_institute": self.has_flagged_institute,
         }
 
 
@@ -208,6 +214,13 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
         degree_entry = _parse_degree_entry(text)
         if degree_entry.degree:
             structured.degrees.append(degree_entry)
+
+    # ---- Check for flagged institutes (fake/unknown universities) ----
+    from src.scoring.tier_lookup import is_institute_flagged
+    for degree in structured.degrees:
+        if degree.institution and is_institute_flagged(degree.institution):
+            structured.flagged_institutes.append(degree.institution)
+            structured.has_flagged_institute = True
 
     # ---- Certifications from the certifications list ----
     for cert_text in profile.get("certifications") or []:

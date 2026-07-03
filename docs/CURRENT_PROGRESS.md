@@ -2,7 +2,7 @@
 
 This document maps every step of the canonical spec
 [`WORKING_LOGIC.md`](WORKING_LOGIC.md) to its implementation status as of
-2026-06-19. Use it as the single source of truth for "what's done vs what's
+2026-07-03. Use it as the single source of truth for "what's done vs what's
 left" when planning the next session.
 
 **Legend:** ✅ Shipped · 🟡 Partially shipped / scaffolded · ⬜ Planned
@@ -14,11 +14,11 @@ left" when planning the next session.
 | Spec rule | Status | Where |
 |---|---|---|
 | System is not a generic ATS / keyword matcher / RAG chatbot | ✅ | Architecture, scoring |
-| Recruiter-controlled weights (0–10) | ✅ | `data/Job descriptions/<role>/<role>_WeightConfig_filled.json` |
+| Recruiter-controlled weights (0–100%, slider UI) | ✅ | FastAPI + HTMX UI → `data/job_descriptions/<role>/<role>_WeightConfig_*.json` (normalized internally to 0–100 via `scale_factor`) |
 | Recruiter-controlled `expected_years` per item | 🟡 | Default 10 in `graded_scorer.DEFAULT_EXPECTED_YEARS`; per-item field not yet exposed in UI |
 | Weight normalization to 0–100 | ✅ | `scale_factor = 100 / max_score` in `src/scoring/graded_scorer.py` |
 | Reproducible, auditable, explainable rankings | ✅ | `graded_scorer.evaluate_candidate` |
-| LLM explains, never scores | ✅ | `src/hireintel_ai/llm/service.py`; `scripts/compare_two.py` |
+| LLM explains, never scores | ✅ | `src/scoring/rubric_scorer.explain_score_from_cache`; recruiter UI narrates cached traces |
 | Ask for clarification, don't assume | ⬜ | No clarification loop yet |
 | Document-Aware Chunking is the default | ✅ | `src/rag/chunker.py` |
 
@@ -37,7 +37,7 @@ left" when planning the next session.
 | SrPythonDeveloper | ✅ | 8/8 | ✅ Pass |
 | WebDesigning | ✅ | 8/8 | ✅ Pass |
 
-**8-file template per role:**
+**7-file template per role** (was 8; the per-role Streamlit CLI `recruiter_weight_input.py` was retired in favour of the unified FastAPI UI on 2026-07-03):
 1. `<Role>_JD.md` — Job Description
 2. `<Role>_SubQuery.md` — Sub-query decomposition with scoring formulas
 3. `<Role>_ScoringGuide.md` — Percentage-based weighting guide
@@ -45,7 +45,8 @@ left" when planning the next session.
 5. `<Role>_RecruiterWeights_EXAMPLE.json` — Example weight configuration
 6. `QUICK_START.md` — Quick start guide
 7. `README_SETUP.md` — Detailed setup instructions
-8. `recruiter_weight_input.py` — Interactive CLI for weight configuration
+
+> Recruiter weight configuration is now done via the unified **FastAPI + HTMX** UI at `src/api/app.py` → `http://127.0.0.1:8000/configure` (added 2026-07-03). It serves all 8 roles, persists to SQLite (`data/hireintel.db`) + JSON (`data/job_descriptions/<role>/<role>_WeightConfig_*.json`), and supports strict 100% validation with +/- 0.5 step sliders.
 
 **SubQuery audit criteria (all passed):**
 - Every JD requirement has corresponding REQ in SubQuery
@@ -66,7 +67,7 @@ left" when planning the next session.
 | Red items block scoring until clarified | Hard gate | ⬜ | — |
 | Degree equivalence table per role | Confirm acceptable alternatives | ⬜ | — |
 | Per-skill expected years (ask when missing) | "Expected Tableau experience?" | ⬜ | — |
-| Recruiter weight assignment 0–10 | Done via form | ✅ | `src/ui/recruiter_weight_config.py` |
+| Recruiter weight assignment 0–10 | Done via FastAPI + HTMX UI | ✅ | `src/api/app.py` → `/configure`; stores to `data/hireintel.db` + `data/job_descriptions/<role>/<role>_WeightConfig_*.json` |
 | Weight normalization to 100 | `scale_factor = 100 / max_score` | ✅ | `src/scoring/graded_scorer.py` |
 
 ---
@@ -78,11 +79,11 @@ left" when planning the next session.
 | Resume Upload (PDF, DOCX, text) | Multiple formats | ✅ | `src/resume_parsing/parser.py`, OCR fallback via `pypdfium2` |
 | Resume Cleaning (headers, footers, templates, noise, duplicates) | Strip noise | 🟡 | Implicit via section parsing; no dedicated cleaning step |
 | Document-Aware Chunking | One chunk per experience/education/project entry | ✅ | `src/rag/chunker.py` |
-| Header Normalization | Synonym lookup + fallback classification → 7 canonical sections | ✅ | `src/resume_parsing/header_normalization.py` — Layer 1 synonym table + Layer 2 LLM fallback |
+| Header Normalization | Synonym lookup + fallback classification → 7 canonical sections | 🟡 | Module code existed pre-2026-07-03 but was retired during dead-code cleanup; canonical section routing now handled inline in `src/rag/section_routed.py` |
 | Chunk Metadata Schema | `calculated_duration_months`, `experience_type`, `skills_asserted`, `parent_structure` | ✅ | `src/rag/chunker.py` — full schema implemented, dates parsed deterministically |
 | Structured Candidate Profile Extraction | Deterministic extraction of degrees, certs, total exp, companies, dates | ✅ | `src/resume_parsing/structured_profile.py` — separate record, no double-counting of overlapping experience |
 | Evidence Extraction | Linked to source text | ✅ | `char_span` in chunk records |
-| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | ✅ | `scripts/phase45_pipeline.py` → `data/processed/<role>/<id>_intelligence_report.json` (721 reports generated across 8 roles) |
+| Candidate Intelligence Report | Aggregated Skills + Experience + Education + Certs + Projects + Objective Scores + Evidence | ✅ | 721 reports pre-generated 2026-07-01 → `data/processed/<role>/<id>_intelligence_report.json`. Production pipeline script retired during 2026-07-03 dead-code cleanup; report format remains valid input to `unified_scorer` |
 
 ---
 
@@ -121,7 +122,7 @@ left" when planning the next session.
 
 | Rule | Status | Where |
 |---|---|---|
-| Sort by deterministic total | ✅ | `batch_score._ranked_rows`; `scripts/phase45_pipeline.py` (721 candidates across 8 roles) |
+| Sort by deterministic total | ✅ | `_ranked_rows` (in `graded_scorer`); 8 ranked files in `data/scores/graded/<role>_ranked.json` from pre-2026-07-03 batch run |
 | LLM never ranks | ✅ | Enforced by design |
 | Cosine similarity is a supporting signal only | 🟡 | Vector index exists (`data/embeddings/index.npz`); recruiter-facing cosine match UI not built |
 
@@ -132,7 +133,7 @@ left" when planning the next session.
 | Step | Status |
 |---|---|
 | Document-Aware Chunking for retrieval | ✅ |
-| RAG-grounded answers | ⬜ (LLM service scaffolded; no resume-chat method implemented; `scripts/resume_chat.py` CLI not built) |
+| RAG-grounded answers | ⬜ (no resume-chat method implemented; prompt spec in `PROMPT_LIBRARY.md` RESUME-CHAT-001 not wired to code) |
 | Strict grounding prompt (no hallucination) | ⬜ (prompt spec exists in `PROMPT_LIBRARY.md` RESUME-CHAT-001; not implemented in code) |
 | "Information not found in candidate documents." fallback | ⬜ (string appears only in docs; not in any `.py` file) |
 
@@ -142,9 +143,8 @@ left" when planning the next session.
 
 | Step | Status | Where |
 |---|---|---|
-| Side-by-side comparison | ✅ | `scripts/compare_two.py` |
-| Evidence-backed "Why A above B" | ✅ | Deterministic score deltas + component breakdown |
-| LLM explanation grounded in retrieved content | 🟡 | `LlmService.explain_candidate_score` generates a comparison narrative when LLM is configured; not grounded in retrieved resume content (uses scorer output, not RAG) |
+| Side-by-side comparison | 🟡 | Standalone CLI script retired 2026-07-03; `unified_scorer` produces per-item evidence + score deltas ready for a comparison view; not yet exposed in any UI |
+| Evidence-backed "Why A above B" | 🟡 | Deterministic score deltas + component breakdown are produced by `unified_scorer`; LLM narrative generation deferred until LLM caller is wired |
 
 ---
 
@@ -183,29 +183,56 @@ left" when planning the next session.
 
 ## Next Recommended Unit of Work
 
-**Phase 4.5 status** — items 1–4 and 9 are ✅ shipped; the remaining items are:
+**Status as of 2026-07-03:**
 
-5. Wire `explain_score_from_cache` into the recruiter UI for per-item score explanations.
-6. Per-item `expected_years` field in weight-config (UI-exposed).
-7. `clarifications.json` per role listing Green / Yellow / Red items and auto-generated questions.
-8. Recruiter UI to answer questions before scoring policy is locked.
+The recruiter weight-configuration UI is now live (FastAPI + HTMX, `/configure`). Dead-code cleanup complete: 14 orphan `.py` files removed, retired `recruiter_weight_input.py` per-role scripts, retired the `phase45_pipeline.py` driver (data outputs retained). Production scorer (`unified_scorer`) and FastAPI app verified loading and serving.
 
-**Completed (2026-07-01):**
-- 721 resumes parsed across 8 roles → `data/processed/<role>/<candidate_id>.json`
-- 721 structured profiles extracted → `data/processed/<role>/<id>_structured_profile.json`
-- 721 chunk files with full metadata schema → `data/chunks/<role>/<candidate_id>.jsonl`
-- 8 ranked score files → `data/scores/graded/<role>_ranked.json`
-- 721 candidate intelligence reports → `data/processed/<role>/<id>_intelligence_report.json`
-- Pipeline script: `scripts/phase45_pipeline.py` (code-only mode; rubric-bound LLM mode pending LLM caller wiring)
-- **Role documentation complete** — 8 roles × 8 files = 64 files created/audited
-- **SubQuery audit complete** — all 8 roles verified for JD alignment
+**Immediate next unit of work** (in order of unblocking power):
 
-**Recommended next unit of work:**
-1. Wire the rubric-bound LLM scorer (`src/scoring/rubric_scorer.py`) into the pipeline so skill depth and relevant-experience scoring produce non-zero scores.
-2. Build the JD clarification loop (Green/Yellow/Red classification → `clarifications.json`).
-3. Expose per-item `expected_years` in the recruiter weight-config UI.
+1. **Wire the FastAPI weight UI to the scoring engine.** The UI produces `data/job_descriptions/<role>/<role>_WeightConfig_*.json` in the canonical format, but `unified_scorer` does not yet read these. Add a `load_weight_config(role_name, config_name) -> dict` helper in `src/scoring/` and have the scorer consume it. This unblocks end-to-end "configure → score" in one click.
+2. **Per-item `expected_years` field in the FastAPI weight UI.** Today the form captures `weight_percentage` only. Add an "expected years" input next to each slider and persist it to the `weight_items.expected_years` column + JSON.
+3. **JD clarification loop (Green / Yellow / Red).** Build `clarifications.json` per role listing each REQ as G/Y/R plus an auto-generated recruiter question. Add a UI page that shows Red items as hard blocks and Yellow items as required questions before scoring policy locks.
+4. **Recruiter evaluation (Phase 7).** With the scorer consuming recruiter JSON, ground-truth the ranking on the 8 ranked files in `data/scores/graded/` against recruiter-confirmed expectations. See `EVALUATION.md` for metrics.
 
-This unblocks **Phase 7 — Evaluation** (ground-truth the scorer against recruiter-confirmed expectations) and **Phase 8 — Deployment** (the UI has a complete data flow to wire up).
+**Why this order:**
+- Step 1 closes the "configure weights → see scores" loop the recruiter is waiting for.
+- Step 2 makes per-skill expected years recruiter-editable (a spec rule in `WORKING_LOGIC.md`).
+- Step 3 unblocks ambiguous JD handling (a foundational rule still ⬜).
+- Step 4 is the meta-validation that confirms the platform actually works.
+
+---
+
+## Recruiter Weight Configuration UI (2026-07-03)
+
+**FastAPI + HTMX** service, no JS framework required. Replaces the per-role Streamlit CLI scripts (`recruiter_weight_input.py`) and the old `src/ui/recruiter_weight_config.py`.
+
+| Capability | Status | Where |
+|---|---|---|
+| Role dropdown (8 roles synced from SubQuery docs) | ✅ | `src/api/roles.py` `POST /api/roles/sync-from-subquery` |
+| Per-requirement slider (0–100, 0.5 step) | ✅ | `src/templates/partials/requirements_form.html` |
+| `+` / `−` buttons for 0.5 fine-tuning | ✅ | `onclick="adjustWeight(...)"` in `configure.html` |
+| Live category breakdown (rated/total/remaining %) | ✅ | `updateTotals()` JS in `configure.html` |
+| Live "Current Weights" panel (REQ-ID, name, current %) | ✅ | `renderCurrentWeights()` JS in `configure.html` |
+| Auto-balance to 100% | ✅ | `autoBalance()` JS in `configure.html` |
+| Strict 100% validation (server-side + client-side) | ✅ | `pages.py:htmx_save_weights` + `updateTotals` |
+| Persist to SQLite (`weight_configurations` + `weight_items`) | ✅ | `src/models/database.py` |
+| Persist to JSON (`<role>_WeightConfig_<name>.json`) | ✅ | `src/services/json_export.py` |
+| Delete removes from both DB and JSON | ✅ | `weights.py:delete_configuration` + `json_export.delete_json_config` |
+| OpenAPI / Swagger docs | ✅ | `GET /docs` (FastAPI auto) |
+| Per-item `expected_years` UI input | ⬜ | Field exists in DB + JSON; not yet exposed in slider form |
+| Multiple recruiters per role (auth + isolation) | ⬜ | Single-recruiter model only |
+| Edit existing config (load weights into form) | ⬜ | Configs are listed and deletable, not re-editable |
+
+**Endpoints:**
+- `GET /` — home
+- `GET /configure` — weight config UI
+- `GET /api/htmx/requirements/{role_id}` — slider form partial
+- `GET /api/htmx/validate/{role_id}` — live validation summary
+- `POST /api/htmx/save/{role_id}` — save to DB + JSON
+- `GET /api/htmx/configurations/{role_id}` — saved configs list
+- `GET /api/roles/`, `GET /api/weights/configurations`, etc. — REST API
+
+**Launch:** `python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000` → http://127.0.0.1:8000/configure
 
 ---
 

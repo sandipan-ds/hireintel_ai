@@ -225,3 +225,88 @@ def get_certificate_tier_points(
     """
     _, points = lookup_certificate_tier(certificate_name, db_path)
     return points
+
+
+# ---------------------------------------------------------------------------
+# Flagged institute detection — identifies fake/unknown universities.
+# ---------------------------------------------------------------------------
+
+def _check_flagged_institute(name: str, db: Dict[str, Any]) -> bool:
+    """Check if an institute is flagged as fake/unknown.
+
+    Args:
+        name: Institute name to check.
+        db: Parsed tier database dict.
+
+    Returns:
+        True if the institute is flagged as fake/unknown, False otherwise.
+    """
+    if not name or not db:
+        return False
+
+    name_lower = name.lower().strip()
+
+    # Check all tiers for flagged institutes
+    for tier_name in ("tier_1", "tier_2", "tier_3"):
+        tier_data = db.get(tier_name, {})
+        entries = tier_data.get("institutes") or []
+        for entry in entries:
+            # Check if this entry has a _note indicating it's flagged
+            if "_note" in entry:
+                aliases = entry.get("aliases", [])
+                for alias in aliases:
+                    if alias == "_default_":
+                        continue
+                    pattern = r"\b" + re.escape(alias.lower()) + r"\b"
+                    if re.search(pattern, name_lower):
+                        return True
+
+    return False
+
+
+def is_institute_flagged(
+    institute_name: str,
+    db_path: Optional[Path] = None,
+) -> bool:
+    """Check if an institute is flagged as fake/unknown.
+
+    Args:
+        institute_name: Name of the institute to check.
+        db_path: Optional path to a custom institute tier database.
+
+    Returns:
+        True if the institute is flagged as fake/unknown, False otherwise.
+    """
+    path = db_path or _INSTITUTES_PATH
+    db = _load_tier_db(str(path))
+    return _check_flagged_institute(institute_name, db)
+
+
+def get_flagged_institutes(
+    db_path: Optional[Path] = None,
+) -> List[Dict[str, Any]]:
+    """Get all flagged institutes from the tier database.
+
+    Args:
+        db_path: Optional path to a custom institute tier database.
+
+    Returns:
+        List of flagged institute entries with their details.
+    """
+    path = db_path or _INSTITUTES_PATH
+    db = _load_tier_db(str(path))
+    flagged = []
+
+    for tier_name in ("tier_1", "tier_2", "tier_3"):
+        tier_data = db.get(tier_name, {})
+        entries = tier_data.get("institutes") or []
+        for entry in entries:
+            if "_note" in entry:
+                flagged.append({
+                    "name": entry.get("name", ""),
+                    "aliases": entry.get("aliases", []),
+                    "tier": tier_name,
+                    "note": entry.get("_note", ""),
+                })
+
+    return flagged

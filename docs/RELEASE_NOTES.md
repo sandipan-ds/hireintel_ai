@@ -8,7 +8,69 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
-### Added — 2026-07-01: Phase 4.5 pipeline (parse + chunk + score all 721 resumes)
+### Added — 2026-07-03: Recruiter Weight Configuration UI (FastAPI + HTMX)
+
+- **Web UI** at `http://127.0.0.1:8000/configure` — replaces the per-role Streamlit CLI scripts.
+- **FastAPI service** (`src/api/`) with 9 routes:
+  - `GET /configure` — main config page
+  - `POST /api/htmx/save/{role_id}` — persist to DB + JSON
+  - `GET /api/htmx/requirements/{role_id}` — slider form partial
+  - `GET /api/htmx/validate/{role_id}` — live validation
+  - `GET /api/htmx/configurations/{role_id}` — saved configs list
+  - REST: `GET /api/roles/`, `GET /api/weights/configurations`, etc.
+- **HTMX-powered UI** with:
+  - Per-requirement slider (0–100%, 0.5 step)
+  - `+` / `−` buttons for fine-tuning (0.5 increment)
+  - Live counter: `X of Y features rated | Z% left`
+  - Live "Current Weights" panel (REQ-ID + name + current value)
+  - Auto-balance to 100% button
+  - Strict server-side 100% validation
+  - Sticky progress bar with over/under color coding
+- **Dual storage** (DB + JSON):
+  - SQLite: `data/hireintel.db` → `weight_configurations` + `weight_items` tables
+  - JSON: `data/job_descriptions/<role>/<role>_WeightConfig_<name>.json` (matches `*_RecruiterWeights_EXAMPLE.json` schema; ready for `unified_scorer` consumption)
+  - Delete removes from both
+- **Database schema** in `src/models/database.py`:
+  - `roles` (8, synced from SubQuery docs)
+  - `requirements` (139 across all roles, 14–20 per role)
+  - `weight_configurations` (name, role_id, total_allocated, scale_factor)
+  - `weight_items` (requirement_id, weight_percentage, expected_years)
+  - `recruiters` (table scaffolded, not yet used in UI)
+- **Role sync from SubQuery** via `POST /api/roles/sync-from-subquery` — parses `data/job_descriptions/<role>/<role>_SubQuery.md` and populates `roles` + `requirements` tables.
+
+### Changed — 2026-07-03: Dead-code cleanup (14 orphan files)
+
+- **Deleted 14 files** (no remaining references in production code):
+  - `src/rag/batch_chunk.py`, `build_index.py`, `embeddings.py`, `index.py`, `jd_match.py`, `retriever.py` (6 — superseded by `chunker.py` + `section_routed.py`)
+  - `src/resume_parsing/batch_parse.py`, `header_normalization.py`, `ocr.py` (3 — were used by retired `phase45_pipeline.py`)
+  - `src/scoring/batch_score.py` (1 — was used by retired `phase45_pipeline.py`)
+  - `scripts/check_data_root.py`, `check_storage.py`, `check_tiers.py`, `audit_imports.py` (4 — dev-only tools)
+  - `data/job_descriptions/*/recruiter_weight_input.py` (8 — replaced by FastAPI UI)
+- **Retired `scripts/phase45_pipeline.py`** driver. Pre-generated outputs retained:
+  - 721 intelligence reports in `data/processed/<role>/`
+  - 8 ranked score files in `data/scores/graded/`
+  - 721 chunk files in `data/chunks/`
+  - These remain valid input to `unified_scorer`.
+- **Fixed folder casing bug** — `data/certificates/` → `data/Certificates/`. The code path in `tier_lookup.py` was `data/Certificates/` but the on-disk folder was lowercase, working only on Windows (case-insensitive). Will now work on Linux/Mac deploys.
+- **Fixed JS `const newVal` bug** in `configure.html` — `adjustWeight()` was throwing `TypeError: Assignment to constant variable` on first click, making `+` / `−` buttons non-functional. Changed to `let`.
+
+### Documentation — 2026-07-03
+
+- `docs/CURRENT_PROGRESS.md` — refreshed to 2026-07-03; added new "Recruiter Weight Configuration UI" section; "Next Recommended Unit of Work" reframed around wiring scorer to JSON.
+- `docs/ARCHITECTURE_CHANGELOG.md` — added tier database expansion entry (Institute tiers 137/54/165 → 192/98/176, Certs expanded to 223, flagged-institute penalty).
+- `docs/AI_DESIGN_RATIONALE.md` — added §11 "Flagged (Fake / Unknown) Institute Detection" with alternatives, tradeoffs, final rationale, and implementation.
+- `docs/EVALUATION.md` — added "Test Dataset" section with role/country/institution/certification distribution from the 721-resume extract.
+- `data/` root — 4 working `.md` files (RESUME_DATA_SUMMARY, CURATED_DATA_FOR_TIERS, TIER_DATABASE_UPDATE_SUMMARY, FLAGGED_INSTITUTE_SYSTEM) merged into the canonical docs above and deleted. `data/hireintel.db` is the only file at `data/` root now.
+
+### Known limitations (post-cleanup)
+
+- Per-item `expected_years` field exists in DB + JSON but is not exposed in the slider UI.
+- `expected_years` defaults to `graded_scorer.DEFAULT_EXPECTED_YEARS` (10 years) until a recruiter-editable UI is built.
+- Recruiter auth / isolation not implemented — single-recruiter model.
+- No re-edit of saved configs (only list + delete); create-only.
+- `unified_scorer` does not yet consume the JSON files the new UI produces — wiring is the next recommended unit of work.
+
+---
 
 - **`scripts/phase45_pipeline.py`** — End-to-end batch pipeline that parses resumes, applies Header Normalization, extracts Structured Candidate Profiles, chunks with full metadata schema, scores with the canonical deterministic scorer, and aggregates Candidate Intelligence Reports.
 - **721 parsed profiles** → `data/processed/<role>/<candidate_id>.json` (8 role folders: BusinessAnalyst 133, DataScience 42, JavaDeveloper 72, ReactDeveloper 18, SalesManager 164, SQLDeveloper 82, SrPythonDeveloper 98, WebDesigning 112).

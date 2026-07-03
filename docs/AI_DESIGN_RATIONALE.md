@@ -268,4 +268,62 @@ Multi-level evaluation covering parsing, retrieval, generation, ranking, and bus
 
 ### Future Upgrade Path
 - Incorporate A/B testing framework for model and prompt changes
-- Add automated regression pipelines triggered on code or model updates
+- Add automated regression pipelines triggered on code or tier database updates
+
+---
+
+## 11. Flagged (Fake / Unknown) Institute Detection
+
+### Decision
+The system automatically detects resumes listing universities/institutes that are **not found in any major ranking system** (QS, THE, ARWU) or appear to be placeholder names, and applies a **50% scoring penalty** on the education dimension.
+
+### Alternatives Considered
+- **Drop flagged institutes entirely** — Harsher, but punishes candidates who may have legitimately attended unranked regional schools.
+- **No penalty** — Permits resume fraud / placeholder text to go undetected, undermining recruiter trust.
+- **Manual recruiter review only** — Doesn't scale; recruiters can't review every resume manually.
+- **Binary flag (visible warning, no scoring impact)** — Recruiters may ignore the warning; doesn't affect candidate ranking.
+- **50% multiplicative penalty (chosen)** — Visible in score, recruiter can still override, doesn't drop candidate from pipeline entirely.
+
+### Tradeoffs Evaluated
+
+| Approach | Deterrent Effect | False-Positive Risk | Recruiter Workload | Scalability |
+|----------|------------------|---------------------|--------------------|-------------|
+| Drop entirely | High | High (legit unranked schools) | Low | High |
+| No penalty | None | None | High (manual review) | Low |
+| Manual review | High | Low | Very High | Low |
+| Warning only | Low | None | Medium | High |
+| **50% penalty (chosen)** | **Medium-High** | **Low** | **Low** | **High** |
+
+### Final Rationale
+- **Visible in score, not in pipeline** — Candidate ranks lower but is still viewable.
+- **Recruiter-overridable** — The penalty shows up as `has_flagged_institute: bool` in the intelligence report so the recruiter can make the final call.
+- **Evidenced** — The flag lists the exact institute names that triggered it, so the recruiter can verify.
+- **Data-driven threshold** — The 13 currently flagged institutes were found by cross-referencing all 721 resumes against QS/THE/ARWU rankings.
+- **Tunable** — Adding `_note: "flagged"` to a new institute is a single-line JSON edit, no code change.
+
+### Implementation
+
+**Detection (`src/scoring/tier_lookup.py`):**
+- `is_institute_flagged(name)` — returns True if the name matches any entry with a `_note` field in `institute_tiers.json`.
+- `get_flagged_institutes()` — returns all flagged entries for display.
+
+**Profile integration (`src/resume_parsing/structured_profile.py`):**
+```python
+for degree in structured.degrees:
+    if degree.institution and is_institute_flagged(degree.institution):
+        structured.flagged_institutes.append(degree.institution)
+        structured.has_flagged_institute = True
+```
+
+**Scoring penalty (`src/scoring/unified_scorer.py`):**
+- Formula: `degree_match × institute_tier_points × flagged_penalty` (where `flagged_penalty = 0.5`).
+- Example: 1.0 match × 0.5 tier points × 1.0 (no flag) = 5.0 → 1.0 × 0.5 × 0.5 (flagged) = 2.5.
+
+**Flagged institutes (13 identified):**
+Shodwe University, XYZ University, XZ University, Cowell University, Timmerman University, Borcelle University, Ace University, Montriad University, Really Great University, Your University, Happy College, Expensive School, Reasonably Priced School.
+
+### Future Upgrade Path
+- Auto-suggest: when an unranked institute appears in N+ resumes, auto-add it to the flagged DB.
+- Recruiter dashboard: badge on candidate cards for `has_flagged_institute = true`.
+- Soft vs hard flagging tiers (e.g., "definitely fake" vs "unranked but possibly legit").
+- Cross-reference with government accreditation databases per country.

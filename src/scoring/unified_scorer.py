@@ -121,6 +121,8 @@ class UnifiedCandidateEvaluation:
     total_max: float
     total: float
     categories: List[UnifiedCategoryEvaluation] = field(default_factory=list)
+    has_flagged_institute: bool = False
+    flagged_institutes: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -130,6 +132,8 @@ class UnifiedCandidateEvaluation:
             "total_max": round(self.total_max, 2),
             "total": round(self.total, 2),
             "categories": [c.to_dict() for c in self.categories],
+            "has_flagged_institute": self.has_flagged_institute,
+            "flagged_institutes": self.flagged_institutes,
         }
 
 
@@ -182,26 +186,38 @@ def _score_education_code_only(
     if matched_institution:
         tier_points = get_institute_tier_points(matched_institution)
 
+    # Check if the institute is flagged as fake/unknown.
+    is_flagged = False
+    if matched_institution:
+        from src.scoring.tier_lookup import is_institute_flagged
+        is_flagged = is_institute_flagged(matched_institution)
+
     # Score: degree_match (0 or 1) × institute_tier_points × importance.
+    # If institute is flagged, apply a penalty (reduce score by 50%).
     degree_gate = 1.0 if degree_matched else 0.0
-    raw_score = round(degree_gate * tier_points * importance, 2)
+    flagged_penalty = 0.5 if is_flagged else 1.0
+    raw_score = round(degree_gate * tier_points * importance * flagged_penalty, 2)
 
     # Build trace.
     trace = {
         "dimension_type": "education",
-        "formula": "degree_match * institute_tier_points",
+        "formula": "degree_match * institute_tier_points * flagged_penalty",
         "sub_scores": [
             {"key": "degree_match", "sub_score": degree_gate,
              "evidence": matched_degree if degree_matched else "No matching degree found"},
             {"key": "institute_tier", "sub_score": tier_points,
              "evidence": matched_institution or "No institution found"},
+            {"key": "flagged_penalty", "sub_score": flagged_penalty,
+             "evidence": "Institute flagged as fake/unknown" if is_flagged else "Institute not flagged"},
         ],
-        "normalized_score": round(degree_gate * tier_points, 4),
+        "normalized_score": round(degree_gate * tier_points * flagged_penalty, 4),
     }
 
     reason = f"Degree match: {'Yes' if degree_matched else 'No'}"
     if matched_institution:
         reason += f" (Institute: {matched_institution}, tier points: {tier_points})"
+    if is_flagged:
+        reason += " [FLAGGED: Institute appears to be fake/unknown]"
 
     return UnifiedItemEvaluation(
         category="Education",
@@ -516,4 +532,6 @@ def evaluate_candidate_unified(
         total_max=total_max,
         total=total,
         categories=categories,
+        has_flagged_institute=structured_profile.has_flagged_institute,
+        flagged_institutes=structured_profile.flagged_institutes,
     )
