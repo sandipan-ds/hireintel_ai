@@ -1,0 +1,53 @@
+<!-- Configurations list partial -->
+{% if configurations %}
+<div class="space-y-4">
+    {% for config in configurations %}
+    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 transition">
+        <div class="flex items-center justify-between">
+            <div>
+                <h4 class="font-medium text-gray-900">{{ config.name }}</h4>
+                <p class="text-sm text-gray-500">
+                    {{ config.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    | {{ config.weight_items|length }} items
+                    | Total: {{ "%.1f"|format(config.total_allocated) }}%
+                </p>
+            </div>
+            <button
+                onclick="deleteConfiguration({{ config.id }}, '{{ config.name }}')"
+                class="text-red-600 hover:text-red-800 font-medium text-sm"
+            >
+                Delete
+            </button>
+        </div>
+
+        <!-- Weight Items -->
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-1 text-sm">
+            {% for item in config.weight_items %}
+            <div class="flex items-center justify-between bg-gray-50 rounded px-2 py-1">
+                <span class="text-gray-700 truncate">
+                    <span class="font-mono text-gray-500 text-xs">{{ item.requirement_req_id }}</span>
+                    {{ item.requirement_name }}
+                </span>
+                <span class="font-semibold text-gray-900 ml-2">{{ item.weight_percentage }}%</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function deleteConfiguration(configId, configName) {
+        if (confirm('Delete "' + configName + '"? Removes from DB and JSON file.')) {
+            fetch('/api/weights/configurations/' + configId, { method: 'DELETE' })
+                .then(response => response.json())
+                .then(data => { location.reload(); });
+        }
+    }
+</script>
+
+{% else %}
+<div class="text-center text-gray-500 py-4">
+    <p>No configurations saved yet for this role.</p>
+</div>
+{% endif %}

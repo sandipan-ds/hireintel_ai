@@ -10,9 +10,12 @@ The parser produces two layers of output that together are RAG-ready:
    the sections map to chunk resumes deterministically and to cite retrieved
    evidence.
 
-Every profile also carries a stable ``candidate_id`` derived from the source
-file path so downstream consumers (scoring, retrieval, ranking) can reference a
-single resume without re-parsing.
+Every profile carries a stable ``candidate_id`` allocated by the
+:class:`src.resume_parsing.candidate_registry.CandidateRegistry` (DEC-025).
+The id is human-readable, role-encoded, and sequential per role
+(``BusinessAnalyst_CAND_0001``). The legacy SHA1-hash-based id is still
+available via :func:`candidate_id_from_path` for the 6,377 existing
+Document-Aware chunks; new candidates use the registry-allocated id.
 """
 
 from hashlib import sha1
@@ -20,7 +23,18 @@ from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-from .ocr import extract_text_hybrid
+from .candidate_registry import CandidateRegistry, fresh_registry
+
+# ``.ocr`` is the optional PDF→text bridge. It is missing in some
+# environments (e.g. minimal CI); we import lazily so the rest of this
+# module remains importable for testing the non-OCR paths (id allocation,
+# text parsing helpers, etc.).
+try:
+    from .ocr import extract_text_hybrid  # type: ignore[import-not-found]
+    _HAS_OCR = True
+except ImportError:  # pragma: no cover - exercised by the env, not a test
+    extract_text_hybrid = None  # type: ignore[assignment]
+    _HAS_OCR = False
 
 EMAIL_REGEX = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 PHONE_REGEX = re.compile(
@@ -54,21 +68,46 @@ def parse_experience_date_line(line: str) -> Tuple[Optional[str], Optional[str],
 
 
 def candidate_id_from_path(path: Path) -> str:
-    """Stable, short, content-addressed identifier for a resume.
+    """Legacy SHA1-hash-based identifier for a resume (DEC-025 superseded).
 
-    The id is derived from the *absolute* source path so the same file maps to
-    the same id across runs, even if the working directory changes.
+    Returns the pre-DEC-025 hash id (``cand_<12hex>``) for the given source
+    path. Used by the 6,377 existing Document-Aware chunks and by the
+    candidate-registry backfill script (``scripts/backfill_candidate_registry.py``).
+
+    For new candidates, use the :class:`CandidateRegistry`-allocated id
+    via :func:`parse_resume` instead. This function is preserved for one
+    release as a backward-compat shim.
+
+    The id is derived from the *absolute* source path so the same file
+    maps to the same id across runs, even if the working directory
+    changes.
     """
     digest = sha1(str(path.resolve()).encode("utf-8")).hexdigest()
     return f"cand_{digest[:12]}"
 
 
-def parse_resume(path: Path) -> Dict[str, Any]:
+def _role_from_path(path: Path) -> Optional[str]:
+    """Best-effort: extract the role folder name from a path under ``data/original/<role>/...``."""
+    parts = path.resolve().parts
+    for i, part in enumerate(parts):
+        if part == "original" and i + 1 < len(parts):
+            return parts[i + 1]
+    return None
+
+
+def parse_resume(
+    path: Path,
+    registry: Optional[CandidateRegistry] = None,
+) -> Dict[str, Any]:
     """Parse a resume from a file path into a structured profile.
 
     The returned dictionary contains:
 
-    * ``candidate_id`` – stable id for downstream joins.
+    * ``candidate_id`` – stable id for downstream joins. Allocated by
+      the supplied ``registry`` (DEC-025); defaults to a fresh in-memory
+      registry if not provided, which is appropriate for one-off
+      scripts. Production code should pass
+      :meth:`CandidateRegistry.load`.
     * ``source_file`` – absolute path to the original PDF/text file.
     * ``raw_text`` – full extracted text (preserved for retrieval & audit).
     * ``sections`` – mapping of section name -> ``{"text": ..., "start": int,
@@ -80,7 +119,19 @@ def parse_resume(path: Path) -> Dict[str, Any]:
     text = extract_text_from_path(path)
     profile = parse_resume_text(text)
     profile["source_file"] = str(path.resolve())
-    profile["candidate_id"] = candidate_id_from_path(path)
+
+    # Allocate the candidate id via the registry (DEC-025). The role is
+    # inferred from the path; if it can't be inferred, fall back to a
+    # generic "Unknown" bucket so the id is still well-formed.
+    role = _role_from_path(path) or "Unknown"
+    legacy = candidate_id_from_path(path)
+    if registry is None:
+        registry = fresh_registry()
+    profile["candidate_id"] = registry.allocate_or_lookup(
+        source_path=path,
+        role=role,
+        legacy_hash_id=legacy,
+    )
     return profile
 
 
@@ -88,6 +139,11 @@ def extract_text_from_path(path: Path) -> str:
     """Extract plain text from a supported resume file."""
     suffix = path.suffix.lower()
     if suffix == ".pdf":
+        if not _HAS_OCR:
+            raise RuntimeError(
+                "PDF extraction requires src.resume_parsing.ocr which is "
+                "not installed in this environment."
+            )
         return extract_text_hybrid(path)
     if suffix == ".txt":
         return path.read_text(encoding="utf-8", errors="ignore")

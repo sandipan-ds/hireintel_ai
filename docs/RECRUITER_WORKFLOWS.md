@@ -40,10 +40,10 @@ The cardinal rule: **the platform must not assume what isn't stated**. When a JD
 
 1. The platform presents Green requirements to the recruiter. **Yellow and Red items block this workflow until clarified.**
 2. Recruiter assigns two values per item:
-   - **Importance** 0–10 (how much this criterion matters).
+   - **Weight percentage** 0–100% (how much this criterion matters). All percentages must sum to exactly **100%**.
    - **Expected years** (target years of experience for this criterion; defaults to 10 if recruiter omits).
 3. The platform validates that weights are non-negative and that all Green items have either an explicit or default `expected_years`.
-4. The platform computes `scale_factor = 100 / sum(importance)` so the candidate total normalizes to 0–100.
+4. The platform validates that all percentages sum to exactly 100%.
 5. The finalized scoring policy is locked and applied consistently to all candidates for the job.
 
 ---
@@ -69,14 +69,14 @@ The cardinal rule: **the platform must not assume what isn't stated**. When a JD
 
 ## Workflow 6: Candidate Evaluation
 
-1. The **single deterministic scoring engine** (`src/scoring/graded_scorer.py`) loads the scoring policy and candidate profile.
+1. The **unified scoring engine** (`src/scoring/unified_scorer.py`) loads the scoring policy, candidate profile, chunks, and structured profile. It routes each requirement to code-only mode (`graded_scorer.py` + `tier_lookup.py`) or rubric-bound LLM mode (`rubric_scorer.py` + `rubrics.py`) based on the dimension type.
 2. The engine operates in **two modes** (per `WORKING_LOGIC.md` "Fundamental Rule"):
    - **Code-only scoring** — for fully measurable requirements (total experience, skill presence + years, degree match, certification match, institute/cert tier lookups). Uses synonym dictionary + structured profile search + regex years detection. Computes `min(importance, candidate_years / expected_years × importance)` with partial credit for mention-only matches. No LLM involved.
-   - **Rubric-bound LLM evidence scoring** — for requirements requiring judgment (skill depth, relevant/same-role/leadership experience, project complexity, domain expertise). The LLM receives the full content of the mapped section(s) via Section-Routed Evidence Retrieval and scores against a recruiter-defined rubric. The LLM **does not see the weight** and **never computes the final weighted contribution**.
+   - **Rubric-bound LLM evidence scoring** — for requirements requiring judgment (skill depth, relevant/same-role/leadership experience, project complexity, domain expertise). The LLM receives the chunks retrieved by the threshold-based retrieval pipeline (cosine ≥ θ, DEC-018) and scores against a recruiter-defined rubric. The LLM **does not see the weight** and **never computes the final weighted contribution**.
 3. In both modes, weight application and final score aggregation are computed in code.
 4. The platform produces score values, explanations, evidence snippets, **matched profile sections**, and score breakdowns.
 5. Rubric sub-scores and cited evidence are **cached at scoring time** for fast, consistent score explanations later.
-6. **RAG may explain results but never produces them.** When the recruiter asks "Why did this candidate receive 78/100?", the system returns the cached reasoning first; if the follow-up goes beyond what was stored, it re-fetches the mapped section(s) and generates a fresh grounded answer — it cannot change the score.
+6. **RAG may explain results but never produces them.** When the recruiter asks "Why did this candidate receive 78/100?", the system returns the cached reasoning first; if the follow-up goes beyond what was stored, it re-fetches the candidate's evidence via threshold-based retrieval and generates a fresh grounded answer — it cannot change the score.
 
 ---
 

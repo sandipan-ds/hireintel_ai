@@ -149,7 +149,7 @@ Per `WORKING_LOGIC.md` ("Structured Candidate Profile Extraction"), facts that a
 ```
 
 **Components of a Scoring Policy:**
-- Point-based or percentage-based weights for each requirement
+- Percentage-based weights for each requirement (0–100%, must sum to exactly 100%)
 - Objective vs. subjective metric weighting
 - Custom scoring rules (e.g., bonus for product company experience)
 
@@ -221,12 +221,12 @@ For every recruiter-defined item handled by this mode:
 1. **Expand the item name** into a synonym dictionary (e.g. `Power BI → powerbi, pbi, dax, power query`), compiled as word-boundary regex patterns.
 2. **Search the structured profile** in priority order: `experience.entries[*].details` → `skills` → `education.entries` → `certifications` → `projects` → `summary`. Raw-text regex is never used.
 3. **Detect years of experience** near the matched alias (`X year(s)` / `X+ yr(s)` within 80 chars). For experience-style items, fall back to the summary's "X+ years of experience as …" line.
-4. **Compute the per-item raw score** on the recruiter's 0–10 scale:
+4. **Compute the per-item raw score** on the recruiter's percentage scale:
 
     * **No evidence** → `0`
-    * **Mentioned, no years measured** → `importance × 0.3` (partial credit)
-    * **Years measured** → `min(importance, candidate_years / expected_years × importance)` (proportional)
-5. **Normalize to 0–100** using the config's `scale_factor = 100 / max_score` and `normalized_importance` per item.
+    * **Mentioned, no years measured** → `weight_percentage × 0.3` (partial credit)
+    * **Years measured** → `min(weight_percentage, candidate_years / expected_years × weight_percentage)` (proportional)
+5. **Normalize to 0–100** using the sum of all weight percentages (which must equal 100%).
 
 ### 5.2 Rubric-Bound LLM Evidence Scoring
 
@@ -277,7 +277,7 @@ filter, not a similarity rank.
 
 ### 5.3 Why Years-Proportional Scoring
 
-A candidate with 1 year of Power BI does not receive the same score as a candidate with 6 years. The score is proportional to `candidate_years / expected_years × importance`, capped at the item's `importance`. The default `expected_years = 10` (configurable per item) means recruiters can tune the depth required for any criterion.
+A candidate with 1 year of Power BI does not receive the same score as a candidate with 6 years. The score is proportional to `candidate_years / expected_years × weight_percentage`, capped at the item's `weight_percentage`. The default `expected_years = 10` (configurable per item) means recruiters can tune the depth required for any criterion.
 
 ### 5.4 Output Contract
 
@@ -286,25 +286,25 @@ A candidate with 1 year of Power BI does not receive the same score as a candida
   "candidate_id": "cand_xxx",
   "role": "Business Analyst Lead",
   "total_raw": 56.8,
-  "total_max": 103.0,
-  "total": 40.6,
+  "total_max": 100.0,
+  "total": 56.8,
   "rank": 1,
   "categories": [
     {
       "name": "Core Skills",
       "score": 21.5,
-      "max_score": 43.0,
+      "max_score": 45.0,
       "items": [
         {
           "category": "Core Skills",
           "item_name": "Requirements Gathering",
           "description": "...",
-          "importance": 8,
+          "weight_percentage": 12,
           "expected_years": 6,
           "matched": true,
           "years_detected": 5.0,
-          "raw_score": 6.7,
-          "score": 5.0,
+          "raw_score": 10.0,
+          "score": 10.0,
           "section": "experience",
           "snippet": "Gather business requirements and translate them into user stories.",
           "reason": "5 year(s) of Requirements Gathering experience identified in the experience section — below the recruiter target of 6 year(s)."
@@ -379,68 +379,43 @@ data/scores/graded/<role>_ranked.json
 
 ## 9. Chunking Architecture
 
-**Purpose:** Divide resumes into semantically meaningful chunks for retrieval without losing structural context.
+**Purpose:** Divide resumes into uniform chunks for regular RAG retrieval.
 
-**Primary Strategy: Document-Aware Chunking**
+**Primary Strategy (updated 2026-07-05, DEC-019): Recursive Chunking**
 
-Chunks are created based on resume sections (one chunk per evidence unit):
+```text
+[Cleaned Resume Text]
+        ↓
+[RecursiveCharacterTextSplitter]
+   separators = ["\n\n", "\n", ". ", " "]
+   chunk_size    = 500 chars       (Optuna hyperparameter)
+   chunk_overlap = 50 chars        (Optuna hyperparameter)
+        ↓
+[Chunks] → [Embedding Model] → [Vector Index]
+```
 
-| Section | Chunk granularity |
-|---|---|
-| `summary` | One chunk per summary block |
-| `experience` | **One chunk per experience entry** (title + company + dates + location + bullets) |
-| `education` | **One chunk per education entry** |
-| `projects` | **One chunk per project** |
-| `skills` | One chunk (joined comma list) |
-| `certifications` | One chunk (joined list) |
-| `languages` | One chunk (joined list) |
-| Other free-text sections | One chunk; sub-split on `\n\n` with overlap if > 1200 chars |
+**Why Recursive (not Document-Aware):** With Section-Routed retrieval retired (DEC-012 → DEC-017), uniform-sized chunks are more comparable under cosine similarity. Recursive chunking is fast, deterministic, and produces chunks whose only metadata is `text + embedding + char_span`.
 
-Chunks are emitted as JSONL files at `data/chunks/<role_bucket>/<candidate_id>.jsonl`. Each record contains:
+**Chunks are emitted as JSONL files at `data/chunks/<role_bucket>/<candidate_id>.jsonl`.** Each record contains:
 
 ```json
 {
-  "chunk_id": "cand_xxx__experience__0",
+  "chunk_id": "cand_xxx__14",
   "candidate_id": "cand_xxx",
   "role_bucket": "BusinessAnalyst",
   "source_file": "...",
-  "section": "experience",
-  "chunk_index": 0,
-  "text": "Senior Data Scientist @ Acme | 2020 - Present\n- bullet 1\n- bullet 2 ...",
+  "chunk_index": 14,
+  "text": "Senior Data Scientist @ Acme | 2020 - Present. Built ML pipelines in Python...",
   "char_span": [800, 1300],
-  "metadata": { "title": "...", "company": "...", "dates": "...", "location": "...", "bullet_count": 5 }
+  "section_type": "experience"        // soft tag, retained from Header Normalization
 }
 ```
 
 The `char_span` references offsets into the profile's `raw_text`, so RAG answers can cite the exact substring.
 
-**Chunk Metadata (per `WORKING_LOGIC.md` "Chunk Metadata Schema"):**
+**Header Normalization is retained for parse-time section labeling** because the structured profile (`degrees`, `certifications`, `total_experience_years`) still needs labeled sections. It is no longer the retrieval routing mechanism.
 
-Every chunk is enriched with metadata at parse time, not inferred later by an LLM. A chunk on its own is not enough — a bullet that mentions a skill is useless for scoring if it loses the dates and context of the role it came from.
-
-```text
-chunk:
-  section_type: experience | education | skills_summary | projects | certifications | header
-  parent_structure:
-    organization
-    role_title
-    location
-    temporal_context:
-      start_date
-      end_date
-      is_current
-      calculated_duration_months   ← computed deterministically, never by the LLM
-  skills_asserted: [ ... ]
-  experience_type: professional | personal_project | academic | unknown
-```
-
-- `calculated_duration_months` is computed in code from parsed dates at parse time. LLMs are unreliable at date arithmetic, so this number is handed to the LLM ready-made.
-- `experience_type` lets scoring distinguish a skill used professionally from one mentioned only in a personal project or coursework.
-- `skills_asserted` enables deterministic metadata filtering when a section is too long for full-content routing.
-- Stable `candidate_id` (sha1 of source file path, 12 hex chars).
-- `char_span` into raw resume text (citation-ready).
-
-**Sub-split rule:** any chunk longer than `MAX_CHUNK_CHARS = 1200` is split on paragraph boundaries (`\n\n`) with `SPLIT_OVERLAP_CHARS = 120` overlap, ensuring no chunk exceeds the embedding model's comfortable context.
+**Legacy chunker** (`DocumentAwareChunker`, the old behavior) is retained under that name in `src/rag/chunker.py` for one release as a migration aid. New code should call `RecursiveChunker`.
 
 ### 9a. Header Normalization
 
@@ -482,7 +457,7 @@ Content does not always respect section boundaries even after labeling — a bul
 
 ## 10. Embedding Architecture
 
-**Purpose:** Generate vector representations for resume chunks to enable semantic search.
+**Purpose:** Generate vector representations for resume chunks to enable threshold-based retrieval.
 
 **Pipeline:**
 ```text
@@ -492,73 +467,55 @@ Content does not always respect section boundaries even after labeling — a bul
 **Embedding Models Used:**
 - Primary: `sentence-transformers/all-MiniLM-L6-v2` (384-dim, ~80 MB, CPU-runnable, no API key)
 - Alternative / future: BGE-M3 (multilingual) — see `MODEL_REGISTRY.md` for upgrade path
+- Experiment candidates for Optuna: MiniLM-L6-v2, `bge-small-en`, `bge-m3`
 
 **Processing:**
 - Chunks are batched (batch size 64) for efficient inference
 - Embeddings are L2-normalized so dot product == cosine similarity
 - Vectors are persisted to `data/embeddings/index.npz` (compressed numpy)
 - Chunk metadata is persisted to `data/embeddings/chunks.jsonl`
-- Re-built on demand via `python -m src.rag.build_index`
+- Re-built on demand via `python -m src.rag.build_index` (re-runs as part of every Optuna trial that changes `chunk_size` or `chunk_overlap`)
 
 ---
 
 ## 11. Retrieval Architecture
 
-**Purpose:** Retrieve resume content for two distinct purposes that must not be conflated: (a) per-candidate evidence for scoring, and (b) cross-candidate pool search / RAG chat.
+**Purpose:** Retrieve resume content for all retrieval purposes — per-candidate scoring, cross-candidate pool search, and resume chat — using a single threshold-based pipeline.
 
-Per `WORKING_LOGIC.md`, these are fundamentally different operations:
-
-### 11a. Section-Routed Evidence Retrieval (Per-Candidate, for Scoring)
-
-A JD requirement does not need to be searched for inside a resume — a resume is one short document (typically 1,000–3,000 tokens), and once it is chunked and header-normalized, the system already knows exactly where each requirement's evidence lives. Similarity ranking is the wrong tool here: a single resume isn't a corpus to search, it's something to read.
+**Strategy (updated 2026-07-05, DEC-017 + DEC-018):**
 
 ```text
-[JD Requirement] -> [Section Mapping (fixed table)]
-                          │
-                          ▼
-           [Fetch all chunks tagged with mapped section(s)]
-           (exact label match — no embeddings, no cosine)
-                          │
-                          ▼
-           [Full section content per requirement]
+[Query] -> [Embed] -> [Cosine ≥ θ over data/embeddings/index.npz] -> [All hits, capped at max_chunks_per_query]
 ```
-
-**Fixed section mapping table (not a model decision):**
-
-```text
-Education requirement      → Education chunk(s)
-Skill / experience depth   → Experience + Projects + Skills chunks
-Certification requirement  → Certifications chunk(s)
-```
-
-**Key rules (per `WORKING_LOGIC.md` "Section-Routed Evidence Retrieval"):**
-- Retrieval is an **exact label match** — fetch every chunk tagged with the mapped section(s), never a ranked top-K subset.
-- Nothing is filtered out; the same requirement against the same resume always returns the same content.
-- No embeddings, no cosine similarity, no risk of a relevant chunk silently falling below a similarity cutoff.
-- Fields that belong together (institute, branch, CGPA) can never get split across separate retrieval calls.
-- If a section is unusually long, deterministic metadata filtering (`skills_asserted contains "Python"`) narrows it further — still an exact filter, not a similarity rank.
-
-This is the retrieval strategy used by the **rubric-bound LLM evidence scoring** mode (§5.2).
-
-### 11b. Dense Cosine Retrieval (Cross-Candidate Pool Search + RAG Chat)
-
-This is the one place embeddings and similarity search belong — searching across the whole candidate pool, not inside a single resume.
-
-```text
-[Recruiter / JD Bullet] -> [Embed] -> [Cosine over data/embeddings/index.npz] -> [Top-K Chunks]
-```
-
-**Used in two contexts:**
-
-1. **Resume Matching / triage** (`src/rag/jd_match.py`) — narrowing a large applicant pool before running the full per-candidate rubric scoring pass. Open-ended pool search: "find candidates with healthcare domain experience" across every resume on file.
-2. **Resume Chat** (`src/rag/retriever.py`) — recruiter questions about a candidate answered via RAG (see §12).
 
 **Configuration:**
-- Top-K chunks retrieved: 5–10 (configurable per call)
-- Similarity threshold: minimum cosine to count as a "match" (default 0.30, configurable)
-- Optional `role_bucket` filter on retrieval
+- Threshold θ: default `0.70` (Optuna hyperparameter)
+- `max_chunks_per_query`: `20` (safety cap; warn on hit)
+- Similarity metric: cosine
+- Optional `role_bucket` and `candidate_id` filters on retrieval
 
-**Critical constraint:** The similarity score is **not** the final ranking score. It is only one supporting/triage signal. Candidate ranking must always be driven by the deterministic scoring engine (§5).
+**Per-query flow:**
+
+```python
+def retrieve(query: str, *, candidate_id: str | None = None,
+             role_bucket: str | None = None) -> list[Chunk]:
+    q_vec = embed(query)
+    sims  = index.cosine(q_vec, candidate_id=candidate_id, role_bucket=role_bucket)
+    hits  = [(s, c) for s, c in zip(sims, index.chunks) if s >= THRESHOLD]
+    hits.sort(reverse=True)
+    if len(hits) > MAX_CHUNKS_PER_QUERY:
+        log.warning("threshold cap hit: %d > %d", len(hits), MAX_CHUNKS_PER_QUERY)
+        return hits[:MAX_CHUNKS_PER_QUERY]
+    return hits
+```
+
+**Used in three contexts:**
+
+1. **Per-candidate evidence retrieval for scoring** — `candidate_id` filter applied; chunks for that one candidate are ranked; the rubric-bound LLM judge (§5.2) scores against anchored scales.
+2. **Cross-candidate pool search** — no `candidate_id` filter; used by JD matching (triage) to narrow a large applicant pool before the full per-candidate scoring pass.
+3. **Resume Chat** — `candidate_id` filter applied; recruiter questions about a candidate answered via RAG (§12).
+
+**Critical constraint:** The retrieval quality is not the final ranking quality. The deterministic scoring engine in §5 is the **only** ranking signal. The LLM is restricted to extraction, rubric-bound scoring, and answer generation; it never sees the weight and never computes the final contribution.
 
 ---
 

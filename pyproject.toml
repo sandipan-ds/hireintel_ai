@@ -3,7 +3,49 @@ name = "hireintel-ai"
 version = "0.1.0"
 description = "HireIntel AI candidate intelligence platform for recruiter-controlled screening and ranking."
 requires-python = ">=3.11"
-dependencies = []
+
+dependencies = [
+    "llama-index>=0.14",
+    "llama-index-llms-ollama",
+    "llama-index-embeddings-ollama",
+    "llama-index-embeddings-huggingface",
+    "llama-index-vector-stores-chroma",
+    "llama-index-readers-file",
+
+    "transformers",
+    "sentence-transformers",
+    "torch",
+    "accelerate",
+
+    "chromadb",
+
+    "numpy",
+    "pandas",
+    "scikit-learn",
+
+    "pdfplumber",
+    "pypdf",
+    "pypdfium2",
+    "python-docx",
+    "docx2txt",
+
+    "opencv-python",
+    "pytesseract",
+    "Pillow",
+
+    "fastapi",
+    "uvicorn",
+    "streamlit",
+
+    "sqlalchemy",
+    "psycopg[binary]",
+
+    "python-dotenv",
+    "requests",
+    "httpx",
+    "tqdm",
+    "rich"
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]

@@ -1,1 +1,1 @@
-"""API entrypoints for HireIntel AI."""
+"""API module for HireIntel AI."""

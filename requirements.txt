@@ -1,188 +1,112 @@
-albumentations==2.0.8
-annotated-doc==0.0.4
-annotated-types==0.7.0
-celery==5.6.3
-certifi==2026.5.20
-cffi==2.0.0
-charset-normalizer==3.4.7
-click==8.4.1
-click-didyoumean==0.3.1
-click-plugins==1.1.1.2
-click-repl==0.3.0
-colorama==0.4.6
-comm==0.2.3
-contourpy==1.3.3
-cryptography==48.0.0
-cycler==0.12.1
-datasketch==1.10.0
-debugpy==1.8.20
-decorator==5.2.1
-distro==1.9.0
-dnspython==2.8.0
-docstring_parser==0.18.0
-ecdsa==0.19.2
-email-validator==2.3.0
-executing==2.2.1
-fastapi==0.136.3
-filelock==3.29.0
-fonttools==4.63.0
-fsspec==2026.4.0
-git-filter-repo==2.47.0
-graphifyy==0.8.36
-graphviz==0.21
-greenlet==3.5.1
-grpc-google-iam-v1==0.14.4
-grpcio==1.80.0
-grpcio-status==1.80.0
-h11==0.16.0
-hf-xet==1.5.1
-httpcore==1.0.9
-httptools==0.8.0
-httpx==0.28.1
-huggingface_hub==1.19.0
-idna==3.18
-iniconfig==2.3.0
-ipykernel==7.2.0
-ipython==9.12.0
-ipython_pygments_lexers==1.1.1
-ipywidgets==8.1.8
-jedi==0.19.2
-Jinja2==3.1.6
-jiter==0.15.0
-joblib==1.5.3
-jupyter_client==8.8.0
-jupyter_core==5.9.1
-jupyterlab_widgets==3.0.16
-kiwisolver==1.5.0
-kombu==5.6.2
-librt==0.11.0
-lightning-utilities==0.15.3
-Markdown==3.10.2
-markdown-it-py==4.2.0
-MarkupSafe==3.0.3
-matplotlib==3.10.9
-matplotlib-inline==0.2.1
-mdurl==0.1.2
-mpmath==1.3.0
-mypy==2.1.0
-mypy_extensions==1.1.0
-neo4j==6.2.0
-nest-asyncio==1.6.0
-networkx==3.6.1
-numpy==2.4.5
-openai==2.41.0
-opencv-python==4.13.0.92
-opencv-python-headless==4.13.0.92
-packaging==26.0
-pandas==3.0.3
-parso==0.8.6
-passlib==1.7.4
-pathspec==1.1.1
-pdfminer.six==20251230
-pdfplumber==0.11.9
-pillow==12.2.0
-pip-chill==1.0.5
-pipx==1.14.0
-platformdirs==4.9.6
-pluggy==1.6.0
-prompt_toolkit==3.0.52
-proto-plus==1.28.0
-protobuf==6.33.6
-psutil==7.2.2
-psycopg==3.3.4
-psycopg-binary==3.3.4
-psycopg2-binary==2.9.12
-pure_eval==0.2.3
-pyarrow==24.0.0
-pyasn1==0.6.3
-pyasn1_modules==0.4.2
-pycparser==3.0
-pydantic==2.13.4
-pydantic-settings==2.14.1
-pydantic_core==2.46.4
-Pygments==2.20.0
-pyparsing==3.3.2
-PyPDF2==3.0.1
-pypdfium2==5.8.0
-pytesseract==0.3.13
-pytest==9.0.3
-python-dateutil==2.9.0.post0
-python-dotenv==1.2.2
-python-jose==3.5.0
-pytz==2026.2
-pywin32==312
-PyYAML==6.0.3
-pyzmq==27.1.0
-RapidFuzz==3.14.5
-redis==8.0.0
-reportlab==4.5.1
-requests==2.34.2
-rich==15.0.0
-rsa==4.9.1
-ruff==0.15.16
-scikit-learn==1.8.0
-scipy==1.17.1
-seaborn==0.13.2
-setuptools==81.0.0
-shellingham==1.5.4
-simsimd==6.5.16
-six==1.17.0
-sniffio==1.3.1
-SQLAlchemy==2.0.50
-stack-data==0.6.3
-starlette==1.2.1
-stringzilla==4.6.1
-sympy==1.14.0
-tenacity==9.1.4
-tensorboard==2.20.0
-tensorboard-data-server==0.7.2
-threadpoolctl==3.6.0
-torch==2.12.0
-torchmetrics==1.9.0
-torchvision==0.27.0
-tornado==6.5.5
-tqdm==4.68.2
-traitlets==5.14.3
-tree-sitter==0.25.2
-tree-sitter-bash==0.25.1
-tree-sitter-c==0.24.2
-tree-sitter-c-sharp==0.23.5
-tree-sitter-cpp==0.23.4
-tree-sitter-elixir==0.3.5
-tree-sitter-fortran==0.6.0
-tree-sitter-go==0.25.0
-tree-sitter-groovy==0.1.2
-tree-sitter-java==0.23.5
-tree-sitter-javascript==0.25.0
-tree-sitter-json==0.24.8
-tree-sitter-julia==0.23.1
-tree-sitter-kotlin==1.1.0
-tree-sitter-lua==0.5.0
-tree-sitter-objc==3.0.2
-tree-sitter-php==0.24.1
-tree-sitter-powershell==0.26.4
-tree-sitter-python==0.25.0
-tree-sitter-ruby==0.23.1
-tree-sitter-rust==0.24.2
-tree-sitter-scala==0.26.0
-tree-sitter-swift==0.7.3
-tree-sitter-typescript==0.23.2
-tree-sitter-verilog==1.0.3
-tree-sitter-zig==1.1.2
-typer==0.25.1
-types-passlib==1.7.7.20260211
-types-pyasn1==0.6.0.20260408
-types-python-jose==3.5.0.20260408
-typing-inspection==0.4.2
-typing_extensions==4.15.0
-tzdata==2026.2
-tzlocal==5.3.1
-urllib3==2.7.0
-userpath==1.9.2
-uvicorn==0.49.0
-vine==5.1.0
-watchfiles==1.2.0
-wcwidth==0.6.0
-websockets==16.0
-Werkzeug==3.1.8
-widgetsnbextension==4.0.15
+# ==========================
+# LlamaIndex
+# ==========================
+llama-index
+llama-index-core
+llama-index-llms-ollama
+llama-index-embeddings-ollama
+llama-index-embeddings-huggingface
+llama-index-vector-stores-chroma
+llama-index-readers-file
+llama-parse
+
+# ==========================
+# LLM & NLP
+# ==========================
+transformers
+sentence-transformers
+accelerate
+torch
+torchvision
+openai
+tiktoken
+rank-bm25
+flashrank
+rapidfuzz
+
+# ==========================
+# Vector Database
+# ==========================
+chromadb
+faiss-cpu
+qdrant-client
+
+# ==========================
+# Document Parsing
+# ==========================
+pypdf
+pdfplumber
+pdfminer.six
+pypdfium2
+python-docx
+docx2txt
+unstructured
+pytesseract
+pillow
+opencv-python
+docling
+
+# ==========================
+# Data Science
+# ==========================
+numpy
+pandas
+scikit-learn
+scipy
+matplotlib
+seaborn
+joblib
+
+# ==========================
+# Backend
+# ==========================
+fastapi
+uvicorn
+sqlalchemy
+psycopg[binary]
+redis
+celery
+jinja2
+python-multipart
+
+# ==========================
+# Utilities
+# ==========================
+python-dotenv
+requests
+httpx
+pydantic
+pyyaml
+tqdm
+rich
+orjson
+tenacity
+
+# ==========================
+# Development
+# ==========================
+pytest
+ruff
+mypy
+streamlit
+ipykernel
+jupyterlab
+
+# ==========================
+# Tree Sitter
+# ==========================
+tree-sitter
+tree-sitter-python
+tree-sitter-java
+tree-sitter-javascript
+tree-sitter-typescript
+
+# ==========================
+# Experiment Tracking & Hyperparameter Search (DEC-020, DEC-021, M0.5c)
+# ==========================
+# MLflow: local experiment tracking (SQLite backend, filesystem artifacts)
+mlflow>=2.10,<3.0
+# Optuna: hyperparameter search (TPE sampler, multi-objective, SQLite studies)
+optuna>=3.6,<4.0
+# Optuna dashboard: local Pareto-front viewer
+optuna-dashboard>=0.9,<1.0

@@ -18,10 +18,10 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 | --- | --- | --- |
 | JD-EXTRACT-001 | Extract structured hiring requirements from a job description | Planned |
 | RESUME-PARSE-001 | Extract a structured candidate profile from resume content | Planned (current parser is rule-based; LLM extraction is the upgrade path) |
-| RUBRIC-SCORE-001 | Score candidate evidence against a recruiter-defined rubric | Planned |
+| RUBRIC-SCORE-001 | Score candidate evidence against a recruiter-defined rubric | Active (`src/scoring/rubric_scorer.py`) |
 | CANDIDATE-SUMMARY-001 | Generate an evidence-based recruiter summary | Planned |
 | CANDIDATE-COMPARE-001 | Compare candidates using structured evidence | Active (used by `scripts/compare_two.py` when LLM is configured) |
-| RESUME-CHAT-001 | Answer recruiter questions using retrieved resume chunks | Active (`hireintel_ai/llm/service.py`) |
+| RESUME-CHAT-001 | Answer recruiter questions using retrieved resume chunks | Planned (LLM service scaffolded; no chat method or strict-grounding fallback implemented yet) |
 | SCORE-EXPLAIN-001 | Narrate a per-item score using retrieved evidence + scorer output | Active (used by score-explanation flow) |
 | HIRING-RECOMMENDATION-001 | Generate evidence-backed hiring recommendation text | Planned |
 
@@ -91,6 +91,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 **Version History:**
 - v0.1: Initial planned prompt specification per `WORKING_LOGIC.md` "Scoring Rubrics" and "Transforming the JD based requirements into sub-questions".
+- v1.0: Adopted as production prompt in `src/scoring/rubric_scorer.py`. Weight excluded from prompt; anchored scales enforced; extraction-before-scoring; cached scoring trace (`CachedScoringTrace`) frozen at scoring time.
 
 ---
 
@@ -133,7 +134,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 **Inputs:**
 - Recruiter question
-- Top-K retrieved resume chunks (Document-Aware Chunking)
+- Retrieved resume chunks (Recursive Chunking, threshold-based cosine ≥ θ, DEC-018/019)
 - Candidate metadata allowed for display
 
 **Outputs:**
@@ -152,7 +153,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 **Version History:**
 - v0.1: Initial planned prompt specification.
-- v1.0: Adopted as the production prompt in `src/hireintel_ai/llm/service.py`.
+- v0.2: Reverted to Planned — `src/hireintel_ai/llm/service.py` does not yet implement a chat method or the strict-grounding fallback string.
 
 ---
 
@@ -161,8 +162,8 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 **Purpose:** Narrate a per-item score from the deterministic scorer using the candidate's retrieved evidence.
 
 **Inputs:**
-- The candidate's `ItemEvaluation` (item_name, importance, expected_years, raw_score, score, matched, section, snippet, reason).
-- The recruiter's question (e.g. "Why did this candidate receive 6/10 for Power BI?").
+- The candidate's `ItemEvaluation` (item_name, weight_percentage, expected_years, raw_score, score, matched, section, snippet, reason).
+- The recruiter's question (e.g. "Why did this candidate receive 10% for Power BI?").
 
 **Outputs:**
 - A short paragraph that combines the scorer's reason with the cited snippet.

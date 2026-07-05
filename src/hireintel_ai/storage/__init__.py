@@ -1,2 +1,0 @@
-"""Persistence and repository abstractions."""
-

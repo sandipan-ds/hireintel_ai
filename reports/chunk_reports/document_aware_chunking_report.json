@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "experiment_name": "document_aware_chunking",
+  "experiment_folder": "data\\document_aware_chunking",
+  "created_at": "2026-07-05T13:45:00Z",
+  "source": "pre-DEC-019 production chunks (721 resumes, 8 roles)",
+  "chunker": "DocumentAwareChunker",
+  "config": {
+    "max_chunk_chars": 1200,
+    "split_overlap_chars": 120
+  },
+  "chunk_statistics": {
+    "total_chunks": 6377,
+    "total_resumes": 721,
+    "chunks_per_role": {
+      "BusinessAnalyst": 1291,
+      "DataScience": 426,
+      "JavaDeveloper": 606,
+      "ReactDeveloper": 105,
+      "SalesManager": 1339,
+      "SQLDeveloper": 629,
+      "SrPythonDeveloper": 1055,
+      "WebDesigning": 926
+    },
+    "chunks_per_resume": {
+      "mean": 8.84,
+      "median": 8.0,
+      "min": 0,
+      "max": 77,
+      "p95": 21
+    },
+    "section_type_distribution": {
+      "": 3136,
+      "experience": 1780,
+      "education": 1021,
+      "projects": 440
+    },
+    "chunks_with_section_type_empty": 3136,
+    "section_type_empty_rate": 0.4918
+  },
+  "key_findings": [
+    "49.2% of chunks have section_type='' and are invisible to Section-Routed retrieval (DEC-015 finding). This is the empirical justification for retiring the DocumentAwareChunker.",
+    "Chunks per resume: mean=8.84, median=8.0, min=0, max=77, p95=21.",
+    "Largest role bucket: SalesManager with 1339 chunks."
+  ],
+  "recommendation": "Retire DocumentAwareChunker as the active strategy. The 40%+ missing-section_type rate makes Section-Routed retrieval unreliable (DEC-019, DEC-015)."
+}
