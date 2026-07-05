@@ -1,6 +1,6 @@
 """Tests for the chunk metadata schema and date parsing utilities."""
 
-from src.rag.chunker import (
+from rag.document_aware_chunker import (
     ChunkRecord,
     _classify_experience_type,
     _extract_skills_asserted,

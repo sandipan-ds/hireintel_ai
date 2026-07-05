@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from src.rag.chunker import ChunkRecord
+from rag.document_aware_chunker import ChunkRecord
 from src.rag.section_routed import SectionEvidence, section_routed_retrieval
 from src.scoring.rubric_scorer import (
     CachedScoringTrace,

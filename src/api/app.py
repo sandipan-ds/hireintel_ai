@@ -7,7 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from src.api import pages, roles, weights
+from src.api import pages, roles, scoring, weights
 from src.models.database import init_db
 
 # Create FastAPI app
@@ -23,6 +23,7 @@ app.mount("/static", StaticFiles(directory="src/static"), name="static")
 # Include routers
 app.include_router(roles.router)
 app.include_router(weights.router)
+app.include_router(scoring.router)
 app.include_router(pages.router)
 
 

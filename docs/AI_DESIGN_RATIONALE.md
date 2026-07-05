@@ -8,34 +8,37 @@ This document records the AI design decisions made in the HireIntel AI platform.
 
 ## 1. Chunking Strategy
 
-### Decision
-**Primary:** Document-Aware Chunking  
-**Long-section handling:** Deterministic metadata filtering (`skills_asserted contains "Python"`) — not semantic chunking
+### Decision (updated 2026-07-05, DEC-019)
+**Primary:** Recursive Chunking  
+**Defaults:** `chunk_size = 500` chars, `chunk_overlap = 50` chars  
+**Long-section handling:** N/A (recursive splitter respects the configured size)
+**Hyperparameters:** both `chunk_size` and `chunk_overlap` are tuned by Optuna (DEC-021)
 
 ### Alternatives Considered
-- **Recursive Chunking:** Fixed-size overlapping chunks regardless of document structure
-- **Document-Aware Chunking:** Chunking based on resume sections (Education, Experience, Projects, etc.)
-- **Semantic Chunking:** Splitting based on semantic boundaries using embeddings
-- **Agentic Chunking:** Using an LLM agent to dynamically decide chunk boundaries
+- **Recursive Chunking (chosen):** Splits text recursively by separator hierarchy (`\n\n` → `\n` → `. ` → ` `) until chunks fit `chunk_size`. Fast, deterministic, no model calls.
+- **Document-Aware Chunking (replaced as active 2026-07-05):** One chunk per resume section entry (Experience, Education, Project). Was the right choice when retrieval was Section-Routed (DEC-012); with regular RAG in place, uniform chunk sizes are more comparable under cosine similarity.
+- **Semantic Chunking:** Splitting based on embedding-distance breakpoints. Adds an embedding call per boundary; expensive and not better for short resumes.
+- **Agentic Chunking:** LLM decides boundaries. Non-deterministic, expensive, and the LLM is unreliable at boundary detection for short structured documents.
 
 ### Tradeoffs Evaluated
 
-| Strategy | Structure Preservation | Retrieval Quality | Cost | Complexity |
-|----------|------------------------|-------------------|------|------------|
-| Recursive | Low | Medium | Low | Low |
-| Document-Aware | High | High | Medium | Medium |
-| Semantic | Medium | High | High | High |
-| Agentic | Medium | Medium | Very High | Very High |
+| Strategy | Structure Preservation | Retrieval Quality | Cost | Complexity | Notes |
+|----------|------------------------|-------------------|------|------------|-------|
+| Recursive (chosen) | Low | High (when θ is tuned) | Low | Low | Uniform chunks; cosine-friendly |
+| Document-Aware | High | High (with section routing) | Medium | Medium | Loses value without section routing |
+| Semantic | Medium | High | High | High | Embedding calls per boundary |
+| Agentic | Medium | Medium | Very High | Very High | Non-deterministic |
 
 ### Final Rationale
-- Resumes have a well-defined, predictable structure (Education, Experience, Skills, etc.)
-- Document-aware chunking preserves semantic coherence within each section
-- Improves retrieval relevance since recruiters often query specific sections (e.g., "React experience")
-- Avoids the high cost and latency of agentic or fully semantic approaches
+- With Section-Routed retrieval retired (DEC-012 → DEC-017), the structural preservation that Document-Aware chunking offered is no longer required for retrieval.
+- Regular RAG needs uniform-sized chunks so cosine similarity is comparing like with like.
+- Recursive chunking is fast, deterministic, easy to reason about, and produces chunks whose only metadata is `text + embedding + char_span`.
+- Header Normalization (the synonym table from DEC-013) is **retained for parse-time section labeling** because the structured profile (`degrees`, `certifications`, `total_experience_years`) still needs labeled sections. It is no longer the retrieval routing mechanism.
 
 ### Future Upgrade Path
-- Header Normalization (synonym lookup + fallback classification) maps heterogeneous resume headers to canonical section labels at parse time — see `AI_ARCHITECTURE.md` §9a.
-- Evaluate hybrid approaches as embedding models improve (for cross-candidate pool search only, not per-candidate evidence retrieval).
+- Semantic chunking can be added as a chunker variant if Optuna shows a quality gain on a specific role.
+- The chunker interface (`ChunkerProtocol`) is the only contract code must depend on, so swapping chunkers is a one-line change in the pipeline factory.
+- Header Normalization remains parse-time; if a future design needs section-aware retrieval again, the labels are already on the chunks.
 
 ---
 
@@ -194,36 +197,45 @@ Every item is **explainable**: the report lists the matched profile section, the
 
 ## 6. Retrieval Strategy
 
-### Decision
-**Per-candidate evidence retrieval (for scoring):** Section-Routed Evidence Retrieval — exact label match on canonical sections, no embeddings, no cosine. Full section content is sent to the rubric-bound LLM judge.
+### Decision (updated 2026-07-05, DEC-017 + DEC-018)
+**Single retrieval strategy for all purposes (per-candidate scoring, cross-candidate pool search, resume chat):** Threshold-based cosine over Recursive chunks.
 
-**Cross-candidate pool search + resume chat:** Dense Cosine over in-memory vector index. Hybrid search (Sparse BM25 + Dense + Reranker) is a **future upgrade path for pool-level search only** — never for per-candidate scoring.
+```
+retrieve(query)  →  embed(query)  →  cosine ≥ θ  →  return all hits
+                                                  (capped at max_chunks_per_query)
+```
+
+**Defaults:** `θ = 0.70`, `max_chunks_per_query = 20`. Both are Optuna hyperparameters.
+
+**Scoring engine is unchanged** — the deterministic scorer in `src/scoring/graded_scorer.py` is still the only ranking signal. The LLM is restricted to extraction, rubric-bound scoring, and answer generation; it never sees the weight and never computes the final contribution.
 
 ### Alternatives Considered
-- **Sparse-Only (Keyword):** Fast, exact match, poor with synonyms
-- **Dense-Only (Vector):** Good semantic understanding, misses exact terms
-- **Hybrid (Sparse + Dense):** Balances exact matching and semantic understanding
-- **Hybrid + Reranker:** Adds a reranking step to boost top-k precision
+- **Sparse-Only (Keyword):** Fast, exact match, poor with synonyms.
+- **Dense-Only (Vector) + Top-K (DEC-012 predecessor):** Good semantic understanding; a fixed `top_k` doesn't adapt to query difficulty.
+- **Dense-Only (Vector) + Threshold (chosen):** Same as top-K but the returned set is dynamic. More chunks when there are more matches, fewer when there are few.
+- **Dense + Reranker (cross-encoder):** Adds a reranking step after threshold retrieval to boost precision on the top-N. Deferred; can be layered on later.
+- **Section-Routed (DEC-012) and Sub-Query Similarity (DEC-015) (replaced):** Two strategies designed around label-based routing; both retired because the routing assumption was brittle and the engineering complexity was not justified for a small candidate pool.
 
 ### Tradeoffs Evaluated
 
-| Strategy | Exact Match | Semantic Match | Speed | Complexity |
-|----------|-------------|----------------|-------|------------|
-| Sparse-Only | Excellent | Poor | Fast | Low |
-| Dense-Only | Poor | Excellent | Medium | Low |
-| Hybrid | Good | Good | Medium | Medium |
-| Hybrid + Reranker | Excellent | Excellent | Medium | High |
+| Strategy | Adapt to query difficulty | Calibration | Speed | Complexity |
+|----------|---------------------------|-------------|-------|------------|
+| Top-K (fixed) | No | Two knobs (K + filter) | Fast | Low |
+| **Threshold θ (chosen)** | **Yes** | **One knob (θ) — tuned by Optuna** | **Fast** | **Low** |
+| Top-K + Reranker | No (top-K caps the rerank pool) | Three knobs | Medium | Medium |
+| Threshold + Reranker | Yes | Two knobs (θ + reranker model) | Medium | Medium |
+| Section-Routed (replaced) | N/A | Routing table | Fast | High (two retrieval paths) |
 
 ### Final Rationale
-- **Section-Routed Evidence Retrieval** is the correct tool for per-candidate scoring: a single resume is a short document (1,000–3,000 tokens) that should be read, not searched. Exact label match on canonical sections guarantees no relevant chunk is silently missed and the same requirement always returns the same content.
-- **Dense cosine** is the correct tool for cross-candidate pool search and resume chat, where the corpus is large and open-ended.
-- Hybrid search (BM25 + Dense + Reranker) is a future upgrade for pool-level search only — it adds synonym awareness and semantic understanding for triage without sacrificing speed.
-- Reranking would significantly improve precision for RAG-based answers and pool triage.
-- Per-candidate scoring must never use similarity ranking — this is a hard rule in `WORKING_LOGIC.md`.
+- A single retrieval strategy across per-candidate scoring, pool search, and chat simplifies the codebase: one config, one index, one set of metrics.
+- Threshold-based retrieval adapts to query difficulty without two-knob tuning. Optuna (DEC-021) calibrates `θ` against a fixed eval set.
+- The deterministic scoring engine provides the explainability and reproducibility that the regular RAG pipeline sacrifices — there is no "embedding chose the wrong chunk and changed the score" failure mode at ranking time, only at evidence-collection time, and the LLM caches the evidence per `(candidate_id, req_id, hash(query, top-chunk-ids), model_name, θ)` so re-runs are stable.
+- `WORKING_LOGIC.md` retains the "chunks for evidence, code for ranking" principle. The RAG pivot changes how evidence is gathered, not who decides the score.
 
 ### Future Upgrade Path
-- Evaluate ColBERT-style late interaction models for reranking
-- Add query expansion or synonym injection to improve sparse retrieval
+- Add a cross-encoder reranker as a post-threshold step (`rerank_top_n` from 20 → 5) if Optuna shows a faithfulness gain.
+- Add MMR for diversity when many near-duplicate chunks return at high similarity.
+- Per-candidate index persistence (FAISS per-candidate file) when candidate pool grows past in-memory comfort.
 
 ---
 
@@ -327,3 +339,112 @@ Shodwe University, XYZ University, XZ University, Cowell University, Timmerman U
 - Recruiter dashboard: badge on candidate cards for `has_flagged_institute = true`.
 - Soft vs hard flagging tiers (e.g., "definitely fake" vs "unranked but possibly legit").
 - Cross-reference with government accreditation databases per country.
+
+---
+
+## 12. Experiment Tracking — MLflow (added 2026-07-05, DEC-020)
+
+### Decision
+Use **MLflow** (local server, SQLite backend, filesystem artifact root) as the single source of truth for retrieval / chunking / scoring experiment results. Resume PII stays on the local machine; no data leaves the host.
+
+### Alternatives Considered
+- **Weights & Biases (W&B)** — rejected. Best-in-class UI and built-in Sweeps, but cloud-based. Resume PII (candidates' names, contact info, employer history) would leave the local machine.
+- **CSV / JSON manifests** — rejected. No UI, no comparison view, no way to diff runs.
+- **TensorBoard** — rejected. Designed for training curves, not for retrieval/hyperparameter sweeps.
+
+### Final Rationale
+- Privacy boundary is a hard constraint: candidate resumes must not be uploaded to any cloud service.
+- MLflow's `log_params` + `log_metrics` + `log_artifact` contract maps cleanly onto the project's per-run logging needs.
+- Local SQLite + filesystem is zero-ops. No external services, no accounts, no rate limits.
+- Integrates natively with Optuna (DEC-021) via `optuna.integration.MLflowCallback`.
+
+### Future Upgrade Path
+- Promote to MLflow's remote tracking server only if multi-machine collaboration becomes necessary.
+- Add MLflow's Model Registry when the team wants to version the scoring engine itself, not just the experiment configs.
+
+---
+
+## 13. Hyperparameter Search — Optuna (added 2026-07-05, DEC-021)
+
+### Decision
+Use **Optuna** with a TPE sampler and a SQLite-backed study store to drive the hyperparameter search. Default to **multi-objective** optimization: maximize faithfulness, minimize `avg_chunks_returned`. The result is a Pareto front; the operator picks the operating point.
+
+### Alternatives Considered
+- **Grid search** — rejected. Combinatorial explosion; no learning between trials.
+- **Random search** — rejected. Better than grid but no learning; TPE is strictly stronger.
+- **Hyperopt** — rejected. Comparable capability, weaker MLflow integration.
+- **W&B Sweeps** — rejected. Couples hyperparameter search to a cloud SaaS.
+
+### Final Rationale
+- Optuna's TPE sampler learns from prior trials; it doesn't waste compute on obviously-bad configurations.
+- Multi-objective search prevents the "50 chunks for 1% faithfulness gain" failure mode that threshold retrieval is prone to.
+- The Optuna study becomes the versioned history of "what configs did we try?"; the MLflow runs become "what did each config produce?". The two together give full reproducibility.
+- The Optuna dashboard (`optuna-dashboard sqlite:///data/optuna/studies.db`) is a free, local Pareto-front view.
+
+### Future Upgrade Path
+- Add a pruner (Hyperband / Successive Halving) for early trial termination when intermediate metrics look hopeless.
+- Add a constrained optimization mode (e.g. `faithfulness ≥ 0.85`) once the team has an SLA target.
+- Add per-role Optuna studies (e.g. `BusinessAnalyst_threshold_v1`) when role-specific tuning is needed.
+
+---
+
+## 14. Per-Resume Reasoning Storage (added 2026-07-05, DEC-022)
+
+### Decision
+Replace the single `data/embeddings/llm_cache.jsonl` with a per-resume artifact tree at `data/per_candidate/<role>/<candidate_id>/reasoning/<req_id>__<query_hash>.json`. Each file stores, per (candidate, req, query), the LLM's full output: narrative reasoning, basis (cited chunks + quotes), retrieved-chunks list, and sub-scores.
+
+**Accept the storage cost (~1–2 GB peak during an Optuna sweep) in exchange for:**
+1. Eliminating LLM round-trips on re-runs of the same (candidate, req, θ).
+2. Structural re-run determinism (same cache key → byte-identical sub-scores).
+3. Per-(candidate, req) audit trail that the score-explanation UI can render directly.
+
+### Alternatives Considered
+- **Keep `llm_cache.jsonl` as a single-file cache** — rejected. The single-file design makes the "re-run reads from cache" claim implicit and un-inspectable. Per-resume storage makes the cache a first-class, browsable artifact.
+- **Store only sub-scores, not reasoning/basis** — rejected. The whole point of DEC-022 is to make the LLM's behavior auditable per-candidate and per-req. Storing only sub-scores is just a fancier cache; storing the reasoning and basis makes the cache an audit trail.
+- **External KV store (Redis, Memcached)** — rejected. Re-runs need to be reproducible from local artifacts for audit. The per-resume JSON tree is on the local filesystem; no extra service to deploy.
+- **Compress the JSON files (gzip)** — deferred. Worth it once the directory exceeds 1 GB; premature now.
+
+### Final Rationale
+- **Storage is a feature, not a cost.** The per-resume reasoning tree makes the LLM's behavior auditable per-(candidate, req) — that is non-negotiable for a system whose deterministic engine is fed by an LLM judge.
+- **Re-runs become free.** After the first scoring pass, every re-run of the same (candidate, req, θ) is a filesystem read. The Optuna sweep (DEC-021) re-runs the eval set dozens of times per trial; without per-resume storage, the LLM cost of an Optuna sweep is prohibitive.
+- **Determinism is structural, not statistical.** Same cache key → same `sub_scores` byte-for-byte. The LLM temperature debate is moot for any (candidate, req) that has been scored.
+- **PII stays local.** Per-resume reasoning files inherit the same PII policy as `data/processed/` — local-only, never logged, never uploaded.
+
+### Future Upgrade Path
+- Compress the JSON files (gzip) once `data/per_candidate/` exceeds 1 GB.
+- Add a `score_explanation` field that pre-renders the recruiter-facing explanation string (cached at scoring time, no LLM call at explanation time).
+- Per-role cache namespaces (e.g. `data/per_candidate/BusinessAnalyst/...` could be split into a separate volume if the dataset grows).
+- A "warm cache" service that pre-loads frequently-accessed reasoning files into memory for sub-millisecond reads.
+
+---
+
+## 15. Per-Experiment Folder Naming (added 2026-07-05, DEC-023)
+
+### Decision
+Every MLflow run for the Recursive chunking pipeline writes its artifacts to a per-experiment folder whose name encodes the hyperparameters that produced it:
+
+```
+data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/
+```
+
+**Field order is fixed (4 numeric fields):** `chunk_size`, `overlap`, `top_k`, `threshold × 100`. `x` is used for an inactive dimension (e.g., `recursive_chunking_500_50_x_70` for threshold-only mode with no `top_k` cap).
+
+The "Active" config in `MODEL_REGISTRY.md` is symlinked at `data/active_experiment/`. Runtime code follows the symlink; it never hardcodes the hyperparameter values.
+
+### Alternatives Considered
+- **Single `data/chunks/` folder for all Recursive experiments** — rejected. Conflates artifacts of distinct experiments; cache invalidation becomes ambiguous; the folder name carries no information about which experiment it serves.
+- **Hash-based folder names (e.g., `data/recursive_chunking_<sha256[:8]>/`)** — rejected. Self-documenting beats self-identifying. The folder name is the recruiter's first hint at what the experiment tested; `500_200_5_50` is more useful than `a3f2b1c8`.
+- **Sub-folders per MLflow run (e.g., `data/recursive_chunking/<run_id>/`)** — rejected. Same-config experiments should share artifacts, not duplicate them. The hyperparameter tuple is the natural grouping key.
+- **Prefix letters in the folder name (e.g., `c500_o200_k5_t50`)** — rejected by user preference. Numeric form is shorter and the field order is documented.
+- **`x` placeholder for unused modes** — accepted. Cleaner than a sentinel value (e.g., `0` or `-1`) and reads as "this dimension is not used in this experiment".
+
+### Final Rationale
+- **Folder name is the self-documenting identifier of the experiment.** The recruiter and the engineer both need to read the folder name and know "this is the experiment with chunk_size=500, overlap=200, top_k=5, threshold=0.50". A short hash would force them to look up `metadata.json` first.
+- **Same-config runs share a folder.** If two MLflow runs have the same hyperparameters, their artifacts are byte-identical (chunks, index, cache), so sharing is correct, not redundant. Trial uniqueness lives in the MLflow run ID and Optuna trial ID (logged in `metadata.json`), not in the folder name.
+- **`data/active_experiment` symlink is the runtime entry point.** Code does not hardcode `data/recursive_chunking_500_50_10_70/`; it follows the symlink. This makes promoting a new Active config a one-line symlink operation.
+- **Active architecture is Recursive Chunking.** The user explicitly stated "our new architecture should be based on recursive_chunking, so all the new codes should follow that". All new pipeline code targets the `data/recursive_chunking_*` folder convention; the legacy `data/document_aware_chunking/` folder is read-only after M0.5e.
+
+### Future Upgrade Path
+- Compress per-experiment artifacts (gzip) once `data/recursive_chunking_*` exceeds 10 GB total.
+- Auto-archive experiments older than 30 days to `data/archive/<study_name>/`.
+- Add a `compare_experiments.py` CLI that reads `metadata.json` from N folders and produces a side-by-side table.

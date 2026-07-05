@@ -30,7 +30,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from src.rag.chunker import parse_temporal_context
+from rag.document_aware_chunker import parse_temporal_context
 
 
 # ---------------------------------------------------------------------------

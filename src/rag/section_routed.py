@@ -34,7 +34,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence
 
-from src.rag.chunker import ChunkRecord
+from rag.document_aware_chunker import ChunkRecord
 
 logger = logging.getLogger(__name__)
 

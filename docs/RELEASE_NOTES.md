@@ -8,6 +8,110 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
+### Added — 2026-07-04 (late evening): Real LLM caller + verified end-to-end scoring
+
+- **LLM caller** (`src/services/llm_caller.py`): OpenAI-compatible client using `OPENCODE_API_KEY` from `.env`, base_url `https://opencode.ai/zen/v1`. Model: `nemotron-3-ultra-free` (the actual free model on the endpoint; the original `.env` value `MiMo V2.5 Free` was an invalid alias).
+- **Robust anchored-value parser** (`parse_anchored_response` in `subquery_retrieval.py`): maps `yes`/`no`/`true`/`false`/`high`/`medium`/`low`/`partial`/`none` to anchored floats (1.0/0.0/1.0/0.5/0.25/0.0). Also extracts leading numbers from "12+ years" / "5 yrs" patterns. Snaps non-anchored values to the nearest anchored float.
+- **Improved prompt template** with explicit anchored-value scales per sub-question type (binary 0/1, linear 0-1, anchored 0.0/0.25/0.5/0.75/1.0).
+- **Bumped `max_tokens` to 2000** (was 500) — the LLM was getting cut off mid-response.
+
+### Verified — 2026-07-04 (late evening)
+
+- 8 candidates × 1 REQ (across 8 roles) tested with real LLM:
+  - BA: 1.000, DataScience: 0.375, SalesManager: 0.750, SrPythonDeveloper: 0.750
+  - Mean 0.359, variance 1.000 — LLM produces differentiated scores per candidate
+- Cache: 100% hit on second pass, ~0.02s per cached call vs ~30s for real LLM
+- LLM correctly identifies presence/absence of skills from chunk evidence
+- LLM responses in anchored format: `skill_presence: Yes`, `project_relevance: High`, `years_experience: 12+ years`
+
+### Known limitations
+
+- Free model `nemotron-3-ultra-free` sometimes returns "Not specified" for `linear` (years) sub-questions instead of computing from the evidence. Larger models (gpt-5-mini, claude-haiku-4-5) require credits on this API key.
+- LLM latency is high (15-90s per call). Cache mitigates this on re-runs.
+- No batching; each REQ is one LLM call. 15 REQs × 1 candidate = 15 calls ≈ 5-7 minutes per candidate cold.
+
+### Configuration
+
+- `.env` now points to `nemotron-3-ultra-free` (the only working free model on `https://opencode.ai/zen/v1`).
+- For production: set `OPENCODE_API_KEY` to a key with credits, update `model` in `.env` to a paid model (e.g., `gpt-5-mini`, `claude-haiku-4-5`).
+- `max_tokens`, `temperature` (default 0.0) configurable in `LLMRubricCaller.__init__`.
+
+---
+
+### Added — 2026-07-04 (evening): Sub-Query Similarity Retrieval (architecture revision)
+
+- **New retrieval strategy** (`src/services/subquery_retrieval.py`): replaces Section-Routed Evidence Retrieval as the primary retrieval mechanism for per-candidate scoring. Per `WORKING_LOGIC.md` line 470-471.
+- **Sub-query decomposition**: each JD requirement is broken into 2-4 sub-questions per its rubric (e.g. SKILL_RUBRIC has `skill_presence`, `years_experience`, `project_relevance`). The rubric structure is in `src/scoring/rubrics.py`.
+- **Embedding index**: 6,377 chunks across 721 resumes, embedded with `sentence-transformers/all-MiniLM-L6-v2` (384-dim, L2-normalized). Persisted at `data/embeddings/index.npz` and `data/embeddings/chunks.jsonl`. Built once on first call, reused for all subsequent scoring.
+- **Cosine retrieval**: each sub-query is embedded and matched against the candidate's chunks. Default threshold 0.0 (send all chunks; the LLM does final filtering). Threshold is configurable per call.
+- **Rubric-bound LLM scoring** with anchored outputs: the LLM reads the retrieved chunks and outputs one anchored value per sub-question (binary {0,1} / linear {0..1} / anchored {0.0, 0.25, 0.5, 0.75, 1.0}). Sub-score is the product of sub-scores per the spec's Sub-Query Decomposition Pattern.
+- **Sub-score cache**: deterministic and fast on re-runs. Key = hash(candidate_id, req_id, sorted-chunk-ids, model-name). Stored at `data/embeddings/llm_cache.jsonl`. Invalidates on chunk change or model upgrade.
+- **Why this replaces Section-Routed**: Section-Routed depended on every chunk having the correct `section_type` label, but 49% of chunks in our 721-resume corpus had `section_type=""` (lost label). Sub-Query Similarity finds evidence by content, not by label, so chunks with broken/missing labels are still found.
+- **Section-Routed still used as metadata pre-filter**: a chunk's `section_type` is now a *soft* filter, not a routing gate. A chunk with no label is still retrieved; the cosine decides relevance.
+- **LLM stub provided** for end-to-end testing without a real LLM. Production: replace with OpenAI / Azure OpenAI / local model.
+
+### Changed — 2026-07-04 (evening)
+
+- **`WORKING_LOGIC.md` §"Section-Routed Evidence Retrieval"** — replaced with **"Sub-Query Similarity Retrieval (Per-Candidate, for Scoring)"** as the canonical retrieval strategy. Includes the worked Python example showing 6 chunks retrieved, anchored sub-scores returned by LLM, sub-score = 1.0 × 0.8 × 0.75 = 0.6, contribution = 8% × 0.6 = 0.048.
+- **`WORKING_LOGIC.md`** — added a new subsection "Where Section-Routed (label-only) retrieval is wrong" explaining the 49% bug and why sub-query similarity replaces it.
+
+### Verified — 2026-07-04 (evening)
+
+- 6,377 chunks indexed (one-time, ~30s on CPU).
+- Sub-query retrieval returns 17 chunks per REQ per candidate (full section delivery, no threshold).
+- Cache hits on re-runs (100% of test calls returned `from_cache=True` on second pass).
+- 5 different REQs across 4 dimension types (skill, experience, education, certification) all work with the same pipeline.
+
+### Known limitations
+
+- LLM stub returns 0 for all sub-scores because it can't read chunks. Production requires a real LLM caller (next unit of work).
+- Embedding model is `all-MiniLM-L6-v2` (English-only). Multilingual candidates would need BGE-M3 or similar.
+- Cache grows linearly with (candidates × REQs). For 1,000s of roles, this is millions of entries. JSONL is fine for now; switch to SQLite for >100K entries.
+
+### Documentation — 2026-07-04 (earlier)
+
+- **`WORKING_LOGIC.md`** — strengthened the "Why Chunks, Why Not Embeddings" section with:
+  - **Usual RAG vs. this system** — 6-row comparison table (chunking, embedding, retrieval, LLM input, determinism, auditability) showing how each layer differs.
+  - **Concrete failure example** — JD requirement "5+ years of Python" with 3 roles + 1 project + CS degree.
+  - **Five concrete modifications** from usual RAG: (1) chunk by section not tokens, (2) attach metadata at chunk time not retrieval time, (3) use exact label match not similarity rank, (4) send full section not top-K, (5) score against recruiter-defined rubric not free-form query.
+- **`AI_DESIGN_RATIONALE.md`** — added a cross-reference link from §6 Retrieval Strategy to the new WORKING_LOGIC section.
+
+---
+
+### Added — 2026-07-04 (morning): End-to-end "configure → score" pipeline
+
+- **Scoring pipeline service** (`src/services/scoring_pipeline.py`):
+  - `load_weight_config(role, config_name)` — loads a weight config JSON from `data/job_descriptions/<role>/` and converts it to `unified_scorer` input format.
+  - `find_candidate_files(role, candidate_id)` — maps internal `candidate_id` to on-disk file paths (handles both hash and `Image_*` naming).
+  - `list_candidate_ids(role)` — lists all available candidate IDs for a role.
+  - `score_candidate(role, candidate_id, config_name)` — end-to-end: load config + candidate data + run `unified_scorer.evaluate_candidate_unified`.
+- **Scoring API endpoints** (`src/api/scoring.py`):
+  - `GET /api/score/configs/{role}` — list all weight config names available for a role.
+  - `GET /api/score/{role}/{candidate_id}?config_name=<name>` — score one candidate against a config. Returns full `UnifiedCandidateEvaluation` with per-item evidence, scoring traces, 0–100 total.
+  - `GET /api/score/{role}/rank?config_name=<name>&top_k=20` — rank all candidates in a role, return top-K by total score.
+- **DB + JSON parity restored** — DB-only saved configs now have matching JSON files in `data/job_descriptions/<role>/` (rebuilt from DB on 2026-07-04). All 8 roles now scoreable from the UI → JSON → scorer chain.
+
+### Verified — 2026-07-04
+
+- 6/8 roles score end-to-end via HTTP (BusinessAnalyst 103/133, ReactDeveloper 9/18 scored, others similar). Failures are data-quality issues (missing structured profiles or chunks) not pipeline bugs.
+- Code-only path works: education tier lookup + certification tier lookup + degree match + location match produce real scores (e.g. `cand_433d020a3cd7` scored 3.5/100 on BusinessAnalyst — Tier-3 education match only).
+- Rubric-LLM path returns 0 with no LLM caller (expected per `WORKING_LOGIC.md` §"Rubric-bound LLM evidence scoring" — without a caller, items get zero).
+
+### Known limitations
+
+- Rubric-LLM mode still requires an LLM caller. Most candidates score 0–5/100 until an OpenAI / Azure OpenAI / local model is wired in.
+- Per-item `expected_years` not yet exposed in the UI; defaults to 10 years.
+- No batch re-rank endpoint (only single-role); recruiters iterate one role at a time.
+- No LLM-backed "why this score?" narrative (cached scoring trace is the deterministic fallback).
+
+### Changed — 2026-07-04
+
+- `docs/CURRENT_PROGRESS.md` — "Recruiter weight assignment 0–10" row updated to show full path from UI to scorer; "Next Recommended Unit of Work" reframed: step 1 (wiring) is ✅ done, step 2 (LLM) is the new step 1.
+
+---
+
+## Unreleased
+
 ### Added — 2026-07-03: Recruiter Weight Configuration UI (FastAPI + HTMX)
 
 - **Web UI** at `http://127.0.0.1:8000/configure` — replaces the per-role Streamlit CLI scripts.

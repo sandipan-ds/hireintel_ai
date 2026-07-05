@@ -28,7 +28,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
-from src.rag.chunker import ChunkRecord
+from rag.document_aware_chunker import ChunkRecord
 from src.rag.section_routed import (
     SectionEvidence,
     classify_requirement_type,

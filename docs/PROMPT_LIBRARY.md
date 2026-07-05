@@ -134,7 +134,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 **Inputs:**
 - Recruiter question
-- Top-K retrieved resume chunks (Document-Aware Chunking)
+- Retrieved resume chunks (Recursive Chunking, threshold-based cosine ≥ θ, DEC-018/019)
 - Candidate metadata allowed for display
 
 **Outputs:**

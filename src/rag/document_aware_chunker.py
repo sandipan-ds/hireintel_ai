@@ -1,4 +1,10 @@
-"""Document-Aware chunker for parsed resume profiles.
+"""Document-Aware chunker for parsed resume profiles (legacy, DEC-019).
+
+This is the **legacy** chunker, retained for one release as a migration aid.
+The active strategy is :class:`src.rag.recursive_chunker.RecursiveChunker`
+(DEC-019, 2026-07-05). The Document-Aware chunker is preserved here so
+existing pipelines and tests that depend on its section-anchored behavior
+continue to work during the migration window.
 
 Each parsed profile (see ``src.resume_parsing.parser.parse_resume``) is split
 into a list of ``ChunkRecord`` objects. The chunker treats *resume sections*
@@ -36,6 +42,11 @@ to the LLM ready-made rather than asked for.
 
 The output of :func:`chunk_profile` is a list of dictionaries matching the
 schema documented in ``docs/AI_ARCHITECTURE.md`` § Document-Aware Chunking.
+
+New code should import :class:`src.rag.recursive_chunker.RecursiveChunker`
+instead. The module-level :func:`chunk_profile` function and
+:data:`ChunkRecord` class are preserved as a backward-compat shim for one
+release.
 """
 
 from __future__ import annotations
@@ -672,3 +683,77 @@ def _emit_section_chunks(
             )
         )
     return out
+
+
+# ---------------------------------------------------------------------------
+# DocumentAwareChunker class wrapper (DEC-019)
+# ---------------------------------------------------------------------------
+#
+# The historical active chunker (pre-2026-07-05) is now wrapped in a class so
+# it can be used side-by-side with ``RecursiveChunker``. The module-level
+# :func:`chunk_profile` function is preserved as a backward-compat shim for
+# one release (existing tests + scripts import it).
+#
+# New code should import :class:`DocumentAwareChunker` (or, preferably, the
+# active :class:`src.rag.recursive_chunker.RecursiveChunker`).
+
+
+class DocumentAwareChunker:
+    """Document-Aware chunker (DEC-019 legacy).
+
+    The original active strategy. Wraps the existing section-anchored
+    chunking logic in a class so it can be used side-by-side with
+    :class:`src.rag.recursive_chunker.RecursiveChunker` during the
+    migration window. New code should prefer ``RecursiveChunker``.
+
+    Args:
+        max_chunk_chars:
+            Soft upper bound for a single chunk in characters. Default
+            :data:`MAX_CHUNK_CHARS` (1200).
+        split_overlap_chars:
+            Overlap applied when sub-splitting an oversized chunk.
+            Default :data:`SPLIT_OVERLAP_CHARS` (120).
+    """
+
+    def __init__(
+        self,
+        max_chunk_chars: int = MAX_CHUNK_CHARS,
+        split_overlap_chars: int = SPLIT_OVERLAP_CHARS,
+    ) -> None:
+        self.max_chunk_chars = max_chunk_chars
+        self.split_overlap_chars = split_overlap_chars
+
+    def chunk_profile(
+        self,
+        profile: Dict[str, Any],
+        role_bucket: str = "",
+    ) -> List[ChunkRecord]:
+        """Convert one parsed profile into a list of chunk records.
+
+        This is the original section-anchored implementation. It emits one
+        chunk per experience entry, one per education entry, one per
+        project, and one per free-text section (summary, skills,
+        certifications, languages). Very large sections are sub-split on
+        paragraph breaks with ``split_overlap_chars`` overlap.
+
+        Args:
+            profile:
+                A parsed resume dict as produced by
+                ``src.resume_parsing.parser.parse_resume``.
+            role_bucket:
+                The role folder the resume was filed under.
+
+        Returns:
+            List of :class:`ChunkRecord`. Order is deterministic.
+        """
+        return chunk_profile(profile, role_bucket=role_bucket)
+
+
+__all__ = [
+    "ChunkRecord",
+    "MAX_CHUNK_CHARS",
+    "SPLIT_OVERLAP_CHARS",
+    "DocumentAwareChunker",
+    "chunk_profile",
+    "chunks_to_jsonl",
+]

@@ -53,19 +53,20 @@ Resume Parsing
 Resume Cleaning
         ↓
         ├─────────────────────┐
-        ↓                     ↓
-Structured Profile     Document-Aware Chunking
-Extraction              (entry-level, intact)
+         ↓                     ↓
+Structured Profile     Recursive Chunking
+Extraction              (uniform 500-char chunks)
 (degrees, certs,                ↓
- total experience,      Header Normalization
- companies, dates)       (canonical section labels)
-        |                        ↓
-         |              Section-Routed Evidence Retrieval
-         |              (JD requirement → mapped
-        |               section, full content sent)
-        |                        ↓
-        |              Evidence per Requirement
-        └────────────┬───────────┘
+ total experience,      Embedding (MiniLM-L6-v2)
+ companies, dates)              ↓
+         |               Vector Index
+         |                        ↓
+          |              Threshold-based Retrieval
+          |              (cosine ≥ θ over Recursive chunks,
+         |               all hits returned, capped at 20)
+         |                        ↓
+          |              Evidence per Requirement
+         └────────────┬───────────┘
                       ↓
             Evidence Extraction
                       ↓
@@ -112,7 +113,7 @@ This separates into two modes:
 
 **Code-only scoring** — used wherever a requirement is fully measurable: years of experience (linear formula), institute tier (lookup table), certification tier (lookup table). No LLM is involved at all.
 
-**Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, domain expertise. The LLM reads the full content of the section(s) that requirement maps to (see Section-Routed Evidence Retrieval) and maps it onto a recruiter-defined point scale (years used, project complexity, frameworks/tools, ownership level) — never onto a free-form label. The LLM does not see the requirement's weight, and never computes the final weighted contribution.
+**Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, domain expertise. The LLM reads the evidence retrieved by the threshold-based retrieval pipeline (cosine ≥ θ, all hits, capped at `max_chunks_per_query`) and maps it onto a recruiter-defined point scale (years used, project complexity, frameworks/tools, ownership level) — never onto a free-form label. The LLM does not see the requirement's weight, and never computes the final weighted contribution.
 
 In both modes, weight application and the final aggregated score are computed by code, never by the LLM. Full formulas are defined in **Scoring Rubrics**.
 
@@ -121,7 +122,7 @@ In both modes, weight application and the final aggregated score are computed by
 Performed using:
 
 * Cached rubric reasoning from scoring time (default)
-* Section-routed resume evidence (for follow-up questions)
+* Threshold-based retrieval over the candidate's chunks (for follow-up questions)
 * Candidate Intelligence Report
 
 LLMs explain scores.
@@ -572,39 +573,35 @@ Reason: facts that are exact and unambiguous — a degree name, a certification 
 
 Requirements that are purely factual (e.g. "Does the candidate hold a Bachelor's degree?") may be answered entirely from the structured profile, bypassing everything else.
 
-Requirements that require interpretation (e.g. "How deep is the candidate's Power BI expertise?") still rely on Section-Routed Evidence Retrieval and rubric-bound LLM evidence scoring (below).
+Requirements that require interpretation (e.g. "How deep is the candidate's Power BI expertise?") still rely on the threshold-based retrieval pipeline and rubric-bound LLM evidence scoring (below).
 
 ---
 
-# Document-Aware Chunking
+# Recursive Chunking (active 2026-07-05, DEC-019)
 
-The default chunking strategy is:
+The active chunking strategy is:
 
-Document-Aware Chunking
+Recursive Chunking
 
-Sections:
+```text
+RecursiveCharacterTextSplitter(
+    separators=["\n\n", "\n", ". ", " "],
+    chunk_size=500,        # Optuna hyperparameter
+    chunk_overlap=50,      # Optuna hyperparameter
+)
+```
 
-* Personal Information
-* Education
-* Experience
-* Projects
-* Skills
-* Certifications
-* Languages
-
-The structure must be preserved.
-
-Each entry within a section is kept as a single intact chunk — for example, a degree's institute, branch, and CGPA are never split apart, and a job's company, dates, and bullet points stay together as one unit. Splitting an entry across chunks is what causes facts to lose the context (dates, employer, degree) they belong to.
-
-Real resumes do not use uniform section headers. Chunking is paired with Header Normalization, below, before any chunk is labeled, so that a resume titled "Core Competencies" and one titled "Skills" both resolve to the same canonical section.
+The default chunk size is 500 characters with 50 characters of overlap. Both are tuned by Optuna against a fixed eval set.
 
 This chunking supports:
 
-* Section-Routed Evidence Retrieval
+* Threshold-based retrieval (regular RAG)
 * Resume Chat
 * Score Explanation
 * Candidate Comparison
 * Hiring Recommendations
+
+The previous Document-Aware chunking strategy (which preserved resume section boundaries) is retained as `DocumentAwareChunker` in `src/rag/chunker.py` for one release as a migration aid. Its only consumer is the structured-profile extractor, which needs labeled sections for `degrees`, `certifications`, and `total_experience_years`.
 
 ---
 
@@ -672,25 +669,491 @@ chunk:
 
 ---
 
-# Section-Routed Evidence Retrieval
+# Threshold-Based Retrieval (Regular RAG, updated 2026-07-05 per DEC-017 + DEC-018)
 
-A JD requirement does not need to be searched for inside a resume — a resume is one short document (typically 1,000–3,000 tokens), and once it is chunked and header-normalized, the system already knows exactly where each requirement's evidence lives. Similarity ranking is the wrong tool here: a single resume isn't a corpus to search, it's something to read.
+For each JD requirement (and for each recruiter chat question), the system must retrieve the evidence needed to score that requirement against the candidate. The canonical retrieval strategy is **threshold-based cosine over a per-candidate (or pool-wide) Recursive-chunk index** — the same regular RAG pattern used in standard LLM applications.
 
-Each requirement is mapped to the canonical section(s) it depends on, by a fixed table, not a model decision:
+## What retrieval has to do
 
-```text
-Education requirement      → Education chunk(s)
-Skill / experience depth   → Experience + Projects + Skills chunks
-Certification requirement  → Certifications chunk(s)
+A JD requirement such as "5+ years of Python experience" is not directly comparable to a chunk of resume text. A candidate's Python experience might be in any section (Experience, Projects, Skills summary, or even a free-text "Career Highlights" block), and might be written in any phrasing ("built ML pipelines in Python", "developed backends in Python/Django", "automated data workflows with Python"). The retrieval step has to find **all** the evidence the LLM will need to score the requirement, and miss **none** of it.
+
+## The retrieval strategy: threshold-based cosine
+
+```
+For each query (a sub-question, a chat question, or a JD bullet):
+
+1. Embed the query (sentence-transformers/all-MiniLM-L6-v2, 384-dim).
+
+2. Compute cosine similarity between the query vector and every chunk
+   vector in the relevant index (per-candidate for scoring, pool-wide
+   for triage and chat).
+
+3. Return all chunks whose cosine ≥ θ (default θ = 0.70, Optuna-tuned).
+
+4. Sort by similarity descending. If the result is larger than
+   max_chunks_per_query (default 20), truncate and log a warning.
+
+5. Send the joined chunks + the rubric (for scoring) to the LLM.
+
+6. For scoring: the LLM outputs anchored floats for each sub-question:
+     skill_presence: 1.0     (binary, from {0.0, 1.0})
+     years_experience: 0.8   (linear, from {0.0, 0.25, 0.5, 0.75, 1.0})
+     project_relevance: 0.75 (anchored)
+
+7. The code computes the sub-score: SQ1 × SQ2 × SQ3 = 1.0 × 0.8 × 0.75 = 0.6.
+   The LLM never sees the requirement's weight and never performs the
+   final aggregation.
+
+8. Cache the (candidate_id, req_id, hash(query, top-chunk-ids), model_name, θ) -> sub-scores
+   for determinism on re-runs.
 ```
 
-Retrieval here is an exact label match — fetch every chunk tagged with the mapped section(s) — never a ranked top-K subset. Nothing is filtered out, and the same requirement against the same resume always returns the same content, every time: no embeddings, no cosine similarity, and no risk of a relevant chunk silently falling below a similarity cutoff (e.g. a second Python role, or a second education entry, getting missed because it ranked just outside the top K).
+## Why a single θ, not top-K
 
-This also avoids a subtler failure: fields that belong together (an institute, its branch, its CGPA) can never get split across separate retrieval calls and recombined incorrectly, because the entry was never split apart in the first place (see Document-Aware Chunking).
+A fixed `top_k` (e.g. `top_k = 5`) doesn't adapt to query difficulty: a 3-chunk result for a hard query is as bad as a 20-chunk result for an easy one. Threshold-based retrieval returns **more chunks when there are more matches** and **fewer when there are few**, with a single, intuitive knob (`θ`). The cap at `max_chunks_per_query = 20` is a safety net, not a primary control.
 
-For each requirement, the LLM is asked to first extract what's relevant from the mapped section(s) (e.g. "list every role where Python appears, with dates"), then score against the rubric — extraction before scoring keeps the read systematic rather than holistic, and keeps the model from being influenced by content outside the mapped section (e.g. scoring CGPA more generously because the Experience section looked impressive).
+## Why the LLM does the final filtering, not a higher threshold
 
-If a section turns out to be unusually long (a senior candidate's multi-page Experience history), deterministic metadata filtering (`skills_asserted contains "Python"`) narrows it further — still an exact filter, not a similarity rank.
+A cosine threshold of 0.5, 0.7, 0.9, or 1.0 all have failure modes:
+
+- **θ = 0.50** — recall is high; precision is low; many irrelevant chunks reach the LLM.
+- **θ = 0.70** (default) — balanced default; Optuna will tune this.
+- **θ = 0.90** — precision is high; recall collapses; relevant chunks get dropped.
+
+The chosen default `0.70` is a starting point. Optuna (DEC-021) calibrates `θ` against a fixed eval set to find a value that balances faithfulness and `avg_chunks_returned` (the multi-objective target).
+
+## Why this is reliable (not "non-deterministic")
+
+The rubric's sub-questions are **anchored**:
+
+- Binary gates: 0.0 or 1.0
+- Linear years: a single float derived from a deterministic formula (`min(years / expected, 1.0)`)
+- Anchored scales: 0.0, 0.25, 0.5, 0.75, 1.0 — with explicit descriptions of what each value means
+
+The LLM is reading chunks and outputting **one of a small set of fixed values**, not generating free-form text. The rubric is the determinism mechanism, not the LLM temperature. Across runs, the LLM's anchored outputs are stable for a well-designed prompt. The cache makes the second run bit-deterministic.
+
+## Header Normalization (parse-time only)
+
+The Recursive chunker emits chunks with a soft `section_type` field ("experience", "education", "skills", etc.) inherited from the legacy Document-Aware chunker. This is **retained as a soft tag** because the structured profile (`degrees`, `certifications`, `total_experience_years`) still needs labeled sections. It is **not** used for retrieval routing — the cosine similarity decides relevance.
+
+## Caching for cost and reproducibility
+
+The cache key is:
+
+```
+hash(candidate_id, req_id, hash(query, sorted(top_chunk_ids)), model_name, θ)
+```
+
+- Same candidate + same REQ + same query + same top chunks + same model + same θ = cache hit
+- Chunking changes → cache invalidates (different chunk IDs)
+- Model upgrade → cache invalidates (different model name)
+- θ change → cache invalidates (different top chunks may be returned)
+
+The cache is stored as a **per-resume reasoning tree** (DEC-022):
+
+```
+data/per_candidate/<role>/<candidate_id>/reasoning/<req_id>__<query_hash>.json
+```
+
+Each file contains the LLM's full output: narrative reasoning, basis (cited chunks + quotes), retrieved-chunks list, and sub-scores. The legacy single-file cache at `data/embeddings/llm_cache.jsonl` is moved to `data/embeddings/llm_cache_legacy.jsonl` during the M0.5e migration and is read-only after that.
+
+See **Per-Resume Reasoning Storage** below for the file schema, cache key, invalidation rules, and GC policy.
+
+## Worked example: Python experience
+
+Candidate has 4 Experience entries (Torphy 9yrs, Dufour 3yrs, Lessard 4yrs, personal project 1yr), 1 Project entry, and 1 Skills line → after Recursive chunking with `chunk_size=500`, ~6 chunks.
+
+```
+JD requirement: REQ-002 = "5+ years Python experience (required, weight 8%)"
+Sub-question (or requirement text): "Python experience"
+
+Step 1: Embed the query
+  v(query) = [0.42, 0.31, 0.18, 0.55, 0.22, 0.41]
+
+Step 2-3: Cosine vs the candidate's chunks
+  chunk_0 (Torphy 9yrs, Python):       0.91   ← ≥ 0.70
+  chunk_1 (Dufour 3yrs, Python):      0.84   ← ≥ 0.70
+  chunk_2 (Lessard 4yrs, Python):     0.79   ← ≥ 0.70
+  chunk_3 (personal project, 1yr):    0.72   ← ≥ 0.70
+  chunk_4 (Project entry, Python):    0.74   ← ≥ 0.70
+  chunk_5 (Skills line, "Python"):    0.65   ← < 0.70, dropped
+  → 5 chunks returned (under cap of 20)
+
+Step 4: Sort by similarity desc: chunk_0, chunk_1, chunk_4, chunk_2, chunk_3.
+
+Step 5: LLM receives the 5 chunks + the rubric.
+
+Step 6: LLM outputs:
+  skill_presence: 1.0     (Python is mentioned in 4 of 5 chunks)
+  years_experience: 0.8   (9+3+4 = 16 yrs professional Python, capped at 5)
+  project_relevance: 0.75 (project descriptions show direct Python use)
+
+Step 7: sub-score = 1.0 × 0.8 × 0.75 = 0.6
+         contribution = 8% × 0.6 = 0.048 (4.8 points out of 8 possible)
+
+Step 8: cache.put(hash, {sub_scores, normalized_score: 0.6})
+         On re-run with same θ: cache.get(hash) returns the same sub-scores.
+```
+
+## What changed from the previous design
+
+The earlier design (DEC-012 → DEC-015) used two layered strategies:
+
+1. **Section-Routed Evidence Retrieval** — exact label match on canonical sections.
+2. **Sub-Query Similarity Retrieval** — decompose each requirement into 2–4 sub-questions, embed each, cosine-match, union, LLM filter.
+
+Both were retired in favor of regular RAG. Why:
+
+- **Section-Routed had a 49% chunk-invisibility bug** (chunks with `section_type=""` were dropped).
+- **Sub-Query Similarity's two-step decomposition added latency and prompt complexity** for a small candidate pool (avg 17 chunks per resume) where it produced no observed quality gain over a single-query threshold retrieval.
+- **Regular RAG is the industry standard** for this use case. The simplification makes the codebase easier to reason about and easier to tune (one knob, `θ`, instead of two).
+
+The deterministic scoring engine is **unchanged** — the `graded_scorer` and `unified_scorer` are still the only ranking signal. The RAG pivot changes how evidence is gathered, not who decides the score.
+
+---
+
+# Per-Resume Reasoning Storage (added 2026-07-05, DEC-022)
+
+The LLM's output for every (candidate, requirement, query) is persisted as a first-class per-resume artifact. This is the **audit trail** and the **cache** for re-runs, and it is what makes the system deterministic on re-runs even though the underlying LLM is not bit-deterministic.
+
+## Storage Layout
+
+```text
+data/
+├── document_aware_chunking/                      # LEGACY — Document-Aware chunks (DEC-022a, DEC-023)
+│   ├── MIGRATION_NOTES.md
+│   └── <role>/<candidate_id>.jsonl
+├── recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/  # PER-EXPERIMENT (DEC-023)
+│   ├── metadata.json                             # the full config that produced this folder
+│   ├── chunks.jsonl                              # Recursive chunks for this (chunk_size, overlap)
+│   ├── index.npz                                 # embedding index (MiniLM-L6-v2, 384-dim)
+│   ├── llm_cache_legacy.jsonl                    # (only in the M0.5e-b migration window)
+│   └── per_candidate/                            # per-resume reasoning tree (DEC-022)
+│       └── <role>/
+│           └── <candidate_id>/
+│               └── reasoning/
+│                   └── <req_id>__<query_hash>.json
+├── active_experiment -> recursive_chunking_500_200_5_50/  # SYMLINK — points to the Active config
+├── embeddings/                                   # ACTIVE — shared index/cache (legacy; migrate to per-experiment)
+│   ├── index.npz
+│   ├── chunks.jsonl
+│   └── llm_cache_legacy.jsonl                    # LEGACY — read-only after M0.5e
+├── mlflow/                                       # ACTIVE — experiment tracking (DEC-020)
+│   ├── mlflow.db
+│   └── artifacts/
+├── optuna/                                       # ACTIVE — hyperparameter search (DEC-021)
+│   └── studies.db
+└── ../reports/                                   # ACTIVE — per-experiment chunk reports (DEC-024)
+    └── chunk_reports/
+        ├── document_aware_chunking_report.json
+        ├── document_aware_chunking_report.md
+        ├── recursive_chunking_500_200_5_50_report.json
+        └── recursive_chunking_500_200_5_50_report.md
+```
+
+(`reports/` is a sibling of `data/`, not a child, so the path is `reports/chunk_reports/...`. The `data/` tree is for binary artifacts; the `reports/` tree is for human-readable diagnostics. Both are committed to git — `data/` mostly ignored, `reports/` fully tracked.)
+
+The legacy chunk files (`data/document_aware_chunking/`) and the legacy `llm_cache.jsonl` are **moved**, not deleted, so the migration is reversible. The per-experiment folders are the active strategy; `data/active_experiment` is the runtime symlink to the "Active" config.
+
+## Per-Experiment Folder Naming (added 2026-07-05, DEC-023)
+
+Every MLflow run for the Recursive chunking pipeline writes its artifacts to a per-experiment folder whose name encodes the hyperparameters that produced it:
+
+```
+data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/
+```
+
+**Field order is fixed (4 numeric fields, in this order):**
+
+| Position | Field | Example | Notes |
+|---|---|---|---|
+| 1 | `chunk_size` (chars) | `500` | from `RecursiveChunker.RECURSIVE_CHUNK_SIZE` |
+| 2 | `overlap` (chars) | `200` | from `RecursiveChunker.RECURSIVE_CHUNK_OVERLAP` |
+| 3 | `top_k` | `5` | from `Retriever.top_k`; `x` if not used |
+| 4 | `threshold × 100` | `50` (i.e. θ=0.50) | from `Retriever.threshold`; `x` if not used |
+
+**Examples:**
+
+| Config | Folder |
+|---|---|
+| `chunk_size=500, overlap=200, top_k=5, θ=0.50` | `data/recursive_chunking_500_200_5_50/` |
+| `chunk_size=500, overlap=50, top_k=10, θ=0.70` | `data/recursive_chunking_500_50_10_70/` |
+| `chunk_size=500, overlap=50, θ=0.70` (threshold mode, no top_k cap) | `data/recursive_chunking_500_50_x_70/` |
+| `chunk_size=500, overlap=50, top_k=5` (top_k mode, no threshold filter) | `data/recursive_chunking_500_50_5_x/` |
+
+**`metadata.json` is the canonical record** of the experiment and is the source of truth for the folder's contents:
+
+```json
+{
+  "schema_version": "1.0",
+  "experiment_folder": "recursive_chunking_500_200_5_50",
+  "created_at": "2026-07-05T11:14:22Z",
+  "chunking": {
+    "chunker": "RecursiveChunker",
+    "chunk_size": 500,
+    "chunk_overlap": 200,
+    "separators": ["\n\n", "\n", ". ", " "]
+  },
+  "retrieval": {
+    "mode": "threshold_and_top_k",
+    "threshold": 0.50,
+    "top_k": 5,
+    "max_chunks_per_query": 20,
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "similarity": "cosine"
+  },
+  "mlflow_run_id": "abc123def456",
+  "optuna_trial_id": 42
+}
+```
+
+**Folder name is the self-documenting identifier.** Two MLflow runs with the same `(chunk_size, overlap, top_k, threshold)` share the same folder — the artifacts (chunks, index, cache) are byte-identical for the same config, so sharing is correct, not redundant. The "Active" config in `MODEL_REGISTRY.md` points to one specific folder; promoting a new Active config means pointing `data/active_experiment` to a different folder (or recreating the symlink).
+
+**Runtime entry point:** code does not hardcode `data/recursive_chunking_500_50_10_70/`. It follows the `data/active_experiment` symlink. Promoting a new Active config is a one-line symlink operation.
+
+## File Schema
+
+Each `<req_id>__<query_hash>.json` stores:
+
+```json
+{
+  "schema_version": "1.0",
+  "candidate_id": "cand_042",
+  "req_id": "REQ-002",
+  "query": "5+ years of Python experience with recommendation systems",
+  "created_at": "2026-07-05T10:32:14Z",
+  "model_name": "nemotron-3-ultra-free",
+  "model_params": { "temperature": 0, "max_tokens": 1024 },
+  "retrieval_params": {
+    "theta": 0.70,
+    "max_chunks_per_query": 20,
+    "chunk_size": 500,
+    "chunk_overlap": 50,
+    "embedding_model": "all-MiniLM-L6-v2"
+  },
+  "retrieved_chunks": [
+    { "chunk_id": "cand_042__14", "cosine": 0.91, "text": "..." },
+    { "chunk_id": "cand_042__2",  "cosine": 0.84, "text": "..." }
+  ],
+  "reasoning": "The candidate mentions Python in 4 of 5 retrieved chunks...",
+  "basis": [
+    { "chunk_id": "cand_042__14", "quote": "Delivered 9 ML projects in Python",                    "relevance": "primary" },
+    { "chunk_id": "cand_042__2",  "quote": "Recommendation system at Netflix for 3 years",          "relevance": "supporting" }
+  ],
+  "sub_scores": {
+    "skill_presence":   { "value": 1.0,  "type": "binary",   "source_basis_idx": [0, 1] },
+    "years_experience": { "value": 0.8,  "type": "linear",   "source_basis_idx": [0] },
+    "project_relevance":{ "value": 0.75, "type": "anchored", "source_basis_idx": [1] }
+  },
+  "rubric_version": "v1.0",
+  "scoring_mode": "rubric_bound_llm"
+}
+```
+
+## Cache Key
+
+```
+hash(candidate_id, req_id, hash(query, sorted(top_chunk_ids)), model_name, θ)
+```
+
+A re-run is a **cache hit** when this key matches exactly. On hit:
+- The LLM is **not called** (no round-trip cost).
+- The embedding is **not recomputed** (no vector DB call).
+- The retrieval is **not re-run** (no cosine call).
+- The scoring engine reads `sub_scores` directly from the file and applies the weight.
+
+A re-run is a **cache miss** when any component of the key differs:
+- Chunking parameters change → new `chunk_id` set → different `top_chunk_ids`.
+- Embedding model changes → new vectors → new `cosine` values.
+- LLM model upgrade → `model_name` differs.
+- `θ` change → different `top_chunk_ids` returned.
+- JD requirement or weight config change → `req_id` or `query` differs.
+
+## Why Storage is Worth It
+
+| Concern | Cost without per-resume storage | Cost with per-resume storage |
+|---|---|---|
+| LLM round-trips on re-runs | One per (candidate, req, θ) — repeat if θ changes during Optuna | Zero (filesystem read) |
+| Re-run determinism | Approximate (LLM temperature variance) | Structural (same key → same bytes) |
+| Score-explanation UI | Re-run the LLM, or read from a stripped cache | Read the file directly |
+| Auditability per (candidate, req) | Re-derive from `llm_cache.jsonl` + retrieval logs | Open one file |
+
+Storage estimate: 721 candidates × ~15 REQs × ~4 sub-queries = ~43,000 JSON files per (model, θ) combo. At 5–20 KB each, that's ~200–800 MB per combo. Peak during an Optuna sweep (~2–3 combos in flight) is ~1–2 GB. See `EVALUATION.md` for the storage-cost metric.
+
+## GC Policy
+
+- Entries with no read in the last 90 days are candidates for archival: moved to `data/per_candidate_archive/`. Not deleted by default.
+- A disk-usage monitor alerts if `data/per_candidate/` exceeds 5 GB.
+- The `MIGRATION_NOTES.md` in `data/chunks_legacy_document_aware/` records the legacy chunk files; they are GC'd after one release.
+
+## Migration Notes
+
+The M0.5e migration script (`scripts/migrate_to_per_resume_reasoning.py`):
+
+1. **Move legacy chunks** (DEC-022a, refined by DEC-023): `mv data/chunks/<role>/<candidate_id>.jsonl data/document_aware_chunking/<role>/<candidate_id>.jsonl` for all 721 files. Write `MIGRATION_NOTES.md` with the move date, source/target chunkers, and per-file chunk-count delta. The destination directory is `document_aware_chunking/` (per DEC-023), not the longer `chunks_legacy_document_aware/` (DEC-022's original placeholder).
+2. **Move legacy cache** (DEC-022b): `mv data/embeddings/llm_cache.jsonl data/embeddings/llm_cache_legacy.jsonl`.
+3. **Backfill per-resume reasoning** (one-time, optional): walk `llm_cache_legacy.jsonl`, group entries by `(candidate_id, req_id, query, model_name, θ)`, and write one file per group into the per-experiment folder. Note: the legacy cache may not have the full `reasoning` and `basis`; backfilled entries are marked `"backfilled": true` and re-runs of those (candidate, req) pairs are forced to refresh.
+
+After M0.5e completes, every new pipeline run creates a per-experiment folder per the DEC-023 convention. The Active config is symlinked from `data/active_experiment`.
+
+The script is **idempotent** — running it twice is a no-op.
+
+---
+
+# Why Chunks, Why Not Embeddings (Per-Candidate Scoring)
+
+> **Updated 2026-07-05 (DEC-017):** The platform now uses regular RAG for
+> retrieval (embed → cosine ≥ θ → LLM), the same pattern as the "Usual
+> RAG" column. The scoring engine remains the only ranking signal; the
+> RAG pivot changes how evidence is gathered, not who decides the score.
+> This section is retained as historical rationale for the design
+> decisions that survived (deterministic scoring, no LLM in the final
+> aggregation, RAG grounding rule, "Information not found…" fallback).
+
+It is reasonable to ask: *if we are not running top-K similarity search, why chunk the resume at all, and why not embed the chunks?* The answer is that **chunks serve a different purpose in this system than in a typical RAG pipeline**, and the deterministic scoring engine is the only ranking signal. Usual RAG (embed corpus → cosine → top-K → LLM) is designed for searching a large document collection; this system uses the same retrieval pattern but routes the result through a deterministic scorer rather than trusting the LLM with the final score.
+
+## Usual RAG vs. this system's approach
+
+The "usual RAG" pipeline most engineers know is: **embed corpus → query → cosine → top-K chunks → LLM answer**. That works when the corpus is large (thousands of docs) and the query is open-ended ("how do I deploy X?"). It does not work when the corpus is one short document and the task is to score every fact in it against a fixed rubric. The two designs are:
+
+| Layer | Usual RAG (large corpus) | This system (per-candidate scoring) |
+|---|---|---|
+| **Chunking** | Recursive or semantic — split text into 200-500 token pieces, optimize for retrieval recall | **Recursive** — `chunk_size=500`, `chunk_overlap=50`; both Optuna hyperparameters (DEC-019) |
+| **Embedding** | All chunks embedded; vectors stored in a vector DB | **All chunks embedded** (MiniLM-L6-v2, 384-dim). Used for cosine ≥ θ retrieval, not for ranking. |
+| **Retrieval** | Cosine similarity, top-K (e.g. 3-5 chunks) | **Cosine ≥ θ** (default θ=0.70, Optuna-tuned) — return all hits, cap at 20 |
+| **Ranking** | LLM picks winner from top-K | **Deterministic scoring engine** in code — LLM never decides ranking |
+| **LLM input** | Top-K chunks ranked by similarity | **All chunks meeting θ** — same content, ranked by similarity |
+| **Determinism (ranking)** | Approximate — same query can return different chunks if the index changes | **Exact** — `graded_scorer` produces the same number for the same inputs |
+| **Auditability (ranking)** | Hard — "why was this chunk dropped?" affects the score | **Trivial** — the ranking formula is public; the retrieved chunks are reproducible via cache |
+
+The shift from "LLM picks the winner" to "LLM gathers evidence, code ranks" drives every other design choice below.
+
+## How usual RAG fails on this use case (concrete example)
+
+Consider a candidate with three Python roles, two side projects mentioning Python, and a CS degree. Scoring JD requirement *"5+ years of Python experience (required, 10% weight)"*.
+
+**With usual RAG (embed corpus → cosine → top-3):**
+
+```
+1. JD requirement "5+ years of Python experience" → embedded as a query vector
+2. Cosine vs every chunk in the resume
+3. top-K = 3, by descending similarity
+4. LLM receives those 3 chunks + the rubric
+5. LLM scores
+
+What can go wrong:
+- The 3 most-similar chunks might be 3 different roles, but the 4th role
+  (ranked 4th by cosine) is the longest Python tenure. It gets dropped.
+- "Python" in the degree section might be the most-similar chunk because
+  of the word "Python" + "computer science" co-occurring. LLM scores
+  the candidate on degree + 1 role, missing 2 of 3 roles.
+- Top-K=3 was a guess — the LLM's score depends on whether you set
+  K=2, K=3, or K=5. Different K = different score for the same
+  candidate + same JD.
+- A re-run with a newer embedding model produces a different top-3 →
+  different score. The recruiter cannot reproduce "why 78?".
+```
+
+**With this system's approach (label match → full section):**
+
+```
+1. JD requirement "5+ years of Python experience"
+   + dimension_type = "skill"  (or "experience")
+2. section_routed_retrieval():
+     classify_requirement_type(category, name)  →  "skill"
+     skill_filter = "Python"  (from requirement name)
+     fetch all chunks where:
+       section_type == "experience"
+       AND ("python" in skills_asserted OR "python" in text)
+3. Returns: chunk_0 (Torphy 2017-2026, 9 yrs, Python), chunk_1
+   (Dufour 2014-2017, 3 yrs, Python), chunk_2 (Lessard 2010-2014,
+   4 yrs, Python), chunk_3 (personal project, 1 yr, Python)
+4. LLM receives all 4 chunks + the rubric, joined as one section
+5. LLM scores based on: 9+3+4 = 16 years Python (deduplicated overlapping
+   time ranges); 1-yr project doesn't count toward professional
+   experience.
+6. Score: 16 / 5 = capped at 1.0 (i.e. exceeded the 5-yr expectation)
+7. Re-run with different model: same chunks, same content, same score.
+   Auditable.
+```
+
+The same candidate, the same JD, the same rubric — same score. That is the property we need and that usual RAG cannot give us at scoring time.
+
+## What chunks are for here
+
+Chunks are not the unit of retrieval. They are the **unit of section delivery** to the rubric-bound LLM judge. A JD requirement mapped to "Experience" needs the candidate's full Experience content, with company, role, dates, and bullets intact, so the LLM can read it and score against the rubric.
+
+Concretely, each chunk carries:
+
+- `section_type` (experience, education, projects, skills, certifications, languages)
+- `parent_structure` (organization, role_title, location, temporal_context with `calculated_duration_months`)
+- `skills_asserted`, `experience_type`
+
+When the scorer asks "what is this candidate's experience with Python?", the route is:
+
+```
+JD requirement "Python experience"
+        ↓
+section_routed_retrieval()
+        ↓
+fetch every chunk tagged section_type="experience"
+        ↓
+join their text into one section string
+        ↓
+send to rubric-bound LLM with the rubric
+```
+
+No similarity ranking happens. Every experience chunk is delivered, in original order, with its metadata.
+
+## Why embeddings are the wrong tool for this
+
+A single resume is a **short document** (1,000–3,000 tokens) — not a corpus. Embeddings + top-K cosine are the right tool for searching across thousands of documents; they are the wrong tool for reading one document. Concretely:
+
+| Failure mode | What goes wrong with embeddings + top-K |
+|---|---|
+| **False negatives from cutoff** | A second Python role ranks at cosine 0.72, below the top-3 cutoff. It gets silently dropped. The candidate looks like they have 3 years of Python when they have 5. |
+| **Context loss** | Embedding a chunk strips the metadata that the scorer needs: dates, duration, company, role title. The LLM cannot tell if "Python" was used for 6 months or 6 years. |
+| **Non-determinism** | Same resume + same JD produces different results if the embedding model changes, the chunk boundaries shift, or the top-K parameter changes. The score becomes unauditable — a recruiter cannot reproduce "why 78?" |
+| **Cost** | For 721 resumes × 17 chunks each = 12,000+ embedding calls just to start. For 1,000s of roles this explodes, and every scoring run has to repeat the embedding step or carry a stale index. |
+
+The deterministic engine (see "Deterministic Scoring Engine" below) requires **reproducible, auditable, explainable rankings**. A score that depends on a similarity ranking is none of those.
+
+## What needs to be modified for this use case
+
+Five concrete changes from the usual RAG pattern:
+
+1. **Chunk by section, not by token count.** Document-Aware Chunking splits the resume on canonical section boundaries (Experience, Education, Projects, ...) and keeps each entry (one job, one degree, one project) as a single intact chunk with its metadata. The usual recursive-or-semantic chunker, which optimizes for retrieval recall, would split a job across two chunks and lose the company + dates context.
+2. **Attach metadata at chunk time, not at retrieval time.** `calculated_duration_months`, `company`, `role_title`, `start_date`, `end_date`, `skills_asserted`, `experience_type` are all computed deterministically at parse time and stored on the chunk. The LLM receives them ready-made; it never has to do date arithmetic or guess at a role's duration. Usual RAG stores text and metadata separately and asks the LLM to re-derive facts at query time — which is exactly what the spec says not to do.
+3. **Use exact label match, not similarity rank.** A fixed table maps each requirement to its canonical section(s) (`src/rag/section_routed.py`). Retrieval is a `WHERE section_type = X` query, not a top-K cosine. This guarantees no relevant chunk is missed because of a similarity cutoff.
+4. **Send the full section, not top-K.** All chunks in the mapped section are joined into one string and sent to the LLM. The LLM reads the full Experience history in order. There is no "rank" applied between the LLM and the evidence.
+5. **Score against a recruiter-defined rubric, not a free-form query.** Each requirement has a rubric (`src/scoring/rubrics.py`) with anchored scales (0.0 / 0.25 / 0.5 / 0.75 / 1.0) and sub-questions. The LLM is constrained to that rubric; it cannot invent its own definition of "Strong" or "Advanced". The LLM also does not see the requirement's weight — it returns sub-scores, and the code applies the weight.
+
+These five modifications together make the system deterministic, auditable, and explainable, at the cost of giving up the flexibility of "ask anything about the resume." For per-candidate scoring, that trade is correct.
+
+## Where embeddings DO belong
+
+Embeddings are the correct tool for **all retrieval** in this system, including per-candidate scoring (post-2026-07-05). The distinction is that the **scoring engine** is the only ranking signal; embeddings are the only retrieval signal. Use cases:
+
+- **Per-candidate evidence retrieval for scoring** — `candidate_id` filter applied; chunks for that one candidate are ranked; the rubric-bound LLM judge reads the evidence and outputs anchored floats that the code aggregates.
+- **Shortlisting / triage** — narrowing a large applicant pool before running the full per-candidate scoring pass.
+- **Open-ended pool search** — "find candidates with healthcare domain experience" across every resume on file.
+- **Resume chat** — RAG-grounded answers to recruiter questions about one candidate's full resume content.
+
+These are all served by the same threshold-based retrieval pipeline; only the filter (`candidate_id` set vs. not set) changes.
+
+## Quick reference
+
+| What | When | Why |
+|---|---|---|
+| Chunk the resume (Recursive) | Every pipeline run | Uniform chunks for fair cosine comparison |
+| Embed + cosine ≥ θ (per-candidate) | Every scoring run | Gathers evidence; threshold tuned by Optuna |
+| Embed + cosine ≥ θ (pool) | Pool search / chat | Same pipeline, no `candidate_id` filter |
+| Deterministic scoring engine | Every scoring run | Only ranking signal; same inputs → same score |
+| LLM (rubric-bound) | Every scoring run | Reads retrieved evidence, outputs anchored floats; never sees weight, never aggregates |
+| LLM (chat) | Recruiter question | Reads retrieved chunks, grounded answer; "Information not found…" if no chunks meet θ |
+| Cross-encoder reranker | Future | Optional post-threshold rerank if Optuna shows a faithfulness gain |
+
+The chunks we build are for **retrieval**, and the scoring engine is the only thing that decides the score. Embeddings + cosine are the right tool for retrieval; the deterministic engine is the right tool for ranking.
 
 ---
 
@@ -826,7 +1289,7 @@ For any "years of experience" requirement, the recruiter sets a target/ideal val
 score = min(candidate_years / ideal_years, 1.0) × max_points
 ```
 
-Note: `candidate_years` for **total experience** is read directly from the structured candidate profile (code-only, no LLM). `candidate_years` for **relevant / same-role / leadership experience** is extracted by the rubric-bound LLM from the mapped section(s) (see Section-Routed Evidence Retrieval), then the formula above is applied in code. The LLM never sees the weight or performs the final aggregation.
+Note: `candidate_years` for **total experience** is read directly from the structured candidate profile (code-only, no LLM). `candidate_years` for **relevant / same-role / leadership experience** is extracted by the rubric-bound LLM from the chunks retrieved by the threshold-based retrieval pipeline (see "Threshold-Based Retrieval (Regular RAG, updated 2026-07-05 per DEC-017 + DEC-018)"), then the formula above is applied in code. The LLM never sees the weight or performs the final aggregation.
 
 Example-
 
@@ -970,7 +1433,7 @@ Cosine Similarity Search
 Similarity Score
 ```
 
-This is unrelated to evidence retrieval for scoring a single candidate, which uses Section-Routed Evidence Retrieval instead — full, intact sections, not similarity-ranked fragments.
+This is unrelated to evidence retrieval for scoring a single candidate, which uses the same threshold-based retrieval pipeline (cosine ≥ θ over Recursive chunks) — only the `candidate_id` filter changes.
 
 The similarity score is not the final ranking score.
 
@@ -1016,7 +1479,7 @@ The system shall:
 
 1. Identify the scoring dimension.
 2. Return the rubric sub-scores and cited evidence stored at scoring time — this is the default path (see note below).
-3. If the recruiter asks a follow-up that goes beyond what was stored, re-fetch the mapped section(s) for that requirement (Section-Routed Evidence Retrieval) and generate a fresh answer grounded in them.
+3. If the recruiter asks a follow-up that goes beyond what was stored, re-fetch the candidate's evidence via threshold-based retrieval and generate a fresh answer grounded in the retrieved chunks.
 
 Example:
 
@@ -1072,9 +1535,9 @@ All answers must be grounded in the candidate's full resume content.
 The platform must always follow:
 
 ```text
-Header Normalization + Section-Routed Evidence
+Recursive Chunking + Embedding
         ↓
-Full Section Content per Requirement
+Threshold-Based Retrieval (cosine ≥ θ)
         ↓
 Code-Only Scoring  +  Rubric-Bound LLM Evidence Scoring
         ↓

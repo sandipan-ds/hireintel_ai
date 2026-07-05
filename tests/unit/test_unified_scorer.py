@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from src.rag.chunker import ChunkRecord
+from rag.document_aware_chunker import ChunkRecord
 from src.resume_parsing.structured_profile import (
     StructuredCandidateProfile,
     DegreeEntry,

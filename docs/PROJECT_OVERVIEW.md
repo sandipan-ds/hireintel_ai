@@ -73,7 +73,7 @@ Resume Upload
 Resume Cleaning + Parsing
           │
           ▼
-Document-Aware Chunking
+Recursive Chunking + Embedding
           │
           ▼
 Candidate Intelligence Report
@@ -263,7 +263,7 @@ implement multiple competing ranking systems.
 Per `WORKING_LOGIC.md` ("Fundamental Rule"), the scoring engine operates in two modes. In both modes, weight application and final aggregation are computed in code — never by the LLM.
 
 * **Code-only scoring** — used wherever a requirement is fully measurable: total years of experience (linear formula), institute tier (lookup table), certification tier (lookup table), skill presence + years (synonym match + regex detection). No LLM is involved.
-* **Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, relevant/same-role/leadership experience, domain expertise. The LLM reads the full content of the mapped section(s) via Section-Routed Evidence Retrieval and scores against a recruiter-defined rubric. The LLM never sees the weight and never computes the final contribution.
+* **Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, relevant/same-role/leadership experience, domain expertise. The LLM reads the chunks retrieved by the threshold-based retrieval pipeline (cosine ≥ θ) and scores against a recruiter-defined rubric. The LLM never sees the weight and never computes the final contribution.
 
 See [`AI_ARCHITECTURE.md`](AI_ARCHITECTURE.md) §5 for the full scoring workflow and output contract, and [`WORKING_LOGIC.md`](WORKING_LOGIC.md) "Scoring Rubrics" for the formulas.
 
@@ -356,7 +356,9 @@ is found, the LLM responds with exactly:
 **"Information not found in candidate documents."**
 
 No speculation. No fabrication. The chunking strategy that supports this is
-Document-Aware Chunking (`src/rag/chunker.py`).
+Recursive Chunking (`src/rag/chunker.py` `RecursiveChunker`); the retrieval
+strategy that supports this is threshold-based cosine over the embedding
+index (DEC-018).
 
 ---
 
@@ -374,14 +376,17 @@ deterministic scoring engine.
 
 # RAG Architecture
 
-RAG is **only** for explanations, resume chat, and cross-candidate pool search. It never participates in per-candidate scoring. See [`AI_ARCHITECTURE.md`](AI_ARCHITECTURE.md) §11–§12 for the full architecture.
+RAG is the single retrieval strategy for explanations, resume chat, cross-candidate pool search, **and per-candidate evidence retrieval** (post-2026-07-05, DEC-017). The scoring engine remains the only ranking signal — the RAG pivot changes how evidence is gathered, not who decides the score. See [`AI_ARCHITECTURE.md`](AI_ARCHITECTURE.md) §11–§12 for the full architecture.
 
-**Two distinct retrieval strategies:**
+**Single retrieval strategy (active 2026-07-05):**
 
-* **Section-Routed Evidence Retrieval** (per-candidate, for scoring) — exact label match on canonical sections; no embeddings, no cosine. Full section content is sent to the rubric-bound LLM judge.
-* **Dense Cosine Retrieval** (cross-candidate pool search + resume chat) — embeddings via `sentence-transformers/all-MiniLM-L6-v2`, in-memory index (`data/embeddings/index.npz`).
+* **Threshold-based cosine over Recursive chunks** — embeddings via `sentence-transformers/all-MiniLM-L6-v2` (384-dim), in-memory index (`data/embeddings/index.npz`). Return all chunks with cosine ≥ θ (default `θ = 0.70`, Optuna-tuned), capped at `max_chunks_per_query = 20` for safety. The same pipeline serves per-candidate scoring, pool search, and resume chat — only the `candidate_id` filter changes.
 
-Active chunking: Document-Aware Chunking (`src/rag/chunker.py`) with Header Normalization at parse time. See [`MODEL_REGISTRY.md`](MODEL_REGISTRY.md) for model details.
+**Chunking (active 2026-07-05):** Recursive Chunking (`src/rag/chunker.py` `RecursiveChunker`), `chunk_size = 500`, `chunk_overlap = 50`. Both are Optuna hyperparameters (DEC-021).
+
+**Experiment tracking:** Every retrieval / scoring run is logged to a local MLflow server (DEC-020). The shipped `θ`, `chunk_size`, and `chunk_overlap` are always the Optuna-recommended point on the Pareto front (DEC-021), not hand-picked.
+
+**RAG grounding rule (unchanged):** If no chunk meets `θ`, the LLM responds with exactly *"Information not found in candidate documents."*
 
 ---
 
