@@ -37,6 +37,7 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-023 | 2026-07-05 | **Per-experiment folder naming for the Recursive chunking pipeline + folder renames.** (a) Rename the legacy Document-Aware folder from `data/chunks_legacy_document_aware/` to `data/document_aware_chunking/` (DEC-022a refinement — the user requested the explicit `document_aware_chunking` name for clarity). (b) Adopt the convention that every MLflow experiment's artifacts (chunks, embedding index, per-resume reasoning tree, `metadata.json`) live in a per-experiment folder named after the hyperparameters that produced it. Format: `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/`. Example: an experiment with `chunk_size=500`, `overlap=200`, `top_k=5`, `threshold=0.50` lives in `data/recursive_chunking_500_200_5_50/`. When a hyperparameter is not active in a given retrieval mode (e.g., pure threshold mode has no `top_k` cap), use `x` as the placeholder: `recursive_chunking_500_200_x_70` for threshold-only. The folder name is the self-documenting identifier of the experiment; two MLflow runs with the same config share the same folder. The "Active" config in `MODEL_REGISTRY.md` points to one specific folder. | Accepted (refines DEC-022) | `WORKING_LOGIC.md`, `AI_DESIGN_RATIONALE.md`, `MODEL_REGISTRY.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
 | DEC-024 | 2026-07-05 | **Chunk reports folder + ranking evaluation methodology without labeled data.** (a) Adopt `reports/chunk_reports/` as the canonical location for per-experiment chunk diagnostics. Report file names mirror the experiment folder names: `document_aware_chunking_report.{json,md}` and `recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>_report.{json,md}`. Each report captures chunk counts, chunk-size distribution, the `section_type=""` rate (the DEC-015 bug), retrieval hit rates, LLM call counts, and the eval metrics. Reports are committed to git (small text files) so the historical record of every experiment is preserved. (b) Adopt a multi-pronged ranking evaluation methodology: (i) **counterfactual tests** (synthetic, deterministic, 100% ground truth) — construct test cases where the expected ranking change is unambiguous and verify the system obeys; (ii) **synthetic labeled set** — hand-rank 30–50 (candidate, role) pairs across multiple recruiters, measure inter-rater agreement, use the majority/median ranking as ground truth; (iii) **stability tests** — re-run the same config twice, verify byte-identical ranking (already covered by DEC-022 determinism but worth measuring explicitly); (iv) **recruiter agreement** (when applicable) — Cohen's kappa or Krippendorff's alpha against human raters; (v) **behavioral signals** (production only) — did the recruiter interview the top-K? tracked, not enforced. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `EVALUATION.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
 | DEC-025 | 2026-07-05 | **Candidate ID nomenclature: `<Role>_CAND_<NNNN>`.** Replace the SHA1-hash-based candidate id (`cand_<12hex>`, e.g. `cand_74cbbc14c744141a`) with a human-readable, role-encoded, sequential id (`BusinessAnalyst_CAND_0001`). The id is allocated and persisted by a new ``data/candidate_registry.json`` so numbers are monotonic per role and never renumber on re-parse. The registry also stores the legacy hash id and the absolute source path for traceability and backwards compatibility with the 6,377 existing Document-Aware chunks. New candidates get the next free number for their role; existing candidates are backfilled once from the corpus. The chunk_id format (`{candidate_id}__{chunk_index}`) is unchanged in shape but switches to the new id space. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `EVALUATION.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
+| DEC-026 | 2026-07-05 | **Ranking diff methodology (before NDCG@k / MAP@k).** Adopt a per-experiment ranking-diff workflow as the first line of regression detection, before any aggregate metric. The diff tool (``src.eval.ranking_diff`` + ``scripts/diff_rankings.py``) compares two rankings of the same role and reports: (1) new entrants to top-K for K=10 and K=50; (2) departures from top-K; (3) per-candidate rank deltas (signed, normalized by the total number of candidates in the role) with average and max; (4) a categorization into ``stable``, ``big_swap_up``, ``big_swap_down``, ``only_in_baseline``, ``only_in_current`` (where "big" is > 10% of the role's total candidates); (5) for each notable case, a side-by-side dump of the rubric-bound LLM's reasoning, the cited basis chunks, the retrieved-chunk list with cosine scores, and the model + retrieval parameters — all read from each experiment's per-resume reasoning tree (DEC-022) so the comparison is fully versioned. Outputs ``reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}`` committed to git. This precedes aggregate metrics (NDCG@k, MAP@k) so regressions are diagnosed at the candidate level, not just measured. | Accepted | `EVALUATION.md`, `MODEL_REGISTRY.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
 
 ---
 
@@ -970,3 +971,60 @@ The team has no external candidate registration number (no ATS, no HRIS import),
 - Per-resume reasoning tree paths (`data/per_candidate/<role>/<candidate_id>/reasoning/...`) use the new id space for new candidates. The tree for an old candidate would use the hash id; the registry's `legacy_hash_id` field is the bridge.
 
 **Related Documents:** `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `EVALUATION.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md`
+
+---
+
+## DEC-026: Ranking diff methodology (before NDCG@k / MAP@k)
+
+**Date:** 2026-07-05
+**Status:** Accepted
+
+**Context:** The platform's "is our ranking correct?" methodology (DEC-024) lists five prongs: counterfactual tests, synthetic labeled set, stability tests, recruiter agreement, behavioral signals. Two of those — synthetic labeled set and recruiter agreement — eventually call for aggregate metrics like NDCG@k and MAP@k. Those metrics are useful summary numbers, but they don't tell us **which** candidates changed rank or **why**. A regression in the Optuna-recommended config could move 5 candidates by 20 positions each, and the aggregate NDCG might still look "OK" while the recruiter-facing ranking is silently wrong.
+
+The user explicitly requested a per-candidate diff before any aggregate metric: "before we go for NDCG@k or MAP we will evaluate how similar or different each of such experiments are". The intuition is sound: regressions in this product are best diagnosed at the candidate level ("candidate X dropped 18 places because the new threshold excluded the chunks that cited his 6 years of Python"). Aggregate metrics are a follow-up, not a substitute.
+
+**Decision:**
+
+**(a) The diff tool.** A new module ``src.eval.ranking_diff`` (with CLI ``scripts/diff_rankings.py``) compares two rankings of the same role. Inputs are the two ``List[Tuple[candidate_id, score]]`` lists and a label for each. The output is a structured report with five sections:
+
+1. **New entrants / departures for top-K.** For K=10 and K=50 (the recruiter-facing shortlists), the report lists every candidate that appears in one top-K but not the other. The user reads this first because a new candidate in the top-10 is the loudest possible signal.
+2. **Rank deltas (signed).** For every candidate that appears in *both* rankings, a signed integer delta where positive = moved up (smaller rank number = better position) and negative = moved down. Sorted by absolute value to surface the largest changes first.
+3. **Aggregate stats.** Average absolute rank change across shared candidates; max absolute change (with the candidate id). Both are *normalized by the total number of candidates in the role* — a 5-position change in a 50-candidate pool is much louder than in a 1000-candidate pool.
+4. **Categorization.** A ``categorize`` method partitions every shared candidate into one of:
+   - ``stable`` — |delta| ≤ threshold
+   - ``big_swap_up`` — moved up by more than the threshold
+   - ``big_swap_down`` — moved down by more than the threshold
+   - ``only_in_baseline`` — present in baseline, absent in current
+   - ``only_in_current`` — present in current, absent in baseline
+   The default threshold is **10% of the total candidates in the role** (e.g. 10 positions in a 100-candidate pool). The threshold is configurable; for small role pools the absolute minimum is 1.
+5. **Per-case investigation with versioned reasoning + chunks.** For each candidate in ``new_in_top_k``, ``only_in_current``, ``big_swap_up``, or ``big_swap_down``, the CLI dumps a side-by-side record pulled from each experiment's per-resume reasoning tree (``data/recursive_chunking_<params>/per_candidate/<role>/<candidate_id>/reasoning/<req_id>__<query_hash>.json`` per DEC-022). The dump includes:
+   - the rubric-bound LLM's narrative ``reasoning``
+   - the cited ``basis`` (chunks + quotes)
+   - the ``retrieved_chunks`` list with cosine scores
+   - the ``model_name`` and ``retrieval_params`` (so the diff report is reproducible from MLflow)
+   - the ``sub_scores`` (the anchored floats that the deterministic engine aggregated)
+   This is what the user means by "everything has to be versioned" — and the per-resume tree from DEC-022 already provides it. The diff tool just reads from both trees and presents the comparison.
+
+**(b) Output format.** The CLI writes a JSON + Markdown pair to ``reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}``. The folder is committed to git (small text files). File names mirror the diff inputs: ``exp1__vs__exp2__BusinessAnalyst.{json,md}``.
+
+**(c) When to run.** The diff tool is the first check after every Optuna-promoted config change. The promotion gate (DEC-024) is "counterfactual pass rate ≥ 0.95, stability = 1.0, NDCG@10 ≥ 0.80"; the diff is what you run *after* the new config is promoted, to inspect which candidates actually moved. It does not gate promotion; it diagnoses it.
+
+**(d) The "versioned" part is already in place.** The user asked "I think it is set like that?" — yes. The per-resume reasoning tree from DEC-022 is keyed by ``(candidate_id, req_id, hash(query, sorted(top-chunk-ids)), model_name, θ)`` and lives in a per-experiment folder. Two experiments with different θ values store *different* files; a third experiment with the same θ reuses the same file. The diff tool reads from both trees; no new versioning infrastructure is needed.
+
+**Alternatives Considered:**
+
+- **Skip the per-candidate diff and just compute NDCG@k / MAP@k.** Rejected. Aggregate metrics tell you "the ranking changed" but not "which candidates moved and why". A 0.02 NDCG drop could be a benign 1-position shuffle across the whole pool, or it could be a 5-candidate massacre in the top-10. The diff is what disambiguates.
+- **Compute NDCG@k first, then per-candidate diff if NDCG drops.** Rejected. The user explicitly asked for per-candidate diff *first*. Their argument: if a new config has a 0.01 NDCG improvement but introduces 3 nonsense candidates into the top-10, the aggregate metric hides the regression. Per-candidate diff catches it.
+- **Use a database join across two score files.** Rejected. The score files are per-experiment and may have different schemas (different fields, different chunk-id sets). A purpose-built diff tool with a clean dataclass API is more maintainable.
+- **Manually compare two score files in a spreadsheet.** Rejected. Doesn't scale, doesn't produce a committed artifact, doesn't preserve the versioned reasoning + chunks.
+- **Run the diff as a Jupyter notebook.** Rejected. Not reproducible, not version-controlled, not committable.
+
+**Consequences:**
+
+- A new ``src/eval/`` package with a focused responsibility: compare two rankings. No dependencies on the scoring engine — the tool accepts ``List[Tuple[candidate_id, score]]`` and produces a report.
+- A new ``scripts/diff_rankings.py`` CLI that the team runs after every config promotion. The CLI's job is to find the candidates worth investigating; the team's job is to look at them.
+- A new ``reports/diff_rankings/`` folder committed to git. Each diff is a small text file (a few KB) that captures a snapshot of the platform's ranking behavior at a point in time. The historical record grows linearly with the number of config changes.
+- The diff tool is **complementary** to NDCG@k / MAP@k, not a replacement. Once the diff is healthy, NDCG/k is the right aggregate to add next (next session's work).
+- No NDCG / MAP work in this session. Per the user's instruction, that comes after the per-candidate diff lands.
+
+**Related Documents:** `EVALUATION.md`, `MODEL_REGISTRY.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md`

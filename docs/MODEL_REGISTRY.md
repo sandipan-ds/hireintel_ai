@@ -88,6 +88,7 @@ All model changes must be documented here before implementation, and significant
 | `data/candidate_registry.json` | Candidate registry (DEC-025) | Active (2026-07-05) | Maps `<Role>_CAND_<NNNN>` to source path + legacy hash id; 721 entries backfilled from the existing corpus; **committed to git** (the source of truth for downstream joins) |
 | `reports/chunk_reports/document_aware_chunking_report.{json,md}` | Historical Document-Aware diagnostic | Active (2026-07-05, DEC-024) | Captures the 49% missing-`section_type` finding (DEC-015) |
 | `reports/chunk_reports/recursive_chunking_<params>_report.{json,md}` | Per-experiment Recursive diagnostic | Active (2026-07-05, DEC-024) | One pair (JSON + MD) per Recursive experiment; file name mirrors the experiment folder |
+| `reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}` | Ranking diff (DEC-026) | Active (2026-07-05) | One pair (JSON + MD) per diff run; JSON includes the full per-case investigation records (reasoning + basis + retrieved chunks + sub-scores for both sides) |
 
 ### Per-Experiment Folder Naming (DEC-023)
 
