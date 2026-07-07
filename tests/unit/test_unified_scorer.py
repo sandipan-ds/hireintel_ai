@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from rag.document_aware_chunker import ChunkRecord
+from src.rag.document_aware_chunker import ChunkRecord
 from src.resume_parsing.structured_profile import (
     StructuredCandidateProfile,
     DegreeEntry,
@@ -184,6 +184,83 @@ class TestCertificationCodeOnly:
         assert result.matched is False
         assert result.raw_score == 0.0
 
+    # Regression: Short abbreviations must NOT match longer tokens that
+    # merely contain them as substrings. Previously "_score_*_code_only"
+    # used a bare ``in`` substring check, so "BA" matched "MBA", "BS"
+    # matched "BSE", and "PMP" matched "PMPI". The fix uses
+    # ``_token_boundary_match`` (word-boundary regex).
+    def test_education_no_ba_in_mba_false_positive(self):
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            degrees=[DegreeEntry(degree="MBA", field="Business",
+                                 institution="Wharton", year="2018-2020")],
+        )
+        # Requirement "BA" must NOT match degree "MBA" — word boundaries
+        # correctly reject "ba" inside "mba" (no left boundary because
+        # the preceding "m" is a letter).
+        result = _score_education_code_only("BA", 6, sp)
+        assert result.matched is False
+        assert result.raw_score == 0.0
+
+    def test_education_no_bs_in_bse_false_positive(self):
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            degrees=[DegreeEntry(degree="BSE", field="Engineering",
+                                 institution="Stanford", year="2014-2018")],
+        )
+        # Requirement "BS" must NOT match degree "BSE" — they are distinct
+        # degrees and the bare substring "bs" in "bse" used to false-match.
+        result = _score_education_code_only("BS", 6, sp)
+        assert result.matched is False
+        assert result.raw_score == 0.0
+
+    def test_education_ba_matches_real_ba_degree(self):
+        # Sanity: real "BA" degree still matches BA requirement.
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            degrees=[DegreeEntry(degree="BA", field="English",
+                                 institution="Yale", year="2014-2018")],
+        )
+        result = _score_education_code_only("BA", 6, sp)
+        assert result.matched is True
+
+    def test_education_btech_in_btech_computer_science(self):
+        # Sanity: "BTech" requirement still matches degree string
+        # "BTech in Computer Science" — substring is whole word.
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            degrees=[DegreeEntry(degree="BTech in Computer Science",
+                                 institution="IIT Bombay", field="CS",
+                                 year="2014-2018")],
+        )
+        result = _score_education_code_only("BTech", 6, sp)
+        assert result.matched is True
+
+    def test_cert_no_pmp_in_pmpi_false_positive(self):
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            certifications=[CertificationEntry(
+                name="PMPI by Project Management Prep Institute",
+                provider="Project Management Prep Institute")],
+        )
+        # Requirement "PMP" must NOT match cert "PMPI" — they are distinct
+        # programs and the bare substring "pmp" in "pmpi" used to false-match.
+        result = _score_certification_code_only("PMP", 8, sp)
+        assert result.matched is False
+        assert result.raw_score == 0.0
+
+    def test_cert_pmp_match_in_pmp_certified(self):
+        sp = StructuredCandidateProfile(
+            candidate_id="c",
+            certifications=[CertificationEntry(
+                name="PMP Certified by PMI",
+                provider="Project Management Institute")],
+        )
+        # Sanity: PMP still matches "PMP Certified" (word boundary works
+        # because there's a space after "PMP").
+        result = _score_certification_code_only("PMP", 8, sp)
+        assert result.matched is True
+
 
 # ---------------------------------------------------------------------------
 # Code-only scoring — location
@@ -229,8 +306,9 @@ class TestEvaluateCandidateUnified:
         assert skill_item is not None
         assert skill_item.scoring_mode == "rubric_llm"
         assert skill_item.scoring_trace is not None
-        # 1.0 * 0.8 * 0.75 = 0.6; 10 * 0.6 = 6.0
-        assert skill_item.raw_score == pytest.approx(6.0)
+        # Banded years-ratio (4 yrs vs target 5): 4 ≥ 0.5*5 → 0.5
+        # Formula: 1.0 * 0.5 * 0.75 = 0.375; 10 * 0.375 = 3.75
+        assert skill_item.raw_score == pytest.approx(3.75)
 
     def test_education_routed_to_code_only(self):
         chunks = _make_chunks()

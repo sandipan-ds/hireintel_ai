@@ -26,11 +26,15 @@ rubric-bound LLM evidence scoring.
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from rag.document_aware_chunker import parse_temporal_context
+from src.audit.no_evidence_flags import write_inferred_full_year_flag
+from src.rag.document_aware_chunker import parse_temporal_context
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -122,6 +126,14 @@ class EmploymentEntry:
         dates: Raw date range string.
         calculated_duration_months: Duration in months, computed in code.
         is_current: Whether this is the current role.
+        inferred_full_year: True when the duration was inferred from a
+            single-year date string alone (per Track 7.2 / DEC-031).
+            The structured-profile extractor applies a guard against
+            cert/education mis-bucketing before accepting the inference;
+            when the guard rejects it, this flag is False and the duration
+            is reset to 0. Callers (the audit log writer, the scorer)
+            use this flag to decide whether to surface the entry for human
+            review.
     """
 
     company: str = ""
@@ -129,6 +141,7 @@ class EmploymentEntry:
     dates: str = ""
     calculated_duration_months: Optional[int] = None
     is_current: bool = False
+    inferred_full_year: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -137,6 +150,7 @@ class EmploymentEntry:
             "dates": self.dates,
             "calculated_duration_months": self.calculated_duration_months,
             "is_current": self.is_current,
+            "inferred_full_year": self.inferred_full_year,
         }
 
 
@@ -228,22 +242,95 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
         structured.certifications.append(cert_entry)
 
     # ---- Employment history from experience entries ----
+    # Track 7.2 / DEC-031: single-year date strings ("2020" alone) are
+    # now inferred to mean "the candidate worked here during 2020" and
+    # receive 12 months of credit from ``parse_temporal_context``. Apply
+    # a guard here — the structured-profile extractor has the full entry
+    # context (company, role, details) which the temporal parser does not.
+    # When ``inferred_full_year`` is True but the entry fails the guard
+    # (no real company + (role OR details), or the role string looks
+    # like a section name rather than a job title —Certifications,
+    # Education, Projects, Skills, Languages—), we reject the inference:
+    # reset ``calculated_duration_months`` to 0 and ``inferred_full_year``
+    # to False. The mis-bucketed records are typically certification /
+    # education noise that the parser mis-attributed to the experience
+    # section; accepting their inferred months would inflate total
+    # experience years with parser-quality artifacts. The guard is the
+    # human-in-the-loop safety net before audit-flag wiring in 7.3.
+    _SECTION_NAME_TOKENS = {
+        "certifications", "certification", "education",
+        "projects", "project", "skills", "skill",
+        "languages", "language", "academic", "summary",
+    }
     experience = profile.get("experience") or {}
     for entry in experience.get("entries") or []:
         dates_str = entry.get("dates") or ""
         temporal_ctx = parse_temporal_context(dates_str)
+        inferred_full_year = bool(temporal_ctx.get("inferred_full_year"))
+        duration = temporal_ctx.get("calculated_duration_months")
+
+        if inferred_full_year:
+            # The entry was the parser's best guess from a single-year
+            # date string. Apply the human-in-the-loop guard:
+            #   1. There must be a real-looking ``company`` field that
+            #      is not itself a 4-digit year (parser bug: sometimes
+            #      puts the year in ``company``).
+            #   2. There must be at least one of (``title`` |
+            #      ``details``-non-empty) — a single-year date with no
+            #      job-title text is almost always parser noise.
+            #   3. The ``title`` must not be a section name (Certifications,
+            #      Education, Projects, Skills, Languages — these are
+            #      mis-bucketed entries from the resume's other sections).
+            company = (entry.get("company") or "").strip()
+            title = (entry.get("title") or "").strip()
+            details = entry.get("details") or []
+            title_is_section_name = any(
+                tok and tok in _SECTION_NAME_TOKENS
+                for tok in title.lower().replace("/", " ").split()
+            )
+            company_is_year = (
+                len(company) == 4 and company.isdigit()
+                and 1950 <= int(company) <= 2100
+            )
+            has_real_company = bool(company) and not company_is_year
+            has_title_or_details = bool(title) or bool(details)
+            if not has_real_company or not has_title_or_details or title_is_section_name:
+                # Reject the inference — this is parser noise, not a
+                # real single-year job. Reset to 0 months.
+                inferred_full_year = False
+                duration = 0
+
         emp_entry = EmploymentEntry(
             company=entry.get("company") or "",
             role=entry.get("title") or "",
             dates=dates_str,
-            calculated_duration_months=temporal_ctx.get("calculated_duration_months"),
+            calculated_duration_months=duration,
             is_current=temporal_ctx.get("is_current", False),
+            inferred_full_year=inferred_full_year,
         )
         structured.employment_history.append(emp_entry)
         if emp_entry.company:
             structured.companies.append(emp_entry.company)
         if emp_entry.role:
             structured.roles.append(emp_entry.role)
+
+        # Track 7.3 / DEC-031: surface accepted inferred-full-year entries
+        # to the audit log so a recruiter can verify the parser's 12-month
+        # credit was warranted. The audit log is best-effort; failures are
+        # logged but never crash the structured-extraction path.
+        if inferred_full_year:
+            try:
+                year_int = int(dates_str.strip())
+            except (TypeError, ValueError):
+                year_int = 0
+            write_inferred_full_year_flag(
+                candidate_id=structured.candidate_id or "",
+                year=year_int,
+                dates_string=dates_str,
+                employer=emp_entry.company,
+                role_text=emp_entry.role or None,
+                inferred_months=duration or 12,
+            )
 
     # ---- Total experience years — computed deterministically ----
     structured.total_experience_years = _compute_total_experience_years(

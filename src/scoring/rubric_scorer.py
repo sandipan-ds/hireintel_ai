@@ -127,11 +127,72 @@ class CachedScoringTrace:
 # Prompt construction — RUBRIC-SCORE-001.
 # ---------------------------------------------------------------------------
 
+def _format_employment_history(employment_history: Optional[List[Any]]) -> Optional[str]:
+    """Format the parser-computed employment history as a human-readable block.
+
+    The :class:`StructuredCandidateProfile.employment_history` list is
+    produced deterministically by ``src.resume_parsing.structured_profile``
+    from the resume's parsed date ranges. Each entry carries
+    ``company``, ``role``, ``dates``, ``calculated_duration_months``,
+    and ``inferred_full_year``. This helper renders that list as a
+    newline-bulleted block the LLM can read alongside the retrieved
+    chunks.
+
+    Why pass this to the LLM:
+      The Recursive chunker may split a resume role's date line away
+      from its bullet points across two different chunks. Without the
+      precomputed date math, the LLM often sees a chunk that mentions
+      the skill but contains no dates, and incorrectly returns
+      ``extracted_years=0`` even when the parser already computed the
+      role's duration. By passing the parser-computed
+      ``employment_history`` here, the LLM can correlate a skill mention
+      in a chunk with a duration from the structured profile — without
+      having to re-parse date strings itself.
+
+    Args:
+        employment_history: A list of :class:`EmploymentEntry` (or
+            duck-typed dicts with the same shape) — typically
+            ``StructuredCandidateProfile.employment_history``. Pass
+            ``None`` or an empty list to omit the block entirely.
+
+    Returns:
+        Formatted string starting with a header line, or ``None`` when
+        the input is empty/unusable.
+    """
+    if not employment_history:
+        return None
+    lines = ["EMPLOYMENT HISTORY (computed deterministically from date ranges — use these durations to answer `years_experience` sub-questions; correlate them with the skill/bullets in the SECTION CONTENT):"]
+    for e in employment_history:
+        try:
+            # Support both EmploymentEntry dataclass and plain dict.
+            company = getattr(e, "company", None) or (e.get("company") if isinstance(e, dict) else "") or ""
+            role = getattr(e, "role", None) or (e.get("role") if isinstance(e, dict) else "") or ""
+            dates = getattr(e, "dates", None) or (e.get("dates") if isinstance(e, dict) else "") or ""
+            months = getattr(e, "calculated_duration_months", None)
+            if months is None and isinstance(e, dict):
+                months = e.get("calculated_duration_months")
+            inferred = getattr(e, "inferred_full_year", False)
+            if inferred is False and isinstance(e, dict):
+                inferred = e.get("inferred_full_year", False)
+            years = round((months or 0) / 12.0, 1) if months else 0
+            inferred_marker = " (inferred full year)" if inferred else ""
+            lines.append(
+                f"- {company} | {role} | {dates} | {months} months (~{years} yrs){inferred_marker}"
+            )
+        except Exception:
+            # Defensive: a malformed entry should not break the prompt.
+            continue
+    if len(lines) <= 1:
+        return None
+    return "\n".join(lines)
+
+
 def _build_rubric_prompt(
     requirement_name: str,
     rubric: RubricTemplate,
     evidence: SectionEvidence,
     target_years: Optional[float] = None,
+    employment_history: Optional[List[Any]] = None,
 ) -> str:
     """Build the RUBRIC-SCORE-001 prompt for the LLM judge.
 
@@ -146,6 +207,14 @@ def _build_rubric_prompt(
         rubric: The rubric template for this dimension type.
         evidence: The section-routed evidence (full section content).
         target_years: The recruiter-defined target years (for linear sub-questions).
+        employment_history: Optional list of :class:`EmploymentEntry`
+            (or duck-typed dicts) from the parsed candidate's
+            structured profile. When non-empty, the prompt appends an
+            ``EMPLOYMENT HISTORY`` block right after the SECTION
+            CONTENT so the LLM can correlate skill mentions in the
+            retrieved chunks with the parser-computed role durations.
+            Mitigates the failure mode where Recursive chunking splits
+            a role's date line away from its bullet points.
 
     Returns:
         The prompt string to send to the LLM.
@@ -164,6 +233,13 @@ def _build_rubric_prompt(
             target = target_years or "not specified"
             sub_q_lines.append(f"    Extract the years of experience, then the ratio will be computed as min(years/{target}, 1.0)")
             sub_q_lines.append(f"    Return: extracted_years (number)")
+            if employment_history:
+                sub_q_lines.append(
+                    "    IMPORTANT: A pre-computed employment history is provided below. "
+                    "Use those durations (not re-derived date parsing) to answer. "
+                    "Match a role's duty/skill description in the SECTION CONTENT to the role in EMPLOYMENT HISTORY, "
+                    "then sum the durations of roles where this requirement appears."
+                )
         elif sq.type == "anchored":
             sub_q_lines.append(f"    Pick EXACTLY one anchor:")
             for anchor in sq.anchors:
@@ -178,6 +254,15 @@ def _build_rubric_prompt(
 
     # The formula (for transparency, but the LLM does NOT compute it).
     formula_text = rubric.formula
+
+    employment_block = _format_employment_history(employment_history)
+    employment_section = ""
+    if employment_block:
+        employment_section = f"""
+{employment_block}
+---
+
+"""
 
     prompt = f"""You are a resume evidence scorer. You will score a candidate against a specific job requirement using a fixed rubric.
 
@@ -194,12 +279,11 @@ DIMENSION TYPE: {rubric.dimension_type}
 RUBRIC (formula applied in code, NOT by you: {formula_text}):
 
 {sub_questions_text}
-
 SECTION CONTENT (from the candidate's resume):
 ---
 {evidence.full_text}
 ---
-
+{employment_section}
 Respond with ONLY a JSON object (no other text) in this format:
 {{
   "sub_scores": [
@@ -221,6 +305,153 @@ Respond with ONLY a JSON object (no other text) in this format:
 # Response parsing — extract structured sub-scores from LLM output.
 # ---------------------------------------------------------------------------
 
+def _extract_json_lenient(text: str) -> Optional[Dict[str, Any]]:
+    """Extract the first JSON object from ``text``, tolerating truncation.
+
+    Free-tier LLM endpoints sometimes cap ``completion_tokens`` mid-response,
+    cutting the JSON payload mid-key or mid-value. A strict
+    ``json.loads`` on the substring fails in those cases and the rubric
+    scorer falls back to zero scores, silently defeating the LLM call.
+
+    This helper:
+      1. Strips markdown code fences if present.
+      2. Locates the first ``{`` and scans forward, tracking nesting
+         depth.
+      3. At every depth-back-to-zero position (i.e. a syntactically
+         complete object), tries ``json.loads``. The longest valid
+         prefix wins.
+      4. If no complete object is found (truncated), attempts a
+         structural recovery: clip at the last complete sub_score
+         object (``}`` followed by ``,`` or ``]``), then synthetically
+         close with ``]}``.
+      5. Returns the parsed dict, or ``None`` if nothing parses.
+
+    Args:
+        text: The raw LLM response text.
+
+    Returns:
+        Parsed dict (top-level keys ``sub_scores`` etc.) or ``None``.
+    """
+    if not text:
+        return None
+    # Strip ```json ... ``` style fences.
+    fenced = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
+    if fenced:
+        text = fenced.group(1)
+    start = text.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    best_end = -1
+    best_data: Optional[Dict[str, Any]] = None
+    for i in range(start, len(text)):
+        ch = text[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = text[start:i + 1]
+                try:
+                    parsed = json.loads(candidate)
+                    if isinstance(parsed, dict):
+                        # Prefer the longest valid parse.
+                        best_end = i
+                        best_data = parsed
+                except json.JSONDecodeError:
+                    pass
+    if best_data is not None:
+        return best_data
+    # Truncated JSON recovery: clip at the last complete sub_score object.
+    # Look for the last `}` preceded by a complete object boundary.
+    body = text[start:]
+    # Find the index of the last `}` that is followed by either `,` or `]`
+    # (i.e. a sub-score boundary, not a value-close).
+    last_obj_end = -1
+    for m in re.finditer(r"\}\s*(?:,|\])", body):
+        last_obj_end = m.start() + 1
+    if last_obj_end > 0:
+        candidate = body[:last_obj_end] + "]}"
+        try:
+            parsed = json.loads(candidate)
+            if isinstance(parsed, dict):
+                logger.info(
+                    "Recovered truncated JSON (%d chars kept out of %d) "
+                    "with %d sub-scores",
+                    last_obj_end, len(body),
+                    len(parsed.get("sub_scores", [])),
+                )
+                return parsed
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
+def _banded_years_ratio(extracted_years: float, target_years: float) -> float:
+    """Compute a banded years-ratio sub-score per owner spec (2026-07-07).
+
+    Replaces the continuous ``min(years / target, 1.0)`` with a discrete
+    4-band rule that is easier to audit and explain to a recruiter:
+
+        years >= target           → 1.00   (meets-or-exceeds)
+        years >= 50% of target    → 0.50   (substantial partial credit)
+        years >= 25% of target    → 0.25   (marginal partial credit)
+        years <  25% of target    → 0.00   (insufficient)
+
+    Why banded (vs continuous):
+      * Continuous ratios (e.g. 0.667 for 4/6) are difficult to defend in a
+        recruiter UI — "why did this candidate get a 0.67 instead of the
+        other candidate's 0.71?" Bands map directly to explainable labels
+        ("meets expectation", "substantial partial", "marginal").
+      * Reduces LLM-extraction noise: a 4.2-vs-4.0 extraction becomes the
+        same band (both 1.0 at expected=3), instead of two different
+        continuous numbers.
+      * Still preserves ordering: candidates with more years never score
+        lower than candidates with fewer years at the same target.
+
+    The band thresholds (50%, 25%) are owner-specified and align with the
+    four anchor values used on the :data:`RELEVANCE_ANCHORS` scale
+    (1.0, 0.75, 0.5, 0.25) — though this rubric uses 1.0/0.5/0.25/0.0 to
+    keep "no evidence" firmly at zero rather than crediting 0.25 for
+    a single passing mention.
+
+    Args:
+        extracted_years: Years value extracted by the LLM (from the
+            employment_history context block, or from a chunk if no
+            structured profile is supplied). May be 0 or negative when
+            the LLM finds no evidence — caller should still apply the
+            0.0 band.
+        target_years: The recruiter-specified expected/required years.
+            Must be > 0 (caller enforces this — the linear branch
+            only invokes this helper when ``target_years > 0``).
+
+    Returns:
+        One of ``1.0``, ``0.5``, ``0.25``, ``0.0``.
+    """
+    if extracted_years <= 0 or target_years <= 0:
+        return 0.0
+    if extracted_years >= target_years:
+        return 1.0
+    if extracted_years >= 0.5 * target_years:
+        return 0.5
+    if extracted_years >= 0.25 * target_years:
+        return 0.25
+    return 0.0
+
+
 def _parse_llm_response(
     response: str,
     rubric: RubricTemplate,
@@ -236,24 +467,9 @@ def _parse_llm_response(
     Returns:
         List of SubScoreResult, one per sub-question in the rubric.
     """
-    # Extract JSON from the response (handles markdown code fences).
-    json_match = re.search(r'\{[^{}]*"(?:sub_scores)"[^{}]*\[.*?\]\s*\}', response, re.DOTALL)
-    if not json_match:
-        # Try a simpler approach — find the first { and last }.
-        first = response.find("{")
-        last = response.rfind("}")
-        if first != -1 and last != -1:
-            json_str = response[first:last + 1]
-        else:
-            logger.warning("No JSON found in LLM response")
-            return _default_sub_scores(rubric, target_years)
-    else:
-        json_str = json_match.group()
-
-    try:
-        data = json.loads(json_str)
-    except json.JSONDecodeError:
-        logger.warning("Invalid JSON in LLM response: %s", json_str[:200])
+    data = _extract_json_lenient(response)
+    if data is None:
+        logger.warning("No JSON found in LLM response")
         return _default_sub_scores(rubric, target_years)
 
     raw_sub_scores = data.get("sub_scores", [])
@@ -271,7 +487,19 @@ def _parse_llm_response(
             logger.warning("Unknown sub-question key '%s' in LLM response", key)
             continue
 
-        sub_score = float(raw.get("sub_score", 0.0))
+        raw_score = raw.get("sub_score")
+        # Defensive: handle "sub_score": null or missing → 0.0.
+        if raw_score is None:
+            sub_score = 0.0
+        else:
+            try:
+                sub_score = float(raw_score)
+            except (TypeError, ValueError):
+                logger.warning(
+                    "Invalid sub_score %r for key %s — defaulting to 0.0",
+                    raw_score, key,
+                )
+                sub_score = 0.0
         # Clamp to 0.0–1.0.
         sub_score = max(0.0, min(1.0, sub_score))
 
@@ -279,7 +507,7 @@ def _parse_llm_response(
         if sq.type == "binary":
             sub_score = 1.0 if sub_score >= 0.5 else 0.0
 
-        # For linear, compute the ratio from extracted years.
+        # For linear, compute the BANDED ratio from extracted years.
         if sq.type == "linear":
             extracted_years = raw.get("extracted_years")
             if extracted_years is not None:
@@ -289,9 +517,15 @@ def _parse_llm_response(
                     extracted_years = None
 
             if extracted_years is not None and target_years and target_years > 0:
-                sub_score = min(extracted_years / target_years, 1.0)
+                # Banded years-ratio (owner spec 2026-07-07):
+                #   >= target → 1.0; >= 50% → 0.5; >= 25% → 0.25; else 0.0.
+                sub_score = _banded_years_ratio(extracted_years, target_years)
             else:
-                # If no years extracted, use the LLM's score directly.
+                # If no years extracted OR no target_years, leave the
+                # LLM's clamped sub_score in place. The default-sub-scores
+                # path (no-LLM branch) returns 0.0 for linear sub-questions;
+                # we only get here when the LLM specifically answered but
+                # could not extract a numeric years value.
                 pass
 
             results.append(SubScoreResult(
@@ -499,6 +733,7 @@ def score_requirement_with_rubric(
     evidence: SectionEvidence,
     target_years: Optional[float] = None,
     llm_caller: Optional[Callable[[str], str]] = None,
+    employment_history: Optional[List[Any]] = None,
 ) -> CachedScoringTrace:
     """Score a single requirement using the rubric-bound LLM evidence scoring.
 
@@ -519,14 +754,26 @@ def score_requirement_with_rubric(
         target_years: Target/ideal years for linear sub-questions.
         llm_caller: Callable that takes a prompt string and returns the LLM
             response. If None, returns a zero-score trace.
+        employment_history: Optional list of ``EmploymentEntry`` (or
+            duck-typed dicts with the same shape) from the candidate's
+            structured profile. When non-empty, the prompt appends an
+            ``EMPLOYMENT HISTORY`` block so the LLM can correlate skill
+            mentions in the retrieved chunks with the parser-computed
+            role durations. Mitigates the failure mode where Recursive
+            chunking splits a role's date line away from its bullets.
 
     Returns:
         ``CachedScoringTrace`` with all sub-scores, evidence, and computed scores.
     """
     rubric = get_rubric(dimension_type)
 
-    # If no evidence was found, return a zero trace.
-    if not evidence.full_text:
+    # If no evidence was found AND no employment history is provided,
+    # return a zero trace. (When employment_history is provided but
+    # evidence.full_text is empty, we still call the LLM — the
+    # employment_history block alone may be enough for the LLM to
+    # score presence/years. The evidence-empty short-circuit only
+    # fires when BOTH inputs are empty.)
+    if not evidence.full_text and not employment_history:
         sub_scores = _default_sub_scores(rubric, target_years)
         normalized = 0.0
         weighted = 0.0
@@ -542,8 +789,17 @@ def score_requirement_with_rubric(
             chunk_ids=[c.chunk_id for c in evidence.chunks],
         )
 
-    # Build the prompt (weight is NOT included).
-    prompt = _build_rubric_prompt(requirement_name, rubric, evidence, target_years)
+    # Build the prompt (weight is NOT included). When employment_history
+    # is non-empty, the prompt includes an EMPLOYMENT HISTORY block right
+    # after the SECTION CONTENT so the LLM can correlate skill mentions
+    # in retrieved chunks with parser-computed role durations.
+    prompt = _build_rubric_prompt(
+        requirement_name,
+        rubric,
+        evidence,
+        target_years=target_years,
+        employment_history=employment_history,
+    )
 
     # Call the LLM (or fall back to zero scores).
     if llm_caller is None:

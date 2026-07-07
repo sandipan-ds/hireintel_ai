@@ -8,6 +8,97 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
+### Added — 2026-07-06 (Track 6, missing-module reconciliation): Hybrid PDF extractor + phantom-module doc fixes (DEC-030)
+
+- **`src/resume_parsing/ocr.py` (NEW)** — restores the optional PDF → text bridge the parser was already gated on. Declares `_HAS_PDFPLUMBER`, `_HAS_PYPDFIUM`, `_HAS_PDF2IMAGE` availability flags at import time. `extract_text_hybrid(path) -> str` runs the strategies in order: `pdfplumber` (high-fidelity text layer) → `pypdfium2` (Poppler-free fallback) → `pdf2image` + OCR (scanned-PDF last resort; placeholder for future wiring). Raises an informative `RuntimeError` if every strategy returns empty text so the parser can mark the resume as unparsable rather than silently producing an empty profile.
+- **`tests/unit/test_ocr.py` (NEW)** — 7 unit tests covering the availability flags, the happy-path extraction on the real `01888170110d1ccf.pdf` (John Wood's resume — same fixture as `test_parse_resume_parser.py`), both `RuntimeError` paths (no backends / empty backends via monkeypatch), and the individual private backend wrappers (`_extract_with_pdfplumber`, `_extract_with_pypdfium`). Each PDF-exercising test carries `pytest.mark.skipif(not _HAS_*)` so the suite remains green in environments where backends are missing.
+- **`tests/unit/test_resume_parser.py`** — added `pytest.mark.skipif(not _HAS_OCR, ...)` to `test_parse_resume_extracts_contact_and_name` so the existing PDF fixture test is exercised when PDF backends are installed and cleanly skipped when they are not. The test now passes (it had been the single failing test for many sessions).
+- **Docs reconciliation** — `header_normalization.py` was a docs-only phantom. The section-header classification logic actually lives in `src/resume_parsing/parser.py` (the `SECTION_HEADERS` dict + `sectionize()` + `identify_section_heading()` functions). Four doc references reconciled: `CURRENT_PROGRESS.md` Header Normalization row, `MODEL_REGISTRY.md` Header Normalization row, `IMPLEMENTATION_ROADMAP.md` line 237, `ARCHITECTURE_CHANGELOG.md` line 277. Each now points to `parser.py` as the real location and links back to Track 6 / DEC-030.
+- **`docs/TROUBLESHOOTING.md`** — appended the full debugging trail for the missing `ocr.py` issue (problem → symptoms → root cause → investigation process → solution → verification → prevention). Reusable pattern for future optional-dependency missing-module investigations.
+- **`docs/ENVIRONMENT_NOTES.md`** — appended the PDF back-end availability matrix (pdfplumber installed, pypdfium2 installed, pdf2image not installed, pymupdf not installed), the optional-dependency pattern (`_HAS_X` flags declared at import time, fail-open at import, fail-closed at call time), and the minimum `pip install -r requirements.txt` command for fresh environments.
+
+### Fixed — 2026-07-06 (Track 6, missing-module reconciliation)
+
+- **The pre-existing single failing unit test (`test_parse_resume_extracts_contact_and_name`) is now passing.** The test calls `parse_resume(<pdf>)` and previously raised `RuntimeError: PDF extraction requires src.resume_parsing.ocr which is not installed in this environment.` Once `src/resume_parsing/ocr.py` was added, `pdfplumber` (already in the venv) was wired up and the John Wood fixture PDF extracts cleanly: name = "John Wood", phone contains "+1-925-885-5155", email contains "help@enhancv.com".
+- **Doc phantom for `src/resume_parsing/header_normalization.py`** — four doc files claimed this file existed and held the canonical section-header normalization logic. Reconciled in this track; the functionality lives in `src/resume_parsing/parser.py`.
+
+### Unchanged — 2026-07-06 (Track 6, missing-module reconciliation)
+
+- The parser's lazy-import branch (`try: from .ocr import ...; _HAS_OCR = True except ImportError: _HAS_OCR = False`) is unchanged. The new `ocr.py` simply makes the `True` path trie-able; environments without PDF back-ends still write `_HAS_OCR = False` and the new `skipif` marker skipped the relevant tests.
+- The `pdfplumber` and `pypdfium2` packages were already declared in `requirements.txt` — no new dependencies. `pdf2image` is documented as optional (Poppler required).
+
+### Test status — 2026-07-06 (Track 6)
+
+- **455 / 455 unit tests pass** (+7 vs the prior 447/448 baseline, and +1 fix for the previously-failing PDF test). Perfect green.
+
+### Added — 2026-07-06 (Track 5, substring fix): Word-boundary matcher for education/cert code-only scoring (DEC-029)
+
+- **`src/scoring/unified_scorer.py::_token_boundary_match`** — new helper that replaces the legacy bare-`in` substring check used by `_score_education_code_only` and `_score_certification_code_only`. The matcher is whole-phrase-first (`\b<needle>\b`) and any-token-fallback (each whitespace-separated token of the requirement checked with `\b<tok>\b` against the candidate text). Stop-word filter skips tokens ≤ 2 chars to avoid near-zero-signal matches.
+- **`tests/unit/test_unified_scorer.py`** — 6 regression tests added: `"BA"` vs `"MBA"` (no match), `"BS"` vs `"BSE"` (no match), `"BA"` vs `"BA"` (match sanity), `"BTech"` vs `"BTech in Computer Science"` (legacy education match preserved), `"PMP"` vs `"PMPI"` (no match), `"PMP"` vs `"PMP Certified"` (legacy cert match preserved).
+- **Test status:** 447/448 passing (+6 vs the prior 441/442 baseline). The single pre-existing failure is the unresolved `src/resume_parsing/ocr.py` issue (Track 6, deferred).
+
+### Fixed — 2026-07-06 (Track 5, substring fix)
+
+- **False-positive education/cert matching for short abbreviations.** Previously, `_score_education_code_only` and `_score_certification_code_only` used `item_name.lower() in degree_entry.degree.lower()` (or the reverse direction, or the `any(kw in cert for kw in item_name.split())` split form for certs). Bare `in` substring matching meant `"BA"` matched `"MBA"` because the substring `ba` appears inside `mba`, `"BS"` matched `"BSE"`, and `"PMP"` matched `"PMPI"`. The new `_token_boundary_match` uses Python's `re` `\b` anchors, so a token must appear as a *whole word* — `"BA"` no longer matches `"MBA"` because the `m` to the left of `ba` is a letter (no boundary). The ANY-token semantic for cert matching is preserved, so `"AWS Certified"` still matches `"AWS Solutions Architect Associate"` via the `aws` token.
+
+### Unchanged — 2026-07-06 (Track 5, substring fix)
+
+- Existing education behavior for substantive degree strings is unchanged: `"BTech"` still matches `"BTech"`, `"BTech in Computer Science"`, and the existing `_make_structured_profile` fixture (`DegreeEntry(degree="BTech", ...)`). The existing `test_btech_iit_tier_1` test confirms this.
+- Existing certification behavior for `"AWS Certified"` against `"AWS Solutions Architect Associate"` is unchanged (the `aws` token carries the match). The existing `test_aws_tier_1` test confirms this.
+
+### Added — 2026-07-06: M0.5a stage-4 code shipped (DEC-027)
+
+- **`src/rag/recursive_chunker.py`** — active chunker (DEC-019). LangChain-free `recursive_split_text`, separator hierarchy `["\n\n", "\n", ". ", " "]`, defaults `chunk_size = 500` / `chunk_overlap = 100`. Owner-specified Optuna bounds enforced at construction: `chunk_size ∈ [200, 500]`, `chunk_overlap ∈ [100, floor(0.60 * chunk_size)]`. Bounds exported as module-level constants for Optuna import.
+- **`src/rag/per_req_retrieval.py`** — canonical SubQuery evidence-gathering entry point. `retrieve_evidence_for_req()` embeds each sub-query (or accepts caller-supplied vectors), retrieves per sub-query via `ThresholdRetriever` with `candidate_id` filter, unions + dedupes by `chunk_id` keeping the highest cosine, sorts desc, caps at `max_chunks_per_query`. Returns `[]` on zero retrieval so the caller raises the no-evidence flag at `reports/audit/no_evidence_flags.jsonl`. 11 unit tests at `tests/unit/test_per_req_retrieval.py`.
+- **`src/rag/build_index.py`** — production index builder + CLI. Walks `data/processed/<role>/*.json`, filters out `_intelligence_report.json` / `_structured_profile.json` downstream artifacts, chunks with `RecursiveChunker`, batch-embeds with MiniLM-L6-v2 (DEC-007, 384-dim, L2-normalized), persists to `data/embeddings/index.npz` + `chunks.jsonl`. Flags `--dry-run`, `--batch-size`, `--chunk-size`, `--chunk-overlap`, `--no-backup`.
+- **`tests/unit/test_cache_key.py`** — 11 tests locking in the theta-in-key invariant for Optuna sweeps.
+
+### Changed — 2026-07-06: M0.5a stage-4 code shipped (DEC-027)
+
+- **Retriever switched from top-K to threshold-based cosine (DEC-018).** `src/rag/retriever.py::ThresholdRetriever` returns every chunk with `cosine >= theta`, sorted desc, capped at `max_chunks_per_query = 20`. Default `theta = 0.30` (was top-K only). WARN log on cap-hit. Bounds `THRESHOLD_LOWER` / `THRESHOLD_UPPER` exported.
+- **SubQuery parser extended.** `src/services/subquery_parser.py::_extract_requirements` now parses SubQuery table rows into a `sub_queries` list per REQ. Verified across all 8 roles: 138 REQs, 356 sub-queries, 0 mismatches.
+- **LLM cache key now includes `theta` (M0.5a Step 5).** `make_cache_key` folds `theta` into the SHA-256 hash, quantized to 6 decimals. All 3 callers updated to thread the retrieval `threshold` into the key. The sweep is now strictly per-trial isolated — a sub-score from `theta = 0.30` is never reused as a `theta = 0.40` hit. Tradeoff: lower hit rate during the sweep; full hit rate restores after a single "Active" config is promoted (M0.5d).
+- **Embedding index rebuilt.** `data/embeddings/index.npz` + `chunks.jsonl` now contain **6,670 chunks** (was Document-Aware's 6,377) from 721 resumes, 384-dim, 8.4 MB. Build time ~135 s on CPU. The prior Document-Aware index is preserved at `data/embeddings/document_aware_backup/`.
+- **Defensive chunker coercion.** `RecursiveChunker.chunk_profile` now treats non-dict `experience` / `education` (list, None) as `{"entries": []}` so real-world parser-output variance does not crash the build.
+
+### Unchanged — 2026-07-06
+
+- The deterministic scoring engine is still the only ranking signal.
+- `DocumentAwareChunker` is retained at `src/rag/document_aware_chunker.py` as a one-release migration aid per DEC-022; production paths do not call it.
+- `ChunkRecord` schema is unchanged — Recursive chunks share the exact dataclass the Document-Aware chunker emits, so downstream embedding / retrieval / scoring code is untouched.
+
+### Known Risks — 2026-07-06
+
+- **Production wiring pending.** The new composed scorer (`evaluate_candidate_composed`) is unit-tested but no batch scoring CLI yet invokes it. The legacy `evaluate_candidate` / `evaluate_candidate_unified` paths are live but are deprecated supersets.
+- **113 candidates were silently dropped** during the index build (721 resumes → 608 unique candidate_ids in the index) because their parsed profile produced zero non-empty sections. Tracked for Track 6.
+- **441 / 442 unit tests pass** (single pre-existing failure is the unresolved `src/resume_parsing/ocr.py` missing-module issue).
+
+### Added — 2026-07-06 (Track 2-S, scorer refactor): Composed Mode1 × Mode2 scorer (DEC-028)
+
+> Track naming: this is "Track 2-S" (scorer refactor), distinct from the docs' "Track 2" (Eval set + MLflow, M0.5b/c). The two tracks are unrelated and run on separate timelines. Track 2-S follows Track 1 (M0.5a RAG pipeline) and gives the new pipeline its first production score consumer.
+
+- **`src/scoring/graded_scorer.py::evaluate_candidate_code_only_v2`** — the canonical code-only scorer under the new spec. Drops `scale_factor` and `DEFAULT_EXPECTED_YEARS`. Total = `Σ (weight% × code_only_part)`, lands in [0, 100] because the recruiter weights sum to 100. Years-type REQs with no recoverable `expected_years` are blocked (contribution 0 + "BLOCKED:" reason). Synonym dictionary + regex years detection from `graded_scorer` legacy helpers are reused.
+- **`src/scoring/graded_scorer.py::extract_expected_years`** — regex extractor for `expected_years` from free text. Handles 4 patterns: `expected N years`, `N-M years → M (upper bound)`, `N+ years`, `N years`; returns `None` when nothing recoverable.
+- **`src/scoring/unified_scorer.py::evaluate_candidate_composed`** — the canonical composition scorer: per REQ, `Sub-Score = Code_only_part × Rubric_LLM_part` (both ∈ [0, 1]); `Contribution = weight% × Sub-Score`; `Total = Σ Contribution`. Code-only part comes from `Binary` + `Float years-proportional` SubQuery SQs scored against the parsed profile. Rubric LLM part comes from one `rubric_scorer.score_requirement_with_rubric` call per REQ after `per_req_retrieval.retrieve_evidence_for_req` retrieves evidence. New `sq_embedder` kwarg lets tests inject hand-crafted vectors (sidesteps MiniLM download).
+- **`src/scoring/unified_scorer.py`** — new dataclasses: `ComposedREQResult`, `ComposedCandidateEvaluation`. Helpers: `_is_binary_subquery`, `_is_years_subquery`, `_is_rubric_subquery` (sub-query classifier), `_score_presence_sq` (token-fallback presence check), `_score_years_sq` (returns `(score, years, expected)`; `expected=None` signals block), `_build_section_evidence` (adapter from per-REQ retrieval `ScoredChunk` list → rubric_scorer's `SectionEvidence`).
+- **`src/audit/no_evidence_flags.py`** — append-only JSONL audit log for zero-evidence flags. `write_flag` / `read_flags` / `clear_flags`. One line per `(candidate, REQ)` pair with: timestamp (ISO 8601 UTC), candidate_id, role, req_id, requirement_name, sub_query_keys, sub_query_count, theta, chunker. Reserved field names protected against overwrite from `extra` dict.
+- **`tests/unit/test_composed_scorer.py`** — 38 unit tests covering extract_expected_years (8), no_evidence_flags writer (6), evaluate_candidate_code_only_v2 (6), sub-query classification (3), per-SQ scoring helpers (5), and evaluate_candidate_composed end-to-end (10). All tests use a 4-dim synthetic toy index + stub embedder, no model download.
+
+### Changed — 2026-07-06 (Track 2-S, scorer refactor)
+
+- **Production scoring formula switched to the canonical WORKING_LOGIC spec.** Legacy `evaluate_candidate` / `evaluate_candidate_unified` paths are kept untouched as backward-compat shims. Production callers should migrate to `evaluate_candidate_composed` (per-REQ) and `evaluate_candidate_code_only_v2` (code-only fallback).
+- **Missing `expected_years` is now a block, not a default-10.** The legacy `DEFAULT_EXPECTED_YEARS = 10` silently defaulted years-type REQs; the new path blocks the REQ (contribution 0) and flags for human review. The JD or SubQuery file is the source of truth for expected_years per the WORKING_LOGIC spec.
+
+### Unchanged — 2026-07-06 (Track 2-S, scorer refactor)
+
+- The legacy `graded_scorer.DEFAULT_EXPECTED_YEARS` constant is kept as a deprecation marker (importable, unused in the new path).
+- The existing `rubric_scorer.score_requirement_with_rubric` API is unchanged; the composed scorer adapts per-REQ retrieved chunks to it via `_build_section_evidence`.
+- The deterministic scoring engine remains the only ranking signal; the LLM only scores the rubric sub-questions within a single REQ.
+
+---
+
+## Earlier unreleased changes (2026-07-04 onward)
+
 ### Added — 2026-07-04 (late evening): Real LLM caller + verified end-to-end scoring
 
 - **LLM caller** (`src/services/llm_caller.py`): OpenAI-compatible client using `OPENCODE_API_KEY` from `.env`, base_url `https://opencode.ai/zen/v1`. Model: `nemotron-3-ultra-free` (the actual free model on the endpoint; the original `.env` value `MiMo V2.5 Free` was an invalid alias).
@@ -189,7 +280,7 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ### Added — 2026-06-30: Two-mode scoring engine + foundation modules
 
-- **Header Normalization** (`src/resume_parsing/header_normalization.py`) — Layer 1 synonym table + Layer 2 LLM fallback for 7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages). 24 tests.
+- **Header Normalization** (~`src/resume_parsing/header_normalization.py`~ — file never existed; the logic lives in `src/resume_parsing/parser.py` per Track 6 / DEC-030) — Layer 1 synonym table + Layer 2 LLM fallback for 7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages). 24 tests.
 - **Chunk Metadata Schema** (`src/rag/chunker.py` updated) — `section_type`, `parent_structure` (organization, role_title, location, temporal_context with `calculated_duration_months`), `skills_asserted`, `experience_type`. Deterministic date parsing. 33 tests.
 - **Structured Candidate Profile** (`src/resume_parsing/structured_profile.py`) — Degrees, institutions, certifications, total experience (no double-counting of overlapping roles), companies, roles, employment dates. Separate deterministic record. 14 tests.
 - **Section-Routed Evidence Retrieval** (`src/rag/section_routed.py`) — Fixed requirement→section mapping table, exact label match, no embeddings/cosine, metadata filtering for long sections. 44 tests.

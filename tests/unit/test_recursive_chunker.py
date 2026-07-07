@@ -9,7 +9,13 @@ from src.rag import (
     RecursiveChunker,
     recursive_split_text,
 )
-from rag.document_aware_chunker import ChunkRecord
+from src.rag.document_aware_chunker import ChunkRecord
+from src.rag.recursive_chunker import (
+    CHUNK_SIZE_LOWER,
+    CHUNK_SIZE_UPPER,
+    min_overlap_for,
+    max_overlap_for,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -24,7 +30,7 @@ def test_empty_input_returns_empty_list():
 
 def test_short_input_returns_single_chunk():
     text = "Short paragraph."
-    out = recursive_split_text(text, chunk_size=500, chunk_overlap=50)
+    out = recursive_split_text(text, chunk_size=500, chunk_overlap=250)
     assert out == [text]
 
 
@@ -37,8 +43,8 @@ def test_chunks_within_chunk_size_plus_overlap():
     defeat the purpose. Matches LangChain's RecursiveCharacterTextSplitter
     behavior.
     """
-    text = ("Sentence. " * 200).strip()  # ~2200 chars
-    chunk_size, chunk_overlap = 500, 50
+    text = ("Sentence. " * 400).strip()  # ~4400 chars
+    chunk_size, chunk_overlap = 1000, 500
     out = recursive_split_text(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     assert all(len(c) <= chunk_size + chunk_overlap for c in out)
 
@@ -51,9 +57,9 @@ def test_chunks_overlap_when_long():
     between two words). Either way, the next chunk starts with at least
     the last ``chunk_overlap`` chars (modulo whitespace) of the previous.
     """
-    text = ("Word " * 300).strip()  # 1500 chars
-    chunk_overlap = 30
-    out = recursive_split_text(text, chunk_size=200, chunk_overlap=chunk_overlap)
+    text = ("Word " * 600).strip()  # 3000 chars
+    chunk_overlap = 250  # 50% of chunk_size=500
+    out = recursive_split_text(text, chunk_size=500, chunk_overlap=chunk_overlap)
     assert len(out) >= 2
     for i in range(1, len(out)):
         prev = out[i - 1]
@@ -72,20 +78,25 @@ def test_chunks_overlap_when_long():
 
 def test_invalid_chunk_size_raises():
     with pytest.raises(ValueError):
-        recursive_split_text("hello", chunk_size=0, chunk_overlap=0)
+        recursive_split_text("hello", chunk_size=200, chunk_overlap=100)   # below CHUNK_SIZE_LOWER=500
+    with pytest.raises(ValueError):
+        recursive_split_text("hello", chunk_size=1500, chunk_overlap=800)  # above CHUNK_SIZE_UPPER=1000
 
 
 def test_invalid_chunk_overlap_raises():
+    # Chunk_size=500 → min_overlap=250, max_overlap=300.
     with pytest.raises(ValueError):
-        recursive_split_text("hello", chunk_size=100, chunk_overlap=100)  # overlap must be < chunk_size
+        recursive_split_text("hello", chunk_size=500, chunk_overlap=500)  # overlap must be < chunk_size
     with pytest.raises(ValueError):
-        recursive_split_text("hello", chunk_size=100, chunk_overlap=-1)
+        recursive_split_text("hello", chunk_size=500, chunk_overlap=200)  # below min_overlap_for(500)=250
+    with pytest.raises(ValueError):
+        recursive_split_text("hello", chunk_size=500, chunk_overlap=350)  # above max_overlap_for(500)=300
 
 
 def test_separator_hierarchy_preserves_paragraph_boundaries():
     """When paragraphs fit, the splitter should keep them in separate chunks."""
     text = "First paragraph about Python.\n\nSecond paragraph about Django."
-    out = recursive_split_text(text, chunk_size=100, chunk_overlap=0, separators=("\n\n", "\n", ". ", " "))
+    out = recursive_split_text(text, chunk_size=500, chunk_overlap=250, separators=("\n\n", "\n", ". ", " "))
     # Both paragraphs are short, but the second has overlap-induced text.
     # At minimum, "First paragraph about Python." must appear in the first chunk.
     assert any("First paragraph about Python." in c for c in out)
@@ -99,19 +110,26 @@ def test_long_word_falls_back_to_hard_split():
     repeat characters at boundaries due to the overlap, but it must
     contain the full input and every piece must respect the size limit.
     """
-    long_word = "a" * 200
-    chunk_size, chunk_overlap = 50, 5
+    long_word = "a" * 1200
+    chunk_size, chunk_overlap = 1000, 500
     out = recursive_split_text(long_word, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     assert all(len(c) <= chunk_size + chunk_overlap for c in out)
     # The full input must be recoverable from the chunks (modulo overlap-induced repeats).
     assert all(c == "a" * len(c) for c in out), "hard-split should not introduce non-`a` characters"
 
 
-def test_defaults_match_dec_019():
-    """DEC-019 defaults: chunk_size=500, chunk_overlap=50."""
-    assert RECURSIVE_CHUNK_SIZE == 500
-    assert RECURSIVE_CHUNK_OVERLAP == 50
+def test_defaults_match_owner_spec_2026_07_07():
+    """Owner spec (2026-07-07): chunk_size=1000, chunk_overlap=500 (50% of chunk_size).
+
+    Previously (DEC-019 / 2026-07-06): chunk_size=500, chunk_overlap=100.
+    Widened to reduce date/skill split incidents and ensure the date line in
+    chunk N also appears in chunk N+1.
+    """
+    assert RECURSIVE_CHUNK_SIZE == 1000
+    assert RECURSIVE_CHUNK_OVERLAP == 500
     assert DEFAULT_SEPARATORS == ("\n\n", "\n", ". ", " ")
+    assert CHUNK_SIZE_LOWER == 500
+    assert CHUNK_SIZE_UPPER == 1000
 
 
 # ---------------------------------------------------------------------------
@@ -121,25 +139,29 @@ def test_defaults_match_dec_019():
 
 def test_chunker_default_construction():
     chunker = RecursiveChunker()
-    assert chunker.chunk_size == 500
-    assert chunker.chunk_overlap == 50
+    assert chunker.chunk_size == 1000
+    assert chunker.chunk_overlap == 500
     assert chunker.separators == DEFAULT_SEPARATORS
     assert chunker.section_type == "document"
 
 
 def test_chunker_rejects_invalid_construction():
     with pytest.raises(ValueError):
-        RecursiveChunker(chunk_size=0)
+        RecursiveChunker(chunk_size=200)                                  # below CHUNK_SIZE_LOWER=500
     with pytest.raises(ValueError):
-        RecursiveChunker(chunk_size=100, chunk_overlap=100)
+        RecursiveChunker(chunk_size=1500)                                # above CHUNK_SIZE_UPPER=1000
     with pytest.raises(ValueError):
-        RecursiveChunker(chunk_size=100, chunk_overlap=-1)
+        RecursiveChunker(chunk_size=500, chunk_overlap=500)              # overlap >= chunk_size
+    with pytest.raises(ValueError):
+        RecursiveChunker(chunk_size=500, chunk_overlap=200)              # below min_overlap_for(500)=250
+    with pytest.raises(ValueError):
+        RecursiveChunker(chunk_size=500, chunk_overlap=350)               # above max_overlap_for(500)=300
     with pytest.raises(ValueError):
         RecursiveChunker(separators=())
 
 
 def test_chunk_text_emits_chunk_records():
-    chunker = RecursiveChunker(chunk_size=100, chunk_overlap=10)
+    chunker = RecursiveChunker(chunk_size=500, chunk_overlap=250)
     text = ("Sentence. " * 20).strip()
     chunks = chunker.chunk_text(
         text,
@@ -155,7 +177,7 @@ def test_chunk_text_emits_chunk_records():
 
 
 def test_chunk_text_chunk_ids_are_unique():
-    chunker = RecursiveChunker(chunk_size=100, chunk_overlap=10)
+    chunker = RecursiveChunker(chunk_size=500, chunk_overlap=250)
     text = ("Sentence. " * 20).strip()
     chunks = chunker.chunk_text(text, candidate_id="cand_test")
     ids = [c.chunk_id for c in chunks]
@@ -172,7 +194,7 @@ def test_chunk_text_empty_input_returns_empty_list():
 
 def test_chunk_profile_uses_section_anchors():
     """chunk_profile emits one chunk series per section, in deterministic order."""
-    chunker = RecursiveChunker(chunk_size=200, chunk_overlap=20)
+    chunker = RecursiveChunker(chunk_size=500, chunk_overlap=250)
     profile = {
         "candidate_id": "cand_001",
         "source_file": "data/original/test.pdf",
@@ -228,7 +250,7 @@ def test_chunk_profile_skips_empty_sections():
 
 def test_section_type_is_propagated():
     """The per-section chunker uses the section name as the ``section_type``."""
-    chunker = RecursiveChunker(chunk_size=500, chunk_overlap=50)
+    chunker = RecursiveChunker(chunk_size=500, chunk_overlap=250)
     profile = {
         "candidate_id": "cand_001",
         "summary": {"value": "Summary text."},
@@ -239,3 +261,13 @@ def test_section_type_is_propagated():
     skill_chunks = [c for c in chunks if c.section == "skills"]
     assert all(c.section_type == "summary" for c in summary_chunks)
     assert all(c.section_type == "skills" for c in skill_chunks)
+
+
+def test_min_max_overlap_bounds():
+    """Verify the new 50-60% overlap bounds (owner spec 2026-07-07)."""
+    # chunk_size=500 → min=250 (50%), max=300 (60%)
+    assert min_overlap_for(500) == 250
+    assert max_overlap_for(500) == 300
+    # chunk_size=1000 → min=500 (50%), max=600 (60%)
+    assert min_overlap_for(1000) == 500
+    assert max_overlap_for(1000) == 600

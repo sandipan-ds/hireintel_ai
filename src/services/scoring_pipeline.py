@@ -22,7 +22,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from rag.document_aware_chunker import ChunkRecord
+from src.rag.document_aware_chunker import ChunkRecord
 from src.resume_parsing.structured_profile import (
     CertificationEntry,
     DegreeEntry,

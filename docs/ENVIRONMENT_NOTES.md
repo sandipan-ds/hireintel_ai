@@ -35,3 +35,42 @@ Use this document for Python installation issues, dependency conflicts, IDE issu
   ```powershell
   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
   ```
+
+---
+
+## PDF extraction back-ends availability
+
+**Date:** 2026-07-06 (Track 6 reconciliation)
+
+**Environment:**
+- Windows development workspace
+- Python 3.14.4
+- venv: `.venv\`
+
+**Available back-ends (probed at runtime via `src/resume_parsing/ocr.py`):**
+- `pdfplumber` — installed. High-fidelity text-layer extraction; preserves layout. Default first try.
+- `pypdfium2` — installed. Poppler-free fallback; fast. Used when `pdfplumber` produces empty text.
+- `pdf2image` — not installed. Optional scanned-PDF OCR bridge. Requires Poppler on the system PATH and an OCR engine (e.g. `pytesseract`).
+- `pymupdf` / `fitz` — not installed. Alternative to `pypdfium2`. Not currently wired into `ocr.py`.
+
+**Cause:**
+- The optional `src/resume_parsing/ocr.py` module was missing; `parser.py` already gated its import via `try/except ImportError` but no module imported the (installed) back-ends. The parser therefore raised a hard `RuntimeError` whenever a `.pdf` path reached `extract_text_from_path`, even on a machine where `pdfplumber` was already installed.
+
+**Resolution:**
+- Created `src/resume_parsing/ocr.py` with availability flags `_HAS_PDFPLUMBER`, `_HAS_PYPDFIUM`, `_HAS_PDF2IMAGE` declared at import time. The hybrid extractor runs `pdfplumber` first, then `pypdfium2`, then `pdf2image` (when installed); raises an informative `RuntimeError` when every strategy returns empty text.
+- Installed back-ends are picked up automatically — no environment variables, no extra setup beyond `pip install`.
+- The parser's lazy import detects the new module and writes `_HAS_OCR = True` automatically.
+
+**Prevention:**
+- Future optional-dependency modules should follow the same pattern: declare availability flags at import time, fail-open at import, fail-closed at call time. This matches `src/resume_parsing/ocr.py` and the existing `pdfplumber` / `pypdfium2` lazy-import branches.
+- To enable scanned-PDF OCR support, install `pdf2image` + Poppler + `pytesseract` together. The placeholder OCR invocation in `ocr.py::_extract_with_pdf2image_ocr` is the only code path that needs extension when OCR back-ends are added.
+
+**Required packages (unchanged):**
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+`pdfplumber` and `pypdfium2` are already declared in `requirements.txt`, so this command brings back any missing PDF back-end on a fresh clone.
+
+**Test gating:**
+- `tests/unit/test_resume_parser.py` carries `pytest.mark.skipif(not _HAS_OCR, reason="...")` so the suite is green in environments that have no PDF back-end installed.
+- `tests/unit/test_ocr.py` carries the same guard for the real-PDF extraction paths (kept as 4 skip-marked tests when back-ends are missing).

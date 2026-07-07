@@ -122,10 +122,18 @@ def test_save_and_load_roundtrip(toy_index):
 # ---------------------------------------------------------------------------
 
 
-def test_default_threshold_matches_dec_018():
+def test_default_threshold_matches_owner_spec_2026_07_06():
+    """Default threshold = 0.25 (slightly below midpoint of [0.10, 0.50]).
+
+    DEC-018 originally shipped 0.70; the owner refined the Optuna search
+    space to [0.10, 0.50] on 2026-07-06. On 2026-07-07 the default was
+    lowered from 0.30 to 0.25 to surface more date-bearing chunks per REQ
+    during smoke testing (mitigating the failure mode where the date line
+    landed in a chunk that did not pass the higher theta).
+    """
     r = ThresholdRetriever(VectorIndex())
     assert r.threshold == DEFAULT_THRESHOLD
-    assert DEFAULT_THRESHOLD == 0.70
+    assert DEFAULT_THRESHOLD == 0.25
     assert r.max_chunks_per_query == DEFAULT_MAX_CHUNKS_PER_QUERY
     assert DEFAULT_MAX_CHUNKS_PER_QUERY == 20
 

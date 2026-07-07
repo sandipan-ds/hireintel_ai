@@ -36,7 +36,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 
-from rag.document_aware_chunker import ChunkRecord
+from src.rag.document_aware_chunker import ChunkRecord
 
 logger = logging.getLogger(__name__)
 
@@ -47,8 +47,8 @@ EMBEDDING_DIM = 384  # MiniLM-L6-v2 output dim
 # Paths.
 ROOT = Path(__file__).resolve().parent.parent.parent
 EMBEDDINGS_DIR = ROOT / "data" / "embeddings"
-INDEX_PATH = EMBEDDINGS_DIR / "index.npz"
-CHUNKS_PATH = EMBEDDINGS_DIR / "chunks.jsonl"
+INDEX_PATH = EMBEDDINGS_DIR / "recursive_chunking" / "index.npz"
+CHUNKS_PATH = EMBEDDINGS_DIR / "recursive_chunking" / "chunks.jsonl"
 CACHE_PATH = EMBEDDINGS_DIR / "llm_cache.jsonl"
 
 
@@ -300,14 +300,29 @@ def make_cache_key(
     req_id: str,
     chunk_ids: Tuple[str, ...],
     llm_model: str = "stub",
+    theta: Optional[float] = None,
 ) -> str:
     """Compute a cache key for an LLM sub-score call.
 
-    Includes the chunk IDs (so any re-chunk invalidates the cache) and
-    the model name (so model upgrades invalidate the cache).
+    Includes the chunk IDs (so any re-chunk invalidates the cache), the
+    model name (so model upgrades invalidate the cache), and the cosine
+    theta used for this retrieval pass.
+
+    Why theta is in the key (M0.5a Step 5, 2026-07-06):
+        During an Optuna sweep (DEC-021) different ``theta`` values may
+        yield the *same* chunk-id set (when every retrieved chunk clears
+        both candidate thresholds). In that case the LLM sees identical
+        evidence and would produce the same score, so the cache could
+        return a hit. Folding ``theta`` into the key makes each Optuna
+        trial strictly isolated: a sweep across theta in [0.10, 0.50]
+        never reuses a sub-score that was computed under a different
+        theta. The tradeoff is more cache misses (lower hit rate during
+        the sweep) but a simpler, auditable per-trial invariant —
+        every cached value is tagged with the theta that produced it.
     """
     h = hashlib.sha256()
-    h.update(f"{candidate_id}|{req_id}|{llm_model}|".encode("utf-8"))
+    theta_repr = "" if theta is None else f"{float(theta):.6f}"
+    h.update(f"{candidate_id}|{req_id}|{llm_model}|theta={theta_repr}|".encode("utf-8"))
     for cid in sorted(chunk_ids):
         h.update(f"{cid}|".encode("utf-8"))
     return h.hexdigest()
@@ -404,11 +419,14 @@ def score_requirement_with_similarity(
             "from_cache": False,
         }
 
-    # 2. Build cache key
+    # 2. Build cache key. Include ``threshold`` so an Optuna sweep across
+    # theta does not reuse sub-scores computed under a different theta
+    # even if the retrieved chunk-id set happens to coincide.
     cache_key = make_cache_key(
         candidate_id, req_id,
         tuple(h.chunk_id for h in hits),
         llm_model=getattr(llm_caller, "model_name", "stub"),
+        theta=threshold,
     )
 
     # 3. Check cache
@@ -683,6 +701,7 @@ def score_candidate_batched(
         per_req_chunk_ids = tuple(h.chunk_id for h in per_req_hits[req_id])
         cache_key = make_cache_key(
             candidate_id, req_id, per_req_chunk_ids, model_name,
+            theta=threshold,
         )
         if cache:
             cached = cache.get(cache_key)
@@ -744,6 +763,7 @@ def score_candidate_batched(
             per_req_chunk_ids = tuple(h.chunk_id for h in per_req_hits[req_id])
             cache_key = make_cache_key(
                 candidate_id, req_id, per_req_chunk_ids, model_name,
+                theta=threshold,
             )
             cache.put(cache_key, {
                 "candidate_id": candidate_id,

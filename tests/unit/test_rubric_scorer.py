@@ -2,7 +2,7 @@
 
 import json
 import pytest
-from rag.document_aware_chunker import ChunkRecord
+from src.rag.document_aware_chunker import ChunkRecord
 from src.rag.section_routed import SectionEvidence, section_routed_retrieval
 from src.scoring.rubric_scorer import (
     CachedScoringTrace,
@@ -13,6 +13,9 @@ from src.scoring.rubric_scorer import (
     _parse_llm_response,
     _evaluate_formula,
     _default_sub_scores,
+    _extract_json_lenient,
+    _banded_years_ratio,
+    _format_employment_history,
 )
 from src.scoring.rubrics import SKILL_RUBRIC, LEADERSHIP_RUBRIC
 
@@ -109,8 +112,9 @@ class TestResponseParsing:
         assert results[0].sub_score == 1.0
         assert results[1].key == "years_experience"
         assert results[1].extracted_years == 4.0
-        # Linear score should be computed: min(4/5, 1.0) = 0.8
-        assert results[1].sub_score == 0.8
+        # Banded years-ratio: 4 / 5 ≥ 0.5*5 → 0.5 (was min(4/5,1.0)=0.8
+        # under the old continuous rule). See _banded_years_ratio().
+        assert results[1].sub_score == 0.5
         assert results[2].key == "project_relevance"
         assert results[2].anchor_description == "Multiple projects clearly relevant"
 
@@ -155,6 +159,208 @@ class TestResponseParsing:
         assert results[0].sub_score == 1.0  # clamped from 1.5
         assert results[1].sub_score == 1.0  # min(10/5, 1.0) = 1.0
         assert results[2].sub_score == 0.0  # clamped from -0.5
+
+    def test_null_sub_score_defaults_to_zero(self):
+        # Free-tier LLMs sometimes emit `"sub_score": null` when they
+        # find no evidence. The parser must not crash on None.
+        response = json.dumps({
+            "sub_scores": [
+                {"key": "skill_presence", "sub_score": None},
+                {"key": "years_experience", "sub_score": None,
+                 "extracted_years": None},
+                {"key": "project_relevance", "sub_score": None},
+            ]
+        })
+        results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
+        assert len(results) == 3
+        assert all(r.sub_score == 0.0 for r in results)
+
+
+class TestLenientJsonExtraction:
+    """The lenient JSON extractor must recover sub-score data when the
+    free-tier LLM endpoint truncates the response mid-JSON."""
+
+    def test_valid_complete_json(self):
+        body = '{"sub_scores": [{"key": "a", "sub_score": 0.5}]}'
+        out = _extract_json_lenient(body)
+        assert out is not None
+        assert len(out["sub_scores"]) == 1
+        assert out["sub_scores"][0]["sub_score"] == 0.5
+
+    def test_json_with_prose_around_it(self):
+        body = ('Here is the score:\n'
+                '```json\n'
+                '{"sub_scores": [{"key": "a", "sub_score": 1.0}]}\n'
+                '```\n')
+        out = _extract_json_lenient(body)
+        assert out is not None
+        assert out["sub_scores"][0]["sub_score"] == 1.0
+
+    def test_truncated_mid_object_recovers(self):
+        # Response cut mid-value for the 3rd sub-score.
+        body = ('{"sub_scores": [\n'
+                '  {"key": "skill_presence", "sub_score": 1.0},\n'
+                '  {"key": "years_experience", "sub_score": 0.6, "extracted_years": 3},\n'
+                '  {"key": "project_relevance", "extracted_evidence": "partial eviden')
+        out = _extract_json_lenient(body)
+        # Recovery should keep the first two sub_scores.
+        assert out is not None
+        assert "sub_scores" in out
+        assert len(out["sub_scores"]) == 2
+        assert out["sub_scores"][0]["key"] == "skill_presence"
+        assert out["sub_scores"][1]["key"] == "years_experience"
+
+    def test_truncated_mid_string_value_recovers(self):
+        # Truncated while still inside a string value.
+        body = ('{"sub_scores": [\n'
+                '  {"key": "skill_presence", "extracted_evidence": "Python experience but the text keeps going ')
+        out = _extract_json_lenient(body)
+        # No complete sub_score object boundary → unverifiable → None.
+        # Acceptable: either None (no recovery) or empty list.
+        assert out is None or out.get("sub_scores", []) == []
+
+    def test_empty_string_returns_none(self):
+        assert _extract_json_lenient("") is None
+        assert _extract_json_lenient("not even a brace") is None
+
+    def test_string_with_braces_inside_value(self):
+        body = ('{"sub_scores": [{"key": "skill_presence", '
+                '"extracted_evidence": "Built {pipeline} with Python"}]}')
+        out = _extract_json_lenient(body)
+        assert out is not None
+        assert out["sub_scores"][0]["extracted_evidence"] == "Built {pipeline} with Python"
+
+
+# ---------------------------------------------------------------------------
+# Banded years-ratio (owner spec 2026-07-07)
+# ---------------------------------------------------------------------------
+
+class TestBandedYearsRatio:
+    """The banded rule replaces continuous min(years/target, 1.0) so the
+    sub-score is one of four discrete audit-friendly values: 1.0, 0.5,
+    0.25, 0.0. Owner spec fixed 50% and 25% as the band thresholds."""
+
+    def test_meets_or_exceeds_target(self):
+        # 6/6 and 8/6 both → 1.0
+        assert _banded_years_ratio(6.0, 6.0) == 1.0
+        assert _banded_years_ratio(8.0, 6.0) == 1.0
+
+    def test_substantial_partial_credit(self):
+        # 4/6 → 4 >= 0.5*6=3 → 0.5
+        assert _banded_years_ratio(4.0, 6.0) == 0.5
+        # 3/6 → exactly at 50% threshold → 0.5
+        assert _banded_years_ratio(3.0, 6.0) == 0.5
+
+    def test_marginal_partial_credit(self):
+        # 2/6 → 2 < 50% but 2 >= 25%=1.5 → 0.25
+        assert _banded_years_ratio(2.0, 6.0) == 0.25
+        # 1.5/6 → exactly at 25% threshold → 0.25
+        assert _banded_years_ratio(1.5, 6.0) == 0.25
+
+    def test_insufficient_returns_zero(self):
+        # 1/6 → 1 < 25%=1.5 → 0.0
+        assert _banded_years_ratio(1.0, 6.0) == 0.0
+        # 0/6 → 0.0 (no evidence at all)
+        assert _banded_years_ratio(0.0, 6.0) == 0.0
+        # Negative → 0.0 (defensive)
+        assert _banded_years_ratio(-1.0, 6.0) == 0.0
+
+    def test_zero_target_returns_zero(self):
+        # Defensive: a 0 target should not divide-by-zero; return 0.
+        assert _banded_years_ratio(4.0, 0.0) == 0.0
+
+
+# ---------------------------------------------------------------------------
+# Employment history prompt block (mitigates chunk-split date loss)
+# ---------------------------------------------------------------------------
+
+class TestEmploymentHistoryBlock:
+    """When employment_history is provided, the rubric prompt must include an
+    EMPLOYMENT HISTORY section right after the SECTION CONTENT so the LLM
+    can correlate skill mentions in retrieved chunks with the parser-
+    computed role durations."""
+
+    def test_format_returns_none_when_empty(self):
+        assert _format_employment_history(None) is None
+        assert _format_employment_history([]) is None
+
+    def test_format_renders_entries(self):
+        # Duck-typed dicts in the same shape as EmploymentEntry.
+        eh = [
+            {
+                "company": "Google",
+                "role": "Data Scientist",
+                "dates": "2017-2019",
+                "calculated_duration_months": 36,
+                "inferred_full_year": False,
+            },
+            {
+                "company": "IBM",
+                "role": "Analyst",
+                "dates": "2016-2017",
+                "calculated_duration_months": 12,
+                "inferred_full_year": True,
+            },
+        ]
+        out = _format_employment_history(eh)
+        assert out is not None
+        assert out.startswith("EMPLOYMENT HISTORY")
+        assert "Google" in out and "IBM" in out
+        assert "36 months" in out and "12 months" in out
+        assert "~3.0 yrs" in out
+        # Inferred marker present on the second entry.
+        assert "inferred full year" in out
+
+    def test_prompt_includes_employment_history_block(self):
+        evidence = _make_evidence("Built ETL with Python, pandas, Airflow.")
+        eh = [
+            {
+                "company": "Google",
+                "role": "Data Scientist",
+                "dates": "2017-2019",
+                "calculated_duration_months": 36,
+                "inferred_full_year": False,
+            },
+        ]
+        prompt = _build_rubric_prompt(
+            requirement_name="Python",
+            rubric=SKILL_RUBRIC,
+            evidence=evidence,
+            target_years=3,
+            employment_history=eh,
+        )
+        # The prompt must include the EMPLOYMENT HISTORY header
+        # and the parser-computed duration.
+        assert "EMPLOYMENT HISTORY" in prompt
+        assert "Google" in prompt
+        assert "36 months" in prompt
+        # The linear sub-question hint telling the LLM to use the
+        # precomputed durations must also be present.
+        assert "pre-computed employment history" in prompt.lower()
+
+    def test_prompt_omits_block_when_no_history(self):
+        evidence = _make_evidence("Built ETL with Python.")
+        prompt = _build_rubric_prompt(
+            requirement_name="Python",
+            rubric=SKILL_RUBRIC,
+            evidence=evidence,
+            target_years=3,
+            employment_history=None,
+        )
+        assert "EMPLOYMENT HISTORY" not in prompt
+        # No hint about deferred date math either.
+        assert "pre-computed" not in prompt.lower()
+
+    def test_prompt_omits_block_when_empty_list(self):
+        evidence = _make_evidence("Built ETL with Python.")
+        prompt = _build_rubric_prompt(
+            requirement_name="Python",
+            rubric=SKILL_RUBRIC,
+            evidence=evidence,
+            target_years=3,
+            employment_history=[],
+        )
+        assert "EMPLOYMENT HISTORY" not in prompt
 
 
 # ---------------------------------------------------------------------------
@@ -243,10 +449,11 @@ class TestScoreRequirementWithRubric:
         assert trace.dimension_type == "skill"
         assert trace.weight == 10
         assert len(trace.sub_scores) == 3
-        # 1.0 * 0.8 * 0.75 = 0.6
-        assert trace.normalized_score == pytest.approx(0.6)
-        # 10 * 0.6 = 6.0
-        assert trace.weighted_score == pytest.approx(6.0)
+        # Banded years-ratio (4 yrs vs target 5): 4 ≥ 0.5*5 → 0.5
+        # Formula: 1.0 * 0.5 * 0.75 = 0.375
+        assert trace.normalized_score == pytest.approx(0.375)
+        # 10 * 0.375 = 3.75
+        assert trace.weighted_score == pytest.approx(3.75)
 
     def test_no_evidence_returns_zero(self):
         evidence = _make_evidence("")

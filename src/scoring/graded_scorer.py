@@ -644,3 +644,326 @@ def render_report(evaluation: CandidateEvaluation) -> str:
 
     lines.append("=" * 70)
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Track 2 (2026-07-06, DEC-028): composed code-only scoring under the
+# canonical WORKING_LOGIC.md formula.
+#
+#   Sub-Score_REQ = Code_only_part × Rubric_LLM_part       (both ∈ [0, 1])
+#   Contribution   = weight_percentage × Sub-Score
+#   Total          = Σ Contribution
+#
+# The legacy :func:`evaluate_candidate` keeps its ``importance`` /
+# ``scale_factor`` / ``DEFAULT_EXPECTED_YEARS`` semantics for backwards
+# compatibility. The new :func:`evaluate_candidate_code_only_v2` is the
+# canonical code-only path under the new spec: it consumes the
+# ``requirements_weights`` flat list (each entry with
+# ``weight_percentage`` ∈ 0-100, summing to exactly 100), drops
+# ``scale_factor`` entirely (the recruiter percentages already sum to
+# 100 so ``Σ weight% × Sub-Score`` lands in [0, 100] by construction),
+# and treats missing ``expected_years`` as a hard block (the REQ scores
+# 0 and is flagged for human review) rather than silently defaulting to
+# :data:`DEFAULT_EXPECTED_YEARS`.
+#
+# The new code-only scorer does NOT consume ``scale_factor`` from the
+# weight config. It is the caller's responsibility (the unified
+# composed scorer in :mod:`src.scoring.unified_scorer`) to combine
+# code-only with rubric-bound LLM parts and aggregate to the final
+# total. This module only computes the code-only half per RES also when
+# V2 is invoked on its own.
+# ---------------------------------------------------------------------------
+
+
+# Regex patterns for extracting ``expected_years`` from a sub-query text
+# (or a weight-config ``expected_years`` note embedded inside the SQ
+# text). The SubQuery files embed expected years as phrases like
+# "relative to expected 3 years", "3-4 years as stated in JD", "10+
+# years". When the recruiter weight config provides explicit
+# ``expected_years`` that takes precedence; otherwise we fall back to
+# extracting from the associated sub-query text.
+_EXPECTED_YEARS_PATTERNS: List[re.Pattern[str]] = [
+    re.compile(r"expected\s+(\d+(?:\.\d+)?)\s*years?", re.IGNORECASE),
+    re.compile(r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)\s*years?", re.IGNORECASE),
+    re.compile(r"(\d+(?:\.\d+)?)\s*\+\s*years?", re.IGNORECASE),
+    re.compile(r"(\d+(?:\.\d+)?)\s*years?\b", re.IGNORECASE),
+]
+
+
+def extract_expected_years(text: str) -> Optional[float]:
+    """Extract ``expected_years`` from a free-text snippet.
+
+    Tries the most specific patterns first ("expected N years" → N)
+    before falling back to ranges ("N-M years" → M, the upper bound)
+    and bare mentions ("N years", "N+ years"). Returns ``None`` when
+    no years mention can be found — the caller is expected to treat
+    this as a hard block on the REQ per the new spec.
+
+    Args:
+        text: Free text from a sub-query or requirement description.
+
+    Returns:
+        The expected years as a float, or ``None`` when no years
+        mention is recoverable.
+    """
+    if not text:
+        return None
+    norm = _normalize(text)
+    for pat in _EXPECTED_YEARS_PATTERNS:
+        m = pat.search(norm)
+        if not m:
+            continue
+        groups = m.groups()
+        # Range pattern: take the upper bound.
+        if len(groups) == 2 and groups[1]:
+            try:
+                return float(groups[1])
+            except ValueError:
+                continue
+        try:
+            return float(groups[0])
+        except (ValueError, IndexError):
+            continue
+    return None
+
+
+@dataclass
+class CodeOnlyItemResult:
+    """Per-REQ result for the new code-only scorer (Track 2 / DEC-028).
+
+    Mirrors :class:`ItemEvaluation` but uses ``weight_percentage`` (the
+    recruiter's 0-100 share) in place of ``importance`` and drops the
+    ``score`` field (the contribution IS the score — no normalization
+    step).
+
+    Attributes:
+        requirement_id: From the weight config (e.g. ``"REQ-001"``).
+        requirement_name: From the weight config.
+        category: From the weight config.
+        weight_percentage: 0-100, the contribution ceiling.
+        matched: ``True`` when the requirement was found in the profile.
+        years_detected: Years extracted from the profile, 0 when none.
+        expected_years: Years target, or ``None`` when the REC was
+            blocked because no expected_years could be resolved.
+        code_only_part: The code-only sub-score ∈ [0, 1]. Equals 0
+            when blocked (missing expected_years on a years-type REQ)
+            or 0 when not matched.
+        contribution: ``weight_percentage × code_only_part``.
+        blocked: ``True`` when the REQ was blocked (missing
+            expected_years on a years-type REQ). When blocked the
+            contribution is 0 regardless of the match.
+        reason: Human-readable explanation.
+        snippet: Evidence snippet from the profile.
+        section: Profile section where the evidence was found.
+    """
+
+    requirement_id: str
+    requirement_name: str
+    category: str
+    weight_percentage: float
+    matched: bool
+    years_detected: float
+    expected_years: Optional[float]
+    code_only_part: float
+    contribution: float
+    blocked: bool
+    reason: str
+    snippet: str = ""
+    section: str = ""
+
+
+@dataclass
+class CodeOnlyCandidateEvaluation:
+    """Result of :func:`evaluate_candidate_code_only_v2` for one candidate.
+
+    ``total`` is the sum of per-REQ contributions and lives in
+    [0, 100] because the recruiter weights sum to exactly 100 and
+    every ``code_only_part`` ∈ [0, 1]. No ``scale_factor`` is applied.
+    """
+
+    candidate_id: str
+    role: str
+    total: float
+    items: List[CodeOnlyItemResult] = field(default_factory=list)
+
+    @property
+    def blocked_items(self) -> List[CodeOnlyItemResult]:
+        """Items whose ``blocked`` flag is set (missing expected_years)."""
+        return [i for i in self.items if i.blocked]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "candidate_id": self.candidate_id,
+            "role": self.role,
+            "total": round(self.total, 4),
+            "blocked_count": len(self.blocked_items),
+            "items": [asdict(i) for i in self.items],
+        }
+
+
+def _is_years_requirement(category: str, item_name: str) -> bool:
+    """Heuristic: does this requirement measure years of experience?
+
+    Code-only REQs without a years dimension (e.g. "degree required",
+    "certification match") do not need an ``expected_years`` to score
+    and are never blocked. Years-type REQs (those whose category or
+    name mentions "experience", "years", "tenure") need an
+    ``expected_years`` and are blocked when one is missing.
+    """
+    blob = f"{category} {item_name}".lower()
+    if any(kw in blob for kw in ("education", "certification", "location")):
+        return False
+    return any(kw in blob for kw in ("experience", "years", "tenure", "senior"))
+
+
+def evaluate_candidate_code_only_v2(
+    profile: Dict[str, Any],
+    weights: Dict[str, Any],
+    fallback_expected_years_texts: Optional[Dict[str, str]] = None,
+) -> CodeOnlyCandidateEvaluation:
+    """Code-only V2 scorer for the new ``requirements_weights`` config.
+
+    Implements the code-only branch of the WORKING_LOGIC scoring
+    contract (DEC-028, 2026-07-06):
+
+        Sub-Score_REQ = code_only_part              (no rubric LLM here)
+        Contribution   = weight_percentage × Sub-Score
+        Total          = Σ Contribution
+
+    The ``code_only_part`` per REQ is computed as follows:
+
+        * Not a years-type REQ (education / cert / location): the
+          match gate is 0/1; ``code_only_part = 1.0`` on match, else
+          ``0.0``.
+        * Years-type REQ with ``expected_years`` available:
+          ``code_only_part = min(years_detected / expected_years, 1.0)``
+          when matched. ``code_only_part = 0.3`` when matched but no
+          years could be detected (mention-only partial credit per
+          the legacy spec).
+        * Years-type REQ with no recoverable ``expected_years``: the
+          REQ is **blocked** — ``code_only_part = 0`` and
+          ``contribution = 0``. The caller is expected to raise a
+          human-review flag.
+
+    ``expected_years`` is resolved in this order:
+
+        1. ``expected_years`` on the weight config item itself.
+        2. Extracted from the corresponding sub-query text in
+           ``fallback_expected_years_texts`` (a ``{req_id: sq_text}``
+           map supplied by the caller). This bridges the gap where the
+           SubQuery file embeds expected years as free text (e.g.
+           "relative to expected 3 years") rather than as a structured
+           field.
+
+    Args:
+        profile: The parsed candidate profile dict.
+        weights: The recruiter weight config dict with a
+            ``requirements_weights`` flat list (each entry has
+            ``requirement_id``, ``requirement_name``, ``category``,
+            ``weight_percentage``; ``expected_years`` optional).
+        fallback_expected_years_texts: Optional map of
+            ``{requirement_id: free_text}`` (e.g. the concatenation of
+            the SubQuery file's sub-query texts for that REQ). Used to
+            recover ``expected_years`` when the weight config omits it.
+
+    Returns:
+        :class:`CodeOnlyCandidateEvaluation` with ``total`` ∈ [0, 100]
+        (no scale_factor applied; the recruiter weights already sum to
+        100 by spec).
+    """
+    candidate_id = (
+        profile.get("candidate_id")
+        or profile.get("id")
+        or Path(profile.get("source_file", "")).stem
+        or "unknown"
+    )
+    role = weights.get("role", "")
+    fallback = fallback_expected_years_texts or {}
+    items: List[CodeOnlyItemResult] = []
+
+    for req in weights.get("requirements_weights", []):
+        req_id = req.get("requirement_id") or req.get("req_id") or ""
+        name = req.get("requirement_name") or req.get("name") or ""
+        cat = req.get("category", "")
+        weight_pct = float(req.get("weight_percentage") or 0.0)
+
+        # Resolve expected_years: explicit on item → fall back to SubQuery text.
+        explicit = req.get("expected_years")
+        expected: Optional[float] = None
+        if explicit is not None:
+            try:
+                expected = float(explicit)
+            except (TypeError, ValueError):
+                expected = None
+        if expected is None:
+            sq_text = fallback.get(req_id, "")
+            expected = extract_expected_years(sq_text)
+
+        patterns = _aliases_for(name)
+        is_years = _is_years_requirement(cat, name)
+        matched, section, snippet, years_detected = _search_profile(
+            profile, patterns, allow_summary_years=is_years,
+        )
+
+        blocked = False
+        code_only_part = 0.0
+
+        if is_years and expected is None:
+            # Years-type REQ with no recoverable expected_years: blocked.
+            blocked = True
+            reason = (
+                f"BLOCKED: years-type REQ '{name}' has no expected_years "
+                f"recoverable from the weight config or the SubQuery text. "
+                f"Score set to 0; flag for human review."
+            )
+        elif not matched:
+            reason = f"No evidence of {name} found in the candidate's profile."
+        elif is_years and years_detected > 0 and expected and expected > 0:
+            code_only_part = round(min(years_detected / expected, 1.0), 4)
+            reason = (
+                f"{years_detected:g} year(s) of {name} identified in the "
+                f"{section or 'profile'} section — relative to the expected "
+                f"{expected:g} year(s)."
+            )
+        elif matched and is_years:
+            # Mentioned but no years value could be extracted.
+            code_only_part = 0.3
+            reason = (
+                f"{name} mentioned in the {section or 'profile'} section, "
+                f"but no years of experience could be measured (expected "
+                f"{expected:g} year(s)). Awarded 0.3 mention-only partial credit."
+            )
+        else:
+            # Non-years REQ (education / cert / location / binary gate):
+            # match → code_only_part = 1.0.
+            code_only_part = 1.0 if matched else 0.0
+            reason = (
+                f"Match for '{name}' found in {section or 'profile'} section."
+                if matched else
+                f"No match for '{name}' in any searched profile section."
+            )
+
+        # When blocked, contribution is forced to 0 (do not multiply by
+        # weight_pct; the block is a loud zero for audit purposes).
+        contribution = 0.0 if blocked else round(weight_pct * code_only_part, 4)
+
+        items.append(CodeOnlyItemResult(
+            requirement_id=req_id,
+            requirement_name=name,
+            category=cat,
+            weight_percentage=weight_pct,
+            matched=matched,
+            years_detected=years_detected,
+            expected_years=expected,
+            code_only_part=code_only_part,
+            contribution=contribution,
+            blocked=blocked,
+            reason=reason,
+            snippet=snippet,
+            section=section,
+        ))
+
+    total = round(sum(it.contribution for it in items), 4)
+    return CodeOnlyCandidateEvaluation(
+        candidate_id=candidate_id, role=role, total=total, items=items,
+    )

@@ -13,6 +13,8 @@ All model changes must be documented here before implementation, and significant
 | Component | Current Selection | Status | Purpose |
 | --- | --- | --- | --- |
 | Active LLM | OpenRouter `minimax/minimax-m3` | **Active** | Candidate comparison narrative (`scripts/compare_two.py`); score explanation scaffold (`src/hireintel_ai/llm/service.py`). Resume chat and rubric-bound evidence scoring are **planned** but not yet implemented. |
+| **Rubric LLM (rubric-bound scoring)** | **`qwen2.5:3b` via Ollama local endpoint** | **Active (2026-07-07)** | **Used by `src/scoring/rubric_scorer.py::score_requirement_with_rubric` for the rubric-bound LLM judge. Local inference via Ollama's OpenAI-compatible endpoint at `http://localhost:11434/v1` avoids free-tier cloud truncation issues (the nemotron-3-ultra-free endpoint was returning `choices=None` and `deepseek-v4-flash-free` truncated JSON mid-stream). `LLM_BACKEND=ollama` env var in `.env` selects this backend; the `OllamaRubricCaller` in `src/services/llm_caller.py` is a drop-in for `LLMRubricCaller`. ~6s per call, ~4000 max_tokens, returns complete JSON.** |
+| Fallback Rubric LLM | `deepseek-v4-flash-free` via `https://opencode.ai/zen/v1` | Available (cloud fallback) | When `LLM_BACKEND=opencode` in `.env`, uses `LLMRubricCaller`. Free-tier `deepseek-v4-flash-free` works but truncates JSON mid-stream at the server-side `completion_tokens` cap — the rubric parser now has a `_extract_json_lenient` recovery helper to handle this case. |
 | Primary LLM (production upgrade) | GPT-4 | Proposed | Resume parsing support, JD extraction support, summaries, comparisons, explanations |
 | Fallback LLM (production upgrade) | Claude 3 | Proposed | Long-context fallback for large resumes and document-heavy comparison tasks |
 | Private / Local LLM | Llama 3 | Proposed | Privacy-first deployment option where candidate data cannot leave controlled infrastructure |
@@ -20,11 +22,11 @@ All model changes must be documented here before implementation, and significant
 | Alternative Embedding Model | BGE-M3 | Future | Multilingual upgrade path; CPU-runnable but larger |
 | Cloud Embedding Option | OpenAI `text-embedding-3-small` | Future | Highest quality but per-token API cost; data egress concern |
 | Reranker | None yet | Future | Optional cross-encoder reranker for top-K precision boost (pool-level search only) |
-| **Chunking Strategy** | **Recursive (`chunk_size=500`, `chunk_overlap=50`)** | **Active (2026-07-05)** | **Replaces Document-Aware chunking under DEC-019. Both `chunk_size` and `chunk_overlap` are Optuna hyperparameters (DEC-021).** |
+| **Chunking Strategy** | **Recursive (`chunk_size=1000`, `chunk_overlap=500`)** | **Active (default-config, refined 2026-07-07)** | **Replaces Document-Aware chunking under DEC-019. LangChain-free `recursive_split_text` with separator hierarchy `["\n\n", "\n", ". ", " "]`. Both `chunk_size` and `chunk_overlap` are Optuna hyperparameters (DEC-021). Owner-refined Optuna bounds (2026-07-07): `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [floor(0.50 * chunk_size), floor(0.60 * chunk_size)]` (overlap is 50-60% of chunk_size). Widened from prior `chunk_size=500`, `chunk_overlap=100` to reduce date/skill split incidents across chunks and improve rubric-LLM correlation of skill mentions with role durations. Bounds enforced at construction; exported as `CHUNK_SIZE_LOWER`/`CHUNK_SIZE_UPPER`/`CHUNK_OVERLAP_MIN_FRACTION`/`CHUNK_OVERLAP_MAX_FRACTION`/`min_overlap_for`/`max_overlap_for` in `src.rag.recursive_chunker`. Implementation in `src/rag/recursive_chunker.py`.** |
 | **Header Normalization** | **Synonym lookup table + fallback classification (7 canonical sections)** | **Active** | **Maps heterogeneous resume headers to canonical section labels at parse time; still required by the structured profile (degrees/certs/total experience). No longer the retrieval routing mechanism (DEC-019).** |
 | **Vector Storage** | **In-memory numpy (`data/embeddings/index.npz`)** | **Active** | **Trivial to load; switchable to FAISS / Chroma / Qdrant without API changes** |
 | Planned Vector Database | FAISS / Chroma / Qdrant | Future | When scale exceeds single-machine memory or we need hosted multi-user |
-| **Retrieval Mode** | **Threshold-based cosine (default `θ = 0.70`, `max_chunks_per_query = 20`)** | **Active (2026-07-05)** | **Returns all chunks with cosine ≥ θ; replaces both Section-Routed (DEC-012) and Sub-Query Similarity (DEC-015) per DEC-017/018. θ is an Optuna hyperparameter.** |
+| **Retrieval Mode** | **Threshold-based cosine (default `θ = 0.25`, `max_chunks_per_query = 20`)** | **Active (default-config, refined 2026-07-07)** | **Returns all chunks with cosine ≥ θ, sorted desc, capped at `max_chunks_per_query`; WARN log on cap-hit. Replaces Section-Routed (DEC-012) and Sub-Query Similarity (DEC-015) per DEC-017/018. θ is an Optuna hyperparameter. Owner-specified Optuna bounds (2026-07-06, retained 2026-07-07): `θ ∈ [0.10, 0.50]`. Bounds enforced at construction; exported as `THRESHOLD_LOWER`/`THRESHOLD_UPPER` in `src.rag.retriever`. The shipped default was lowered from `θ = 0.30` to `θ = 0.25` on 2026-07-07 to surface more date-bearing chunks per REQ during smoke testing (mitigates the failure mode where the date line landed in a chunk that did not pass a higher θ). Combined with the larger `chunk_size=1000` and 50% overlap, this drastically reduces incidents where the rubric LLM sees a skill mention without its corresponding date context. The Optuna-promoted "Active" config is still pending M0.5d — the shipped default is data-ready, not the recommended value. Implementation in `src/rag/retriever.py::ThresholdRetriever`.** |
 | **Per-Candidate Evidence Retrieval** | **Threshold-based cosine over Recursive chunks** | **Active (2026-07-05)** | **Replaces Section-Routed as the per-candidate retrieval path; scoring engine still consumes the retrieved chunks for the rubric-bound LLM judge.** |
 | **Cross-Candidate Pool Retrieval** | **Threshold-based cosine over Recursive chunks** | **Active (2026-07-05)** | **Single retrieval strategy now covers per-candidate + pool + chat (DEC-017).** |
 | **Keyword Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
@@ -34,7 +36,7 @@ All model changes must be documented here before implementation, and significant
 | **Rubric-Bound LLM Evidence Scoring** | **`src/scoring/rubric_scorer.py` + `src/scoring/rubrics.py`: LLM judge scores against recruiter-defined rubric; weight application in code** | **Active** | **Scores skill depth, relevant/same-role/leadership experience, project complexity, language proficiency, communication quality; LLM never sees weight or computes aggregation** |
 | **Rubric Templates** | **`src/scoring/rubrics.py`: 12 templates with anchored scales (0.0/0.25/0.5/0.75/1.0)** | **Active** | **Fixed sub-questions + formulas per dimension type; recruiter-visible, LLM cannot invent rubrics** |
 | **Section-Routed Evidence Retrieval** | **`src/rag/section_routed.py`: exact label match on canonical sections** | **Superseded (2026-07-05) by DEC-017** | **Retained for one release as a migration aid only; new code should not call it** |
-| **Header Normalization** | **`src/resume_parsing/header_normalization.py`: Layer 1 synonym table + Layer 2 LLM fallback** | **Active (parse-time only)** | **7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages); used by structured profile, not by retrieval** |
+| **Header Normalization** | **`src/resume_parsing/parser.py` (the `SECTION_HEADERS` dict + `sectionize()` + `identify_section_heading()` functions): synonym lookup + fallback classification** | **Active (parse-time only)** | **7 canonical sections (Personal_Info, Education, Experience, Projects, Skills, Certifications, Languages); used by structured profile, not by retrieval. The dedicated `src/resume_parsing/header_normalization.py` file referenced in older docs was a phantom — see Track 6 reconciliation.** |
 | **Chunk Metadata Schema** | **`src/rag/chunker.py`: simplified to `chunk_id`, `candidate_id`, `text`, `char_span`, `embedding_index`** | **Active (2026-07-05)** | **Section metadata is now a soft tag retained for the structured profile; not required for retrieval** |
 | **Structured Candidate Profile** | **`src/resume_parsing/structured_profile.py`: deterministic extraction** | **Active** | **Degrees, institutions, certifications, total experience (no double-count), companies, roles, employment dates** |
 | **Institute Tier Database** | **`data/Institutes/institute_tiers.json` + `src/scoring/tier_lookup.py`** | **Active** | **115 Tier 1 (1.0), 54 Tier 2 (0.75), 155 Tier 3 (0.50), not-listed (0.50); recruiter-editable** |
@@ -63,7 +65,7 @@ All model changes must be documented here before implementation, and significant
 | Parameter | Value | Source |
 | --- | --- | --- |
 | Retrieval mode | `threshold` | `src/rag/retriever.py` (DEC-018) |
-| `threshold θ` | 0.70 (Optuna hyperparameter) | `src/rag/retriever.DEFAULT_THRESHOLD` |
+| `threshold θ` | 0.25 (Optuna hyperparameter; bounds `[0.10, 0.50]` per owner spec 2026-07-06; default lowered from 0.30 → 0.25 on 2026-07-07) | `src/rag/retriever.DEFAULT_THRESHOLD` |
 | `max_chunks_per_query` | 20 (safety cap) | `src/rag/retriever.MAX_CHUNKS_PER_QUERY` |
 | Similarity metric | cosine | `src/rag/retriever` |
 | Cap-hit warning | logged at WARN when > 20 chunks meet θ | `src/rag/retriever` |
@@ -71,8 +73,15 @@ All model changes must be documented here before implementation, and significant
 
 ## Storage Layout (added 2026-07-05, DEC-022, refined by DEC-023)
 
+> **Pre-DEC-023 layout (active today):** the Recursive chunks + index live at `data/embeddings/recursive_chunking/{chunks.jsonl,index.npz}` (moved to a sub-folder 2026-07-06 Track 7.4 to separate the active Recursive artifacts from the legacy Document-Aware index). The per-experiment folder naming scheme below is the target post-M0.5e. The legacy Document-Aware index is backed up at `data/embeddings/document_aware_backup/`.
+
 | Path | Purpose | Status | Notes |
 | --- | --- | --- | --- |
+| `data/embeddings/recursive_chunking/chunks.jsonl` | Recursive chunks (6,670) — pre-DEC-023 active location | Active (2026-07-06, M0.5a; moved into sub-folder 2026-07-06 Track 7.4) | Will be relocated to `data/recursive_chunking_<params>/chunks.jsonl` per DEC-023 once M0.5e ships. Schema: `chunk_id`, `candidate_id`, `role_bucket`, `source_file`, `section`, `chunk_index`, `text`, `metadata`. |
+| `data/embeddings/recursive_chunking/index.npz` | Recursive embedding index (6,670 × 384-dim, L2-normalized, MiniLM-L6-v2) — pre-DEC-023 active location | Active (2026-07-06, M0.5a; moved into sub-folder 2026-07-06 Track 7.4) | Will be relocated to `data/recursive_chunking_<params>/index.npz` per DEC-023 once M0.5e ships. |
+| `data/embeddings/subqueries_cache.npz` *(planned, Track 7)* | Encoded sub-queries cache — (N, 384) matrix + manifest mapping `cache_key → (role, req_id, sq_key, sq_text, subquery_file_hash)`. | Planned | File-hash-aware invalidation: rebuild when `<role>_SubQuery.md` changes. Wraps `embed_sub_queries`; consumed via `sq_embedder` callable in `evaluate_candidate_composed`. |
+| `data/embeddings/document_aware_backup/` | Prior Document-Aware index (6,377 chunks) backed up pre-rebuild. | Legacy / read-only | M0.5a Step 1.4 migration record. |
+| `data/embeddings/llm_cache_legacy.jsonl` | Legacy single-file LLM cache (35-line JSONL). | Legacy / read-only after M0.5e-b | Superseded by the per-experiment per-resume reasoning tree. |
 | `data/document_aware_chunking/<role>/<candidate_id>.jsonl` | Legacy Document-Aware chunks | Legacy (read-only after M0.5e-a) | Renamed from `data/chunks_legacy_document_aware/` per DEC-023. `MIGRATION_NOTES.md` in the directory records the move. |
 | `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/` | Per-experiment Recursive chunks + index + per-resume reasoning | Active (2026-07-05, DEC-023) | Folder name encodes the hyperparameters; see "Per-Experiment Folder Naming" below. One folder per (chunk_size, overlap, top_k, θ) combination. |
 | `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/chunks.jsonl` | Recursive chunks for this experiment | Active | Written by `RecursiveChunker` only (DEC-019) |
@@ -80,15 +89,22 @@ All model changes must be documented here before implementation, and significant
 | `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/metadata.json` | Canonical record of the experiment's config | Active | Schema in `WORKING_LOGIC.md` §"Per-Experiment Folder Naming" |
 | `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/per_candidate/<role>/<candidate_id>/reasoning/<req_id>__<query_hash>.json` | Per-resume reasoning artifacts for this experiment | Active (2026-07-05, DEC-022) | Stores narrative reasoning, basis, retrieved chunks, sub-scores per (candidate, req, query) |
 | `data/active_experiment` | Symlink to the "Active" config folder | Active (2026-07-05, DEC-023) | Runtime entry point; promoted via one-line symlink operation when `MODEL_REGISTRY.md` "Active" row changes |
-| `data/embeddings/llm_cache_legacy.jsonl` | Legacy single-file LLM cache | Legacy (read-only after M0.5e-b) | Superseded by the per-experiment per-resume reasoning tree |
-| `data/per_candidate_archive/` | Archived reasoning entries (90+ days idle) | Planned | GC target; not yet created |
+| `data/candidate_registry.json` | Candidate registry (DEC-025) | Active (2026-07-05) | Maps `<Role>_CAND_<NNNN>` to source path + legacy hash id; 721 entries backfilled from the existing corpus; **committed to git** (the source of truth for downstream joins) |
+| `data/job_descriptions/<role>/<role>_SubQuery.md` | Canonical SubQuery source for each role | Authoritative | Parsed by `src/services/subquery_parser.py` into REQ list with `sub_queries` field. Verified on 8 roles: 138 REQs, 356 sub-queries. **Must not be editorialized** (AGENTS.md rule). |
+| `data/job_descriptions/<role>/<role>_WeightConfig_<name>.json` | Recruiter weight configuration | Active | `requirements_weights` flat list, `weight_percentage` sums to 100, `expected_years` extracted from SubQuery SQ text via `extract_expected_years` (not stored per-item). |
+| `data/Institutes/institute_tiers.json` | Recruiter-editable institute tier database | Active | Committed to git. |
+| `data/Certificates/certificate_tiers.json` | Recruiter-editable certification tier database | Active | Committed to git. |
+| `reports/audit/no_evidence_flags.jsonl` | Zero-evidence audit log | Active (2026-07-06, Track 2-S) | One line per `(candidate, REQ)` pair with no retrieved chunks. Schema: `flag_type: "no_evidence"`, `timestamp` ISO 8601 UTC, `candidate_id`, `role`, `req_id`, `requirement_name`, `sub_query_keys`, `sub_query_count`, `theta`, `chunker`. Written by `src/audit/no_evidence_flags.py::write_flag`. |
+| `reports/audit/inferred_full_year_flags.jsonl` | Inferred-full-year audit log | Active (2026-07-06, Track 7.3 / DEC-031) | One line per accepted single-year-date inference. Schema: `flag_type: "inferred_full_year"`, `timestamp`, `candidate_id`, `year`, `dates_string`, `employer`, `role`, `inferred_months`, `guard_checks: {has_real_company, has_title_or_details, title_is_section_name}`. Written by `src/audit/no_evidence_flags.py::write_inferred_full_year_flag`. Kept in a separate file from `no_evidence_flags.jsonl` because the two flag types serve different audiences (scorer-debugging vs recruiter-trust) with orthogonal schemas. |
+| `reports/chunk_reports/document_aware_chunking_report.{json,md}` | Historical Document-Aware diagnostic | Active (2026-07-05, DEC-024) | Captures the 49% missing-`section_type` finding (DEC-015) |
+| `reports/chunk_reports/recursive_chunking_<params>_report.{json,md}` | Per-experiment Recursive diagnostic | Active (2026-07-05, DEC-024) | One pair (JSON + MD) per Recursive experiment; file name mirrors the experiment folder |
+| `reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}` | Ranking diff (DEC-026) + Optuna rank-stability metrics | Active (2026-07-05; rank-stability metrics added Track 7) | One pair (JSON + MD) per diff run; JSON includes the full per-case investigation records (reasoning + basis + retrieved chunks + sub-scores for both sides) |
+| `data/eval/v1.jsonl` | Retrieval/RAG eval set (≥50 triples, ≥3 roles) | Planned (M0.5b) | Gates M0.5d Optuna. |
+| `data/eval/counterfactual_v1.jsonl` | Counterfactual ranking suite (≥50 tests, ≥4 categories) | Planned (M0.5f) | Hard promotion gate: pass rate ≥ 0.95. |
+| `data/eval/ranking_v1.jsonl` | Synthetic labeled ranking set (30–50 pairs, 2–3 recruiters, inter-rater agreement ≥ 0.60) | Planned (M0.5f) | Hard promotion gate: NDCG@10 ≥ 0.80. |
 | `data/mlflow/mlflow.db` | MLflow backend store | Active (2026-07-05, DEC-020) | SQLite |
 | `data/mlflow/artifacts/` | MLflow artifact root | Active (2026-07-05, DEC-020) | Retrieved-chunks JSON, eval-set inputs, study summaries |
 | `data/optuna/studies.db` | Optuna study store | Active (2026-07-05, DEC-021) | SQLite; in `.gitignore` |
-| `data/candidate_registry.json` | Candidate registry (DEC-025) | Active (2026-07-05) | Maps `<Role>_CAND_<NNNN>` to source path + legacy hash id; 721 entries backfilled from the existing corpus; **committed to git** (the source of truth for downstream joins) |
-| `reports/chunk_reports/document_aware_chunking_report.{json,md}` | Historical Document-Aware diagnostic | Active (2026-07-05, DEC-024) | Captures the 49% missing-`section_type` finding (DEC-015) |
-| `reports/chunk_reports/recursive_chunking_<params>_report.{json,md}` | Per-experiment Recursive diagnostic | Active (2026-07-05, DEC-024) | One pair (JSON + MD) per Recursive experiment; file name mirrors the experiment folder |
-| `reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}` | Ranking diff (DEC-026) | Active (2026-07-05) | One pair (JSON + MD) per diff run; JSON includes the full per-case investigation records (reasoning + basis + retrieved chunks + sub-scores for both sides) |
 
 ### Per-Experiment Folder Naming (DEC-023)
 
@@ -124,9 +140,14 @@ The "Active" config in this table points to one specific folder; promoting a new
 # Large binary artifacts
 data/document_aware_chunking/
 data/recursive_chunking_*/
-data/embeddings/index.npz
-data/embeddings/chunks.jsonl
+# Recursive chunks + index moved into sub-folder 2026-07-06 (Track 7.4) to
+# separate them from the legacy Document-Aware backup.
+data/embeddings/recursive_chunking/
+data/embeddings/document_aware_backup/
 data/embeddings/llm_cache_legacy.jsonl
+data/embeddings/llm_cache.jsonl
+data/embeddings/subqueries_cache.npz
+data/embeddings/subqueries_cache_manifest.jsonl
 data/per_candidate/
 data/per_candidate_archive/
 data/mlflow/
