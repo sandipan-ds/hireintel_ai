@@ -1,0 +1,95 @@
+{
+  "ollama": {
+    "latency_s": 17.27834153175354,
+    "normalized_score": 0.0,
+    "weighted_score": 0.0,
+    "sub_scores": [
+      {
+        "key": "skill_presence",
+        "sub_score": 1.0,
+        "extracted_years": null,
+        "extracted_evidence": "['Python', 'pandas', 'NumPy', 'scikit-learn', 'TensorFlow', 'PyTorch']",
+        "cited_text": "DATA SCIENTIST, IBM - 2016-2017, Built and defined strategies for R&D data, analytics",
+        "cited_present_in_chunks": true
+      },
+      {
+        "key": "years_experience",
+        "sub_score": 0.0,
+        "extracted_years": null,
+        "extracted_evidence": null,
+        "cited_text": null,
+        "cited_present_in_chunks": false
+      },
+      {
+        "key": "project_relevance",
+        "sub_score": 0.5,
+        "extracted_years": null,
+        "extracted_evidence": "['pandas', 'NumPy', 'scikit-learn', 'TensorFlow', 'PyTorch']",
+        "cited_text": "DATA SCIENTIST, IBM - 2016-2017, Built and defined strategies for R&D data, analytics",
+        "cited_present_in_chunks": true
+      }
+    ]
+  },
+  "openrouter": {
+    "latency_s": 48.81464457511902,
+    "normalized_score": 0.0,
+    "weighted_score": 0.0,
+    "sub_scores": [
+      {
+        "key": "skill_presence",
+        "sub_score": 0.0,
+        "extracted_years": null,
+        "extracted_evidence": "Python mentioned in skills list: 'PHP, Python, HTML, css, Minitab, SPSS'",
+        "cited_text": "PHP, Python, HTML, css, Minitab, SPSS",
+        "cited_present_in_chunks": true
+      },
+      {
+        "key": "years_experience",
+        "sub_score": 0.0,
+        "extracted_years": 0.0,
+        "extracted_evidence": "No explicit mention of years of experience with pandas, NumPy, scikit-learn, TensorFlow, PyTorch.",
+        "cited_text": "",
+        "cited_present_in_chunks": false
+      },
+      {
+        "key": "project_relevance",
+        "sub_score": 0.25,
+        "extracted_years": null,
+        "extracted_evidence": "Duties: 'Developed insights into the performance of Network/Studio programs and their competitors across all platforms' and 'Built and defined strategies for R&D data analytics'",
+        "cited_text": "- Developed insights into the performance\n- of Network/Studio programs and their\n- competitors across all platforms\n- (including linear, multiplatform and\n- svoD)",
+        "cited_present_in_chunks": true
+      }
+    ]
+  },
+  "opencode": {
+    "latency_s": 29.66543483734131,
+    "normalized_score": 0.0,
+    "weighted_score": 0.0,
+    "sub_scores": [
+      {
+        "key": "skill_presence",
+        "sub_score": 0.0,
+        "extracted_years": null,
+        "extracted_evidence": "Python is listed as a skill, but no data science libraries are mentioned.",
+        "cited_text": "PHP, Python, HTML, css, Minitab, SPSS",
+        "cited_present_in_chunks": true
+      },
+      {
+        "key": "years_experience",
+        "sub_score": 0.0,
+        "extracted_years": 0.0,
+        "extracted_evidence": "No explicit mention of years of experience with Python or data science libraries.",
+        "cited_text": "",
+        "cited_present_in_chunks": false
+      },
+      {
+        "key": "project_relevance",
+        "sub_score": 0.0,
+        "extracted_years": null,
+        "extracted_evidence": "No projects or experience with the specified data science libraries are mentioned.",
+        "cited_text": "",
+        "cited_present_in_chunks": false
+      }
+    ]
+  }
+}

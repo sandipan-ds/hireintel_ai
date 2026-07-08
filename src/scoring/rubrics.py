@@ -180,11 +180,15 @@ SKILL_RUBRIC = RubricTemplate(
     dimension_type="skill",
     description=(
         "Evaluates a skill requirement (e.g., Python, Power BI). "
-        "The LLM extracts every role/project where the skill appears, "
-        "then scores presence, years, and project relevance."
+        "Two sub-questions: (1) binary presence — does the candidate know "
+        "the skill? (2) linear years — how many years of working experience "
+        "with the skill? Code applies the banded years ratio afterwards "
+        "via _banded_years_ratio. No project_relevance SQ — owner spec "
+        "(2026-07-09): 2-SQ pattern only, to avoid over-crediting "
+        "tangential project mentions and to keep the AND-gate honest."
     ),
     sections=["Experience", "Projects", "Skills"],
-    formula="gate * years_ratio * relevance",
+    formula="gate * years_ratio",
     sub_questions=[
         SubQuestion(
             key="skill_presence",
@@ -195,16 +199,9 @@ SKILL_RUBRIC = RubricTemplate(
         ),
         SubQuestion(
             key="years_experience",
-            question="How many years of relevant experience does the candidate have with {skill}?",
+            question="How many years of working experience does the candidate have with {skill}? Return the number of years, or null if no evidence.",
             type="linear",
             target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the candidate's projects to the JD requirement for {skill}?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
             extract_first=True,
         ),
     ],
@@ -214,10 +211,11 @@ EXPERIENCE_RUBRIC = RubricTemplate(
     dimension_type="experience",
     description=(
         "Evaluates a general experience requirement (e.g., '5+ years in data science'). "
-        "The LLM extracts all relevant experience and scores presence, years, and relevance."
+        "Two sub-questions: binary presence + linear years. Code applies "
+        "the banded years ratio afterwards via _banded_years_ratio."
     ),
     sections=["Experience"],
-    formula="gate * years_ratio * relevance",
+    formula="gate * years_ratio",
     sub_questions=[
         SubQuestion(
             key="experience_presence",
@@ -228,16 +226,9 @@ EXPERIENCE_RUBRIC = RubricTemplate(
         ),
         SubQuestion(
             key="years_experience",
-            question="How many years of relevant experience does the candidate have?",
+            question="How many years of relevant experience does the candidate have? Return the number of years, or null if no evidence.",
             type="linear",
             target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant is the candidate's experience to the JD requirement?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
             extract_first=True,
         ),
     ],
@@ -247,10 +238,13 @@ LEADERSHIP_RUBRIC = RubricTemplate(
     dimension_type="leadership",
     description=(
         "Evaluates a leadership experience requirement (e.g., '6 years in a leadership role'). "
-        "Adds a binary leadership gate on top of the experience rubric."
+        "Three sub-questions: presence + years + a binary leadership gate "
+        "(leadership retains its 3rd gate because the requirement is "
+        "specifically about leadership, not just total experience). "
+        "Code applies the banded years ratio afterwards."
     ),
     sections=["Experience"],
-    formula="gate * years_ratio * leadership_gate * relevance",
+    formula="gate * years_ratio * leadership_gate",
     sub_questions=[
         SubQuestion(
             key="experience_presence",
@@ -261,7 +255,7 @@ LEADERSHIP_RUBRIC = RubricTemplate(
         ),
         SubQuestion(
             key="years_experience",
-            question="How many years of relevant experience?",
+            question="How many years of relevant experience? Return the number of years, or null if no evidence.",
             type="linear",
             target_field="expected_years",
             extract_first=True,
@@ -273,13 +267,6 @@ LEADERSHIP_RUBRIC = RubricTemplate(
             anchors=BINARY_ANCHORS,
             extract_first=True,
         ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the candidate's projects to the JD requirement?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
     ],
 )
 
@@ -287,11 +274,11 @@ SAME_ROLE_RUBRIC = RubricTemplate(
     dimension_type="same_role",
     description=(
         "Evaluates same/similar-role experience (e.g., 'has worked as a Business Analyst'). "
-        "The binary gate checks for a similar role — not necessarily identical. "
-        "The relevance sub-score then judges how close the match is."
+        "Two sub-questions: binary presence (similar role, not exact title) + "
+        "linear years. Code applies the banded years ratio afterwards."
     ),
     sections=["Experience"],
-    formula="gate * years_ratio * relevance",
+    formula="gate * years_ratio",
     sub_questions=[
         SubQuestion(
             key="role_presence",
@@ -302,16 +289,9 @@ SAME_ROLE_RUBRIC = RubricTemplate(
         ),
         SubQuestion(
             key="years_experience",
-            question="How many years has the candidate spent in a similar role?",
+            question="How many years has the candidate spent in a similar role? Return the number of years, or null if no evidence.",
             type="linear",
             target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant is this role experience to the JD requirement? (This judges the actual degree of similarity.)",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
             extract_first=True,
         ),
     ],
@@ -321,12 +301,11 @@ DOMAIN_RUBRIC = RubricTemplate(
     dimension_type="domain",
     description=(
         "Evaluates industry/domain experience (e.g., 'healthcare domain experience'). "
-        "The binary gate checks for a similar domain — not necessarily identical. "
-        "The relevance sub-score then judges how close the domain match is "
-        "(e.g., 'finance' and 'banking' are similar, not the same)."
+        "Two sub-questions: binary presence (similar domain) + linear years. "
+        "Code applies the banded years ratio afterwards."
     ),
     sections=["Experience", "Projects"],
-    formula="gate * years_ratio * relevance",
+    formula="gate * years_ratio",
     sub_questions=[
         SubQuestion(
             key="domain_presence",
@@ -337,16 +316,9 @@ DOMAIN_RUBRIC = RubricTemplate(
         ),
         SubQuestion(
             key="years_experience",
-            question="How many years of experience in a similar domain?",
+            question="How many years of experience in a similar domain? Return the number of years, or null if no evidence.",
             type="linear",
             target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the domain-specific projects to the JD requirement? (This judges the actual degree of domain similarity.)",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
             extract_first=True,
         ),
     ],

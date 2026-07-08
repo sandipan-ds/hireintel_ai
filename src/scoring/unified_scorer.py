@@ -1115,54 +1115,81 @@ def evaluate_candidate_composed(
 
         # ==============================================================
         # 1. Code-only SQ scoring (binary presence + years-proportional).
+        #
+        # Code-only path is reserved for table-lookup REQs (institute
+        # tier, cert tier, degree, location) where a regex/lookup is
+        # the right tool. For skill + experience REQs the code-only
+        # regex-based presence/years detectors are unreliable (the
+        # monolithic alias regex misses resume prose; the years regex
+        # can only match literal "N years" phrases, not date ranges),
+        # so those REQs route SOLELY through the rubric LLM. Setting
+        # code_only_part = 1.0 (identity) means sub_score becomes the
+        # rubric LLM's verdict directly.
         # ==============================================================
+        req_dim_type = classify_requirement_type(cat, name)
         code_only_sq_scores: Dict[str, float] = {}
         years_blocked = False
         years_blocked_reason = ""
+        skip_code_only = req_dim_type in ("skill", "experience",
+                                          "same_role", "leadership", "domain")
 
-        for sq in sub_queries:
-            sq_key = sq.get("key") or ""
-            sq_txt = sq.get("text") or ""
-
-            if _is_binary_subquery(sq):
-                code_only_sq_scores[sq_key] = _score_presence_sq(
-                    sq, requirement_name=name, profile=profile,
-                )
-            elif _is_years_subquery(sq):
-                score, years_detected, expected = _score_years_sq(
-                    sq, requirement_name=name, profile=profile,
-                )
-                code_only_sq_scores[sq_key] = score
-                if expected is None:
-                    years_blocked = True
-                    years_blocked_reason = (
-                        f"Years-proportional SQ {sq_key!r} for {req_id} "
-                        f"has no recoverable expected_years from its text "
-                        f"(SQ text: {sq_txt[:80]!r}). REQ blocked."
-                    )
-            # Else: it's a rubric SQ; skip here.
-        # Compute the code-only part.
-        if years_blocked:
-            result.code_only_part = 0.0
-            result.blocked = True
-            result.blocked_reason = years_blocked_reason
-        elif code_only_sq_scores:
-            prod = 1.0
-            for v in code_only_sq_scores.values():
-                prod *= float(v)
-            result.code_only_part = round(prod, 4)
-        else:
-            # No code-only SQs on this REQ — multiplicative identity.
+        if skip_code_only:
+            # Skill/experience REQs: rubric LLM is the sole judge.
+            # code_only_part stays 1.0 (identity), code_only_sq_scores
+            # stays empty so no AND-gate is applied to these REQs.
             result.code_only_part = 1.0
+        else:
+            for sq in sub_queries:
+                sq_key = sq.get("key") or ""
+                sq_txt = sq.get("text") or ""
+
+                if _is_binary_subquery(sq):
+                    code_only_sq_scores[sq_key] = _score_presence_sq(
+                        sq, requirement_name=name, profile=profile,
+                    )
+                elif _is_years_subquery(sq):
+                    score, years_detected, expected = _score_years_sq(
+                        sq, requirement_name=name, profile=profile,
+                    )
+                    code_only_sq_scores[sq_key] = score
+                    if expected is None:
+                        years_blocked = True
+                        years_blocked_reason = (
+                            f"Years-proportional SQ {sq_key!r} for {req_id} "
+                            f"has no recoverable expected_years from its "
+                            f"text (SQ text: {sq_txt[:80]!r}). REQ blocked."
+                        )
+                # Else: it's a rubric SQ; skip here.
+            # Compute the code-only part.
+            if years_blocked:
+                result.code_only_part = 0.0
+                result.blocked = True
+                result.blocked_reason = years_blocked_reason
+            elif code_only_sq_scores:
+                prod = 1.0
+                for v in code_only_sq_scores.values():
+                    prod *= float(v)
+                result.code_only_part = round(prod, 4)
+            else:
+                # No code-only SQs on this REQ — multiplicative identity.
+                result.code_only_part = 1.0
         result.code_only_sq_scores = code_only_sq_scores
 
         # ==============================================================
         # 2. Rubric LLM scoring (one call per REQ, after per-REQ retrieval).
+        #
+        # When code-only is skipped (skill/experience REQs), EVERY SQ
+        # on the REQ is rubric-bound — both the binary presence gate
+        # and the linear years question go to the LLM, and the LLM's
+        # verdict on each becomes the rubric sub-score.
         # ==============================================================
-        rubric_sq_keys = [
-            sq.get("key") for sq in sub_queries
-            if _is_rubric_subquery(sq)
-        ]
+        if skip_code_only:
+            rubric_sq_keys = [sq.get("key") for sq in sub_queries]
+        else:
+            rubric_sq_keys = [
+                sq.get("key") for sq in sub_queries
+                if _is_rubric_subquery(sq)
+            ]
         rubric_sq_scores: Dict[str, float] = {}
 
         if not rubric_sq_keys:

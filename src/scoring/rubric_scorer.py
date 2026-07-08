@@ -230,24 +230,39 @@ def _build_rubric_prompt(
         if sq.type == "binary":
             sub_q_lines.append(f"    Answer: 0 (No) or 1 (Yes)")
         elif sq.type == "linear":
-            target = target_years or "not specified"
-            sub_q_lines.append(f"    Extract the years of experience, then the ratio will be computed as min(years/{target}, 1.0)")
-            sub_q_lines.append(f"    Return: extracted_years (number)")
+            # NOTE: The target_years value is intentionally NOT shown to the
+            # LLM. A small local model (qwen2.5:3b) may rationalize toward
+            # the target when it sees it. The LLM is asked only to extract
+            # the number of years; code applies the banded ratio afterwards
+            # (see _parse_llm_response → _banded_years_ratio).
+            sub_q_lines.append(
+                f"    Count the total years of experience the candidate has with this requirement."
+            )
+            sub_q_lines.append(
+                "    Return \"extracted_years\" as a plain NUMBER only (e.g. 3, 2.5, 0). "
+                "Do NOT write \"3 years\" or \"approximately 3\" — write only the digit. "
+                "Return null (JSON null, not the string \"null\") if there is absolutely no evidence."
+            )
+            sub_q_lines.append(
+                "    Also return \"sub_score\" as 0.0 (code will recompute it from extracted_years)."
+            )
             if employment_history:
                 sub_q_lines.append(
                     "    IMPORTANT: A pre-computed employment history is provided below. "
-                    "Use those durations (not re-derived date parsing) to answer. "
-                    "Match a role's duty/skill description in the SECTION CONTENT to the role in EMPLOYMENT HISTORY, "
-                    "then sum the durations of roles where this requirement appears."
+                    "Sum the durations (in years) of all roles where this skill/requirement "
+                    "is mentioned in the SECTION CONTENT bullets. Do not re-parse raw dates."
                 )
         elif sq.type == "anchored":
-            sub_q_lines.append(f"    Pick EXACTLY one anchor:")
+            sub_q_lines.append(f"    Pick EXACTLY one anchor value from the list below (copy the number exactly):")
             for anchor in sq.anchors:
                 sub_q_lines.append(f"      {anchor.value} — {anchor.description}")
-            sub_q_lines.append(f"    Return: sub_score (one of the anchor values)")
+            sub_q_lines.append(f"    Return: \"sub_score\" set to that anchor number, \"anchor_description\" set to the anchor text.")
 
         if sq.extract_first:
-            sub_q_lines.append(f"    First, extract the relevant evidence from the section content, then score.")
+            sub_q_lines.append(
+                f"    Step 1 — copy the relevant text from SECTION CONTENT into "
+                f"\"extracted_evidence\" and \"cited_text\" before you score."
+            )
         sub_q_lines.append("")
 
     sub_questions_text = "\n".join(sub_q_lines)
@@ -263,38 +278,69 @@ def _build_rubric_prompt(
 ---
 
 """
+    # Build a pre-populated JSON skeleton so small models (qwen2.5:3b) do not
+    # decide how many array entries to produce — they only need to fill in the
+    # values. Without this, qwen2.5:3b typically outputs only the first entry
+    # and stops, leaving all subsequent sub-questions at 0.
+    skeleton_entries: List[str] = []
+    for sq in rubric.sub_questions:
+        if sq.type == "binary":
+            entry = (
+                f'    {{\n'
+                f'      "key": "{sq.key}",\n'
+                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "cited_text": "FILL: short exact quote",\n'
+                f'      "sub_score": FILL_0_OR_1,\n'
+                f'      "extracted_years": null,\n'
+                f'      "anchor_description": ""\n'
+                f'    }}'
+            )
+        elif sq.type == "linear":
+            entry = (
+                f'    {{\n'
+                f'      "key": "{sq.key}",\n'
+                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "cited_text": "FILL: short exact quote",\n'
+                f'      "sub_score": 0,\n'
+                f'      "extracted_years": FILL_NUMBER_OR_NULL,\n'
+                f'      "anchor_description": ""\n'
+                f'    }}'
+            )
+        else:  # anchored
+            anchor_vals = " / ".join(str(a.value) for a in sq.anchors)
+            entry = (
+                f'    {{\n'
+                f'      "key": "{sq.key}",\n'
+                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "cited_text": "FILL: short exact quote",\n'
+                f'      "sub_score": FILL_ONE_OF_{anchor_vals},\n'
+                f'      "extracted_years": null,\n'
+                f'      "anchor_description": "FILL: which anchor you chose and why"\n'
+                f'    }}'
+            )
+        skeleton_entries.append(entry)
 
-    prompt = f"""You are a resume evidence scorer. You will score a candidate against a specific job requirement using a fixed rubric.
+    skeleton_json = ",\n".join(skeleton_entries)
 
-CRITICAL RULES:
-1. You must NOT consider the importance or point value of this requirement — you are only scoring evidence quality.
-2. You must NOT compute any aggregated score — just return sub-scores.
-3. You must score strictly against the rubric below — never use your own notions of "Advanced" or "Strong".
-4. For each sub-question with "extract first", you MUST list the relevant evidence you found BEFORE giving the score.
-5. If evidence is insufficient for a sub-question, return 0 for that sub-question — do not speculate.
+    prompt = f"""You are a resume evidence scorer. Score the candidate for ONE requirement.
 
 REQUIREMENT: {requirement_name}
-DIMENSION TYPE: {rubric.dimension_type}
 
-RUBRIC (formula applied in code, NOT by you: {formula_text}):
-
+RUBRIC sub-questions to answer:
 {sub_questions_text}
-SECTION CONTENT (from the candidate's resume):
+RESUME CONTENT:
 ---
 {evidence.full_text}
 ---
 {employment_section}
-Respond with ONLY a JSON object (no other text) in this format:
+TASK: Fill in the JSON below. Replace every FILL_... placeholder with the real value.
+- For binary keys: sub_score must be 0 or 1 (integer, no quotes).
+- For linear keys: extracted_years must be a plain number like 3 or 2.5, NOT a string. Use JSON null if no evidence.
+- Do NOT add extra keys. Do NOT change the "key" values. Output ONLY the JSON, nothing else.
+
 {{
   "sub_scores": [
-    {{
-      "key": "<sub-question key>",
-      "extracted_evidence": "<what you found that's relevant>",
-      "cited_text": "<exact text from the resume that supports the score>",
-      "sub_score": <numeric score — 0 or 1 for binary, anchor value for anchored, 0.0-1.0 for linear>,
-      "extracted_years": <number or null — only for linear type>,
-      "anchor_description": "<description of chosen anchor — only for anchored type>"
-    }}
+{skeleton_json}
   ]
 }}"""
 
@@ -452,12 +498,89 @@ def _banded_years_ratio(extracted_years: float, target_years: float) -> float:
     return 0.0
 
 
+def _coerce_years(raw_val: Any) -> Optional[float]:
+    """Robustly coerce the LLM's ``extracted_years`` value to a float.
+
+    Small models (qwen2.5:3b) frequently return the years field as a
+    string rather than a JSON number, e.g. ``"3 years"``,
+    ``"approximately 4"``, ``"~2.5"``, ``"3+"``.  A plain
+    ``float()`` call on any of these raises ``ValueError`` and the
+    caller silently falls back to ``None``, forcing a 0 score even
+    when the candidate clearly has the skill.
+
+    Strategy:
+      1. If ``raw_val`` is already numeric (int/float), return it.
+      2. If it is a string, strip whitespace, remove leading ``~``,
+         ``>`` ``<`` ``+`` characters and trailing unit words
+         (``years``, ``yrs``, ``year``, ``y``), then try
+         ``float()`` on the remainder.
+      3. Fall back to ``None`` only when no digit sequence can be
+         parsed at all.
+
+    Args:
+        raw_val: The value of the ``extracted_years`` field from the
+            LLM JSON response. May be ``int``, ``float``, ``str``,
+            or ``None``.
+
+    Returns:
+        A non-negative float, or ``None`` when the value is
+        genuinely absent or uninterpretable.
+    """
+    if raw_val is None:
+        return None
+    if isinstance(raw_val, (int, float)):
+        return float(raw_val)
+    if not isinstance(raw_val, str):
+        return None
+
+    # Strip whitespace, then remove common prefix/suffix noise.
+    cleaned = raw_val.strip()
+    # Remove leading approximate markers and comparison operators.
+    cleaned = re.sub(r"^[~<>≈≥≤+\-]+", "", cleaned).strip()
+    # Remove trailing unit words ("years", "yrs", "year", "y").
+    cleaned = re.sub(r"\s*(years?|yrs?|y)\s*$", "", cleaned,
+                     flags=re.IGNORECASE).strip()
+    # Remove any remaining trailing non-numeric noise.
+    cleaned = re.sub(r"[^0-9.]+$", "", cleaned).strip()
+    if not cleaned:
+        return None
+
+    # Try a direct float conversion on the cleaned string.
+    try:
+        val = float(cleaned)
+        return val if val >= 0 else None
+    except ValueError:
+        pass
+
+    # Last resort: grab the first number-like substring.
+    m = re.search(r"(\d+(?:\.\d+)?)", raw_val)
+    if m:
+        try:
+            return float(m.group(1))
+        except ValueError:
+            pass
+
+    return None
+
+
 def _parse_llm_response(
     response: str,
     rubric: RubricTemplate,
     target_years: Optional[float] = None,
 ) -> List[SubScoreResult]:
     """Parse the LLM's JSON response into SubScoreResult objects.
+
+    The parser is deliberately lenient toward small-model quirks
+    (qwen2.5:3b):
+
+    * Uses :func:`_extract_json_lenient` to survive truncated JSON.
+    * Uses :func:`_coerce_years` to handle ``extracted_years`` values
+      that are strings (``"3 years"``) instead of JSON numbers.
+    * When ``extracted_years`` is ``null`` / ``None`` for a linear
+      sub-question but the LLM returned a non-zero ``sub_score``,
+      that clamped score is used as-is rather than forced to 0 — this
+      preserves partial credit when the LLM can't count years but at
+      least signals the skill is present.
 
     Args:
         response: The raw LLM response text.
@@ -467,13 +590,29 @@ def _parse_llm_response(
     Returns:
         List of SubScoreResult, one per sub-question in the rubric.
     """
+    # Always log the raw response at DEBUG level so the years-parsing
+    # failure mode is immediately visible without adding print()s.
+    logger.debug(
+        "[rubric_scorer] raw LLM response (first 800 chars): %.800s",
+        response or "(empty)",
+    )
+
     data = _extract_json_lenient(response)
     if data is None:
-        logger.warning("No JSON found in LLM response")
+        logger.warning(
+            "[rubric_scorer] No JSON found in LLM response. "
+            "Raw response (first 400 chars): %.400s",
+            response or "(empty)",
+        )
         return _default_sub_scores(rubric, target_years)
 
     raw_sub_scores = data.get("sub_scores", [])
     if not raw_sub_scores:
+        logger.warning(
+            "[rubric_scorer] LLM JSON had no 'sub_scores' list. "
+            "Parsed data keys: %s",
+            list(data.keys()),
+        )
         return _default_sub_scores(rubric, target_years)
 
     # Build a lookup from the rubric for validation.
@@ -484,7 +623,11 @@ def _parse_llm_response(
         key = raw.get("key", "")
         sq = rubric_lookup.get(key)
         if sq is None:
-            logger.warning("Unknown sub-question key '%s' in LLM response", key)
+            logger.warning(
+                "[rubric_scorer] Unknown sub-question key %r in LLM response. "
+                "Known keys: %s",
+                key, list(rubric_lookup.keys()),
+            )
             continue
 
         raw_score = raw.get("sub_score")
@@ -496,7 +639,7 @@ def _parse_llm_response(
                 sub_score = float(raw_score)
             except (TypeError, ValueError):
                 logger.warning(
-                    "Invalid sub_score %r for key %s — defaulting to 0.0",
+                    "[rubric_scorer] Invalid sub_score %r for key %s — defaulting to 0.0",
                     raw_score, key,
                 )
                 sub_score = 0.0
@@ -507,26 +650,50 @@ def _parse_llm_response(
         if sq.type == "binary":
             sub_score = 1.0 if sub_score >= 0.5 else 0.0
 
-        # For linear, compute the BANDED ratio from extracted years.
+        # For linear sub-questions: robustly parse extracted_years (which
+        # small models often return as a string) then apply the banded ratio.
         if sq.type == "linear":
-            extracted_years = raw.get("extracted_years")
-            if extracted_years is not None:
-                try:
-                    extracted_years = float(extracted_years)
-                except (ValueError, TypeError):
-                    extracted_years = None
+            raw_ey = raw.get("extracted_years")
+            # Use the robust coercer rather than a bare float() call.
+            # This handles "3 years", "~4", "approximately 3", etc.
+            extracted_years = _coerce_years(raw_ey)
+
+            if extracted_years is None and raw_ey is not None:
+                logger.warning(
+                    "[rubric_scorer] Could not coerce extracted_years %r for "
+                    "key %s to float — treating as None.",
+                    raw_ey, key,
+                )
 
             if extracted_years is not None and target_years and target_years > 0:
                 # Banded years-ratio (owner spec 2026-07-07):
                 #   >= target → 1.0; >= 50% → 0.5; >= 25% → 0.25; else 0.0.
                 sub_score = _banded_years_ratio(extracted_years, target_years)
+                logger.debug(
+                    "[rubric_scorer] key=%s extracted_years=%.1f target=%.1f "
+                    "→ banded sub_score=%.2f",
+                    key, extracted_years, target_years, sub_score,
+                )
+            elif extracted_years is None and sub_score > 0:
+                # The LLM could not extract a years figure but it DID
+                # assign a non-zero sub_score. Trust the clamped score
+                # as partial credit rather than zeroing it out. This
+                # avoids the failure mode where the 3B model correctly
+                # identifies the skill but fails the years field format.
+                logger.debug(
+                    "[rubric_scorer] key=%s: extracted_years=None but "
+                    "LLM sub_score=%.2f retained as partial credit.",
+                    key, sub_score,
+                )
             else:
-                # If no years extracted OR no target_years, leave the
-                # LLM's clamped sub_score in place. The default-sub-scores
-                # path (no-LLM branch) returns 0.0 for linear sub-questions;
-                # we only get here when the LLM specifically answered but
-                # could not extract a numeric years value.
-                pass
+                # extracted_years is None AND sub_score == 0 (or target
+                # is missing). No credit — correct behaviour.
+                if target_years is None or target_years <= 0:
+                    logger.debug(
+                        "[rubric_scorer] key=%s: target_years is %r — "
+                        "no banded ratio applied; sub_score=%.2f kept.",
+                        key, target_years, sub_score,
+                    )
 
             results.append(SubScoreResult(
                 key=key,
@@ -553,6 +720,11 @@ def _parse_llm_response(
         existing_keys = {r.key for r in results}
         for sq in rubric.sub_questions:
             if sq.key not in existing_keys:
+                logger.debug(
+                    "[rubric_scorer] Sub-question key %r missing from LLM "
+                    "response — defaulting to 0.0.",
+                    sq.key,
+                )
                 results.append(SubScoreResult(
                     key=sq.key,
                     question=sq.question.replace("{skill}", ""),
@@ -726,6 +898,64 @@ def _is_binary_key(key: str, sub_scores: List[SubScoreResult]) -> bool:
 # Public API — score a requirement with the rubric-bound LLM.
 # ---------------------------------------------------------------------------
 
+def _apply_partial_credit_for_unknown_years(
+    sub_scores: List[SubScoreResult],
+    rubric: RubricTemplate,
+) -> None:
+    """Apply minimum partial credit when skill is confirmed but years unknown.
+
+    This fixes the most common qwen2.5:3b failure mode: the model correctly
+    identifies that the candidate has a skill (binary gate = 1) but returns
+    ``extracted_years = null`` for the linear years sub-question because it
+    sees dates in text format ("2016 - Ongoing") and can't compute duration.
+
+    Without this rescue, the formula ``gate * years_ratio`` evaluates to
+    ``1.0 * 0.0 = 0.0``, which is misleading — we KNOW the candidate has
+    the skill.
+
+    Resolution:
+    * If the binary sub-question has ``sub_score == 1.0``.
+    * AND the linear sub-question has ``sub_score == 0.0`` AND
+      ``extracted_years is None``.
+    * THEN set the linear sub_score to the minimum banded credit (0.25).
+
+    This is deliberately conservative: 0.25 corresponds to the
+    ``< 25% of target years`` banded band. The recruiter should treat this
+    as "skill confirmed, duration indeterminate" in the explanation.
+
+    The function mutates ``sub_scores`` in place.
+
+    Args:
+        sub_scores: Parsed sub-score results from the LLM response.
+        rubric: The rubric template used for scoring.
+    """
+    # Find binary and linear sub-questions in this rubric.
+    binary_keys = {sq.key for sq in rubric.sub_questions if sq.type == "binary"}
+    linear_keys = {sq.key for sq in rubric.sub_questions if sq.type == "linear"}
+
+    if not binary_keys or not linear_keys:
+        return  # rubric doesn't have the gate+years pattern
+
+    # Check whether ANY binary gate passed.
+    gate_passed = any(
+        ss.sub_score >= 0.5
+        for ss in sub_scores
+        if ss.key in binary_keys
+    )
+    if not gate_passed:
+        return  # skill not confirmed — zero is correct
+
+    # Apply minimum credit to linear sub-questions that have no years.
+    for ss in sub_scores:
+        if ss.key in linear_keys and ss.extracted_years is None and ss.sub_score == 0.0:
+            ss.sub_score = 0.25
+            logger.debug(
+                "[rubric_scorer] partial-credit rescue: key=%s gate passed "
+                "but extracted_years=None — applying minimum credit 0.25.",
+                ss.key,
+            )
+
+
 def score_requirement_with_rubric(
     requirement_name: str,
     dimension_type: str,
@@ -812,6 +1042,16 @@ def score_requirement_with_rubric(
         except Exception as exc:
             logger.warning("LLM call failed for '%s': %s", requirement_name, exc)
             sub_scores = _default_sub_scores(rubric, target_years)
+
+    # Partial-credit rescue: if the binary gate passed (skill confirmed present)
+    # but the linear years sub-question returned null (model saw dates in text
+    # but can't compute duration — typical qwen2.5:3b failure), apply the
+    # minimum banded credit (0.25) rather than zeroing the entire REQ.
+    #
+    # Rationale: the candidate demonstrably HAS the skill (gate=1) so a zero
+    # contribution is misleading. 0.25 corresponds to the "<= 25% of target"
+    # banded band — the most conservative non-zero credit.
+    _apply_partial_credit_for_unknown_years(sub_scores, rubric)
 
     # Evaluate the formula in code (never by the LLM).
     normalized = _evaluate_formula(rubric.formula, sub_scores)

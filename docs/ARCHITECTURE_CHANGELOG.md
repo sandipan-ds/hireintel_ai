@@ -6,6 +6,109 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-07-08 (b) — MLflow experiment-tracking wiring shipped (DEC-020, M0.5c)
+
+### What changed
+
+- **New module: `src/services/mlflow_wiring.py`** — the single integration point between the HireIntel scoring pipeline and the local MLflow tracking server (DEC-020). Sits under `src/services/` alongside the other external-integration helpers (`llm_caller.py`, `subquery_parser.py`, `json_export.py`). Pipeline code now imports from this module instead of `mlflow` directly, so the DEC-020 contract (9 params, 11 metrics, 2 canonical tags, ≥1 artifact) is enforced in one auditable place.
+- **`PipelineParams` / `RetrievalMetrics` dataclasses** centralize the contract. Adding a contract field is a single dataclass change; every caller picks it up automatically. Defaults reflect the shipped RecursiveChunker + ThresholdRetriever config so a forgotten field logs a real value, not `None`.
+- **`MLflowRun` context manager** — wraps `mlflow.start_run` with typed log helpers (`log_pipeline_params`, `log_retrieval_metrics`, `log_metric`, `log_artifact`, `set_tag`). A `with` block that raises is finalized with `status='FAILED'`. The context holds the active-run flag so every helper no-ops cleanly when the dependency is missing (graceful degradation: a missing `mlflow` breaks only tracking, never the scoring run).
+- **New script: `scripts/start_mlflow_server.py`** — the convenience launcher that produces the exact DEC-020 command line. Pre-creates the SQLite parent directory and the artifact root so the first run does not fail. Supports `--dry-run`, `--port`, `--host`.
+- **`scripts/score_batch_composed.py` updated** — the per-role scoring loop now opens an `MLflowRun` per role with `experiment_set` + `role` tags, logs all 9 `PipelineParams`, the 4 rollup metrics (`n_candidates`, `mean_score`, `n_zero_evidence_reqs`, `time_seconds`), the 11 `RetrievalMetrics` placeholders (0.0 until the M0.5d eval harness fills them), and the `<role>_ranked.json` artifact. New CLI flags: `--no-mlflow`, `--experiment-set`, `--tracking-uri`, `--no-llm-track`. When `mlflow` is not installed, one warning is logged and the run proceeds untracked.
+- **`requirements.txt` pinned** — `mlflow>=2.10,<5.0` (resolved to 3.14.0 in dev) and `optuna>=3.6,<5.0` (for the upcoming M0.5d Optuna sweep). `optuna-dashboard` deliberately not pinned (pip wheel-build failed on this box; revisit for M0.5d).
+
+### Why
+
+- **DEC-020 was specified but not implemented.** The MLflow contract (tracking URI, backend store, artifact root, tags, params, metrics, artifacts) was published in `EVALUATION.md` on 2026-07-05 and the rationale recorded in `AI_DESIGN_RATIONALE.md` §12, but the implementer row in `CURRENT_PROGRESS.md` M0.5c sat at ⬜. With Track 7.5 (Prong 6 reporter) shipped earlier today, M0.5c was the only remaining unblocked prerequisite for the Optuna sweep (M0.5d). This entry closes M0.5c.
+- **No outside-calls, no PII exfiltration.** MLflow runs on `127.0.0.1:5000` with a local SQLite backend and a local filesystem artifact root. Candidate resumes, names, and contact info never leave the host — the hard privacy constraint documented in `AI_DESIGN_RATIONALE.md` §12 is preserved.
+- **Graceful degradation is non-negotiable for ops.** A missing optional dependency must not prevent a scoring run. The wiring module probes `mlflow` at import time and routes every helper through `_available` so the absence of the library shows up as a single warning plus an untracked run, not an ImportError that aborts the batch.
+
+### Affected files
+
+- **New:** `src/services/mlflow_wiring.py` (~270 lines, 1 dataclass pair, 1 context manager class).
+- **New:** `scripts/start_mlflow_server.py` (~95 lines, launcher).
+- **New:** `tests/unit/test_mlflow_wiring.py` (12 hermetic tests).
+- **Updated:** `scripts/score_batch_composed.py` — import block + per-role scoring loop wrapped in `with run or _NullCtx():`; new flags.
+- **Updated:** `requirements.txt` — `mlflow>=2.10,<5.0`, `optuna>=3.6,<5.0` pins.
+- **Updated:** `docs/CURRENT_PROGRESS.md` M0.5c three rows ⬜ → ✅.
+- **Updated:** `docs/RELEASE_NOTES.md` Unreleased block — Added entry for 2026-07-08 (M0.5c).
+- **Updated:** `docs/DECISIONS.md` DEC-020 status advanced; rationale appended.
+
+### Storage impact
+
+- New persisted paths (created by the launcher or by the first tracked run):
+  - `data/mlflow/mlflow.db` — MLflow SQLite backend store (experiments + runs + params + metrics + tags).
+  - `data/mlflow/artifacts/` — MLflow artifact root (per-run artifact files; here, `<role>_ranked.json`).
+- Both are git-ignored by convention (the `data/` directory is already in `.gitignore`).
+- A transient `mlruns/` folder may appear if `mlflow` defaults are exercised without the launcher; that path is **not** part of the shipped configuration and should be removed if it appears.
+
+### Test impact
+
+- 12 new unit tests at `tests/unit/test_mlflow_wiring.py`. Total unit count: 512 → 524. Full suite passes (524/524). Ruff clean on the three new/modified files.
+
+### Risks introduced
+
+- **`mlruns/` directory accidentally created in CWD.** If the launcher is not used and the caller calls `mlflow.set_experiment(...)` before `configure_tracking`, MLflow will drop a local `./mlruns` directory rather than the SQLite backend. Mitigation: wiring always calls `mlflow.set_tracking_uri(self.tracking_uri)` *before* `mlflow.set_experiment(...)`. Tests confirm the order.
+- **`optuna-dashboard` not installed.** M0.5d will need it; current pip fails on `pyarrow` wheel build in this env. Workaround for M0.5d: install via `pip install optuna-dashboard` in a fresh venv, or skip the dashboard and rely on MLflow's own comparison view.
+
+### Future considerations
+
+- **M0.5d (Optuna sweep)** is now unblocked: the wiring module exposes every DEC-020 contract surface the Optuna driver will need. The driver just wraps each trial in `with start_run(experiment_name="chunking_v1", ...) as run:` and calls `run.log_pipeline_params(trial.params)`.
+- **Evaluator runs** (M0.5b/c/d) will overwrite the 11 `RetrievalMetrics` placeholders with measured values; the contract keys are already in place so no schema migration of older runs is required.
+- **MLflow Model Registry** is the documented future upgrade path (`AI_DESIGN_RATIONALE.md` §12): if the team wants to version the scoring engine itself, not just experiment configs, promote MLflow to its remote tracking server only when multi-machine collaboration becomes necessary.
+
+---
+
+## 2026-07-08 (a) — Optuna ranking-stability reporter shipped (DEC-024 Prong 6, Track 7.5; DEC-031 umbrella)
+
+### What changed
+
+- **New module: `src/reporting/rank_stability.py`** — the Prong 6 reporter that measures ranking stability across hyperparameter perturbations during an Optuna sweep (M0.5d). The Prong 6 spec was published in `EVALUATION.md` on 2026-07-06 (DEC-024) but its implementer was a Track 7 ⬜ row. This entry closes Track 7.5.
+
+- **Pipeline role:** the reporter sits at the end of the Optuna sweep loop. Each Optuna trial already writes a per-study rankings JSON at `reports/diff_rankings/optuna_study_<study>__<role>__rankings.json` (per `EVALUATION.md` §"Where the rankings come from"). Once the sweep completes, `compute_rank_stability(study_payload)` reads that JSON, computes the nine Prong 6 metrics across every `(trial_A, trial_B)` pair, and `write_stability_report()` writes a sibling `...__rank_stability.json` + `...__rank_stability.md` pair. The JSON is what MLflow logs as a metric set for the study; the MD is the human-readable summary a reviewer scans before promoting an Optuna-recommended config to "Active" in `MODEL_REGISTRY.md`.
+
+- **Pure-function primitives.** Every per-pair metric is a deterministic function of two candidate-id sequences — no I/O, no global state, easy to unit test. `top_k_jaccard`, `rank_shift_stats`, `distribution_correlations`, `newcomer_drop_rates`. All rank-shift magnitudes are unsigned (per the spec's +/- cancellation guard — a `+5` and `-5` between two candidates never sum to 0 and hide the magnitude).
+
+- **HP-axis explained-variance decomposition.** For each HP key present in the trial `params` dicts, the reporter computes the R^2 of `mean_abs_rank_shift` against the absolute HP delta between paired trials. Uses a closed-form single-slope linear regression (`_r_squared_for_axis`) — no `scikit-learn` dependency. The catch-all "no variation in HP axis" branch returns `0.0` rather than NaN: a constant HP explains zero of the *across-trial* variance by definition.
+
+- **Soft-target flags.** The six soft targets published in `EVALUATION.md` §"Prong 6 Targets" (`top_10_jaccard ≥ 0.60`, `max_rank_shift ≤ 50`, `mean_abs_rank_shift ≤ 15`, `kendall_tau ≥ 0.60`, `spearman_rho ≥ 0.65`, `newcomer_rate_top_10 ≤ 0.30`) are surfaced verbatim in every report. `_derive_flags` lists any violation in the `flags` field. Per spec, Prong 6 metrics are **informational** — an Optuna-recommended "Active" config candidate **cannot** be blocked solely by Prong 6. A flag is a prompt for human review, not a gate.
+
+### Why
+
+- **Prong 6 was specified but not implemented.** DEC-024 (2026-07-05) added the 5-prong ranking-evaluation methodology including Prong 6, but left the implementer as a Track 7 ⬜ row. With Track 7.4 (batch CLI + subquery cache + scoring improvements) shipped 2026-07-07, the only blocking gap for the Optuna sweep (M0.5d) was the absence of a stability diagnostic — the spec's exact phrasing was "without rank-stability, Optuna cannot diagnose shortlist churn". Track 7.5 closes that gap.
+
+- **The reporter is decoupled from Optuna itself.** It takes the parsed study JSON and returns a populated report. That decoupling is what lets the unit tests (9 in `tests/unit/test_rank_stability.py`) verify every metric against synthetic fixtures without spinning up a real Optuna study — the test-suite stays hermetic and CI-runnable in seconds.
+
+### Affected files
+
+- **New:** `src/reporting/rank_stability.py` (766 lines, 18 functions, 1 dataclass).
+- **New:** `tests/unit/test_rank_stability.py` (9 tests).
+- **Updated:** `docs/CURRENT_PROGRESS.md` Track 7.5 row ⬜ → ✅; Track 7.6 row ⬜ → ✅ (doc-drift fix — Track 7.6 had been landed inline last session but the row was not flipped).
+- **Updated:** `docs/RELEASE_NOTES.md` "Unreleased" block — Added entry for 2026-07-08 (Track 7.5).
+- **Updated:** `docs/DECISIONS.md` — dedicated DEC-031 entry added (was previously only referenced in Track 7 prose; the entry had never landed).
+
+### Storage impact
+
+- New output paths (per-study, per-role):
+  - `reports/diff_rankings/optuna_study_<study>__<role>__rank_stability.json` — the structured metric bundle (logged to MLflow as a metric set).
+  - `reports/diff_rankings/optuna_study_<study>__<role>__rank_stability.md` — the human-readable summary (committed to git per the existing `reports/` tracking rule).
+- Both files are siblings of the source `...__rankings.json` written by the Optuna exporter — they move with the study.
+
+### Test status
+
+- **512 / 512 unit tests pass** (was 503/503; +9 from the new test file). Ruff clean on both new files.
+
+### Promotion gate impact
+
+- None — Prong 6 is informational. The four hard gates (DEC-024 promotion-gate revision: counterfactual ≥ 0.95, stability = 1.0, NDCG@10 ≥ 0.80 if labeled set exists, no regression in prior Active's counterfactual) are unchanged. Prong 6 merely adds a flag for human review when `top_10_jaccard < 0.30` against the prior "Active" config — the reviewer can still override.
+
+### Related decisions
+
+- **DEC-024** (2026-07-05) — added Prong 6 to the ranking-evaluation methodology and specified the nine metrics + soft targets.
+- **DEC-031** (added 2026-07-08) — Track 7 umbrella decision (subquery cache + batch CLI + rank-stability reporter); this entry implements its Prong 6 component.
+
+---
+
 ## 2026-07-07 (b) — Rubric LLM context enrichment + banded years-ratio + local Ollama backend (DEC-033, Track 7.4.2)
 
 ### What changed

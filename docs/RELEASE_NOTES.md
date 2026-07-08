@@ -8,6 +8,62 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
+### Added — 2026-07-08 (M0.5c): MLflow experiment-tracking wiring (DEC-020)
+
+- **`src/services/mlflow_wiring.py` (NEW)** — the single integration point between the HireIntel scoring pipeline and the local MLflow tracking server. Pipeline code (batch CLI, future Optuna drivers) never imports `mlflow` directly; every call routes through the typed helpers here so the DEC-020 contract (params / metrics / artifacts / tags) is centralized and auditable in one source of truth.
+  - `PipelineParams` dataclass → all 9 DEC-020 required params with defaults reflecting the shipped RecursiveChunker + ThresholdRetriever config (`chunk_size=500`, `chunk_overlap=100`, `embedding_model=MiniLM-L6-v2`, `vector_store=npz`, `similarity=cosine`, `retrieval_mode=threshold`, `threshold=0.30`, `top_k=20`, `llm=off`).
+  - `RetrievalMetrics` dataclass → all 11 DEC-020 required metrics with `0.0` defaults so every contract key is logged on every run (a partial run records the key, not a `missing field` exception).
+  - `MLflowRun` context manager wrapping `mlflow.start_run` with typed helpers: `log_pipeline_params`, `log_retrieval_metrics`, `log_metric` (ad-hoc rollups), `log_artifact`, `set_tag`. A run interrupted by an exception is finalized with `status='FAILED'` rather than left unfinished.
+  - `start_run(...)` factory function for `with start_run(...) as run:` ergonomic use.
+  - `configure_tracking(...)` helper plus module constants `DEFAULT_TRACKING_URI` (`http://127.0.0.1:5000`), `DEFAULT_BACKEND_STORE` (`data/mlflow/mlflow.db`), `DEFAULT_ARTIFACT_ROOT` (`data/mlflow/artifacts/`).
+  - Graceful degradation: if `mlflow` is not installed every helper becomes a no-op, so a missing dependency breaks only experiment tracking — never the scoring run itself.
+- **`scripts/start_mlflow_server.py` (NEW)** — thin convenience launcher that produces the exact DEC-020 launch line (`mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri sqlite:///data/mlflow/mlflow.db --default-artifact-root data/mlflow/artifacts/`) and pre-creates the SQLite parent + artifact root directories so the first run does not fail with ENOENT. Supports `--dry-run`, `--port`, `--host` overrides.
+- **`scripts/score_batch_composed.py` UPDATED** — per-role scoring loop now wraps each role in an `MLflowRun`, logging the canonical tags (`experiment_set`, `role`), all `PipelineParams`, the per-role rollup metrics (`n_candidates`, `mean_score`, `n_zero_evidence_reqs`, `time_seconds`), the `RetrievalMetrics` block (0.0 placeholders until the M0.5d eval harness fills them), and the `<role>_ranked.json` artifact. New flags: `--no-mlflow` (opt-out), `--experiment-set` (default `batch_composed`), `--tracking-uri` (override), `--no-llm-track` (don't track `--no-llm` smoke tests). When `mlflow` is not installed a single warning is logged and the run proceeds untracked.
+- **`requirements.txt` UPDATED** — pinned `mlflow>=2.10,<5.0` (resolved to 3.14.0 in the dev env) and `optuna>=3.6,<5.0` (for the upcoming M0.5d Optuna sweep).
+- **`tests/unit/test_mlflow_wiring.py` (NEW, 12 tests, hermetic)** — every test spins up an in-memory SQLite MLflow tracking store under a per-test `tmp_path` so no network server is required. The tests re-read the logged params/metrics/tags/artifacts back via the official `mlflow.tracking.MlflowClient` API to verify the contract directly (not just call-through).
+  - `test_is_available_returns_bool` — `is_available()` is a real bool.
+  - `test_canonical_tags_logged` — `experiment_set` + `role` tags are written (DEC-020).
+  - `test_log_pipeline_params_writes_contract_keys` — all 9 required param keys appear in the run, with values round-tripped.
+  - `test_pipeline_params_defaults_match_shipped_config` — defaults reflect the shipped RetrievalConfig.
+  - `test_log_retrieval_metrics_writes_contract_keys` — all 11 required metric keys appear in the run.
+  - `test_log_metric_accepts_arbitrary_keys` — ad-hoc rollups (e.g. `n_candidates`) are loggable.
+  - `test_log_artifact_records_file` — the file lands in the artifact store.
+  - `test_log_artifact_warns_on_missing_file` — missing artifact path warns, never raises.
+  - `test_failed_run_marked_failed_on_exception` — `with` block that raises ⇒ run status `FAILED`.
+  - `test_no_op_when_mlflow_unavailable` — monkeypatch `_available=False`; every helper becomes a no-op.
+  - `test_default_tracking_constants_match_dec020` — module constants match the spec values.
+  - `test_start_mlflow_server_command_shape` — the launcher produces the exact DEC-020 command vector.
+- **Test status — 2026-07-08 (M0.5c):** **524 / 524 unit tests pass** (+12 vs the prior 512/512 baseline). Ruff clean on all three new/modified files (`mlflow_wiring.py`, `start_mlflow_server.py`, `test_mlflow_wiring.py`); the pre-existing E402/E501 ruff findings in `score_batch_composed.py` are unchanged.
+- **Docs sync:** `CURRENT_PROGRESS.md` M0.5c rows ⬜ → ✅ (3 rows: requirements.txt pin, pipeline logging, local server runnable). `RELEASE_NOTES.md` Unreleased block — Added entry for 2026-07-08 (M0.5c). `ARCHITECTURE_CHANGELOG.md` — added 2026-07-08 (b) entry. `DECISIONS.md` — DEC-020 status advanced to "Implementation shipped" + rationale update.
+- **Style guide compliance:** `src/services/mlflow_wiring.py` follows `docs/STYLE_GUIDE.md` — type hints throughout, Google-style docstrings with Args/Returns/Raises/Side effects, no `iterrows()` / `apply()` (pandas not used), no premature abstraction, module-level `__all__` for the public API, every function ≤ 60 body lines.
+
+### Added — 2026-07-08 (Track 7.5): Optuna ranking-stability reporter (DEC-024 Prong 6, DEC-031 umbrella)
+
+- **`src/reporting/rank_stability.py` (NEW, 766 lines)** — the Prong 6 reporter that measures how brittle the recruiter shortlist is across hyperparameter perturbations during an Optuna sweep (M0.5d). Pure functions for every per-pair primitive (no I/O, easy to unit test):
+  - `top_k_jaccard(rank_a, rank_b, k)` — Jaccard similarity of the top-k candidate sets in `[0.0, 1.0]`.
+  - `rank_shift_stats(rank_a, rank_b)` — `(max_abs_shift, mean_abs_shift)`. All magnitudes are unsigned per the spec's +/- cancellation guard.
+  - `distribution_correlations(rank_a, rank_b)` — `(kendall_tau, spearman_rho)` via `scipy.stats`, NaN-guarded to `0.0` for <2 shared candidates.
+  - `newcomer_drop_rates(rank_a, rank_b, k)` — `(newcomer_rate, drop_rate)` split for top-k direction-of-churn diagnostics.
+- **Study-level `compute_rank_stability(study_payload, role=None)`** — the pure-math entry point. Iterates every `(trial_A, trial_B)` pair, accumulates sums + running max, derives the HP-axis explained-variance R^2 decomposition, builds the `RankStabilityReport` dataclass, and surfaces soft-target violation flags (Prong 6 metrics are informational per spec — they cannot block an Optuna promotion by themselves, but a flag prompts a human review comment in `MODEL_REGISTRY.md` before merging).
+- **HP-axis R^2** via a closed-form single-slope linear regression (`_r_squared_for_axis` helper) — no `scikit-learn` dependency. A constant HP axis returns `R^2 = 0.0` (zero by definition, never NaN).
+- **I/O layer** — `load_study_file(path)` reader + `write_stability_report(report, input_path)` writer that produces a sibling `optuna_study_*__<role>__rank_stability.json` + `.md` pair next to the source rankings file (the layout `MODEL_REGISTRY.md`'s diff_rankings row documents).
+- **`RankStabilityReport` dataclass** with all nine metrics the spec defines (`top_10_jaccard`, `top_50_jaccard`, `max_rank_shift`, `mean_abs_rank_shift`, `kendall_tau`, `spearman_rho`, `newcomer_rate_top_10`, `drop_rate_top_10`, `hp_axis_explained_variance`) plus `soft_targets` (verbatim from `EVALUATION.md` Prong 6 targets) and `flags` (the violations surfaced for human review).
+- **Public API:** `SCHEMA_VERSION`, `DEFAULT_TOP_K`, `DEFAULT_TOP_K_WIDE`, `RankStabilityReport`, `top_k_jaccard`, `rank_shift_stats`, `distribution_correlations`, `newcomer_drop_rates`, `compute_rank_stability`, `load_study_file`, `write_stability_report`.
+- **`tests/unit/test_rank_stability.py` (NEW, 9 tests — spec called for 8; one extra test splits the FileNotFoundError vs ValueError distinction at the I/O boundary)**:
+  - `test_identical_rankings_are_perfectly_stable` — identity extreme (jaccard 1, shift 0, kendall/spearman 1).
+  - `test_disjoint_top10_produces_zero_jaccard_and_full_churn` — disjoint extreme (jaccard 0, churn 1).
+  - `test_single_jump_max_shift_is_45` — pins the spec's "rank 50 → rank 5 = max shift 45" example; the 99 unchanged candidates dilute the mean but not the max — verifies the max is not averaged away.
+  - `test_compute_identical_study_is_perfectly_stable` — full study with two identical trials at the stable extreme; verifies report fields round-trip.
+  - `test_compute_disjoint_top10_surfaces_churn_flags` — disjoint top-10 surfaces `top_10_jaccard` and `newcomer_rate` flags in the report's `flags` list.
+  - `test_hp_axis_explained_variance_isolates_theta_driver` — three trials with only `theta` varying ⇒ `theta` R^2 > 0 and `chunk_size` R^2 = 0 (the constant axis explains zero by definition).
+  - `test_compute_rank_stability_requires_two_trials` — studies with 0 or 1 trials raise `ValueError` (cannot be "stable against" nothing).
+  - `test_end_to_end_writes_json_and_md_alongside_input` — synthetic study JSON on disk → reporter produces the sibling `...__rank_stability.{json,md}` pair with the spec's naming convention and contents round-trip back into the report.
+  - `test_load_study_file_raises_on_missing_and_malformed` — `FileNotFoundError` for missing path vs `ValueError` for malformed JSON (distinct errors so a CI pipeline can tell "sweep never ran" from "sweep wrote garbage").
+- **Tests hermetic** — synthetic fixtures throughout, no real Optuna study or labeled ground truth required. Reporter is decoupled from Optuna itself (reads the self-describing per-study rankings JSON shape documented in `EVALUATION.md` §"Where the rankings come from").
+- **Test status — 2026-07-08 (Track 7.5):** **512 / 512 unit tests pass** (+9 vs the prior 503/503 baseline). Ruff clean on both new files.
+- **Docs sync:** `CURRENT_PROGRESS.md` Track 7.5 → ✅, Track 7.6 ⬜ → ✅ (doc-drift fix — Track 7.6 had been landed inline but the row was not flipped). `DECISIONS.md` — added dedicated DEC-031 entry (the umbrella was previously only referenced in Track 7 prose; the entry never landed). `ARCHITECTURE_CHANGELOG.md` — added 2026-07-08 (a) entry. `EVALUATION.md` Prong 6 spec is unchanged (the reporter implements it verbatim).
+- **Style guide compliance:** `src/reporting/rank_stability.py` follows `docs/STYLE_GUIDE.md` — type hints throughout, Google-style docstrings with Args/Returns/Raises, functions ≤ 60 body lines (the 83-line `compute_rank_stability` is 46 body lines + 37 docstring, consistent with the existing `src/reporting/chunk_report.py`), no `iterrows()` / `apply()` (no pandas used), no premature abstraction, no defensive code without evidence. Module-level `__all__` for the public API.
+
 ### Added — 2026-07-07 (Track 7.4.1, bug fix): `role_subqueries` shape-mismatch bug — composed scorer defaulted every REQ to 100.00 under `--no-llm`
 
 - **Bug:** Running `python scripts/score_batch_composed.py --role DataScience --no-llm` produced `mean=100.00` and `top-1=100.00` for every role. Every REQ on every candidate showed `code_only_part=1.00`, `rubric_llm_part=1.00`, `sub_score=1.00`, with `code_only_sq_scores={}` and `rubric_sq_scores={}` (both empty).
