@@ -56,7 +56,7 @@ class LLMRubricCaller:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model: Optional[str] = None,
-        max_tokens: int = 2000,
+        max_tokens: int = 4000,
         temperature: float = 0.0,
     ) -> None:
         self.api_key = api_key or OPENCODE_API_KEY
@@ -93,10 +93,13 @@ class LLMRubricCaller:
                     {
                         "role": "system",
                         "content": (
-                            "You are a strict rubric scorer. You read resume chunks and "
-                            "answer each sub-question with the EXACT anchored value "
-                            "shown. You do not explain. You do not add prose. You output "
-                            "ONLY one line per sub-question in the format `key: value`."
+                            "You are a strict rubric scorer for resume evidence. "
+                            "Follow the format instructions in the user message "
+                            "EXACTLY. Do not add explanations, prose, or "
+                            "commentary beyond what the format requires. Do not "
+                            "speculate beyond the resume content. If evidence is "
+                            "insufficient, return 0 / \"unknown\" / null as the "
+                            "format allows."
                         ),
                     },
                     {"role": "user", "content": prompt},
@@ -112,12 +115,146 @@ class LLMRubricCaller:
 
 
 # Module-level default instance for convenience
-_default_caller: Optional[LLMRubricCaller] = None
+_default_caller: Optional[Any] = None
 
 
-def get_default_caller() -> LLMRubricCaller:
+def get_default_caller() -> Any:
     """Get a module-level default LLM caller (lazy-initialized)."""
     global _default_caller
     if _default_caller is None:
-        _default_caller = LLMRubricCaller()
+        _default_caller = get_rubric_caller()
     return _default_caller
+
+
+# ---------------------------------------------------------------------------
+# Ollama local-LLM caller (OpenAI-compatible endpoint at port 11434).
+#
+# Free-tier cloud LLM endpoints truncate the JSON response mid-stream (server-
+# side `completion_tokens` cap), so local inference is the path of least
+# resistance for rubric scoring. Ollama exposes an OpenAI-compatible REST API
+# at http://localhost:11434/v1, so the same OpenAI Python SDK drives both
+# backends — only ``base_url``, ``api_key`` (any non-empty string works), and
+# ``model`` differ.
+#
+# Select Ollama via the env var ``LLM_BACKEND=ollama`` (read from .env or the
+# process environment). The default remains ``opencode`` (the existing
+# endpoint) so existing callers are unaffected.
+# ---------------------------------------------------------------------------
+
+OLLAMA_BASE_URL: str = _ENV.get("ollama_base_url", "http://localhost:11434/v1")
+OLLAMA_MODEL: str = _ENV.get("ollama_model", "qwen2.5:3b")
+OLLAMA_API_KEY: str = _ENV.get("ollama_api_key", "ollama")  # any non-empty str
+
+
+class OllamaRubricCaller:
+    """Ollama-local LLM caller for the rubric-bound scoring.
+
+    Uses Ollama's OpenAI-compatible endpoint at
+    ``http://localhost:11434/v1``. Any non-empty API key is accepted; we use
+    ``"ollama"`` by default. The model name (e.g. ``qwen2.5:3b``) must be
+    one of the models listed by ``ollama list`` on the host.
+
+    Designed to be a drop-in replacement for :class:`LLMRubricCaller`:
+    same ``__call__(prompt) -> str`` contract and same ``model_name`` /
+    ``_available`` attributes used by callers / tests.
+    """
+
+    def __init__(
+        self,
+        model: Optional[str] = None,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+        max_tokens: int = 4000,
+        temperature: float = 0.0,
+        timeout: float = 120.0,
+    ) -> None:
+        self.model_name = model or OLLAMA_MODEL
+        self.base_url = base_url or OLLAMA_BASE_URL
+        self.api_key = api_key or OLLAMA_API_KEY
+        self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.timeout = timeout
+        self._client = None
+        self._available = False
+
+        try:
+            from openai import OpenAI
+            self._client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.base_url,
+                timeout=self.timeout,
+            )
+            self._available = True
+            logger.info(
+                "Ollama caller ready: model=%s base_url=%s",
+                self.model_name, self.base_url,
+            )
+        except Exception as e:
+            logger.warning("Failed to initialize Ollama OpenAI client: %s", e)
+            self._client = None
+
+    def __call__(self, prompt: str) -> str:
+        """Send a prompt and return the assistant's raw text response."""
+        if not self._available or self._client is None:
+            return ""
+        try:
+            response = self._client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a strict rubric scorer for resume evidence. "
+                            "Follow the format instructions in the user message "
+                            "EXACTLY. Do not add explanations, prose, or "
+                            "commentary beyond what the format requires. Do not "
+                            "speculate beyond the resume content. If evidence is "
+                            "insufficient, return 0 / \"unknown\" / null as the "
+                            "format allows."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+                max_tokens=self.max_tokens,
+                temperature=self.temperature,
+            )
+            if not response.choices:
+                logger.warning(
+                    "Ollama returned empty choices for model %s", self.model_name,
+                )
+                return ""
+            content = response.choices[0].message.content or ""
+            return content.strip()
+        except Exception as e:
+            logger.warning("Ollama LLM call failed: %s", e)
+            return ""
+
+
+def get_rubric_caller() -> Any:
+    """Factory returning the configured rubric LLM caller.
+
+    Selection order (first match wins):
+      1. ``LLM_BACKEND`` env var in the process environment (``ollama`` or
+         ``opencode``).
+      2. ``LLM_BACKEND`` key in the ``.env`` file.
+      3. Default: ``opencode`` (the existing cloud endpoint).
+
+    Returns:
+        An ``LLMRubricCaller`` or ``OllamaRubricCaller`` instance. Both
+        implement the ``__call__(prompt) -> str`` contract.
+    """
+    backend = (
+        os.environ.get("LLM_BACKEND")
+        or _ENV.get("LLM_BACKEND")
+        or "opencode"
+    ).lower().strip()
+    if backend == "ollama":
+        caller = OllamaRubricCaller()
+        if not caller._available:
+            logger.warning(
+                "LLM_BACKEND=ollama but Ollama caller is not available — "
+                "falling back to opencode backend."
+            )
+            return LLMRubricCaller()
+        return caller
+    return LLMRubricCaller()

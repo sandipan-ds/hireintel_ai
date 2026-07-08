@@ -1,6 +1,6 @@
 """Tests for the chunk metadata schema and date parsing utilities."""
 
-from rag.document_aware_chunker import (
+from src.rag.document_aware_chunker import (
     ChunkRecord,
     _classify_experience_type,
     _extract_skills_asserted,
@@ -62,9 +62,32 @@ class TestParseTemporalContext:
         assert ctx["calculated_duration_months"] is None
 
     def test_single_year(self):
+        # Track 7.2 (DEC-031): a single year alone is treated as a full
+        # year of employment (start=Jan, end=Dec → 12 months inclusive
+        # both ends), with an ``inferred_full_year`` flag set so callers
+        # can audit / override. The guard against cert/education
+        # mis-bucketing is applied at the structured-profile call site.
         ctx = parse_temporal_context("2020")
         assert ctx["start_date"]["year"] == 2020
-        assert ctx["calculated_duration_months"] == 0
+        assert ctx["start_date"]["month"] == 1
+        assert ctx["end_date"]["month"] == 12
+        assert ctx["calculated_duration_months"] == 12
+        assert ctx["inferred_full_year"] is True
+
+    def test_unparseable_text_has_no_inferred_full_year_flag(self):
+        # When the date string can't be parsed at all, ``inferred_full_year``
+        # must be False (not missing). Callers use this flag to decide
+        # whether to emit an audit record.
+        ctx = parse_temporal_context("some random text")
+        assert ctx.get("inferred_full_year") is False
+
+    def test_year_range_not_inferred(self):
+        # A real "2018 - 2020" range is NOT an inferred-full-year entry —
+        # the start and end are both explicit, so the ``inferred_full_year``
+        # flag should be False (or missing — both treated as False).
+        ctx = parse_temporal_context("2018 - 2020")
+        assert ctx["calculated_duration_months"] == 36  # Jan 2018..Dec 2020
+        assert not ctx.get("inferred_full_year", False)
 
     def test_slash_format(self):
         ctx = parse_temporal_context("01/2020 - 06/2023")

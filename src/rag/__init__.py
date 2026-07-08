@@ -13,7 +13,7 @@ The legacy ``chunk_profile`` function and ``ChunkRecord`` class in
 release. New code should import the classes above.
 """
 
-from rag.document_aware_chunker import ChunkRecord, DocumentAwareChunker, chunk_profile
+from src.rag.document_aware_chunker import ChunkRecord, DocumentAwareChunker, chunk_profile
 from src.rag.recursive_chunker import (
     DEFAULT_SEPARATORS,
     RECURSIVE_CHUNK_OVERLAP,

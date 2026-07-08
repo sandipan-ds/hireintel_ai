@@ -486,17 +486,17 @@ Here, the LLM act as only a brain to objectively check and give a subscore for t
 The scoring proceeds as follows- 
 
 1 if the candidate knows Python (It's a binary gate 0 or 1), 
-3 years of experience must be calculated linearly capped at 5. (So it should be- 3/5=0.6)
+3 years of experience scored against a 5-year target using the banded rule (3 ≥ 2.5 = 50% → 0.5 band)
 Relevance of the projects to the JD requirement (in a scale of 0 to 1, 0 lowest, and 1 exact match)
 
 So for a candidate whose resume says-
 
 - Python with experience of 4+ years
 - Worked in Netflix for Recommendation system for 3 years 
-                                  
+                                   
 The normalized score should be:
 
-Normalized Score for Python Skill and exp: 1* (4/5)* (0.8)= 1* 0.8* 0.8= 0.64
+Normalized Score for Python Skill and exp: 1 × 0.5 × 0.8 = 0.4 (using the banded ratio)
 
 Explanation- 1 because he knows python, 0.8 because he has exp of 4 years in python (this requires LLM judgment, as in the resume
 the experience may not always be mentioned clearly, so we need to calculate relevant exp from each retrieved chunk
@@ -586,12 +586,12 @@ Recursive Chunking
 ```text
 RecursiveCharacterTextSplitter(
     separators=["\n\n", "\n", ". ", " "],
-    chunk_size=500,        # Optuna hyperparameter
-    chunk_overlap=50,      # Optuna hyperparameter
+    chunk_size=1000,       # Optuna hyperparameter (bounds [500, 1000])
+    chunk_overlap=500,      # Optuna hyperparameter (bounds [50%, 60%] of chunk_size)
 )
 ```
 
-The default chunk size is 500 characters with 50 characters of overlap. Both are tuned by Optuna against a fixed eval set.
+The default chunk size is 1000 characters with 500 characters of overlap (50% of `chunk_size`). Both are tuned by Optuna against a fixed eval set. The bounds were widened on 2026-07-07 from `[200, 500]` / `[100, 60%]` to `[500, 1000]` / `[50%, 60%]` to reduce the failure mode where a resume role's date line and its skill bullets land in different chunks — larger chunks with 50% overlap keep the date line and the bullet points in the same (or overlapping) chunk, so the rubric LLM can correlate skills with durations without needing to re-parse dates.
 
 This chunking supports:
 
@@ -688,19 +688,27 @@ For each query (a sub-question, a chat question, or a JD bullet):
    vector in the relevant index (per-candidate for scoring, pool-wide
    for triage and chat).
 
-3. Return all chunks whose cosine ≥ θ (default θ = 0.70, Optuna-tuned).
+3. Return all chunks whose cosine ≥ θ (default θ = 0.25, Optuna-tuned;
+   bounds [0.10, 0.50] per owner spec 2026-07-06; default lowered
+   from 0.30 to 0.25 on 2026-07-07 to surface more date-bearing
+   chunks per REQ).
 
 4. Sort by similarity descending. If the result is larger than
    max_chunks_per_query (default 20), truncate and log a warning.
 
 5. Send the joined chunks + the rubric (for scoring) to the LLM.
+   The prompt also includes an EMPLOYMENT HISTORY block (computed
+   deterministically from parsed date ranges by the structured profile
+   extractor) so the LLM can correlate skill mentions in retrieved
+   chunks with the parser-computed role durations — without needing
+   to re-parse sparse date strings from 1000-char chunks.
 
 6. For scoring: the LLM outputs anchored floats for each sub-question:
      skill_presence: 1.0     (binary, from {0.0, 1.0})
-     years_experience: 0.8   (linear, from {0.0, 0.25, 0.5, 0.75, 1.0})
+     years_experience: 0.5   (banded: >= target → 1.0; >= 50% → 0.5; >= 25% → 0.25; else 0.0)
      project_relevance: 0.75 (anchored)
 
-7. The code computes the sub-score: SQ1 × SQ2 × SQ3 = 1.0 × 0.8 × 0.75 = 0.6.
+7. The code computes the sub-score: SQ1 × SQ2 × SQ3 = 1.0 × 0.5 × 0.75 = 0.375.
    The LLM never sees the requirement's weight and never performs the
    final aggregation.
 
@@ -714,10 +722,11 @@ A fixed `top_k` (e.g. `top_k = 5`) doesn't adapt to query difficulty: a 3-chunk 
 
 ## Why the LLM does the final filtering, not a higher threshold
 
-A cosine threshold of 0.5, 0.7, 0.9, or 1.0 all have failure modes:
+A cosine threshold of 0.10, 0.25, 0.50, or 0.90 all have failure modes:
 
+- **θ = 0.10** — recall is maximized; precision is very low; almost all chunks reach the LLM (noisy, expensive).
+- **θ = 0.25** (current default, 2026-07-07) — surfaces more date-bearing chunks per REQ; combined with the larger `chunk_size=1000` and 50% overlap, reduces date/skill split incidents. Optuna will tune this.
 - **θ = 0.50** — recall is high; precision is low; many irrelevant chunks reach the LLM.
-- **θ = 0.70** (default) — balanced default; Optuna will tune this.
 - **θ = 0.90** — precision is high; recall collapses; relevant chunks get dropped.
 
 The chosen default `0.70` is a starting point. Optuna (DEC-021) calibrates `θ` against a fixed eval set to find a value that balances faithfulness and `avg_chunks_returned` (the multi-objective target).
@@ -761,7 +770,7 @@ See **Per-Resume Reasoning Storage** below for the file schema, cache key, inval
 
 ## Worked example: Python experience
 
-Candidate has 4 Experience entries (Torphy 9yrs, Dufour 3yrs, Lessard 4yrs, personal project 1yr), 1 Project entry, and 1 Skills line → after Recursive chunking with `chunk_size=500`, ~6 chunks.
+Candidate has 4 Experience entries (Torphy 9yrs, Dufour 3yrs, Lessard 4yrs, personal project 1yr), 1 Project entry, and 1 Skills line → after Recursive chunking with `chunk_size=1000`, ~4 chunks.
 
 ```
 JD requirement: REQ-002 = "5+ years Python experience (required, weight 8%)"
@@ -774,21 +783,22 @@ Step 2-3: Cosine vs the candidate's chunks
   chunk_0 (Torphy 9yrs, Python):       0.91   ← ≥ 0.70
   chunk_1 (Dufour 3yrs, Python):      0.84   ← ≥ 0.70
   chunk_2 (Lessard 4yrs, Python):     0.79   ← ≥ 0.70
-  chunk_3 (personal project, 1yr):    0.72   ← ≥ 0.70
-  chunk_4 (Project entry, Python):    0.74   ← ≥ 0.70
-  chunk_5 (Skills line, "Python"):    0.65   ← < 0.70, dropped
+  chunk_3 (personal project, 1yr):    0.72   ← ≥ 0.25
+  chunk_4 (Project entry, Python):    0.74   ← ≥ 0.25
+  chunk_5 (Skills line, "Python"):    0.65   ← ≥ 0.25, included (θ = 0.25)
   → 5 chunks returned (under cap of 20)
 
 Step 4: Sort by similarity desc: chunk_0, chunk_1, chunk_4, chunk_2, chunk_3.
 
-Step 5: LLM receives the 5 chunks + the rubric.
+Step 5: LLM receives the 5 chunks + the rubric + the EMPLOYMENT HISTORY block
+  (which shows Torphy 9yrs 108mo, Dufour 3yrs 36mo, Lessard 4yrs 48mo, personal project 1yr 12mo).
 
-Step 6: LLM outputs:
+Step 6: LLM outputs (correlating the skill mentions with the employment durations):
   skill_presence: 1.0     (Python is mentioned in 4 of 5 chunks)
-  years_experience: 0.8   (9+3+4 = 16 yrs professional Python, capped at 5)
+  years_experience: 1.0   (Torphy 9yrs + Dufour 3yrs + Lessard 4yrs where Python appears; 16 yrs ≥ 5 target → banded 1.0)
   project_relevance: 0.75 (project descriptions show direct Python use)
 
-Step 7: sub-score = 1.0 × 0.8 × 0.75 = 0.6
+Step 7: sub-score = 1.0 × 1.0 × 0.75 = 0.75
          contribution = 8% × 0.6 = 0.048 (4.8 points out of 8 possible)
 
 Step 8: cache.put(hash, {sub_scores, normalized_score: 0.6})
@@ -833,7 +843,7 @@ data/
 │           └── <candidate_id>/
 │               └── reasoning/
 │                   └── <req_id>__<query_hash>.json
-├── active_experiment -> recursive_chunking_500_200_5_50/  # SYMLINK — points to the Active config
+├── active_experiment -> recursive_chunking_1000_500_x_25/  # SYMLINK — points to the Active config
 ├── embeddings/                                   # ACTIVE — shared index/cache (legacy; migrate to per-experiment)
 │   ├── index.npz
 │   ├── chunks.jsonl
@@ -847,8 +857,8 @@ data/
     └── chunk_reports/
         ├── document_aware_chunking_report.json
         ├── document_aware_chunking_report.md
-        ├── recursive_chunking_500_200_5_50_report.json
-        └── recursive_chunking_500_200_5_50_report.md
+        ├── recursive_chunking_1000_500_x_25_report.json
+        └── recursive_chunking_1000_500_x_25_report.md
 ```
 
 (`reports/` is a sibling of `data/`, not a child, so the path is `reports/chunk_reports/...`. The `data/` tree is for binary artifacts; the `reports/` tree is for human-readable diagnostics. Both are committed to git — `data/` mostly ignored, `reports/` fully tracked.)
@@ -867,7 +877,7 @@ data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/
 
 | Position | Field | Example | Notes |
 |---|---|---|---|
-| 1 | `chunk_size` (chars) | `500` | from `RecursiveChunker.RECURSIVE_CHUNK_SIZE` |
+| 1 | `chunk_size` (chars) | `1000` | from `RecursiveChunker.RECURSIVE_CHUNK_SIZE` |
 | 2 | `overlap` (chars) | `200` | from `RecursiveChunker.RECURSIVE_CHUNK_OVERLAP` |
 | 3 | `top_k` | `5` | from `Retriever.top_k`; `x` if not used |
 | 4 | `threshold × 100` | `50` (i.e. θ=0.50) | from `Retriever.threshold`; `x` if not used |
@@ -876,22 +886,22 @@ data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/
 
 | Config | Folder |
 |---|---|
-| `chunk_size=500, overlap=200, top_k=5, θ=0.50` | `data/recursive_chunking_500_200_5_50/` |
-| `chunk_size=500, overlap=50, top_k=10, θ=0.70` | `data/recursive_chunking_500_50_10_70/` |
-| `chunk_size=500, overlap=50, θ=0.70` (threshold mode, no top_k cap) | `data/recursive_chunking_500_50_x_70/` |
-| `chunk_size=500, overlap=50, top_k=5` (top_k mode, no threshold filter) | `data/recursive_chunking_500_50_5_x/` |
+| `chunk_size=1000, overlap=500, θ=0.25` (threshold mode, no top_k cap — current Active) | `data/recursive_chunking_1000_500_x_25/` |
+| `chunk_size=1000, overlap=500, top_k=20, θ=0.25` (threshold + cap mode) | `data/recursive_chunking_1000_500_20_25/` |
+| `chunk_size=500, overlap=250, θ=0.10` (low recision sweep point) | `data/recursive_chunking_500_250_x_10/` |
+| `chunk_size=1000, overlap=600, θ=0.50` (high precision sweep point) | `data/recursive_chunking_1000_600_x_50/` |
 
 **`metadata.json` is the canonical record** of the experiment and is the source of truth for the folder's contents:
 
 ```json
 {
   "schema_version": "1.0",
-  "experiment_folder": "recursive_chunking_500_200_5_50",
+  "experiment_folder": "recursive_chunking_1000_500_x_25",
   "created_at": "2026-07-05T11:14:22Z",
   "chunking": {
     "chunker": "RecursiveChunker",
-    "chunk_size": 500,
-    "chunk_overlap": 200,
+    "chunk_size": 1000,
+    "chunk_overlap": 500,
     "separators": ["\n\n", "\n", ". ", " "]
   },
   "retrieval": {
@@ -909,7 +919,7 @@ data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/
 
 **Folder name is the self-documenting identifier.** Two MLflow runs with the same `(chunk_size, overlap, top_k, threshold)` share the same folder — the artifacts (chunks, index, cache) are byte-identical for the same config, so sharing is correct, not redundant. The "Active" config in `MODEL_REGISTRY.md` points to one specific folder; promoting a new Active config means pointing `data/active_experiment` to a different folder (or recreating the symlink).
 
-**Runtime entry point:** code does not hardcode `data/recursive_chunking_500_50_10_70/`. It follows the `data/active_experiment` symlink. Promoting a new Active config is a one-line symlink operation.
+**Runtime entry point:** code does not hardcode `data/recursive_chunking_1000_500_x_25/`. It follows the `data/active_experiment` symlink. Promoting a new Active config is a one-line symlink operation.
 
 ## File Schema
 
@@ -922,14 +932,15 @@ Each `<req_id>__<query_hash>.json` stores:
   "req_id": "REQ-002",
   "query": "5+ years of Python experience with recommendation systems",
   "created_at": "2026-07-05T10:32:14Z",
-  "model_name": "nemotron-3-ultra-free",
-  "model_params": { "temperature": 0, "max_tokens": 1024 },
+  "model_name": "qwen2.5:3b",
+  "model_params": { "temperature": 0, "max_tokens": 4000 },
   "retrieval_params": {
-    "theta": 0.70,
+    "theta": 0.25,
     "max_chunks_per_query": 20,
-    "chunk_size": 500,
-    "chunk_overlap": 50,
-    "embedding_model": "all-MiniLM-L6-v2"
+    "chunk_size": 1000,
+    "chunk_overlap": 500,
+    "embedding_model": "all-MiniLM-L6-v2",
+    "llm_backend": "ollama"
   },
   "retrieved_chunks": [
     { "chunk_id": "cand_042__14", "cosine": 0.91, "text": "..." },
@@ -942,9 +953,10 @@ Each `<req_id>__<query_hash>.json` stores:
   ],
   "sub_scores": {
     "skill_presence":   { "value": 1.0,  "type": "binary",   "source_basis_idx": [0, 1] },
-    "years_experience": { "value": 0.8,  "type": "linear",   "source_basis_idx": [0] },
+    "years_experience": { "value": 1.0,  "type": "banded",   "source_basis_idx": [0], "extracted_years": 16, "target_years": 5 },
     "project_relevance":{ "value": 0.75, "type": "anchored", "source_basis_idx": [1] }
   },
+  "employment_history_used": true,
   "rubric_version": "v1.0",
   "scoring_mode": "rubric_bound_llm"
 }
@@ -1018,7 +1030,7 @@ The "usual RAG" pipeline most engineers know is: **embed corpus → query → co
 
 | Layer | Usual RAG (large corpus) | This system (per-candidate scoring) |
 |---|---|---|
-| **Chunking** | Recursive or semantic — split text into 200-500 token pieces, optimize for retrieval recall | **Recursive** — `chunk_size=500`, `chunk_overlap=50`; both Optuna hyperparameters (DEC-019) |
+| **Chunking** | Recursive or semantic — split text into 500-1000 token pieces, optimize for retrieval recall | **Recursive** — `chunk_size=1000`, `chunk_overlap=500` (50% overlap); both Optuna hyperparameters (DEC-019, refined 2026-07-07) |
 | **Embedding** | All chunks embedded; vectors stored in a vector DB | **All chunks embedded** (MiniLM-L6-v2, 384-dim). Used for cosine ≥ θ retrieval, not for ranking. |
 | **Retrieval** | Cosine similarity, top-K (e.g. 3-5 chunks) | **Cosine ≥ θ** (default θ=0.70, Optuna-tuned) — return all hits, cap at 20 |
 | **Ranking** | LLM picks winner from top-K | **Deterministic scoring engine** in code — LLM never decides ranking |
@@ -1281,15 +1293,27 @@ Sub-Score = SQ004 × SQ005 × SQ006 × SQ007
 Contribution = 8% × Sub-Score
 ```
 
-## Experience Scoring (Code-Only Formula)
+## Experience Scoring (Banded Years-Ratio Formula)
 
-For any "years of experience" requirement, the recruiter sets a target/ideal value. The score scales linearly and caps at the maximum:
+For any "years of experience" requirement, the recruiter sets a target/ideal value. The score is computed using a **banded ratio** — one of four discrete values rather than a continuous fraction — so it is easy to audit and explain to a recruiter (updated 2026-07-07 per the banded-rule refinement):
 
 ```text
-score = min(candidate_years / ideal_years, 1.0) × max_points
+if candidate_years >= ideal_years:
+    score = 1.0
+elif candidate_years >= 0.5 * ideal_years:
+    score = 0.5
+elif candidate_years >= 0.25 * ideal_years:
+    score = 0.25
+else:
+    score = 0.0
 ```
 
-Note: `candidate_years` for **total experience** is read directly from the structured candidate profile (code-only, no LLM). `candidate_years` for **relevant / same-role / leadership experience** is extracted by the rubric-bound LLM from the chunks retrieved by the threshold-based retrieval pipeline (see "Threshold-Based Retrieval (Regular RAG, updated 2026-07-05 per DEC-017 + DEC-018)"), then the formula above is applied in code. The LLM never sees the weight or performs the final aggregation.
+Replaces the prior continuous formula `min(candidate_years / ideal_years, 1.0)`. The banded thresholds (50%, 25%) align with the four anchor values used on the relevance scale (1.0, 0.75, 0.5, 0.25); this rubric uses 1.0 / 0.5 / 0.25 / 0.0 (no 0.75 band) to keep "no evidence" firmly at zero.
+
+Note: `candidate_years` for **total experience** is read directly from the structured candidate profile (code-only, no LLM). `candidate_years` for **relevant / same-role / leadership / skill-specific experience** is extracted by the rubric-bound LLM from:
+  1. The chunks retrieved by the threshold-based retrieval pipeline (skill mentions, project descriptions).
+  2. The **Employment History block** — a pre-computed list of (company, role, dates, computed duration_months) appended to the rubric prompt right after the SECTION CONTENT. The LLM correlates the skill mention in a retrieved chunk with the role duration from the employment history — without needing to re-parse sparse date strings from the chunks themselves. This mitigates the failure mode where the Recursive chunker splits a role's date line away from its bullet points.
+The banded formula is then applied in code. The LLM never sees the weight or performs the final aggregation.
 
 Example-
 

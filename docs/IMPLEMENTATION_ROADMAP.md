@@ -165,7 +165,7 @@ Standalone modules implementing the two-mode scoring architecture from
 wired into the batch pipeline (that is Phase 4.5).
 
 1. **Header Normalization** ✅
-   - `src/resume_parsing/header_normalization.py`
+   - `src/resume_parsing/parser.py` (the `SECTION_HEADERS` dict + `sectionize()` + `identify_section_heading()` functions) — see Track 6 / DEC-030. There is no dedicated `header_normalization.py` file.
    - Layer 1: synonym lookup table → 7 canonical sections
    - Layer 2: LLM fallback classification for unmatched headers
 2. **Chunk Metadata Schema** ✅
@@ -232,9 +232,9 @@ Why A ranked above B:   [SCORE] BUSINESS ANALYST RESUME ranked HIGHER by 21.3 po
 
 ## Phase 6: Resume Chat / RAG 🟡 Mostly built, CLI pending
 1. Implement chunking strategy
-   - **Recursive Chunking** (active 2026-07-05 per DEC-019): `chunk_size=500`, `chunk_overlap=50`, both Optuna hyperparameters. ✅ (`src/rag/chunker.py` `RecursiveChunker`)
+   - **Recursive Chunking** (active 2026-07-05 per DEC-019, refined 2026-07-07): `chunk_size=1000`, `chunk_overlap=500` (50% of chunk_size), both Optuna hyperparameters. Bounds widened 2026-07-07 to `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [50%, 60%] of chunk_size`. ✅ (`src/rag/recursive_chunker.py` `RecursiveChunker`)
    - Document-Aware chunker retained as `DocumentAwareChunker` for one release. ✅
-   - Header Normalization with 7 canonical sections. ✅ (`src/resume_parsing/header_normalization.py`) — used for the structured profile, no longer for retrieval routing.
+   - Header Normalization with 7 canonical sections. ✅ (implemented directly in `src/resume_parsing/parser.py` — the `SECTION_HEADERS` dict + `sectionize()` + `identify_section_heading()` functions; no dedicated `header_normalization.py` file — Track 6 reconciliation). Used for the structured profile, no longer for retrieval routing.
    - Chunk metadata simplified: `chunk_id`, `candidate_id`, `text`, `char_span`, `embedding_index` (required); `section_type` is a soft tag.
 2. Build embedding and retrieval pipeline
    - Embedding model: `sentence-transformers/all-MiniLM-L6-v2` ✅
@@ -329,7 +329,7 @@ Pivots the active retrieval to regular RAG (DEC-017) and adds MLflow + Optuna (D
 ### M0.5a — Chunking + Retrieval Switch
 
 1. **Switch chunker to RecursiveChunker** (`src/rag/chunker.py`)
-   - Add `RecursiveChunker` class implementing `RecursiveCharacterTextSplitter(separators=["\n\n","\n",". "," "], chunk_size=500, chunk_overlap=50)`.
+   - Add `RecursiveChunker` class implementing `RecursiveCharacterTextSplitter(separators=["\n\n","\n",". "," "], chunk_size=1000, chunk_overlap=500)`. Bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [50%, 60%] of chunk_size`.
    - Rename existing chunker to `DocumentAwareChunker`; keep it for one release as a migration aid.
    - Chunk metadata schema simplified: required fields are `chunk_id`, `candidate_id`, `text`, `char_span`, `embedding_index`. `section_type` becomes a soft tag.
 2. **Switch retriever to threshold-based cosine** (`src/rag/retriever.py`)

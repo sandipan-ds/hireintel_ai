@@ -2,7 +2,7 @@
 
 The active retrieval strategy for the platform: given a query embedding,
 return every chunk whose cosine similarity to the query is at least
-``threshold`` (default ``0.70``), sorted by similarity descending and capped
+``threshold`` (default ``0.25``), sorted by similarity descending and capped
 at ``max_chunks_per_query`` (default ``20``) for safety. The deterministic
 scoring engine is the only ranking signal — this module just supplies the
 chunks the LLM judge reads.
@@ -42,20 +42,55 @@ import numpy as np
 
 
 # ---------------------------------------------------------------------------
-# Tunables (DEC-018 defaults; Optuna hyperparameters per DEC-021)
+# Tunables (DEC-018 defaults; Optuna hyperparameters per DEC-021).
+#
+# Owner guidance (2026-07-07): threshold bounds stay permissive at
+# [0.10, 0.50] so the smoke test can sweep the low end and see how retrieval
+# breadth affects ranking. The default has been lowered from 0.30 to 0.25
+# to surface more date-bearing chunks per REQ (mitigating the failure mode
+# where the date line landed in a chunk that did not pass the higher theta).
+# Combined with the larger chunk_size (1000) and overlap (500), this should
+# drastically reduce the chance that the rubric LLM sees a skill mention
+# without its corresponding date context.
+#
+# Optuna search-space bounds (owner-specified, 2026-07-07):
+#   threshold      ∈ [0.10, 0.50]   — relevance floor; chunks below this are dropped
+#   chunk_size     ∈ [500, 1000]    — RecursiveCharacterTextSplitter chunk size (chars)
+#   chunk_overlap  ∈ [floor(0.50 * chunk_size), floor(0.60 * chunk_size)]
+#                                    — overlap is 50-60% of chunk_size
+# The shipped defaults below sit INSIDE the search ranges so a default-config
+# run is a valid point in the Optuna sweep. Promoting a new "Active" config
+# via M0.5d replaces these defaults with the Optuna-recommended values.
 # ---------------------------------------------------------------------------
 
-#: Default cosine-similarity threshold. Tunable by Optuna.
-DEFAULT_THRESHOLD: float = 0.70
+#: Default cosine-similarity threshold. Slightly below midpoint of [0.10, 0.50]
+#: to surface more date-bearing chunks per REQ during smoke testing.
+DEFAULT_THRESHOLD: float = 0.25
+
+#: Optuna lower/upper bounds for threshold (per owner spec, 2026-07-06).
+THRESHOLD_LOWER: float = 0.10
+THRESHOLD_UPPER: float = 0.50
 
 #: Hard cap on returned chunks per query. A safety net, not a primary control.
+#: Only kicks in when more chunks pass `threshold` than `max_chunks_per_query`.
 DEFAULT_MAX_CHUNKS_PER_QUERY: int = 20
 
+#: Optuna lower/upper bounds for chunk_size (chars). Mirror the chunker's
+#: bounds (see src/rag/recursive_chunker.py).
+CHUNK_SIZE_LOWER: int = 500
+CHUNK_SIZE_UPPER: int = 1000
+
+#: Minimum overlap as a fraction of chunk_size (not less than 50%).
+CHUNK_OVERLAP_MIN_FRACTION: float = 0.50
+
+#: Maximum overlap as a fraction of chunk_size. Per owner spec: not more than 60%.
+CHUNK_OVERLAP_MAX_FRACTION: float = 0.60
+
 #: Path to the canonical embedding index produced by ``src.rag.build_index``.
-DEFAULT_INDEX_PATH: str = "data/embeddings/index.npz"
+DEFAULT_INDEX_PATH: str = "data/embeddings/recursive_chunking/index.npz"
 
 #: Path to the line-delimited JSONL metadata file produced alongside the index.
-DEFAULT_CHUNKS_PATH: str = "data/embeddings/chunks.jsonl"
+DEFAULT_CHUNKS_PATH: str = "data/embeddings/recursive_chunking/chunks.jsonl"
 
 #: Embedding model identifier (DEC-007). The retriever does not embed
 #: queries itself; the embedding is the caller's responsibility. This
@@ -253,7 +288,7 @@ class ThresholdRetriever:
         Build a retriever from the on-disk index and query it::
 
             from src.rag.retriever import ThresholdRetriever, VectorIndex
-            index = VectorIndex.load_npz("data/embeddings/index.npz")
+            index = VectorIndex.load_npz("data/embeddings/recursive_chunking/index.npz")
             retriever = ThresholdRetriever(index)
             query_vec = embed("5+ years of Python experience")
             hits = retriever.retrieve_scored(query_vec, candidate_id="cand_042")
@@ -415,7 +450,13 @@ def load_default_retriever(
 
 __all__ = [
     "DEFAULT_THRESHOLD",
+    "THRESHOLD_LOWER",
+    "THRESHOLD_UPPER",
     "DEFAULT_MAX_CHUNKS_PER_QUERY",
+    "CHUNK_SIZE_LOWER",
+    "CHUNK_SIZE_UPPER",
+    "CHUNK_OVERLAP_MIN_FRACTION",
+    "CHUNK_OVERLAP_MAX_FRACTION",
     "DEFAULT_INDEX_PATH",
     "DEFAULT_CHUNKS_PATH",
     "DEFAULT_EMBEDDING_MODEL",

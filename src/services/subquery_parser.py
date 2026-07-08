@@ -56,7 +56,16 @@ def _extract_role_name(file_path: Path, content: str) -> str:
 
 
 def _extract_requirements(content: str) -> List[Dict[str, Any]]:
-    """Extract all requirements from SubQuery content."""
+    """Extract all requirements from SubQuery content.
+
+    Each requirement carries:
+        - ``req_id``, ``name``, ``category``, ``requirement_type``,
+          ``description``, ``subquery_count``, ``scoring_formula`` (as before)
+        - ``sub_queries``: a list of dicts of shape
+          ``{key, text, type, scale, assessment_method}`` parsed from the
+          SubQuery table rows following each REQ header. Empty list if the
+          table is missing or malformed.
+    """
     requirements = []
 
     # Find all REQ sections
@@ -81,6 +90,9 @@ def _extract_requirements(content: str) -> List[Dict[str, Any]]:
         # Extract subquery count and formula
         subquery_count, scoring_formula = _extract_subquery_info(section_content)
 
+        # Extract the actual sub-query rows from the table.
+        sub_queries = _extract_sub_queries(section_content)
+
         requirements.append({
             "req_id": req_id,
             "name": req_name,
@@ -89,9 +101,81 @@ def _extract_requirements(content: str) -> List[Dict[str, Any]]:
             "description": description,
             "subquery_count": subquery_count,
             "scoring_formula": scoring_formula,
+            "sub_queries": sub_queries,
         })
 
     return requirements
+
+
+# ---------------------------------------------------------------------------
+# Sub-query row parser.
+#
+# SubQuery tables follow this shape (one row per sub-query):
+#
+#     | # | Sub-Query | Type | Scale | Assessment Method |
+#     |---|-----------|------|-------|-------------------|
+#     | SQ001 | Is there evidence that...? | Binary | 0 or 1 | Look for: ... |
+#     | SQ002 | How relevant is...?        | Float  | 0.0-1.0 | Rubric: ...    |
+#
+# The parser:
+#   1. Finds the table (lines starting with ``| SQ``).
+#   2. Per row, splits on ``|``, strips whitespace, and pulls the 5 columns.
+#      Extra ``|`` characters inside the assessment cell (rare but legal) are
+#      rejoined so the cell stays whole.
+#   3. Returns a list of dicts in the order they appear. An empty list means
+#      the table was missing or unparseable — the caller can still score the
+#      REQ using its name as a single query.
+# ---------------------------------------------------------------------------
+
+# Matches a table row whose first cell is a sub-query id (SQ### or SQ##).
+_SQ_ROW_RE = re.compile(r"^\|\s*(SQ\d+)\s*\|", re.MULTILINE)
+
+
+def _extract_sub_queries(section_content: str) -> List[Dict[str, Any]]:
+    """Parse the sub-query table rows under one REQ section.
+
+    Args:
+        section_content: The markdown body between this REQ's ``### REQ-XXX:``
+            header and the next REQ header (or end of document).
+
+    Returns:
+        A list of dicts, one per sub-query row, in document order. Each dict
+        has keys: ``key`` (e.g. ``"SQ001"``), ``text`` (the sub-query text),
+        ``type`` (``"Binary"`` / ``"Float"``), ``scale`` (e.g. ``"0 or 1"``,
+        ``"0.0 - 1.0"``), ``assessment_method`` (the rubric/formula text).
+        Returns ``[]`` if no ``| SQ### |`` rows are found.
+    """
+    out: List[Dict[str, Any]] = []
+    for m in _SQ_ROW_RE.finditer(section_content):
+        # Grab the full line containing this row.
+        line_start = section_content.rfind("\n", 0, m.start()) + 1
+        line_end = section_content.find("\n", m.end())
+        if line_end < 0:
+            line_end = len(section_content)
+        row = section_content[line_start:line_end].strip()
+
+        # Strip the leading and trailing ``|`` and split.
+        # Rejoin any overflow columns so the assessment cell stays whole.
+        cells = [c.strip() for c in row.strip("|").split("|")]
+        if len(cells) < 5:
+            continue
+        key = cells[0]
+        text = cells[1]
+        sq_type = cells[2]
+        scale = cells[3]
+        # The assessment-method cell may have been split by ``|`` inside a
+        # regex like ``r"\bword\b"`` — rejoin with ``|`` so the cell ends up
+        # exactly as in the source file.
+        assessment_method = "|".join(cells[4:])
+
+        out.append({
+            "key": key,
+            "text": text,
+            "type": sq_type,
+            "scale": scale,
+            "assessment_method": assessment_method,
+        })
+    return out
 
 
 def _extract_category_and_type(content: str) -> Tuple[str, str]:

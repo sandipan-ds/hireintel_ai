@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from rag.document_aware_chunker import (
+from src.rag.document_aware_chunker import (
     MAX_CHUNK_CHARS,
     SPLIT_OVERLAP_CHARS,
     ChunkRecord,

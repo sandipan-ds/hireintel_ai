@@ -182,17 +182,41 @@ def parse_temporal_context(dates_str: str) -> Dict[str, Any]:
         # Try single year or single date.
         single = _parse_single_date(dates_str.strip())
         if single[0] is not None:
+            # Single-year date string (e.g. "2020"). The parser cannot tell
+            # if this is "all of 2020", "started in 2020", or "ended in
+            # 2020". Resume convention strongly favors (a) "the candidate
+            # worked here during 2020" — short stints would typically be
+            # written as "Jan 2020 - Jun 2020" rather than "2020" alone,
+            # and multi-year spans would be written "2018 - 2020".
+            #
+            # Track 7.2 (DEC-031) decision: emit ``calculated_duration_months
+            # = 12`` for a single year alone, with an ``inferred_full_year:
+            # True`` flag in the returned context so callers can audit /
+            # override. The guard against cert/education mis-bucketing
+            # (entries that have ``title`` matching a section name) is
+            # applied at the structured-profile call site, where the full
+            # entry context is available — not here, where only the date
+            # string is. Gaming-cost tradeoff: max ≈ 1 year of false credit
+            # per single-year entry; recruiter-visible on the rendered
+            # resume and the structured profile; flag emitted to
+            # ``data/audit/no_evidence_flags.jsonl`` for review. See
+            # ``docs/DECISIONS.md`` DEC-031 for the full rationale.
+            #
+            # Span: [Jan YYYY .. Dec YYYY] = 12 months (inclusive both ends).
+            inferred_months = (single[0] * 12 + 12) - (single[0] * 12 + 1) + 1
             return {
-                "start_date": {"year": single[0], "month": single[1]},
-                "end_date": {"year": single[0], "month": single[1]},
+                "start_date": {"year": single[0], "month": 1},
+                "end_date": {"year": single[0], "month": 12},
                 "is_current": False,
-                "calculated_duration_months": 0,
+                "calculated_duration_months": inferred_months,
+                "inferred_full_year": True,
             }
         return {
             "start_date": None,
             "end_date": None,
             "is_current": False,
             "calculated_duration_months": None,
+            "inferred_full_year": False,
         }
 
     start_token, end_token = match.group(1), match.group(2)

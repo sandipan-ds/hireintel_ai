@@ -396,6 +396,88 @@ A new "Active" config is promoted to `MODEL_REGISTRY.md` only if **all four of t
 
 The Optuna study (M0.5d) optimizes `faithfulness` and `avg_chunks_returned` against the eval set (M0.5b). The counterfactual + stability gate is applied **after** the Optuna-recommended point is identified, before promotion. This is a hard gate: an Optuna-recommended config that fails the gate is not promoted.
 
+### Prong 6: Optuna Ranking Stability Across Hyperparameter Values (added 2026-07-06, Track 7)
+
+**Motivation:** The Optuna sweep (M0.5d) tries many `(chunk_size, chunk_overlap, theta, max_chunks_per_query)` combinations. Each produces a different ranking for the same candidate pool. Two questions arise naturally:
+
+1. **How sensitive is the ranking to HP changes?** If `theta=0.35` and `theta=0.40` produce wildly different top-10s, the ranker is fragile — small perturbations can flip interview shortlists. If they produce nearly identical top-10s, the ranker is robust.
+2. **Which HP dimension drives the most rank churn?** Is `theta` the dominant axis of ranking change, or `chunk_size`? This tells us which HP we must tune carefully and which we can leave at the default.
+
+**This is orthogonal to Prong 3 (Stability Tests).** Prong 3 re-runs the *same* config and asks for byte-identical results (the cache-key determinism test). Prong 6 compares *different* configs (the HP-sensitivity test) and asks how much ranking changes. Both matter — Prong 3 is correctness, Prong 6 is robustness.
+
+#### Datasets
+
+Each trial in the Optuna study already produces a full per-candidate ranking `(candidate_id, total_score)` for one role. Prong 6 collects these rankings across the full sweep and computes pairwise metrics:
+
+- **Pair** = `(trial_A, trial_B)` where both trials ran the same role.
+- Per pair, compute the rank-difference vectors and aggregate.
+
+#### Metrics (per role, per Optuna study)
+
+| Metric | Definition | Interpretation |
+|---|---|---|
+| `top_10_jaccard` | Mean Jaccard similarity of top-10 candidate sets across all trial pairs: `|A ∩ B| / |A ∪ B|` | 1.0 = identical top-10. 0.0 = no overlap. High = robust; low = fragile. |
+| `top_50_jaccard` | Same for top-50 | Wider-net version of `top_10_jaccard`. |
+| `max_rank_shift` | `max(|rank_A(c) - rank_B(c)|)` for any candidate `c` across all pairs | Max positional movement. Big values indicate a candidate can swing wildly. |
+| `mean_abs_rank_shift` | Mean of `|rank_A(c) - rank_B(c)|` across candidates and pairs | Average positional movement. Smoothed-over max-outlier view. |
+| `kendall_tau` | Kendall's tau-b between every pair of trial rankings (averaged) | Distribution-shape agreement. 1.0 = same order; -1.0 = inverse; 0.0 = uncorrelated. |
+| `spearman_rho` | Spearman's rho between every pair of trial rankings (averaged) | Monotonic-shape agreement. |
+| `newcomer_rate_top_10` | Mean fraction of top-10 candidates in trial B that were NOT in trial A's top-10 (per pair, asymmetric) | "How often does a candidate enter the shortlist from outside?" High = shortlist churn; low = shortlist stable. |
+| `drop_rate_top_10` | Symmetric counterpart of `newcomer_rate` (candidates who left the top-10) | Same info, opposite direction. Should equal `newcomer_rate_top_10` over a symmetric pair-average, but split for diagnostic value. |
+| `HP_axis_explained_variance` | For each HP (`chunk_size`, `chunk_overlap`, `theta`, ...), the R² of how much of the `mean_abs_rank_shift` variance it explains | "Which HP dimension drives rank churn?" Identifies the HP to tune carefully vs. the HP we can let sit at default. |
+
+**Note on the +/− cancellation problem:** the user explicitly raised the failure mode of naive signed rank-shift aggregation (`+5` for one candidate and `-5` for another can sum to 0 and hide the magnitude). All metrics above use unsigned magnitudes (`|rank_A(c) - rank_B(c)|`) or distribution-shape coefficients (Kendall, Spearman) — never a signed sum. We never let negative and positive rank-shifts cancel across candidates.
+
+#### Targets
+
+These are tracked-not-enforced knobs for the first sweep; we'll refine them once we see the empirical distribution on real studies. Initial soft targets (Track 7 calibration):
+
+| Metric | Soft target (Track 7) | Rationale |
+|---|---|---|
+| `top_10_jaccard` | ≥ 0.60 | At least 6/10 candidates shared between typical sweep trials. Less than this = the shortlist is too sensitive to HP perturbation to be useful to a recruiter. |
+| `max_rank_shift` | ≤ 50 | No candidate swings more than half the pool's size across HP perturbations. |
+| `mean_abs_rank_shift` | ≤ 15 | Average swing is contained. |
+| `kendall_tau` | ≥ 0.60 | Pairwise agreement is moderate or better. |
+| `spearman_rho` | ≥ 0.65 | Monotonic agreement is moderate or better. |
+| `newcomer_rate_top_10` | ≤ 0.30 | No more than 30% of the top-10 turns over between typical trial pairs. |
+
+These are **not** hard promotion gates yet — they are diagnostics that ship with every Optuna run so the team can see whether a candidate's shortlist appearance is brittle. If a particular HP axis drives the churn (e.g., `theta` causes > 50% top-10 turnover for a small `delta_theta=0.05`), we widen the Optuna search space and let the model find a flatter region.
+
+#### Where the rankings come from
+
+The Optuna study (M0.5d) records the full ranking for every trial. We persist these to `reports/diff_rankings/` as JSON:
+
+```
+reports/diff_rankings/optuna_study_<study_name>__<role>__rankings.json
+{
+  "study_name": "m05d_first_sweep_2026-07-15",
+  "role": "BusinessAnalyst",
+  "trials": [
+    {
+      "trial_number": 14,
+      "params": {"chunk_size": 500, "chunk_overlap": 100, "theta": 0.35},
+      "ranking": [
+        {"candidate_id": "BusinessAnalyst_CAND_0040", "total_score": 78.2, "rank": 1},
+        {"candidate_id": "BusinessAnalyst_CAND_0011", "total_score": 76.8, "rank": 2},
+        ...
+      ]
+    },
+    ...
+  ]
+}
+```
+
+The metric computation is done by a small reporter `src/reporting/rank_stability.py` (Track 7) that reads the JSON, computes all the metrics above per role, and writes:
+
+- `reports/diff_rankings/optuna_study_<study_name>__<role>__rank_stability.json` — the raw metric values per (role, study).
+- `reports/diff_rankings/optuna_study_<study_name>__<role>__rank_stability.md` — a human-readable summary with the HP-axis explained-variance breakdown.
+
+The MD file is what a recruiter-facing team member reads. The JSON is the artifact that MLflow logs as a metric set for the study.
+
+#### Promotion gate impact (Track 7 addition)
+
+Prong 6 metrics are **informational**. An Optuna-recommended "Active" config candidate **cannot** be blocked solely by Prong 6 — the metrics are diagnostic-only. However, if Prong 6 finds that the new "Active" candidate sits in a high-churn region (e.g., `top_10_jaccard` < 0.30 against the prior "Active" config), the promotion is **flagged for human review** before being merged. The flag is a comment in the `MODEL_REGISTRY.md` "Active" row + a release-notes entry. Reviewer can override.
+
 ### Summary
 
 | Prong | Cost | Cadence | Gate? | Target |
@@ -405,6 +487,7 @@ The Optuna study (M0.5d) optimizes `faithfulness` and `avg_chunks_returned` agai
 | Synthetic labeled | Moderate | Quarterly | **Yes** | NDCG ≥ 0.80 |
 | Recruiter agreement | High | Quarterly study | Informational | Kappa ≥ 0.60 |
 | Behavioral | Production data | Continuous | Informational | Tracked, not enforced |
+| **Optuna rank stability** *(Track 7 addition)* | **Free (uses Optuna trial artifacts)** | **Every Optuna study** | **Informational (flag for human review on high-churn)** | **`top_10_jaccard` ≥ 0.60, `max_rank_shift` ≤ 50** |
 
 ## Per-Resume Reasoning Cache Metrics (added 2026-07-05, DEC-022)
 

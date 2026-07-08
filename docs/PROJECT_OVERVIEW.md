@@ -263,7 +263,7 @@ implement multiple competing ranking systems.
 Per `WORKING_LOGIC.md` ("Fundamental Rule"), the scoring engine operates in two modes. In both modes, weight application and final aggregation are computed in code — never by the LLM.
 
 * **Code-only scoring** — used wherever a requirement is fully measurable: total years of experience (linear formula), institute tier (lookup table), certification tier (lookup table), skill presence + years (synonym match + regex detection). No LLM is involved.
-* **Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, relevant/same-role/leadership experience, domain expertise. The LLM reads the chunks retrieved by the threshold-based retrieval pipeline (cosine ≥ θ) and scores against a recruiter-defined rubric. The LLM never sees the weight and never computes the final contribution.
+* **Rubric-bound LLM evidence scoring** — used wherever genuine judgment is required: skill depth, project complexity, relevant/same-role/leadership experience, domain expertise. The LLM reads the chunks retrieved by the threshold-based retrieval pipeline (cosine ≥ θ) **plus a pre-computed EMPLOYMENT HISTORY block** (deterministic date math from the structured profile) and scores against a recruiter-defined rubric. The years-of-experience sub-question uses a **banded ratio** (≥ target → 1.0; ≥ 50% → 0.5; ≥ 25% → 0.25; else 0.0) for audit-friendliness. The LLM never sees the weight and never computes the final contribution. Production rubric LLM is the local Ollama endpoint (`qwen2.5:3b`) — see `MODEL_REGISTRY.md`.
 
 See [`AI_ARCHITECTURE.md`](AI_ARCHITECTURE.md) §5 for the full scoring workflow and output contract, and [`WORKING_LOGIC.md`](WORKING_LOGIC.md) "Scoring Rubrics" for the formulas.
 
@@ -380,9 +380,9 @@ RAG is the single retrieval strategy for explanations, resume chat, cross-candid
 
 **Single retrieval strategy (active 2026-07-05):**
 
-* **Threshold-based cosine over Recursive chunks** — embeddings via `sentence-transformers/all-MiniLM-L6-v2` (384-dim), in-memory index (`data/embeddings/index.npz`). Return all chunks with cosine ≥ θ (default `θ = 0.70`, Optuna-tuned), capped at `max_chunks_per_query = 20` for safety. The same pipeline serves per-candidate scoring, pool search, and resume chat — only the `candidate_id` filter changes.
+* **Threshold-based cosine over Recursive chunks** — embeddings via `sentence-transformers/all-MiniLM-L6-v2` (384-dim), in-memory index (`data/embeddings/index.npz`). Return all chunks with cosine ≥ θ (default `θ = 0.25`, Optuna-tuned; bounds `[0.10, 0.50]`), capped at `max_chunks_per_query = 20` for safety. The same pipeline serves per-candidate scoring, pool search, and resume chat — only the `candidate_id` filter changes. The default was lowered from 0.30 to 0.25 on 2026-07-07 to surface more date-bearing chunks per REQ. The prompt also includes a pre-computed EMPLOYMENT HISTORY block so the rubric LLM can correlate skill mentions with parser-computed role durations.
 
-**Chunking (active 2026-07-05):** Recursive Chunking (`src/rag/chunker.py` `RecursiveChunker`), `chunk_size = 500`, `chunk_overlap = 50`. Both are Optuna hyperparameters (DEC-021).
+**Chunking (active 2026-07-05, refined 2026-07-07):** Recursive Chunking (`src/rag/recursive_chunker.py` `RecursiveChunker`), `chunk_size = 1000`, `chunk_overlap = 500` (50% overlap). Both are Optuna hyperparameters (DEC-021). Bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [50%, 60%] of chunk_size`. Widened on 2026-07-07 from the prior 500/100 defaults to reduce date/skill split incidents across chunks.
 
 **Experiment tracking:** Every retrieval / scoring run is logged to a local MLflow server (DEC-020). The shipped `θ`, `chunk_size`, and `chunk_overlap` are always the Optuna-recommended point on the Pareto front (DEC-021), not hand-picked.
 
