@@ -38,6 +38,8 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-024 | 2026-07-05 | **Chunk reports folder + ranking evaluation methodology without labeled data.** (a) Adopt `reports/chunk_reports/` as the canonical location for per-experiment chunk diagnostics. Report file names mirror the experiment folder names: `document_aware_chunking_report.{json,md}` and `recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>_report.{json,md}`. Each report captures chunk counts, chunk-size distribution, the `section_type=""` rate (the DEC-015 bug), retrieval hit rates, LLM call counts, and the eval metrics. Reports are committed to git (small text files) so the historical record of every experiment is preserved. (b) Adopt a multi-pronged ranking evaluation methodology: (i) **counterfactual tests** (synthetic, deterministic, 100% ground truth) — construct test cases where the expected ranking change is unambiguous and verify the system obeys; (ii) **synthetic labeled set** — hand-rank 30–50 (candidate, role) pairs across multiple recruiters, measure inter-rater agreement, use the majority/median ranking as ground truth; (iii) **stability tests** — re-run the same config twice, verify byte-identical ranking (already covered by DEC-022 determinism but worth measuring explicitly); (iv) **recruiter agreement** (when applicable) — Cohen's kappa or Krippendorff's alpha against human raters; (v) **behavioral signals** (production only) — did the recruiter interview the top-K? tracked, not enforced. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `EVALUATION.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
 | DEC-025 | 2026-07-05 | **Candidate ID nomenclature: `<Role>_CAND_<NNNN>`.** Replace the SHA1-hash-based candidate id (`cand_<12hex>`, e.g. `cand_74cbbc14c744141a`) with a human-readable, role-encoded, sequential id (`BusinessAnalyst_CAND_0001`). The id is allocated and persisted by a new ``data/candidate_registry.json`` so numbers are monotonic per role and never renumber on re-parse. The registry also stores the legacy hash id and the absolute source path for traceability and backwards compatibility with the 6,377 existing Document-Aware chunks. New candidates get the next free number for their role; existing candidates are backfilled once from the corpus. The chunk_id format (`{candidate_id}__{chunk_index}`) is unchanged in shape but switches to the new id space. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `EVALUATION.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
 | DEC-026 | 2026-07-05 | **Ranking diff methodology (before NDCG@k / MAP@k).** Adopt a per-experiment ranking-diff workflow as the first line of regression detection, before any aggregate metric. The diff tool (``src.eval.ranking_diff`` + ``scripts/diff_rankings.py``) compares two rankings of the same role and reports: (1) new entrants to top-K for K=10 and K=50; (2) departures from top-K; (3) per-candidate rank deltas (signed, normalized by the total number of candidates in the role) with average and max; (4) a categorization into ``stable``, ``big_swap_up``, ``big_swap_down``, ``only_in_baseline``, ``only_in_current`` (where "big" is > 10% of the role's total candidates); (5) for each notable case, a side-by-side dump of the rubric-bound LLM's reasoning, the cited basis chunks, the retrieved-chunk list with cosine scores, and the model + retrieval parameters — all read from each experiment's per-resume reasoning tree (DEC-022) so the comparison is fully versioned. Outputs ``reports/diff_rankings/<baseline>__vs__<current>__<role>.{json,md}`` committed to git. This precedes aggregate metrics (NDCG@k, MAP@k) so regressions are diagnosed at the candidate level, not just measured. | Accepted | `EVALUATION.md`, `MODEL_REGISTRY.md`, `IMPLEMENTATION_ROADMAP.md`, `CURRENT_PROGRESS.md` |
+| DEC-032 | 2026-07-07 | **Widen chunk_size to 1000, chunk_overlap to 50% of chunk_size; lower default θ to 0.25.** Owner-specified refinement (2026-07-07). The prior defaults (`chunk_size=500`, `chunk_overlap=100`, `θ=0.30`) produced chunks small enough that a resume role's date line frequently landed in a different chunk from its bullet describing skill use, defeating the rubric LLM's ability to correlate skills with durations. Widened to `chunk_size=1000`, `chunk_overlap=500` (50% of chunk_size) so adjacent chunks share half their text — the date line in chunk N also appears in chunk N+1. New Optuna bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [floor(0.50 × chunk_size), floor(0.60 × chunk_size)]`. Default threshold lowered from `θ=0.30` to `θ=0.25` (bounds `[0.10, 0.50]` retained) to surface more date-bearing chunks per REQ. Embedding index rebuilt (6,670 → 4,763 chunks). | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_DESIGN_RATIONALE.md`, `CURRENT_PROGRESS.md`, `IMPLEMENTATION_ROADMAP.md`, `PROJECT_OVERVIEW.md` |
+| DEC-033 | 2026-07-07 | **Rubric LLM context enrichment + banded years-ratio + local Ollama backend.** Four combined fixes that turn the LLM rubric path from always-zero into a working scoring pipeline: (a) `score_requirement_with_rubric` accepts an optional `employment_history` kwarg; the rubric prompt appends an `EMPLOYMENT HISTORY (computed deterministically from date ranges)` block right after the SECTION CONTENT so the LLM can correlate skill mentions in retrieved chunks with the parser-computed role durations — without needing to re-parse sparse date strings from chunks. (b) Replaced the continuous `min(years/target, 1.0)` formula with a discrete 4-band rule (`≥ target → 1.0; ≥ 50% → 0.5; ≥ 25% → 0.25; else 0.0`) for audit-friendliness. (c) Added `_extract_json_lenient` in `rubric_scorer.py` to recover truncated LLM JSON responses mid-stream (free-tier cloud endpoints sometimes cap `completion_tokens` mid-JSON); added defensive `null` handling for `sub_score`. (d) Added `OllamaRubricCaller` + `get_rubric_caller` factory in `src/services/llm_caller.py`; `.env` now selects `LLM_BACKEND=ollama` with `qwen2.5:3b` as the production rubric LLM — the free-tier cloud (`nemotron-3-ultra-free` returned `choices=None`; `deepseek-v4-flash-free` truncated JSON) was unreliable. End-to-end smoke test: 1 DataScience candidate scored 2.25 (was 0.00), with real LLM sub-scores and `extracted_years=3.0` from the employment_history block. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_DESIGN_RATIONALE.md`, `CURRENT_PROGRESS.md`, `RELEASE_NOTES.md`, `ARCHITECTURE_CHANGELOG.md` |
 
 ---
 
@@ -333,9 +335,9 @@ Lookup is code-only (`src/scoring/tier_lookup.py`) with word-boundary regex matc
 
 **Decision:** Adopt a single regular RAG pipeline for all retrieval — per-candidate scoring, cross-candidate pool search, and resume chat.
 
-- **Chunking:** Recursive (DEC-019). Default `chunk_size = 500`, `chunk_overlap = 50`. Both are Optuna hyperparameters.
+- **Chunking:** Recursive (DEC-019, refined DEC-032). Default `chunk_size = 1000`, `chunk_overlap = 500` (50% of `chunk_size`). Both are Optuna hyperparameters. Bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [50%, 60%] of chunk_size`.
 - **Embedding:** Unchanged — `sentence-transformers/all-MiniLM-L6-v2` (DEC-007).
-- **Retrieval:** Threshold-based cosine (DEC-018). Default `θ = 0.70`, `max_chunks_per_query = 20`.
+- **Retrieval:** Threshold-based cosine (DEC-018). Default `θ = 0.25` (lowered from 0.30 on 2026-07-07), `max_chunks_per_query = 20`. Bounds `[0.10, 0.50]`.
 - **Generation:** LLM receives retrieved chunks + (for scoring) the rubric. LLM never sees the requirement's weight. LLM never computes the final weighted contribution.
 - **Scoring:** Unchanged. The deterministic engine in `src/scoring/graded_scorer.py` and `src/scoring/unified_scorer.py` is the **only** ranking signal. RAG feeds evidence; code computes the score.
 - **RAG grounding rule:** Unchanged. If no chunk meets `θ`, LLM responds with `"Information not found in candidate documents."`
@@ -405,7 +407,7 @@ def retrieve(query: str, index, top_level_cap: int = 20) -> list[Chunk]:
 
 **Context:** Document-Aware chunking was originally chosen (DEC-003) to preserve resume section structure for the Section-Routed retrieval path. With Section-Routed retired (DEC-012 → DEC-015 → DEC-017) and regular RAG in place, the section structure is no longer required for retrieval — chunks are embedded as opaque text, and cosine similarity is content-based. Recursive chunking is simpler, faster, and produces uniform-sized chunks that are more comparable under cosine similarity.
 
-**Decision:** Use **Recursive Chunking** (`RecursiveCharacterTextSplitter` or equivalent) as the active chunking strategy. Defaults: `chunk_size = 500` chars, `chunk_overlap = 50` chars. Both are exposed as Optuna hyperparameters.
+**Decision:** Use **Recursive Chunking** (`RecursiveCharacterTextSplitter` or equivalent) as the active chunking strategy. Defaults (refined 2026-07-07 per DEC-032): `chunk_size = 1000` chars, `chunk_overlap = 500` chars (50% of `chunk_size`). Bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [50%, 60%] of chunk_size`. Both are exposed as Optuna hyperparameters. (Initial 2026-07-05 defaults were `chunk_size = 500`, `chunk_overlap = 50`; widened 2026-07-07 to reduce date/skill split incidents across chunks.)
 
 Separator hierarchy (LangChain default, fits resumes well):
 1. `\n\n` (paragraph)
@@ -1270,3 +1272,118 @@ Two pre-existing inconsistencies between the docs and the implementation had bee
 ### Related Documents
 
 `CURRENT_PROGRESS.md` (Track 6 status table, shipped), `RELEASE_NOTES.md` (2026-07-06 Track 6 Added/Fixed/Unchanged entries), `TROUBLESHOOTING.md` (full debugging trail for the missing `ocr.py` issue), `ENVIRONMENT_NOTES.md` (PDF back-end availability matrix + the optional-dependency pattern), `MODEL_REGISTRY.md` (Header Normalization row reconciled), `IMPLEMENTATION_ROADMAP.md` (Header Normalization line reconciled), `ARCHITECTURE_CHANGELOG.md` (initial-creation entry annotated with the Track 6 reconciliation note), `AI_ARCHITECTURE.md` (Resume parsing workflow — header classification step now correctly attributed to `parser.py`).
+
+---
+
+## DEC-032: Widen chunk_size to 1000, chunk_overlap to 50% of chunk_size; lower default θ to 0.25
+
+Date: 2026-07-07
+
+Status: Accepted
+
+### Context
+
+The prior chunking/retrieval defaults (`chunk_size=500`, `chunk_overlap=100`, `θ=0.30`) shipped on 2026-07-06 under DEC-027 (Track 1, M0.5a). They produced 6,670 chunks across the 721-candidate corpus and a working retrieval pipeline. During the 2026-07-07 rubric LLM smoke test (DataScience `--limit 1`), we observed that the rubric LLM consistently returned `years_experience=0` for most REQs because:
+
+1. The 500-char chunks frequently split a resume role's date line (`"2017-2019"`) into a different chunk from its bullet describing skill use (`"Built ETL with Python"`). The LLM received the bullet chunk but not the date chunk, and could not correlate the two.
+2. Without the date math, the LLM correctly returned `extracted_years=0` (no evidence → 0 per the RAG grounding rule).
+3. The multiplicative rubric formula `gate × years_ratio × relevance` zeroed the entire REQ when `years_ratio=0`, even when `gate=1.0` and `relevance=0.75` were correctly scored.
+
+The work-around options discussed were: (A) backfill `years_experience` from `structured_profile.total_experience_years` (wrong — global, not per-skill), (B) move years out of the rubric entirely (overly invasive spec change), (C) widen chunking + lower θ + pass `employment_history` to the LLM (the chosen fix).
+
+### Decision
+
+Owner-specified refinement (2026-07-07):
+
+1. **Widen `chunk_size`:** `500 → 1000` characters. The new default sits at the upper end of the new Optuna bounds.
+2. **Widen `chunk_overlap`:** `100 → 500` characters (50% of `chunk_size`). The new Optuna bounds are `chunk_overlap ∈ [floor(0.50 × chunk_size), floor(0.60 × chunk_size)]` — overlap is 50-60% of `chunk_size`. With 50% overlap, the date line in chunk N also appears in chunk N+1, eliminating the "date in a different chunk" failure mode.
+3. **Lower `DEFAULT_THRESHOLD`:** `0.30 → 0.25` (bounds `[0.10, 0.50]` retained). Surfaces more chunks per REQ, increasing the chance the date-bearing chunk passes the cosine threshold.
+4. **Embedding index rebuilt:** 6,670 → 4,763 chunks (larger chunks → fewer of them).
+
+These are Optuna hyperparameters; the widened bounds give Optuna more room to find the optimal point in the M0.5d sweep. The shipped defaults sit at the upper end of the search range (the configuration that minimizes date/skill split incidents).
+
+### Alternatives Considered
+
+- **Keep `chunk_size=500` and only lower θ:** Insufficient — even with `θ=0.10`, the date line would still land in a different chunk from the bullet; the LLM would still see a chunk with no dates. θ adjustment alone cannot fix a chunking problem.
+- **Switch to whole-resume prompts (no chunking):** Rejected — fails at scale. 721 candidates × 20 REQs × whole-resume prompts = enormous token cost. Retrieval exists precisely to avoid this. The structured profile already has the dates, so we don't need to re-feed the whole resume.
+- **Pure regex years extraction (extract dates per role from structured fields):** Rejected — regex can't reliably correlate "did ETL work" (line 4) with "2017-2019" (line 12) across chunks. The LLM's skill-to-role correlation judgment is exactly what we want; we just need to give it the date math the parser already computed (see DEC-033).
+
+### Tradeoffs
+
+- **Larger chunks mean fewer chunks per candidate.** A candidate who previously produced ~10 chunks of 500 chars may now produce ~5 chunks of 1000 chars. This reduces retrieval granularity (a 1000-char chunk is a coarser unit) but improves the chance the chunk contains both the date line and the skill mention.
+- **50% overlap means 50% of each chunk is duplicated in the next chunk.** Token cost is ~2× per chunk, but chunk count is ~half, so total token cost is roughly the same. The overlap ensures the date line in chunk N also appears in chunk N+1, which is the whole point.
+- **Lower θ means more noise per REQ.** At `θ=0.25`, ~50% more chunks pass the threshold vs `θ=0.30`. The LLM is robust to noise (it is reading chunks and extracting evidence against a fixed rubric, not generating free-form text). The cap at `max_chunks_per_query=20` prevents runaway.
+
+### Verification
+
+- `pytest tests/unit` → 503/503 passing (was 493; +10 new tests for the lenient JSON extractor + banded years-ratio + employment-history prompt block).
+- `python -m src.rag.build_index --chunk-size 1000 --chunk-overlap 500` → 721 profiles, 4,763 chunks, 384-dim embeddings, 140.5s.
+- RecursiveChunker + ThresholdRetriever + min/max_overlap bounds verified by `tests/unit/test_recursive_chunker.py` and `tests/unit/test_retriever.py`.
+
+### Related Documents
+
+`WORKING_LOGIC.md` (Recursive Chunking §, Threshold-Based Retrieval §, Experience Scoring § — all updated), `MODEL_REGISTRY.md` (Chunking Strategy row, Retrieval Mode row, `threshold θ` row — all updated), `AI_DESIGN_RATIONALE.md` (Recursive chunking — refined defaults), `CURRENT_PROGRESS.md` (Track 7.4.2 row added), `IMPLEMENTATION_ROADMAP.md` (Recursive Chunking line), `PROJECT_OVERVIEW.md` (Chunking + Retrieval rows).
+
+---
+
+## DEC-033: Rubric LLM context enrichment + banded years-ratio + local Ollama backend
+
+Date: 2026-07-07
+
+Status: Accepted
+
+### Context
+
+The 2026-07-06 rubric LLM smoke test surfaced multiple bugs in the rubric scoring path that were not visible under the `--no-llm` smoke test (which only exercises the code-only path):
+
+1. **`role_subqueries` shape mismatch (Track 7.4.1 bug).** The CLI passed the 8-role dict to `evaluate_candidate_composed`, while the function expected a single-role dict. `sq_by_id` was empty → every REQ defaulted to `code_only_part=1.0 × rubric_llm_part=1.0 = 1.0` → 100.00 on every REQ. Fixed in a prior commit (Track 7.4.1, see `TROUBLESHOOTING.md`).
+
+2. **Cloud free-tier LLM endpoints unreliable.** `nemotron-3-ultra-free` caused the openai SDK to deserialize `choices=None` (the model's response shape has a `reasoning_details` field the SDK doesn't handle). `deepseek-v4-flash-free` worked but truncated JSON responses mid-stream (server-side `completion_tokens` cap). Default model `MiMo V2.5 Free` (from `.env`) returned 401 "not supported". The rubric scorer's strict `json.loads` failed on every truncated response and fell back to zero scores.
+
+3. **`years_experience` sub-question depended on the LLM extracting years from chunks alone.** The parser already computes `StructuredCandidateProfile.employment_history` with `calculated_duration_months` per role (Track 7.2), but that result was never passed to the rubric LLM. The LLM was forced to re-derive what the system already knew.
+
+4. **System message in `LLMRubricCaller` contradicted the user prompt format.** The caller's system message said "output ONLY `key: value` lines" while the rubric prompt said "Respond with ONLY a JSON object". The LLM followed the system message and produced anchored `key: value` lines instead of JSON, triggering `"No JSON found in LLM response"` on every call.
+
+5. **Continuous `min(years/target, 1.0)` was hard to audit.** A recruiter UI showing "0.67" for a 4/6 years-ratio would require explaining why 0.67 and not 0.71. Bands map directly to explainable labels ("meets expectation", "substantial partial", "marginal").
+
+### Decision
+
+Five combined fixes (each one tested independently):
+
+1. **Pass `structured_profile.employment_history` to the rubric LLM as a prompt-context block.** `score_requirement_with_rubric` accepts a new optional kwarg `employment_history: List[EmploymentEntry]`. When non-empty, `_build_rubric_prompt` appends an `EMPLOYMENT HISTORY (computed deterministically from date ranges)` block right after the SECTION CONTENT. The LLM reads both the retrieved chunks (skill mentions, project descriptions) and the parser-computed date math (per-role durations in months) — it correlates them to answer the `years_experience` sub-question. The LLM is still the brain doing the skill-to-role correlation; we just give it the date math we already computed instead of forcing it to re-parse sparse dates out of 1000-char chunks.
+
+2. **Replace continuous `min(years/target, 1.0)` with a discrete 4-band rule:** `≥ target → 1.0; ≥ 50% → 0.5; ≥ 25% → 0.25; else 0.0`. Easier to audit, defensible to a recruiter, reduces LLM-extraction noise (a 4.2-vs-4.0 extraction becomes the same band).
+
+3. **Add `_extract_json_lenient` in `rubric_scorer.py`.** Uses a brace-counting scanner to locate the first valid JSON object; if the response is truncated mid-JSON, attempts to recover at the last complete sub-score object boundary and synthetically close with `]}`. Also added defensive `null` handling for `sub_score` so a "no evidence" LLM answer (`"sub_score": null`) doesn't crash the parser with `float(None)`.
+
+4. **Rewrite the `LLMRubricCaller` system message** to defer to the user-prompt's format instructions instead of overriding with a contradicting `key: value` directive. Bump `max_tokens` from 2000 → 4000 so reasoning models (which burn tokens on chain-of-thought before producing the answer) have room to finish.
+
+5. **Add `OllamaRubricCaller` + `get_rubric_caller` factory in `src/services/llm_caller.py`.** Local inference via Ollama's OpenAI-compatible endpoint at `http://localhost:11434/v1`. Selection via `LLM_BACKEND=ollama` in `.env`. The local `qwen2.5:3b` model is the production rubric LLM now — ~6s per call, no JSON truncation, no rate limits, no API key. The cloud free-tier remains available as a fallback (`LLM_BACKEND=opencode`).
+
+### Alternatives Considered
+
+- **Move years out of the rubric entirely (code-only):** Rejected. Per-skill years (e.g., "3 yrs of Python vs 4 yrs of SQL") requires reading the bullet descriptions and correlating them with role durations — a regex cannot do this reliably. The LLM is the right tool for the skill-to-role correlation; the fix gives it the date math as input.
+
+- **Backfill `years_experience` from `total_experience_years`:** Rejected. `total_experience_years` is global (e.g., 4 years total), not per-skill. A candidate with 10 years total but only 2 years of Python would be incorrectly credited with 10 years of Python.
+
+- **Use a larger cloud model (gpt-5.4-nano):** Rejected for now. The free-tier tests showed `gpt-5.4-nano` requires credits. The local `qwen2.5:3b` works on the same machine with no API cost and no JSON truncation. We can revisit a cloud model later if the local one proves insufficient at scale.
+
+### Tradeoffs
+
+- **Production rubric LLM now requires a local Ollama install.** `qwen2.5:3b` is 1.9 GB. The `.env` selects `LLM_BACKEND=ollama` so the CLI picks it up automatically. If Ollama is not running, the caller falls back to empty strings and rubric contributions zero out — same behavior as `--no-llm`.
+
+- **The employment_history block adds ~200-400 chars per REQ to the prompt.** The LLM token cost per call is higher, but the call count is the same (one LLM call per REQ). The block is essential — without it, the LLM cannot correlate skills with durations.
+
+- **Banded rule loses resolution at intermediate values.** A candidate with 4/6 years and a candidate with 5.9/6 years both get 0.5 (both in the "substantial partial" band). This is a deliberate tradeoff — banded scores are easier to defend in a recruiter UI than continuous ratios. If finer resolution is needed later, we can add a 0.75 band (matching the relevance anchor scale).
+
+### Verification
+
+- `pytest tests/unit` → **503/503 passing** (+10 new tests: 6 for banded years-ratio + employment-history prompt block, 4 for lenient JSON extraction + null-safety).
+- `scripts/score_batch_composed.py --role DataScience --limit 1` → 1 candidate scored 2.25 (was 0.00). Per-REQ breakdown showed:
+  - REQ-001 (Python): `skill_presence=1.0`, `years_experience=1.0` (3 yrs ≥ target 3 → banded 1.0), `project_relevance=0.75` → `normalized = 0.75`.
+  - REQ-003 (Data Wrangling): `code_only_part=1.0` (binary SQs passed), `rubric_llm_part=0.375` (formula `1.0 × 0.5 × 0.75`) → `contribution = 2.25`.
+  - LLM `extracted_years=3.0` — correctly parsed from the employment_history block, NOT from the chunks (chunks don't contain explicit "3 years" phrasing).
+
+### Related Documents
+
+`WORKING_LOGIC.md` (Experience Scoring § updated to banded rule, Retrieval § updated to mention employment_history block, file schema example updated), `MODEL_REGISTRY.md` (Rubric LLM row added, Chunking/Retrieval rows updated), `AI_DESIGN_RATIONALE.md` (banded years-ratio decision documented), `CURRENT_PROGRESS.md` (Track 7.4.2 row added), `RELEASE_NOTES.md` (Track 7.4.2 changes documented), `ARCHITECTURE_CHANGELOG.md` (2026-07-07 entry added).
