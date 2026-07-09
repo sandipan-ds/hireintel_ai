@@ -46,9 +46,17 @@ class SubScoreResult:
         key: The sub-question key (e.g., "skill_presence", "years_experience").
         question: The question that was asked.
         sub_score: The numeric score (0.0–1.0).
-        extracted_evidence: What the LLM extracted as relevant (for
-            extract_first sub-questions). Empty for code-only sub-questions.
-        cited_text: The exact resume text cited as evidence.
+        evidence_found: Whether the LLM explicitly confirmed it found matching
+            evidence (``True``) or merely cited the closest available text
+            without a direct match (``False``). Populated from the LLM's
+            ``evidence_found`` field ("yes" / "no"). Defaults to ``False``
+            for code-only sub-questions.
+        closest_evidence: The most relevant resume text the LLM located,
+            regardless of whether it directly proves the requirement. When
+            ``evidence_found`` is ``False`` this text is the *closest* the
+            retriever found, not a confirmed match — reported as
+            "No direct evidence (closest: ...)" in explanations.
+        cited_text: The exact short resume quote cited as evidence.
         anchor_description: For anchored sub-questions, the description of the
             chosen anchor. Empty for binary and linear types.
         extracted_years: For linear sub-questions, the years extracted by the LLM.
@@ -58,18 +66,26 @@ class SubScoreResult:
     key: str
     question: str
     sub_score: float
-    extracted_evidence: str = ""
+    evidence_found: bool = False
+    closest_evidence: str = ""
     cited_text: str = ""
     anchor_description: str = ""
     extracted_years: Optional[float] = None
     target_years: Optional[float] = None
+
+    # Back-compat alias: callers that read ``extracted_evidence`` still work.
+    @property
+    def extracted_evidence(self) -> str:
+        """Alias for ``closest_evidence`` (backward compatibility)."""
+        return self.closest_evidence
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "key": self.key,
             "question": self.question,
             "sub_score": self.sub_score,
-            "extracted_evidence": self.extracted_evidence,
+            "evidence_found": self.evidence_found,
+            "closest_evidence": self.closest_evidence,
             "cited_text": self.cited_text,
             "anchor_description": self.anchor_description,
             "extracted_years": self.extracted_years,
@@ -161,7 +177,14 @@ def _format_employment_history(employment_history: Optional[List[Any]]) -> Optio
     """
     if not employment_history:
         return None
-    lines = ["EMPLOYMENT HISTORY (computed deterministically from date ranges — use these durations to answer `years_experience` sub-questions; correlate them with the skill/bullets in the SECTION CONTENT):"]
+    # Header row makes the column layout explicit so the LLM can correctly
+    # correlate job titles with skill bullets regardless of parse quirks.
+    lines = [
+        "EMPLOYMENT HISTORY (computed deterministically from date ranges — use these"
+        " durations to answer `years_experience` sub-questions; correlate them with"
+        " the skill/bullets in the SECTION CONTENT):",
+        "  Columns: Role | Company | Dates | Duration",
+    ]
     for e in employment_history:
         try:
             # Support both EmploymentEntry dataclass and plain dict.
@@ -176,13 +199,15 @@ def _format_employment_history(employment_history: Optional[List[Any]]) -> Optio
                 inferred = e.get("inferred_full_year", False)
             years = round((months or 0) / 12.0, 1) if months else 0
             inferred_marker = " (inferred full year)" if inferred else ""
+            # Emit Role | Company order (more natural for LLM correlation with
+            # skill bullets that typically reference the job title first).
             lines.append(
-                f"- {company} | {role} | {dates} | {months} months (~{years} yrs){inferred_marker}"
+                f"- {role} | {company} | {dates} | {months} months (~{years} yrs){inferred_marker}"
             )
         except Exception:
             # Defensive: a malformed entry should not break the prompt.
             continue
-    if len(lines) <= 1:
+    if len(lines) <= 2:  # only header rows, no real entries
         return None
     return "\n".join(lines)
 
@@ -282,13 +307,19 @@ def _build_rubric_prompt(
     # decide how many array entries to produce — they only need to fill in the
     # values. Without this, qwen2.5:3b typically outputs only the first entry
     # and stops, leaving all subsequent sub-questions at 0.
+    #
+    # Each entry now includes two evidence fields:
+    #   evidence_found: "yes" or "no" — did the LLM confirm a direct match?
+    #   closest_evidence: the most relevant text found (even if not a direct match)
+    # This lets the report distinguish [ZERO_NO_EVIDENCE] from [ZERO_WRONG_INFERENCE].
     skeleton_entries: List[str] = []
     for sq in rubric.sub_questions:
         if sq.type == "binary":
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
-                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "evidence_found": FILL_yes_OR_no,\n'
+                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
                 f'      "cited_text": "FILL: short exact quote",\n'
                 f'      "sub_score": FILL_0_OR_1,\n'
                 f'      "extracted_years": null,\n'
@@ -299,7 +330,8 @@ def _build_rubric_prompt(
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
-                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "evidence_found": FILL_yes_OR_no,\n'
+                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
                 f'      "cited_text": "FILL: short exact quote",\n'
                 f'      "sub_score": 0,\n'
                 f'      "extracted_years": FILL_NUMBER_OR_NULL,\n'
@@ -311,7 +343,8 @@ def _build_rubric_prompt(
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
-                f'      "extracted_evidence": "FILL: paste relevant resume text here",\n'
+                f'      "evidence_found": FILL_yes_OR_no,\n'
+                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
                 f'      "cited_text": "FILL: short exact quote",\n'
                 f'      "sub_score": FILL_ONE_OF_{anchor_vals},\n'
                 f'      "extracted_years": null,\n'
@@ -322,10 +355,48 @@ def _build_rubric_prompt(
 
     skeleton_json = ",\n".join(skeleton_entries)
 
+    # Semantic inference rules help qwen2.5:3b bridge the gap between
+    # implicit resume language and formal requirement keywords. Without
+    # these rules the 3B model performs surface-level keyword matching:
+    # "developing dashboards" does NOT trigger skill_presence=1 for
+    # "Data Visualization" unless it also sees "Tableau" or "matplotlib".
+    semantic_rules = """
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana" → counts as Data Visualization
+- "clean", "cleaning", "preprocess", "transform", "wrangle", "ETL", "pipeline",
+  "feature engineering", "imputation" → counts as Data Wrangling / Data Pipelines
+- "deploy", "deployment", "serve", "API", "endpoint", "container", "Docker",
+  "Kubernetes", "MLflow", "monitoring", "production" → counts as Model Deployment / MLOps
+- "Bachelor" / "B.Sc" / "B.Tech" / "B.E." / "B.S." / "undergraduate" in CS, Statistics,
+  Mathematics, Engineering, or related field → counts as Bachelor Degree Match
+- "Master" / "M.Sc" / "M.Tech" / "M.S." / "MSc" / "M.A." in Data Science, ML,
+  Statistics, Mathematics, CS, Engineering → counts as Advanced Degree Match
+- "SQL", "database", "MySQL", "PostgreSQL", "BigQuery", "Redshift", "Snowflake",
+  "relational", "query", "schema" → counts as SQL / Relational Databases
+- "Spark", "Hadoop", "Databricks", "Hive", "Kafka", "distributed", "large-scale"
+  → counts as Big Data Ecosystems
+- "classification", "regression", "clustering", "forecasting", "prediction",
+  "model", "algorithm", "neural network", "XGBoost", "random forest"
+  → counts as Design & Develop ML Models
+- "NLP", "text", "language model", "sentiment", "entity", "time series",
+  "forecasting", "ARIMA", "LSTM" → counts as NLP or Time-Series
+- "AWS", "Azure", "GCP", "cloud", "S3", "EC2", "SageMaker"
+  → counts as Cloud Platforms
+- "accuracy", "precision", "recall", "F1", "AUC", "cross-validation", "A/B test",
+  "validation", "evaluation", "error rate", "benchmark" → counts as Model Evaluation
+- "EDA", "exploratory", "analysis", "feature", "correlation", "distribution"
+  → counts as Exploratory Data Analysis
+- "stakeholder", "team", "collaborate", "cross-functional", "present", "communicate"
+  → counts as Collaboration
+- "insight", "finding", "report", "recommendation", "data-driven"
+  → counts as Communicate Findings
+"""
+
     prompt = f"""You are a resume evidence scorer. Score the candidate for ONE requirement.
 
 REQUIREMENT: {requirement_name}
-
+{semantic_rules}
 RUBRIC sub-questions to answer:
 {sub_questions_text}
 RESUME CONTENT:
@@ -336,6 +407,8 @@ RESUME CONTENT:
 TASK: Fill in the JSON below. Replace every FILL_... placeholder with the real value.
 - For binary keys: sub_score must be 0 or 1 (integer, no quotes).
 - For linear keys: extracted_years must be a plain number like 3 or 2.5, NOT a string. Use JSON null if no evidence.
+- For evidence_found: use the string "yes" if the resume directly proves the requirement (use SEMANTIC INFERENCE RULES above), else use "no".
+- For closest_evidence: always paste the most relevant text you found, even if it is indirect.
 - Do NOT add extra keys. Do NOT change the "key" values. Output ONLY the JSON, nothing else.
 
 {{
@@ -695,22 +768,37 @@ def _parse_llm_response(
                         key, target_years, sub_score,
                     )
 
+            # Parse the new evidence_found field ("yes"/"no") from the LLM response.
+            # Falls back to False for backward compat if field is absent (old cache entries).
+            raw_ev_found = raw.get("evidence_found", "")
+            evidence_found = str(raw_ev_found).strip().lower() == "yes"
+
+            # Prefer the new closest_evidence field; fall back to old extracted_evidence.
+            closest_ev = raw.get("closest_evidence") or raw.get("extracted_evidence", "")
+
             results.append(SubScoreResult(
                 key=key,
                 question=sq.question.replace("{skill}", ""),
                 sub_score=sub_score,
-                extracted_evidence=raw.get("extracted_evidence", ""),
+                evidence_found=evidence_found,
+                closest_evidence=closest_ev,
                 cited_text=raw.get("cited_text", ""),
                 extracted_years=extracted_years,
                 target_years=target_years,
             ))
             continue
 
+        # Parse evidence_found / closest_evidence for non-linear sub-questions.
+        raw_ev_found = raw.get("evidence_found", "")
+        evidence_found = str(raw_ev_found).strip().lower() == "yes"
+        closest_ev = raw.get("closest_evidence") or raw.get("extracted_evidence", "")
+
         results.append(SubScoreResult(
             key=key,
             question=sq.question.replace("{skill}", ""),
             sub_score=sub_score,
-            extracted_evidence=raw.get("extracted_evidence", ""),
+            evidence_found=evidence_found,
+            closest_evidence=closest_ev,
             cited_text=raw.get("cited_text", ""),
             anchor_description=raw.get("anchor_description", ""),
         ))
@@ -1099,8 +1187,13 @@ def explain_score_from_cache(trace: CachedScoringTrace) -> str:
 
     for ss in trace.sub_scores:
         parts.append(f"  • {ss.key}: {ss.sub_score:.2f}")
-        if ss.extracted_evidence:
-            parts.append(f"    Evidence: {ss.extracted_evidence}")
+        if ss.closest_evidence:
+            # Use evidence_found to distinguish confirmed evidence from
+            # "closest retrieved text" — makes zero-score auditing clear.
+            if ss.evidence_found:
+                parts.append(f"    Evidence of: {ss.closest_evidence}")
+            else:
+                parts.append(f"    No direct evidence (closest: {ss.closest_evidence})")
         if ss.cited_text:
             parts.append(f"    Cited: \"{ss.cited_text}\"")
         if ss.anchor_description:

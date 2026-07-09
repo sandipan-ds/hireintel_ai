@@ -1133,11 +1133,31 @@ def evaluate_candidate_composed(
         skip_code_only = req_dim_type in ("skill", "experience",
                                           "same_role", "leadership", "domain")
 
+        # Check for expected_years block on any years-proportional SQ
+        # (even if skip_code_only is True, because missing expected_years
+        # is a hard contract violation that blocks the entire REQ).
+        for sq in sub_queries:
+            if _is_years_subquery(sq):
+                ey = extract_expected_years(sq.get("text") or "")
+                if ey is None:
+                    years_blocked = True
+                    years_blocked_reason = (
+                        f"Years-proportional SQ {sq.get('key') or ''!r} for {req_id} "
+                        f"has no recoverable expected_years from its "
+                        f"text (SQ text: {(sq.get('text') or '')[:80]!r}). REQ blocked."
+                    )
+                    break
+
         if skip_code_only:
             # Skill/experience REQs: rubric LLM is the sole judge.
             # code_only_part stays 1.0 (identity), code_only_sq_scores
             # stays empty so no AND-gate is applied to these REQs.
-            result.code_only_part = 1.0
+            if years_blocked:
+                result.code_only_part = 0.0
+                result.blocked = True
+                result.blocked_reason = years_blocked_reason
+            else:
+                result.code_only_part = 1.0
         else:
             for sq in sub_queries:
                 sq_key = sq.get("key") or ""

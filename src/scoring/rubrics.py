@@ -128,7 +128,6 @@ BINARY_ANCHORS = [
 
 # Project relevance anchored scale (per WORKING_LOGIC.md).
 RELEVANCE_ANCHORS = [
-    Anchor(0.0, "No relevant projects or experience"),
     Anchor(0.25, "Tangential mention, no real project work in this area"),
     Anchor(0.5, "One project partially relevant to the JD requirement"),
     Anchor(0.75, "Multiple projects clearly relevant to the JD requirement"),
@@ -137,8 +136,7 @@ RELEVANCE_ANCHORS = [
 
 # Project complexity / depth anchored scale.
 COMPLEXITY_ANCHORS = [
-    Anchor(0.0, "No project work demonstrated"),
-    Anchor(0.25, "Simple/tutorial-level projects only"),
+    Anchor(0.25, "No or Simple/tutorial-level projects only"),
     Anchor(0.5, "One substantial project with real complexity"),
     Anchor(0.75, "Multiple projects with clear depth and ownership"),
     Anchor(1.0, "Complex, production-grade projects with significant impact"),
@@ -146,8 +144,7 @@ COMPLEXITY_ANCHORS = [
 
 # Language proficiency anchored scale.
 PROFICIENCY_ANCHORS = [
-    Anchor(0.0, "No knowledge of this language"),
-    Anchor(0.25, "Basic — can read simple text"),
+    Anchor(0.25, "No or Basic — can read simple text"),
     Anchor(0.5, "Intermediate — can converse on familiar topics"),
     Anchor(0.75, "Professional working proficiency"),
     Anchor(1.0, "Native or bilingual proficiency"),
@@ -162,15 +159,6 @@ COMMUNICATION_ANCHORS = [
     Anchor(1.0, "Exceptional communication — concise, impactful, well-structured"),
 ]
 
-# Resume organization anchored scale (subjective).
-ORGANIZATION_ANCHORS = [
-    Anchor(0.0, "No clear structure — sections blend together"),
-    Anchor(0.25, "Minimal structure, hard to find key information"),
-    Anchor(0.5, "Basic structure present but inconsistent"),
-    Anchor(0.75, "Clear section structure, easy to navigate"),
-    Anchor(1.0, "Excellent organization — every section clearly labeled and ordered"),
-]
-
 
 # ---------------------------------------------------------------------------
 # Rubric templates — one per dimension type.
@@ -181,8 +169,8 @@ SKILL_RUBRIC = RubricTemplate(
     description=(
         "Evaluates a skill requirement (e.g., Python, Power BI). "
         "Two sub-questions: (1) binary presence — does the candidate know "
-        "the skill? (2) linear years — how many years of working experience "
-        "with the skill? Code applies the banded years ratio afterwards "
+        "the skill? (2) How many years of working experience "
+        "with the skill? Code applies the four banded years ratio afterwards "
         "via _banded_years_ratio. No project_relevance SQ — owner spec "
         "(2026-07-09): 2-SQ pattern only, to avoid over-crediting "
         "tangential project mentions and to keep the AND-gate honest."

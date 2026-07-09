@@ -1,45 +1,36 @@
 # Current Progress vs `WORKING_LOGIC.md`
 
 This document maps every step of the canonical spec
-[`WORKING_LOGIC.md`](WORKING_LOGIC.md) to its implementation status as of
-**2026-07-07**. Use it as the single source of truth for "what's done vs what's
-left" when planning the next session.
+[`WORKING_LOGIC.md`](WORKING_LOGIC.md) to its implementation status. As of
+**2026-07-09**, the project has been restarted from scratch due to sub-score zero bugs in candidate evaluation. All scoring, embedding, and execution caches have been cleared to ensure a clean rebuild.
 
 **Legend:** ✅ Shipped · 🟡 Partially shipped / scaffolded · ⬜ Planned
 
 ---
 
-> ## Architecture pivot (2026-07-05)
+> ## Project Restart from Scratch (2026-07-09)
 >
-> The platform pivoted end-to-end in a single day. Eight new decisions
-> (`DEC-017` through `DEC-024`) reshape retrieval, chunking, storage,
-> experiment management, and ranking evaluation. The **deterministic scoring
-> engine is unchanged** and remains the only ranking signal.
+> To address bugs in the LLM scoring engine (where sub-scores were repeatedly evaluated as 0.0), the project database, caches, intermediate scores, and temporary scripts have been deleted. 
+> We are rebuilding the pipeline from a clean slate using recursive chunking and robust years extraction helpers.
 >
-> | DEC | What changed |
+> | Action | Status |
 > |---|---|
-> | DEC-017 | **Regular RAG pivot.** Single retrieval strategy for everything: per-candidate scoring, pool search, resume chat. Section-Routed (DEC-012) and Sub-Query Similarity (DEC-015) superseded. |
-> | DEC-018 | **Threshold-based cosine retrieval** (`θ = 0.70`, `max_chunks_per_query = 20`). θ is an Optuna hyperparameter. |
-> | DEC-019 | **Recursive Chunking replaces Document-Aware.** `chunk_size = 500`, `chunk_overlap = 50`. Both are Optuna hyperparameters. Header Normalization retained for parse-time only. |
-> | DEC-020 | **MLflow for experiment tracking.** Local server, SQLite backend, filesystem artifact root. Every retrieval / scoring run logged. |
-> | DEC-021 | **Optuna for hyperparameter search.** Multi-objective (faithfulness ↑, avg_chunks_returned ↓). TPE sampler, SQLite study store. |
-> | DEC-022 | **Per-resume reasoning storage + legacy chunk migration.** Replaces `llm_cache.jsonl` with `data/per_candidate/<role>/<id>/reasoning/<req_id>__<query_hash>.json` storing reasoning + basis + retrieved chunks + sub-scores. |
-> | DEC-023 | **Per-experiment folder naming.** `data/recursive_chunking_<chunk_size>_<overlap>_<top_k>_<threshold×100>/` with `data/active_experiment` symlink. `data/chunks_legacy_document_aware/` renamed to `data/document_aware_chunking/`. |
-> | DEC-024 | **Chunk reports folder + multi-pronged ranking evaluation.** `reports/chunk_reports/` per-experiment diagnostics. Five independent signals for "is our ranking correct?" — none require a single labeled ground truth. |
->
-> See `ARCHITECTURE_CHANGELOG.md` 2026-07-05 (a/b/c/d) for the full change set.
+> | Clear old cache, databases, and scores | ✅ Completed |
+> | Remove redundant ad-hoc scripts | ✅ Completed |
+> | Reset project vital documents | 🟡 In Progress |
+> | Re-initialize database & rebuild pipeline | ⬜ Planned |
 
 ---
 
 ## Pipeline Stages (high-level view)
 
-The platform moves through four stages; the first three are shipped, the fourth is the next unit of work.
+The platform moves through four stages; we are currently resetting the implementation of these stages.
 
 | # | Stage | Status | Where |
 |---|---|---|---|
-| 1 | **JD Formation** — extract requirements from JDs (required/preferred skills, experience, education, certifications); produce per-role structured JD objects | ✅ | `data/job_descriptions/<role>/<Role>_JD.md` + `<Role>_RecruiterWeights_EXAMPLE.json`; 8 roles fully populated |
-| 2 | **Sub-Query Formation** — decompose each JD requirement into 2–4 anchored sub-questions (binary / linear / anchored) so the LLM can judge each aspect separately | ✅ | `data/job_descriptions/<role>/<Role>_SubQuery.md`; 8 roles audited (DEC-014) |
-| 3 | **Document-Aware Chunking** — preserve resume section structure (one chunk per experience/education/project entry) with Header Normalization for parse-time section labeling | ✅ shipped, now legacy | `data/document_aware_chunking/` (moved 2026-07-05 per DEC-022/023); the **49% missing-`section_type` finding (DEC-015)** is captured in `reports/chunk_reports/document_aware_chunking_report.{json,md}` (M0.5f-a) |
+| 1 | **JD Formation** — extract requirements from JDs; produce per-role structured JD objects | ✅ | `data/job_descriptions/<role>/<Role>_JD.md`; 8 roles fully populated |
+| 2 | **Sub-Query Formation** — decompose each JD requirement into 2–4 anchored sub-questions | ✅ | `data/job_descriptions/<role>/<Role>_SubQuery.md`; 8 roles audited |
+| 3 | **Recursive Chunking & Embeddings** — uniform chunks, threshold-based cosine retrieval | ⬜ Planned | To be rebuilt under clean index |
 | 4 | **Recursive Chunking** — uniform 1000-char chunks with 500-char overlap (50%), threshold-based cosine retrieval (θ ≥ 0.25), employment-history-augmented rubric prompt, per-experiment folder convention | 🟡 in progress | `data/recursive_chunking_<params>/` (M0.5a-d-f); `data/active_experiment` symlink (M0.5e-b); chunking bounds widened 2026-07-07 (DEC-032) |
 
 **What's preserved across the pivot:** the deterministic scoring engine (`src/scoring/graded_scorer.py` + `src/scoring/unified_scorer.py`) is unchanged. The four stages produce evidence; the engine produces the score. The pivot changes how evidence is gathered, not who decides the score.

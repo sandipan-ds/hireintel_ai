@@ -134,6 +134,13 @@ Adobe Certified Expert (ACE) (6), Microsoft Professional Program Certificate in 
 - `max_chunks_per_query = 20`
 - `embedding_model = all-MiniLM-L6-v2`
 
+**Updated Baseline defaults to start with:**
+- `chunk_size = 500`
+- `chunk_overlap = minimum 50% of chunk_size`
+- `θ = 0.25`
+- `max_chunks_per_query = 20`
+- `embedding_model = all-MiniLM-L6-v2`
+
 **Promotion Criteria** (config → `Active` in `MODEL_REGISTRY.md`):
 - A new configuration must improve on the baseline `faithfulness` **and** not regress `groundedness` by more than 1%.
 - The promoting Optuna trial must exist in `data/optuna/studies.db` and the corresponding MLflow run must include all metrics above.
