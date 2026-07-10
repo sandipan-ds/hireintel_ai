@@ -178,19 +178,29 @@ class OllamaRubricCaller:
         self._available = False
 
         try:
-            from openai import OpenAI
-            self._client = OpenAI(
-                api_key=self.api_key,
-                base_url=self.base_url,
-                timeout=self.timeout,
-            )
-            self._available = True
-            logger.info(
-                "Ollama caller ready: model=%s base_url=%s",
-                self.model_name, self.base_url,
-            )
+            import requests
+            # Test connectivity to local Ollama server
+            # Ollama responds with 'Ollama is running' on the root URL
+            root_url = self.base_url.replace("/v1", "")
+            r = requests.get(root_url, timeout=1.0)
+            if r.status_code == 200:
+                from openai import OpenAI
+                self._client = OpenAI(
+                    api_key=self.api_key,
+                    base_url=self.base_url,
+                    timeout=self.timeout,
+                )
+                self._available = True
+                logger.info(
+                    "Ollama caller ready: model=%s base_url=%s",
+                    self.model_name, self.base_url,
+                )
+            else:
+                logger.warning("Ollama server returned status %d. Falling back.", r.status_code)
+                self._available = False
         except Exception as e:
-            logger.warning("Failed to initialize Ollama OpenAI client: %s", e)
+            logger.warning("Ollama server is not running: %s. Falling back.", e)
+            self._available = False
             self._client = None
 
     def __call__(self, prompt: str) -> str:

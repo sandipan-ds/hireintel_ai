@@ -1,194 +1,363 @@
-# Implementation Plan — New Rubric Scoring Functions
+# Stage 3 — PDF Resume → JSON Extraction Pipeline (DEC-035)
 
-## Background & What Changed
+## What this solves
 
-The current scoring engine in `src/scoring/rubrics.py` defines broad **per-dimension rubric templates** (e.g. `SKILL_RUBRIC`, `EXPERIENCE_RUBRIC`, `LEADERSHIP_RUBRIC`) each containing sub-questions of type `"binary"`, `"linear"`, or `"anchored"`. The LLM reads evidence and scores each sub-question using generic anchor objects like `RELEVANCE_ANCHORS`, `COMPLEXITY_ANCHORS`, `PROFICIENCY_ANCHORS`, etc.
+The existing `src/resume_parsing/parser.py` extracts raw text using `pdfplumber`.
+It breaks on two-column layouts, graphical headers, sidebar sections, scanned PDFs,
+and DOCX files. The output is unstructured text — it does not follow
+`06_RESUME_EXTRACTION_JSON_SCHEMA.md`, which is the data contract all downstream
+scoring depends on.
 
-**The new model replaces all of this** with explicit, named **scoring functions** that the LLM calls per sub-question. Each sub-question in a SubQuery document maps to exactly one of these functions, and the function determines both the scale and the logic:
-
-| Function | When to Use | Scale |
-|---|---|---|
-| `BINARY` | Is a skill present? Has the candidate served a role? Does a degree match? | `0` or `1` |
-| `FOUR_BAND_QUALITATIVE` | Depth/strength of evidence when **no dates, months, or years** are mentioned | `1.00 / 0.50 / 0.25 / 0.01` |
-| `FOUR_BAND_QUANTITATIVE` | Depth/strength of evidence when **dates, months, or years are mentioned** and can be extracted | `1.00 / 0.50 / 0.25 / 0.01` |
-| `CGPA` | Academic grade / percentage against a recruiter-defined target | `1.00` (≥ target) or `0.50` (< target) |
-| `INSTITUTION_RANK` | Tier lookup for university/institute | `1.00 / 0.75 / 0.50 / 0.01` |
-| `CERTIFICATE_RANK` | Tier lookup for certification provider | `1.00 / 0.75 / 0.50 / 0.01` |
-
-**Either-or rule for qualitative vs quantitative:** For any given sub-question evaluating depth or quantity of experience, the LLM first checks if the resume provides explicit temporal evidence (dates, duration, number of years/months). If yes → `FOUR_BAND_QUANTITATIVE`. If no → `FOUR_BAND_QUALITATIVE`. **Never both.**
-
-**Aggregation (additive, not multiplicative):**
-```
-Sub-Score = SQ1 + SQ2 + SQ3 + ... + SQ_N   (simple sum)
-Contribution = Weight × (Sub-Score / N)      (scaled to weight, out of weight)
-Total Score = Σ all contributions             (out of 100)
-```
+This plan implements a **routed extraction pipeline** that produces schema-compliant
+JSON from any resume format, per `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 
 ---
 
-## User Review Required
+## Why this is the critical path
 
-> [!IMPORTANT]
-> **The old per-dimension rubric templates (`SKILL_RUBRIC`, `EXPERIENCE_RUBRIC`, `LEADERSHIP_RUBRIC`, `SAME_ROLE_RUBRIC`, `DOMAIN_RUBRIC`, `PROJECT_RUBRIC`, `LANGUAGE_RUBRIC`, `COMMUNICATION_RUBRIC`, `RESUME_ORGANIZATION_RUBRIC`) will be deleted.** Their sub-question logic is replaced by the new functions.
+Without correct JSON extraction:
+- Chunking produces noise chunks from broken reading order
+- Retrieval surfaces irrelevant text
+- The scoring LLM gets wrong evidence
+- Scores are wrong regardless of the scoring formula
 
-> [!WARNING]
-> **The anchor objects (`RELEVANCE_ANCHORS`, `COMPLEXITY_ANCHORS`, `PROFICIENCY_ANCHORS`, `COMMUNICATION_ANCHORS`, `ORGANIZATION_ANCHORS`) will be deleted.** The new functions encode the scale directly — no separate anchor tables needed.
+All downstream stages (4 → 5 → 6) depend on Stage 3 output.
 
-> [!NOTE]
-> **Kept unchanged:** `BINARY_ANCHORS` (still used by `BINARY` function), `EDUCATION_RUBRIC`, `CERTIFICATION_RUBRIC`, `LOCATION_RUBRIC` templates are replaced by the new `CGPA`, `INSTITUTION_RANK`, `CERTIFICATE_RANK` functions. The code-only path in `unified_scorer` is replaced by function calls. The RAG pipeline, chunking, embeddings, API, and DB remain untouched.
+---
+
+## Architecture
+
+```
+Input (PDF / DOCX / image)
+        │
+        ▼
+┌─────────────────────┐
+│   File Classifier   │  → native_pdf / scanned_pdf / mixed_pdf / docx
+└─────────────────────┘
+        │
+   ┌────┴────────────────────────────────┐
+   │                                              │
+   ▼                                              ▼
+Route A: Native PDF / DOCX                  Route B: Scanned / Image PDF
+  Step 1: Docling (primary parser)            Step 1: PaddleOCR (text detection)
+  Step 2: Unstructured (fallback)             Step 2: Surya (layout + reading order)
+        │                                          │
+        └──────────┬────────────────────┘
+                   ▼
+         ┌────────────────────┐
+         │   Section Builder   │  → group into 7 canonical sections
+         └────────────────────┘
+                   │
+                   ▼
+         ┌────────────────────┐
+         │   LLM Normalization │  → dates, degrees, skill names → structured fields
+         └────────────────────┘
+                   │
+                   ▼
+         ┌────────────────────┐
+         │  Schema Validation  │  → required fields check + confidence score
+         └────────────────────┘
+                   │
+                   ▼
+         Output JSON (per 06_RESUME_EXTRACTION_JSON_SCHEMA.md)
+```
 
 ---
 
 ## Proposed Changes
 
-### 1. DELETE — Legacy Scoring Files
+### New Package: `src/resume_parsing/extraction/`
 
-#### [DELETE] [subquery_retrieval.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/src/services/subquery_retrieval.py)
-Legacy sub-query similarity vector search. Superseded by regular RAG (DEC-017). No active callers after `scoring_subquery.py` is also removed.
+#### [NEW] `src/resume_parsing/extraction/__init__.py`
+Empty init file.
 
-#### [DELETE] [scoring_subquery.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/src/services/scoring_subquery.py)
-Legacy batched sub-query LLM call pipeline. Superseded by `evaluate_candidate_composed`. No active callers after `scoring_pipeline.py` cleanup.
+#### [NEW] `src/resume_parsing/extraction/file_classifier.py`
+- `classify_file(path: str) -> FileType`
+- `FileType` enum: `NATIVE_PDF`, `SCANNED_PDF`, `MIXED_PDF`, `DOCX`, `TEXT`
+- Detection: try `pdfplumber` text extraction; if < 50 chars/page → classify `SCANNED_PDF`
+- DOCX: check extension + `python-docx` content sniff
+
+#### [NEW] `src/resume_parsing/extraction/docling_parser.py`
+- `extract_with_docling(path: str) -> ExtractionResult`
+- Primary parser for native PDFs using **Docling**
+- Produces reading-order-correct elements: paragraphs, headings, tables, lists
+- Returns `None` gracefully if Docling not installed or fails
+
+#### [NEW] `src/resume_parsing/extraction/unstructured_parser.py`
+- `extract_with_unstructured(path: str) -> ExtractionResult`
+- Fallback parser using **Unstructured**
+- Element-level output: `Title`, `NarrativeText`, `ListItem`, `Table`
+- Supports PDF and DOCX
+
+#### [NEW] `src/resume_parsing/extraction/ocr_parser.py`
+- `extract_with_ocr(path: str) -> ExtractionResult`
+- **PaddleOCR** for text detection and recognition
+- **Surya** for layout analysis and reading-order recovery
+- Handles multi-column layouts
+- Only loaded/instantiated when the file classifier routes to this path
+
+#### [NEW] `src/resume_parsing/extraction/section_builder.py`
+- `build_sections(elements: list[Element]) -> dict[str, list[str]]`
+- Groups elements into 7 canonical sections:
+  `summary`, `skills`, `experience`, `education`, `certifications`, `projects`, `other`
+- Uses the existing `SECTION_HEADERS` synonym table from `parser.py`
+- Handles heading→body grouping
+
+#### [NEW] `src/resume_parsing/extraction/llm_normalizer.py`
+- `normalize_to_schema(sections: dict, candidate_id: str) -> ResumeJSON`
+- Deterministic regex for: name, email, phone, URLs (fast, no LLM)
+- LLM (Ollama `qwen2.5:3b`) for: dates, durations, degree names, skill list normalization
+- Strict JSON-only output prompt; cites text literally, no hallucination
+
+#### [NEW] `src/resume_parsing/extraction/schema_validator.py`
+- `validate(resume_json: dict) -> ValidationResult`
+- `ValidationResult`: `is_valid: bool`, `missing_fields: list[str]`, `confidence_score: float`
+- Checks all required fields per `06_RESUME_EXTRACTION_JSON_SCHEMA.md`
+- Flags low-confidence fields (< 0.70) for review
+
+#### [NEW] `src/resume_parsing/extraction/pipeline.py`
+- `extract_resume(path: str, candidate_id: str) -> ResumeJSON`
+- Orchestrates the full pipeline: classify → route → build sections → normalize → validate
+- The single entry point for all downstream code
 
 ---
 
-### 2. MODIFY — `src/scoring/rubrics.py`
+### Batch Script
 
-This is the **central change**. The file will be substantially rewritten.
+#### [NEW] `scripts/batch_extract_resumes.py`
+- Walk `data/original/<role>/` for all 8 roles
+- Run `extract_resume()` per file
+- Write output to `data/processed/<role>/<candidate_id>.json`
+- Log failures and low-confidence extractions to `run_reports/`
+- Progress bar (tqdm)
 
-**What is removed:**
-- `RELEVANCE_ANCHORS`, `COMPLEXITY_ANCHORS`, `PROFICIENCY_ANCHORS`, `COMMUNICATION_ANCHORS`, `ORGANIZATION_ANCHORS` — all deleted.
-- Per-dimension `RubricTemplate` objects: `SKILL_RUBRIC`, `EXPERIENCE_RUBRIC`, `LEADERSHIP_RUBRIC`, `SAME_ROLE_RUBRIC`, `DOMAIN_RUBRIC`, `PROJECT_RUBRIC`, `LANGUAGE_RUBRIC`, `COMMUNICATION_RUBRIC`, `RESUME_ORGANIZATION_RUBRIC` — all deleted.
-- `RUBRIC_REGISTRY` dict — deleted (no longer needed; sub-question type dispatch replaces it).
+---
 
-**What is added — the new scoring functions:**
+### Tests
 
-```python
-def score_binary(condition_met: bool) -> float:
-    """Binary gate: 1.0 if condition met, 0.0 otherwise."""
+#### [NEW] `tests/unit/test_file_classifier.py` — 5 test cases
+#### [NEW] `tests/unit/test_section_builder.py` — 10 test cases
+#### [NEW] `tests/unit/test_schema_validator.py` — 8 test cases
+#### [NEW] `tests/integration/test_extraction_pipeline.py` — 3 real resume fixtures
 
-def score_four_band_qualitative(level: str) -> float:
-    """4-band scale for qualitative evidence (no dates/years in resume).
-    level values: "substantial" | "some" | "few" | "none"
-    Returns: 1.00 / 0.50 / 0.25 / 0.01
-    """
+---
 
-def score_four_band_quantitative(
-    extracted_years: Optional[float],
-    target_years: float,
-) -> float:
-    """4-band scale for quantitative evidence (dates/years present in resume).
-    extracted_years >= target_years        → 1.00
-    extracted_years >= 0.5 * target_years  → 0.50
-    extracted_years >= 0.25 * target_years → 0.25
-    else / None                            → 0.01
-    """
+## Dependencies to Add (`requirements.txt`)
 
-def score_cgpa(score: Optional[float], target: float) -> float:
-    """2-band CGPA/percentage check.
-    score >= target  → 1.00
-    score < target   → 0.50  (partial credit — candidate has degree, just below target)
-    score is None    → 0.01  (no grade info found)
-    """
-
-def score_institution_rank(institute_name: str) -> float:
-    """Tier lookup for university/institute via data/Institutes/institute_tiers.json.
-    Tier 1 → 1.00 | Tier 2 → 0.75 | Tier 3 → 0.50 | Unlisted → 0.01
-    """
-
-def score_certificate_rank(provider_name: str) -> float:
-    """Tier lookup for certification provider via data/Certificates/certificate_tiers.json.
-    Tier 1 → 1.00 | Tier 2 → 0.75 | Tier 3 → 0.50 | Unlisted → 0.01
-    """
+```
+docling>=2.0          # primary document parser
+unstructured>=0.16    # fallback element-level parser
+paddleocr>=2.9        # OCR for scanned resumes
+surya-ocr>=0.6        # layout analysis + reading order
+python-docx>=1.1      # DOCX support
 ```
 
-**What is kept:**
-- `Anchor`, `SubQuestion`, `RubricTemplate` dataclasses — **kept** (still needed for `SubQuestion` type declarations in the sub-query parser and prompt builder).
-- `BINARY_ANCHORS` — **kept** (used by `BINARY` sub-questions).
-- `EDUCATION_RUBRIC` and `CERTIFICATION_RUBRIC` template definitions — **replaced** by direct calls to `score_cgpa`, `score_institution_rank`, `score_certificate_rank` in the scorer (the template objects themselves are removed).
-- `is_code_only()`, `is_rubric_bound_llm()` — **removed** (the code-only/LLM-bound split is no longer the routing mechanism; function type on each sub-question handles dispatch).
+> [!IMPORTANT]
+> `PaddleOCR` and `Surya` are large packages with model downloads on first use.
+> They should only be instantiated when the file classifier routes to OCR.
+> Add a `--no-ocr` flag to the batch script to skip scanned PDFs during testing.
 
 ---
 
-### 3. MODIFY — `src/scoring/tier_lookup.py`
+## Open Questions
 
-Change `_NOT_LISTED_POINTS = 0.50` → `_NOT_LISTED_POINTS = 0.01` to align with the new unlisted fallback standard across all tier lookups.
+> [!IMPORTANT]
+> **LLM normalization scope:** Should the LLM normalize all fields, or only
+> ambiguous ones (dates, degree names, skill normalization)?
+> **Recommendation:** deterministic regex for contact info + simple fields;
+> LLM only for dates, experience bullet normalization, education parsing.
 
----
+> [!IMPORTANT]
+> **Keep old `parser.py` as a fallback or retire it?**
+> It works for simple single-column native PDFs.
+> **Recommendation:** keep it as Route D (last resort), clearly labeled.
 
-### 4. MODIFY — `src/scoring/rubric_scorer.py`
-
-Refactor the LLM response parser and sub-score aggregator:
-
-- **Remove** all references to `RELEVANCE_ANCHORS`, `COMPLEXITY_ANCHORS`, `PROFICIENCY_ANCHORS`.
-- **Add** a dispatcher that reads each sub-question's `type` field from the SubQuery document and calls the correct scoring function:
-  - `"binary"` → `score_binary()`
-  - `"four_band_qualitative"` → `score_four_band_qualitative()`
-  - `"four_band_quantitative"` → `score_four_band_quantitative()` with `extracted_years` parsed from the LLM response.
-  - `"cgpa"` → `score_cgpa()`
-  - `"institution_rank"` → `score_institution_rank()`
-  - `"certificate_rank"` → `score_certificate_rank()`
-- **Either-or routing:** For sub-questions tagged as `"four_band"` (before the LLM call), detect if the retrieved chunks contain explicit temporal evidence. If yes → invoke `score_four_band_quantitative`. If no → invoke `score_four_band_qualitative`.
-- **Aggregation:** Replace `gate × years_ratio × ...` multiplication with simple addition: `sum(sq_scores)`.
-
----
-
-### 5. MODIFY — `src/scoring/unified_scorer.py`
-
-Update `evaluate_candidate_composed` aggregation logic:
-
-- **Replace** the legacy `Code_only_part × Rubric_LLM_part` multiplication formula with the new additive sum: `Sub-Score = SQ1 + SQ2 + ... + SQ_N`.
-- **Replace** the contribution formula: `Contribution = Weight × (Sub-Score / N)`.
-- **Remove** direct calls to `_score_education_code_only`, `_score_certification_code_only`, `_score_location_code_only` (these are replaced by the new function calls above routed through `rubric_scorer`).
-- **Keep** the `CGPA` / `INSTITUTION_RANK` / `CERTIFICATE_RANK` code paths but refactor them to call the new `score_cgpa()`, `score_institution_rank()`, `score_certificate_rank()` functions from `rubrics.py` instead of the old structured-profile lookup helpers.
-
----
-
-### 6. MODIFY — `src/services/scoring_pipeline.py`
-
-- **Remove** all `from src.services.scoring_subquery import ...` imports.
-- **Remove** all `from src.services.subquery_retrieval import ...` imports.
-- **Refactor** `score_candidate_batched_end_to_end` to route all REQs (including education/certification) through the updated composed evaluator, removing the old "code_only vs llm-bound split" approach.
-- **Keep** `score_candidate`, `list_candidate_ids`, `load_weight_config`, `list_configs_for_role` unchanged.
-
----
-
-### 7. MODIFY — `src/api/scoring.py`
-
-Minor alignment: ensure `ItemScoreResponse` fields reflect the new sub-score aggregation output (rename any references to old anchor-type fields).
-
----
-
-## What Does NOT Change
-
-| Component | Why Untouched |
-|---|---|
-| `src/rag/` (retriever, per_req_retrieval, subquery_cache, recursive_chunker) | RAG pipeline is correct and active |
-| `src/resume_parsing/` | Parsing, OCR, structured profile, candidate registry are all correct |
-| `src/services/subquery_parser.py` | Sub-query parser is correct; just adds `type` field per sub-question |
-| `src/services/mlflow_wiring.py` | Experiment tracking is correct |
-| `src/api/` (app, pages, roles, weights) | FastAPI recruiter UI is correct |
-| `src/models/database.py` | SQLite schema is correct |
-| `src/schemas/weight_config.py` | Pydantic config models are correct |
-| `data/Institutes/institute_tiers.json` | Used by `score_institution_rank()` |
-| `data/Certificates/certificate_tiers.json` | Used by `score_certificate_rank()` |
-| All `*_SubQuery.md` files | Already updated to additive scoring and 0.01 floors |
-| All `*_ScoringGuide.md` files | Already updated |
-| `docs/WORKING_LOGIC.md` | Already updated |
+> [!NOTE]
+> **Re-parse all 721 existing resumes immediately?**
+> **Recommendation:** yes — re-parse all to get a consistent data layer,
+> then rebuild the embedding index. The old `data/processed/` JSONs do not
+> follow `06_RESUME_EXTRACTION_JSON_SCHEMA.md`.
 
 ---
 
 ## Verification Plan
 
-### Automated Tests
-- Verify new functions individually:
-  `pytest tests/unit/test_rubrics.py`
-- Verify tier lookup `_NOT_LISTED_POINTS = 0.01`:
-  `pytest tests/unit/test_tier_lookup.py`
-- Run the composed scorer smoke test on 1 candidate:
-  `python scripts/score_batch_composed.py --role BusinessAnalyst --no-llm`
-- Initialize database from scratch:
-  `python scripts/init_database.py`
+1. Install dependencies: `pip install docling unstructured paddleocr surya-ocr python-docx`
+2. Run on 5 DataScience resumes: `python scripts/batch_extract_resumes.py --role DataScience --limit 5`
+3. Inspect output JSON — confirm all schema fields are populated
+4. Manually verify 2 complex resumes (two-column layout, scanned)
+5. Check confidence scores — flag any < 0.70
+6. Rebuild embedding index: `python src/rag/build_index.py`
+7. Run scoring: `python scripts/score_batch_composed.py --role DataScience --limit 5`
+8. Confirm scores are meaningfully higher than the current broken-parser output
 
-### Manual Verification
-- Start the API: `python scripts/start_server.py`
-- Verify `/api/score/BusinessAnalyst/<candidate_id>?config_name=...` returns per-item sub-scores using additive sums and that unlisted tiers return `0.01` in the scoring trace.
+---
+
+## Decision Record
+
+**DEC-035: PDF → JSON Extraction Pipeline** — to be formally recorded in `18_DECISIONS.md` after approval.
+
+Documents to update after implementation:
+`03_CURRENT_PROGRESS.md`, `18_DECISIONS.md`, `19_ARCHITECTURE_CHANGELOG.md`, `20_RELEASE_NOTES.md`
+
+
+---
+
+## Failure Mode 1 — Wrong Evidence Retrieved (RAG mismatch)
+
+**Examples:**
+- `cand_3b6b638c310c` REQ-011 (Visualization): Evidence shown is *"analyzing large datasets, developing dashboards..."* — no mention of Tableau/Power BI/matplotlib. Yet the candidate clearly built dashboards!
+- `cand_49c7271f22cf` REQ-016 (Bachelor's Degree): Evidence shown is *"Madison University... Computer Science... GPA 3.7"* — that IS a CS degree. Score should be 1, but LLM gave 0.
+- `cand_49c7271f22cf` REQ-011 (Visualization): Evidence = *"Developed insights into performance of Network/Studio programs..."* — clearly the wrong chunk retrieved.
+
+**Root cause:** Section routing is fetching text from the wrong section, or the skill keyword (e.g., "Tableau", "matplotlib") is not present in the retrieved chunk, so the LLM correctly concludes "no evidence" — but the evidence retrieved was already the wrong one.
+
+---
+
+## Failure Mode 2 — LLM Sees Evidence but Still Scores 0 (Inference Failure)
+
+**Examples (your specific ones):**
+- `cand_3b6b638c310c` REQ-011: Evidence *contains* "developing visualizations... 3 new dashboards" — this IS data visualization. LLM should say `skill_presence = 1`. It said 0.
+- `cand_49c7271f22cf` REQ-016: Evidence is literally *"Madison University Department of Computer Science"* — this IS a CS degree, yet `degree_match = 0`.
+- `cand_2998bbbd6f03` REQ-018: Evidence contains "Designed, developed and deployed statistical data models" — directly maps to "Design & Develop ML Models". LLM gave `skill_presence = 0`.
+- `cand_98344c47897a` REQ-002: Evidence = *"Masters... Advanced Statistics for Health"* — clearly relevant. LLM gave `experience_presence = 0`.
+
+**Root cause:** The `qwen2.5:3b` model is performing **surface-level keyword matching** instead of semantic reasoning. "developing visualizations" ≠ "Tableau/matplotlib" to a small 3B model. It is not inferring that "dashboards = data visualization tools" without explicit tool names in the text.
+
+---
+
+## Failure Mode 3 — The "Contradictory Evidence" Problem
+
+The LLM returns `extracted_evidence` that contains content from completely irrelevant sections (e.g., `"SAS Enterprise and SAS Miner (60 hours)"` as evidence for REQ-014 "Proven Track Record"). This happens when:
+- The retrieved chunk for that requirement is from certifications/courses section
+- The LLM faithfully quotes from what it was given, but it makes no sense
+
+This means the `extracted_evidence` field in the report **is currently lying** — it says "Evidence:" but it's actually the closest thing retrieved, which may be irrelevant. The user correctly identifies this: we need to distinguish:
+- **`evidence_found`**: `yes` / `no` — did the LLM actually find matching content?
+- **`closest_evidence`**: the text it retrieved (regardless of whether it matched)
+
+---
+
+## Failure Mode 4 — Employment History Swapped Columns Bug
+
+As documented earlier: the `_format_employment_history` renders rows as:
+```
+- {company} | {role} | {dates} | {months}
+```
+But the parsed employment history has `company` holding layout artifacts (`Oct`, `68`, `Ç2`) and `role` holding actual company names. The LLM cannot correlate skill mentions with correct job durations.
+
+---
+
+## Proposed Fixes
+
+### Fix 1 — Add `evidence_found` + `closest_evidence` fields to the prompt & SubScoreResult
+
+**What changes:**
+- In the JSON skeleton sent to the LLM (`_build_rubric_prompt`), replace:
+  ```json
+  "extracted_evidence": "FILL: paste relevant resume text here"
+  ```
+  with two fields:
+  ```json
+  "evidence_found": "yes" or "no",
+  "closest_evidence": "FILL: paste the most relevant text you found, even if it doesn't directly prove the skill"
+  ```
+- Add explicit instruction: *"Set `evidence_found` to `yes` only if the text directly proves the skill. Set to `no` if you are citing the closest available text but it does not prove the requirement."*
+- Update `SubScoreResult` dataclass to store both `evidence_found: bool` and `closest_evidence: str`.
+- The report generator and `explain_score_from_cache()` use these to emit either `"Evidence of..."` or `"No direct evidence (closest: ...)"`.
+
+**Why this matters:**
+- Makes it immediately visible WHY the LLM gave a 0 — was it truly absent, or was wrong text retrieved?
+- Removes the misleading "Evidence:" label when the text shown has nothing to do with the requirement.
+
+---
+
+### Fix 2 — Semantic Inference Hint in Prompt
+
+**What changes:**
+- In the system prompt instruction block, add a brief inference table for common equivalences:
+
+```
+SEMANTIC INFERENCE RULES (apply these before deciding evidence_found = no):
+- "dashboard", "report", "visualization", "chart", "plot" → counts as Data Visualization
+- "clean", "preprocess", "transform", "wrangle", "ETL" → counts as Data Wrangling
+- "deploy", "serve", "containerize", "API", "endpoint" → counts as Model Deployment
+- "Bachelor" / "B.Sc" / "B.Tech" / "B.E." in CS, Stats, Maths, Engineering → counts as Degree Match
+- "Master" / "M.Sc" / "M.Tech" / "MBA (quantitative)" → counts as Advanced Degree
+```
+
+This addresses the qwen2.5:3b surface-level keyword matching failure directly.
+
+---
+
+### Fix 3 — Employment History Column Order Fix
+
+**What changes:**
+- In `_format_employment_history()`, swap `company` and `role` in the template:
+  ```python
+  # Current (broken): f"- {company} | {role} | ..."
+  # Fixed: f"- {role} | {company} | ..."  
+  ```
+  And add a header row so the LLM knows the column meaning:
+  ```
+  EMPLOYMENT HISTORY: Role | Company | Dates | Duration
+  - Data Scientist | General Motor - NewYork | Oct 2018 - Present | 103 months (~8.6 yrs)
+  ```
+
+---
+
+### Fix 4 — Log Enrichment: Zero-Evidence Flagging
+
+**What changes:**
+- When generating run reports, any sub-score where `evidence_found = "no"` and `sub_score = 0` is flagged as `ZERO_NO_EVIDENCE`.
+- Any sub-score where `evidence_found = "yes"` and `sub_score = 0` is flagged as `ZERO_WRONG_INFERENCE` — a LLM reasoning failure we can target with better prompts.
+- The log file written to `run_reports/` now includes a structured section:
+  ```
+  [ZERO_NO_EVIDENCE]    cand_X REQ-001 skill_presence — no matching text found
+  [ZERO_WRONG_INFERENCE] cand_Y REQ-011 skill_presence — text found but LLM did not infer
+  ```
+
+---
+
+## Files to Change
+
+### `src/scoring/rubric_scorer.py`
+- `SubScoreResult`: add `evidence_found: bool = False`, rename `extracted_evidence` → `closest_evidence`
+- `_build_rubric_prompt()`: update skeleton JSON to use new field names + add semantic inference rules
+- `_parse_llm_response()`: parse new `evidence_found` field, propagate to `SubScoreResult`
+- `explain_score_from_cache()`: use `evidence_found` to choose label ("Evidence of..." vs "No direct evidence (closest:...)")
+
+### `scripts/score_batch_composed.py` (or wherever the run report is generated)
+- Enrich the zero-score logging with `[ZERO_NO_EVIDENCE]` / `[ZERO_WRONG_INFERENCE]` tags
+
+### `run_reports/` generation (report writer script)
+- Update the Markdown report template to emit `evidence_found: yes/no` and `closest_evidence`
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Should `evidence_found` be a hard gate?**  
+> Option A: `evidence_found = "no"` forces `sub_score = 0` (strict — no inference allowed).  
+> Option B: `evidence_found = "no"` only affects reporting, not the score (LLM can still infer and give partial credit).  
+> My recommendation: **Option B** — keep scoring lenient, use `evidence_found` only for diagnostics.
+
+> [!IMPORTANT]
+> **Semantic inference rules: hardcoded vs. LLM-generated?**  
+> The rules above are static. If a new role type is added, they need updating. Alternatively, the JD extraction step could generate these hints per-role. For now, a static table per dimension type is pragmatic.
+
+> [!NOTE]
+> **Does fixing the employment history column order require re-parsing all resumes?**  
+> No — the fix is in the prompt formatting function only. No re-parsing needed.  
+> The cached sub-query results will need to be flushed (`--flush-cache`) on the next run.
+
+---
+
+## Verification Plan
+
+1. Run `score_batch_composed.py --role DataScience --limit 5 --flush-cache` after changes.
+2. Check that `cand_3b6b638c310c` REQ-011 now shows `evidence_found: yes` with score > 0.
+3. Check that `cand_49c7271f22cf` REQ-016 now shows `degree_match = 1`.
+4. Check the run report `run_reports/run_DataScience_2.md` for reduced `[ZERO_NO_EVIDENCE]` counts.
+5. Confirm total scores increase meaningfully (candidate 1 should exceed 31.5/100).

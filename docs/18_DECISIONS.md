@@ -8,7 +8,26 @@ Every major architecture or AI change must be documented here before implementat
 
 ---
 
-## Decision Log
+## Active Decisions (Post-Restart — DEC-034 onward)
+
+> **Project restarted 2026-07-09.** Decisions DEC-001 through DEC-033 below are
+> **archived pre-restart context**. They describe what was tried, why it was
+> changed, and what was discarded. They are kept for traceability only.
+>
+> **New decisions must be added here first**, numbered from DEC-035 onward.
+
+| ID | Date | Decision | Status |
+|---|---|---|---|
+| DEC-034 | 2026-07-09 | **Additive Sub-Score Formula + 0.01 Floor.** Sub-Score = SQ1 + SQ2 + SQ3 (additive). Weights normalized to 100. 4-band minimum is 0.01, not 0.0. CGPA 2-band: >= target → 1.00, else 0.50. | ✅ Active |
+| DEC-035 | TBD | **PDF → JSON Extraction Pipeline.** Routed pipeline: file classifier → Docling (primary) → Unstructured (fallback) → PaddleOCR/Surya (OCR) → section builder → LLM normalization → schema validation → JSON. Implements `06_RESUME_EXTRACTION_JSON_SCHEMA.md` and `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`. | ⬜ Planned |
+
+---
+
+## Archived Decision Log (Pre-Restart — DEC-001 to DEC-033)
+
+> These decisions are **archived**. Do not treat them as the current system state.
+> The project was restarted on 2026-07-09. See `03_CURRENT_PROGRESS.md` for
+> what is actually built today.
 
 | ID | Date | Decision | Status | Related Docs |
 | --- | --- | --- | --- | --- |
