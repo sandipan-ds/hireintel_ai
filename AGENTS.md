@@ -13,27 +13,29 @@ following numbered sequence. Each document builds on the previous. Do NOT skip a
 
 ```
 docs/
-├── 01_PROJECT_OVERVIEW.md              ← what the product is and why it exists
-├── 02_WORKING_LOGIC.md                 ← canonical scoring/evaluation spec (DEC-011) ← READ FIRST
-├── 03_CURRENT_PROGRESS.md              ← what is built today vs what is planned
-├── 04_SYSTEM_ARCHITECTURE.md           ← how the system is structured
-├── 05_AI_ARCHITECTURE.md               ← AI-specific architecture (parsing, RAG, scoring)
-├── 06_RESUME_EXTRACTION_JSON_SCHEMA.md ← data contract: PDF → JSON (MUST-HAVE capability)
-├── 07_DATABASE_SCHEMA.md               ← storage schema for production
-├── 08_END_TO_END_PIPELINE.md           ← end-to-end flow: PDF upload → candidate ranking
-├── 09_AI_DESIGN_RATIONALE.md           ← why every AI decision was made
-├── 10_MODEL_REGISTRY.md                ← which models and strategies are live
-├── 11_PROMPT_LIBRARY.md                ← all production prompts with version history
-├── 12_RECRUITER_WORKFLOWS.md           ← how recruiters interact with the platform
-├── 13_IMPLEMENTATION_ROADMAP.md        ← what to build next
-├── 14_EVALUATION.md                    ← how to measure quality (metrics, eval methodology)
-├── 15_STYLE_GUIDE.md                   ← coding standards (read before writing code)
-├── 16_DECISIONS.md                     ← full decision log (reference)
-├── 17_ARCHITECTURE_CHANGELOG.md        ← architecture change history
-├── 18_RELEASE_NOTES.md                 ← version and release history
-├── 19_TROUBLESHOOTING.md               ← known issues and resolutions
-└── 20_ENVIRONMENT_NOTES.md             ← environment and setup notes
-├── 21_CODEBASE_MAP.md                  ← auto-generated module dependency map
+├── 01_PROJECT_OVERVIEW.md                  ← what the product is and why it exists
+├── 02_WORKING_LOGIC.md                     ← canonical scoring/evaluation spec (DEC-011) ← READ FIRST
+├── 03_CURRENT_PROGRESS.md                  ← what is built today vs what is planned
+├── 04_SYSTEM_ARCHITECTURE.md               ← how the system is structured
+├── 05_AI_ARCHITECTURE.md                   ← AI-specific architecture (parsing, RAG, scoring)
+├── 06_RESUME_EXTRACTION_JSON_SCHEMA.md     ← data contract: PDF → JSON field schema
+├── 07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md  ← HOW-TO: routing pipeline for all PDF formats
+├── 08_RETRIEVAL_STRATEGY_SPEC.md           ← Hybrid RAG retrieval architecture spec
+├── 09_DATABASE_SCHEMA.md                   ← storage schema for production
+├── 10_END_TO_END_PIPELINE.md               ← end-to-end flow: PDF upload → candidate ranking
+├── 11_AI_DESIGN_RATIONALE.md               ← why every AI decision was made
+├── 12_MODEL_REGISTRY.md                    ← which models and strategies are live
+├── 13_PROMPT_LIBRARY.md                    ← all production prompts with version history
+├── 14_RECRUITER_WORKFLOWS.md               ← how recruiters interact with the platform
+├── 15_IMPLEMENTATION_ROADMAP.md            ← what to build next
+├── 16_EVALUATION.md                        ← how to measure quality (metrics, eval methodology)
+├── 17_STYLE_GUIDE.md                       ← coding standards (read before writing code)
+├── 18_DECISIONS.md                         ← full decision log (reference)
+├── 19_ARCHITECTURE_CHANGELOG.md            ← architecture change history
+├── 20_RELEASE_NOTES.md                     ← version and release history
+├── 21_TROUBLESHOOTING.md                   ← known issues and resolutions
+├── 22_ENVIRONMENT_NOTES.md                 ← environment and setup notes
+└── 23_CODEBASE_MAP.md                      ← auto-generated module dependency map
 ```
 
 All docs defer to `02_WORKING_LOGIC.md` for scoring, evaluation, and ranking details.
@@ -87,7 +89,7 @@ respect to scoring and evaluation. All other docs defer to it.
 
 All code generation and refactoring must comply with:
 
-docs/15_STYLE_GUIDE.md
+docs/17_STYLE_GUIDE.md
 
 The style guide defines:
 - Code structure
@@ -188,7 +190,47 @@ The platform MUST extract from PDFs of any design, template, or writing style.
 
 ---
 
-### 07_DATABASE_SCHEMA.md
+### 07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md
+
+Contains:
+
+• Why naive PDF text extraction fails on real resumes
+• Routed pipeline design: File classifier → extraction route → layout-aware recovery → section builder → LLM normalization → validation → JSON
+• Recommended open-source tool stack:
+  - Docling (primary parser — document understanding, not just text extraction)
+  - Unstructured (secondary/fallback — element-level parsing, paragraph/title/table separation)
+  - PaddleOCR + Surya (OCR for scanned/image-heavy resumes — layout analysis, reading order)
+• How to handle multi-column layouts, graphical headers, sidebar sections
+• How to recover correct reading order from two-column PDFs
+• How commercial systems (ChatGPT, Claude) handle PDFs — multimodal pattern
+• Validation and confidence scoring for extraction output
+
+This is the HOW-TO implementation guide that pairs with 06_RESUME_EXTRACTION_JSON_SCHEMA.md
+(which defines WHAT to extract; this defines HOW to extract it from any format).
+
+---
+
+### 08_RETRIEVAL_STRATEGY_SPEC.md
+
+Contains:
+
+• Why this platform is a Hybrid RAG system
+• Two retrieval modes and when to use each:
+  - Structured lookup: exact factual fields (degree, email, total_experience_months)
+  - Chunk-based semantic retrieval: contextual evidence (skill depth, leadership evidence, domain context)
+• Retrieval routing layer design
+• How retrieval connects to deterministic requirement scoring and explainability
+• Threshold-based cosine similarity retrieval (vs BM25 hybrid)
+• Section-aware retrieval hints per requirement type
+• Why retrieval similarity is NOT the final score
+
+This is the authoritative retrieval architecture spec. Pairs with 05_AI_ARCHITECTURE.md
+(which describes what components exist) and 02_WORKING_LOGIC.md (which defines the scoring rules
+that retrieval must serve).
+
+---
+
+### 09_DATABASE_SCHEMA.md
 
 Contains:
 
@@ -200,7 +242,7 @@ Contains:
 
 ---
 
-### 08_END_TO_END_PIPELINE.md
+### 10_END_TO_END_PIPELINE.md
 
 Contains:
 
@@ -215,7 +257,7 @@ Best onboarding document for new developers and stakeholders.
 
 ---
 
-### 09_AI_DESIGN_RATIONALE.md
+### 11_AI_DESIGN_RATIONALE.md
 
 Contains:
 
@@ -229,7 +271,7 @@ Every significant AI decision must be documented.
 
 ---
 
-### 10_MODEL_REGISTRY.md
+### 12_MODEL_REGISTRY.md
 
 Contains:
 
@@ -247,7 +289,7 @@ This document tracks all production AI models and configurations.
 
 ---
 
-### 11_PROMPT_LIBRARY.md
+### 13_PROMPT_LIBRARY.md
 
 Contains:
 
@@ -264,7 +306,7 @@ Known limitations, and Version history. All production prompts must be documente
 
 ---
 
-### 12_RECRUITER_WORKFLOWS.md
+### 14_RECRUITER_WORKFLOWS.md
 
 Contains:
 
@@ -283,7 +325,7 @@ This document explains how recruiters interact with the platform.
 
 ---
 
-### 13_IMPLEMENTATION_ROADMAP.md
+### 15_IMPLEMENTATION_ROADMAP.md
 
 Contains:
 
@@ -298,7 +340,7 @@ This document is the execution plan for the project.
 
 ---
 
-### 14_EVALUATION.md
+### 16_EVALUATION.md
 
 Contains:
 
@@ -314,14 +356,14 @@ This document tracks AI system performance.
 
 ---
 
-### 18_RELEASE_NOTES.md
+### 20_RELEASE_NOTES.md
 Contains:
 • Feature additions
 • Bug fixes
 • Breaking changes
 • Version history
 
-### 21_CODEBASE_MAP.md
+### 23_CODEBASE_MAP.md
 
 Contains:
 
@@ -381,6 +423,13 @@ Implementation must follow (in reading order):
 3.	docs/04_SYSTEM_ARCHITECTURE.md
 4.	docs/05_AI_ARCHITECTURE.md
 5.	docs/03_CURRENT_PROGRESS.md (status snapshot — must be updated when implementation changes)
+
+For PDF extraction work, also read:
+6.	docs/06_RESUME_EXTRACTION_JSON_SCHEMA.md (data contract)
+7.	docs/07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md (implementation HOW-TO)
+
+For retrieval / RAG work, also read:
+8.	docs/08_RETRIEVAL_STRATEGY_SPEC.md (Hybrid RAG retrieval spec)
 If implementation requires deviation:
 •	Document the reason.
 •	Update architecture documents first.
@@ -468,7 +517,7 @@ ________________________________________
 Troubleshooting Workflow
 When debugging:
 Update:
-docs/19_TROUBLESHOOTING.md
+docs/21_TROUBLESHOOTING.md
 Include:
 •	Problem description
 •	Symptoms
@@ -481,7 +530,7 @@ ________________________________________
 Environment Workflow
 When environment or setup issues occur:
 Update:
-docs/20_ENVIRONMENT_NOTES.md
+docs/22_ENVIRONMENT_NOTES.md
 Examples:
 •	Python installation issues
 •	Package conflicts
@@ -581,11 +630,12 @@ The following AI-specific documents must be maintained.
 docs/
 
 ├── 05_AI_ARCHITECTURE.md
-├── 09_AI_DESIGN_RATIONALE.md
-├── 10_MODEL_REGISTRY.md
-├── 11_PROMPT_LIBRARY.md
-├── 14_EVALUATION.md
-├── 12_RECRUITER_WORKFLOWS.md
+├── 08_RETRIEVAL_STRATEGY_SPEC.md
+├── 11_AI_DESIGN_RATIONALE.md
+├── 12_MODEL_REGISTRY.md
+├── 13_PROMPT_LIBRARY.md
+├── 16_EVALUATION.md
+├── 14_RECRUITER_WORKFLOWS.md
 
 ---
 
@@ -728,10 +778,11 @@ Before modifying:
 
 Update:
 
-1. docs/16_DECISIONS.md
-2. docs/09_AI_DESIGN_RATIONALE.md
-3. docs/10_MODEL_REGISTRY.md
+1. docs/18_DECISIONS.md
+2. docs/11_AI_DESIGN_RATIONALE.md
+3. docs/12_MODEL_REGISTRY.md
 4. docs/05_AI_ARCHITECTURE.md
+5. docs/08_RETRIEVAL_STRATEGY_SPEC.md
 
 Then implement.
 
