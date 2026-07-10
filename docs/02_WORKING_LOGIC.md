@@ -485,22 +485,23 @@ Here, the LLM act as only a brain to objectively check and give a subscore for t
 
 The scoring proceeds as follows- 
 
-1 if the candidate knows Python (It's a binary gate 0 or 1), 
-3 years of experience scored against a 5-year target using the banded rule (3 ≥ 2.5 = 50% → 0.5 band)
-Relevance of the projects to the JD requirement (in a scale of 0 to 1, 0 lowest, and 1 exact match)
+1.00 if the candidate knows Python (It's a binary gate 0 or 1), 
+0.50 if candidate has 3 years of experience scored against a 5-year target using the banded rule (3 ≥ 2.5 = 50% → 0.50 band)
+Relevance of the projects to the JD requirement (in a scale of 0.01 to 1.00, 0.01 lowest, and 1.00 exact match)
 
 So for a candidate whose resume says-
 
 - Python with experience of 4+ years
 - Worked in Netflix for Recommendation system for 3 years 
                                    
-The normalized score should be:
+The sub-score is calculated by summing the sub-queries:
 
-Normalized Score for Python Skill and exp: 1 × 0.5 × 0.8 = 0.4 (using the banded ratio)
+Sub-Score = 1.00 + 0.50 + 0.80 = 2.30
 
-Explanation- 1 because he knows python, 0.8 because he has exp of 4 years in python (this requires LLM judgment, as in the resume
-the experience may not always be mentioned clearly, so we need to calculate relevant exp from each retrieved chunk
-but do not double count for the experience on the same skill. So all evidence minus the common or repeated experience mentions of the same skill), 0.8 because of the relevance of his working experience as demanded by the JD requirement (This requires some LLM Judgment too)
+Explanation- 1.00 because he knows python, 0.50 because he has exp of 4 years in python (this requires LLM judgment to calculate relevant exp from retrieved chunks), 0.80 because of the relevance of his working experience as demanded by the JD requirement.
+
+Contribution of this requirement is scaled out of its weight:
+Weight × (Sub-Score / Number of Sub-Queries) = 10% × (2.30 / 3) = 7.67 points out of 10.
 
 # Final Sub-score Normalization
 
@@ -704,13 +705,13 @@ For each query (a sub-question, a chat question, or a JD bullet):
    to re-parse sparse date strings from 1000-char chunks.
 
 6. For scoring: the LLM outputs anchored floats for each sub-question:
-     skill_presence: 1.0     (binary, from {0.0, 1.0})
-     years_experience: 0.5   (banded: >= target → 1.0; >= 50% → 0.5; >= 25% → 0.25; else 0.0)
+     skill_presence: 1.00     (binary, from {0.00, 1.00})
+     years_experience: 0.50   (banded: >= target → 1.00; >= 50% → 0.50; >= 25% → 0.25; else 0.01)
      project_relevance: 0.75 (anchored)
 
-7. The code computes the sub-score: SQ1 × SQ2 × SQ3 = 1.0 × 0.5 × 0.75 = 0.375.
-   The LLM never sees the requirement's weight and never performs the
-   final aggregation.
+7. The code computes the sub-score: SQ1 + SQ2 + SQ3 = 1.00 + 0.50 + 0.75 = 2.25.
+   Its scaled contribution to the total score is: Weight × (Sub-Score / N) = 8% × (2.25 / 3) = 6.00 points out of 8.
+   The LLM never sees the requirement's weight and never performs the final aggregation.
 
 8. Cache the (candidate_id, req_id, hash(query, top-chunk-ids), model_name, θ) -> sub-scores
    for determinism on re-runs.
@@ -798,10 +799,10 @@ Step 6: LLM outputs (correlating the skill mentions with the employment duration
   years_experience: 1.0   (Torphy 9yrs + Dufour 3yrs + Lessard 4yrs where Python appears; 16 yrs ≥ 5 target → banded 1.0)
   project_relevance: 0.75 (project descriptions show direct Python use)
 
-Step 7: sub-score = 1.0 × 1.0 × 0.75 = 0.75
-         contribution = 8% × 0.6 = 0.048 (4.8 points out of 8 possible)
+Step 7: sub-score = 1.00 + 1.00 + 0.75 = 2.75
+         contribution = 8% × (2.75 / 3) = 7.33 points out of 8
 
-Step 8: cache.put(hash, {sub_scores, normalized_score: 0.6})
+Step 8: cache.put(hash, {sub_scores, normalized_score: 2.75 / 3})
          On re-run with same θ: cache.get(hash) returns the same sub-scores.
 ```
 
@@ -1253,29 +1254,29 @@ Every scoring dimension must resolve to an explicit, recruiter-visible rule befo
 
 Each requirement is broken down into atomic sub-queries (2-6 per requirement depending on complexity). Sub-queries follow a consistent pattern:
 
-**Pattern:** Binary gates × Float evidence scores
+**Pattern:** Binary gates + Float evidence scores
 
 ```
 REQ-001: Requirement Name
-├─ SQ001: Binary gate (0 or 1) — Does evidence exist?
-├─ SQ002: Binary gate (0 or 1) — Is it used for the right purpose?
-├─ SQ003: Float evidence (0.0 - 1.0) — How strong is the evidence?
-└─ SQ004: Float years-proportional (0.0 - 1.0) — min(years / expected, 1.0)
+├─ SQ001: Binary gate (0.00 or 1.00) — Does evidence exist?
+├─ SQ002: Binary gate (0.00 or 1.00) — Is it used for the right purpose?
+├─ SQ003: Float evidence (0.01 - 1.00) — How strong is the evidence?
+└─ SQ004: Float years-proportional (0.01 - 1.00) — Banded years-ratio
 ```
 
 **Formula for each requirement:**
 ```
-Sub-Score = SQ001 × SQ002 × SQ003 × SQ004
+Sub-Score = SQ001 + SQ002 + SQ003 + SQ004
 ```
 
 **Final contribution:**
 ```
-Contribution = Recruiter_Weight% × Sub-Score
+Contribution = Recruiter_Weight% × (Sub-Score / Number of Sub-Queries)
 ```
 
 **Total candidate score:**
 ```
-Total = SUM of all contributions
+Total = SUM of all contributions (scaled out of 100)
 ```
 
 **Example:**
@@ -1284,14 +1285,17 @@ For a Business Analyst role requiring SQL skills:
 
 ```
 REQ-002: SQL for Data Validation & Analysis (Weight: 8%)
-├─ SQ004: Does candidate know SQL? → Binary (0 or 1)
-├─ SQ005: Has candidate used SQL for data validation? → Binary (0 or 1)
-├─ SQ006: Years of SQL experience (relative to 4 years expected) → Float (0.0 - 1.0)
-└─ SQ007: Complexity level of SQL work → Float (0.0 - 1.0)
+├─ SQ004: Does candidate know SQL? → Binary (0.00 or 1.00)
+├─ SQ005: Has candidate used SQL for data validation? → Binary (0.00 or 1.00)
+├─ SQ006: Years of SQL experience (relative to 4 years expected) → Banded float (0.01 - 1.00)
+└─ SQ007: Complexity level of SQL work → Float (0.01 - 1.00)
 
-Sub-Score = SQ004 × SQ005 × SQ006 × SQ007
-Contribution = 8% × Sub-Score
+Sub-Score = SQ004 + SQ005 + SQ006 + SQ007
+Contribution = 8% × (Sub-Score / 4)
 ```
+
+*Note: Why It is not a multiplication?* It is not a multiplication because if any of the sub-query in the sub-query set extracts a score of zero (e.g. no project descriptions), then the whole contribution of that sub-score becomes zero, completely wiping out the other valid sub-query signals. Addition ensures a fairer aggregation. Minimum values on qualitative/quantitative scales are set to `0.01` to safeguard candidate scoring contributions.
+
 
 ## Experience Scoring (Banded Years-Ratio Formula)
 
@@ -1299,16 +1303,16 @@ For any "years of experience" requirement, the recruiter sets a target/ideal val
 
 ```text
 if candidate_years >= ideal_years:
-    score = 1.0
+    score = 1.00
 elif candidate_years >= 0.5 * ideal_years:
-    score = 0.5
+    score = 0.50
 elif candidate_years >= 0.25 * ideal_years:
     score = 0.25
 else:
-    score = 0.0
+    score = 0.01
 ```
 
-Replaces the prior continuous formula `min(candidate_years / ideal_years, 1.0)`. The banded thresholds (50%, 25%) align with the four anchor values used on the relevance scale (1.0, 0.75, 0.5, 0.25); this rubric uses 1.0 / 0.5 / 0.25 / 0.0 (no 0.75 band) to keep "no evidence" firmly at zero.
+Replaces the prior continuous formula `min(candidate_years / ideal_years, 1.0)`. The banded thresholds (50%, 25%) align with the four anchor values used on the relevance scale (1.00, 0.75, 0.50, 0.25). The minimum value is `0.01` to prevent zero scores.
 
 Note: `candidate_years` for **total experience** is read directly from the structured candidate profile (code-only, no LLM). `candidate_years` for **relevant / same-role / leadership / skill-specific experience** is extracted by the rubric-bound LLM from:
   1. The chunks retrieved by the threshold-based retrieval pipeline (skill mentions, project descriptions).
@@ -1317,24 +1321,23 @@ The banded formula is then applied in code. The LLM never sees the weight or per
 
 Example-
 
-The candidate must have experience of 6 years in a leadership role managing projects on Customer Services:
+The candidate must have experience of 6 years in a leadership role managing projects on Customer Services (Weight 10%).
 
 Sub-questions-
 
-Is the candidate experienced? (Binary 1 or 0)
-Has she got 6 years of experience? (Linearly varies in scale of years of experience / total experience required)
-Has he or she been engaged in a leadership role? (Binary 1 or 0)
-How relevant his or her projects are on scale of 0 to 1? (Not relevant at all- 0, Absolutely relevant-1)
+1. Is the candidate experienced? (Binary 1.00 or 0.00)
+2. Has she got 6 years of experience? (Banded ratio score, 0.01 to 1.00)
+3. Has he or she been engaged in a leadership role? (Binary 1.00 or 0.00)
+4. How relevant his or her projects are on scale of 0.01 to 1.00? (Not relevant at all- 0.01, Absolutely relevant-1.00)
 
 So for a candidate whose resume says-
 
-- Been engaged in managing a jewellery shop for 10 years
+- Been engaged in managing a jewellery shop for 10 years (meets target of 6 years: score 1.00)
 
 It should be-
 
-1 * (10/6) * 1 * 1
-
-Experience sub-score = min(calculated sub-score, 1.0) = min(1.67, 1) = 1
+Sub-Score = 1.00 + 1.00 + 1.00 + 1.00 = 4.00
+Contribution = 10% × (4.00 / 4) = 10.00 points out of 10.
 
 
 ## Institute and Certification Tier Lookup (Code-Only)
@@ -1342,11 +1345,18 @@ Experience sub-score = min(calculated sub-score, 1.0) = min(1.67, 1) = 1
 The platform maintains a recruiter-editable tier database for institutions and certification providers.
 
 ```text
-Tier 1            → 100% of allotted points (1.0)
-Tier 2            → 75%  of allotted points (0.75)
-Tier 3            → 50%  of allotted points (0.50)
-Not Listed        → 50%  of allotted points (0.50)
+Tier 1            → 1.00
+Tier 2            → 0.75
+Tier 3            → 0.50
+Not Listed        → 0.01
 ```
+
+Education and certification scoring also evaluates candidate academic performance (CGPA or percentage of marks) when a degree is present, using a deterministic **2-band rule**:
+```text
+CGPA or percentage of marks >= target  → 1.00
+CGPA or percentage of marks < target  → 0.50 (minimum partial credit)
+```
+
 
 Institute and certification weight remain fully recruiter-controlled — a recruiter may set Education Weight = 2 for one role and Education Weight = 20 for another. The platform must never assume institute prestige is universally important; see **Quality-Based Evaluation** below.
 
@@ -1585,3 +1595,430 @@ Candidate Score
 The LLM explains decisions.
 
 The scoring engine makes decisions.
+
+---
+
+# Platform Architecture — Multi-Layer Design
+
+> This appendix documents the full platform-level architecture.  Content is merged from
+> WORKING_LOGIC_SUPPLEMENTARY.md (retired).  The canonical spec above takes precedence
+> wherever there is any apparent conflict.
+
+---
+
+## Platform Scope
+
+The platform supports many roles, not only one example role.
+
+Examples:
+
+- Data Scientist
+- Business Analyst Lead
+- Sales Manager
+- Web Designer
+- Backend Engineer
+- Product Manager
+- other future roles
+
+The platform uses:
+
+- **one universal resume-processing pipeline**
+- **one universal scoring engine**
+- **many role-specific configuration packs**
+
+A role pack defines what should be evaluated for a role, but the extraction and scoring
+infrastructure remains shared.
+
+---
+
+## Non-Negotiable Rules
+
+### Final ranking must be deterministic
+
+Final ranking must come only from:
+
+- recruiter-approved requirement definitions
+- recruiter-defined requirement weights
+- deterministic scoring formulas
+- stored evidence-backed sub-scores
+
+### Resume extraction is not scoring
+
+Resume extraction should only produce:
+
+- structured candidate facts
+- normalized helper fields
+- evidence chunks
+- traceability links
+- validation and confidence signals
+
+It must not directly produce final ranking or hidden candidate quality judgments.
+
+### Explanations must be grounded
+
+Every recruiter-facing explanation must be grounded in:
+
+- retrieved evidence chunks
+- stored rubric sub-scores
+- requirement-level scores
+- deterministic score breakdowns
+
+### Missing data must remain missing
+
+The system must not hallucinate skills, dates, degrees, responsibilities, domain experience,
+or project details.
+
+Unknown values must remain:
+
+- `null` for missing scalar fields
+- `[]` for missing list fields
+- explicit warnings for ambiguous or low-confidence fields
+
+---
+
+## Eight Logical Layers
+
+1. **Role Template Layer**
+2. **Job Description Processing Layer**
+3. **Resume Ingestion and Extraction Layer**  ← *critical path — see section below*
+4. **Structured Profile and Evidence Layer**
+5. **Requirement-wise Retrieval Layer**
+6. **Rubric Evaluation Layer**
+7. **Deterministic Scoring Layer**
+8. **Explanation and Recruiter Interaction Layer**
+
+---
+
+## Role Template Layer
+
+A role template is a reusable scoring blueprint for a role family.
+
+Each role template contains:
+
+- role name and role family
+- version
+- canonical requirement categories
+- requirement blocks
+- atomic sub-query definitions
+- default or example recruiter weights
+- rubric definitions
+- clarifying questions for ambiguous JDs
+
+### Stable requirement categories (all roles)
+
+- **Core Skills**
+- **Preferred Skills**
+- **Experience**
+- **Education and Certifications**
+- **Key Responsibilities**
+
+These categories remain fixed across roles. What changes is the content inside them.
+
+### Cross-role examples
+
+| Role | Representative requirements |
+|---|---|
+| Data Scientist | Python, SQL, model evaluation, MLOps, time series |
+| Business Analyst Lead | stakeholder management, BRD/FRD, SQL, BI tools, leadership |
+| Sales Manager | pipeline ownership, quota achievement, CRM, team leadership |
+| Web Designer | Figma/Adobe, responsive design, typography, portfolio quality |
+
+The engine remains the same. Only the role pack changes.
+
+---
+
+## Resume Ingestion and Extraction Layer
+
+> **This is a MUST-HAVE capability.** The platform must be able to extract structured
+> candidate information from resumes in any format, layout, template, or writing style
+> — including multi-column layouts, graphical headers, icon-based skill sections, and
+> tables — and convert that information into the canonical JSON schema.
+
+### Why this is hard
+
+Real-world resumes come in wildly different designs:
+
+- **multi-column PDFs** with skills in a sidebar and experience in the main column
+- **graphical/template resumes** with icons, progress bars, and styled headers
+- **scanned image PDFs** where the text is not selectable (requires OCR)
+- **DOCX and other formats** with embedded styles or tracked changes
+- **non-standard section names** (e.g., "What I've done" instead of "Experience")
+- **mixed-language documents** (e.g., English resume with a Hindi or French section)
+
+The extractor must handle all of these without losing evidence.
+
+### Resume routing
+
+Every uploaded resume must first be classified:
+
+| Route | Trigger | Tool |
+|---|---|---|
+| Native-text PDF | PDF with selectable text | docling / pdfminer |
+| Scanned PDF | Image-only pages, no selectable text | OCR (Tesseract / AWS Textract) |
+| Mixed PDF | Some pages native, some scanned | Hybrid pipeline |
+| DOCX | Word document format | python-docx |
+
+### Extraction goals — two parallel outputs
+
+1. **Structured candidate profile** — canonical JSON with typed fields (see schema doc)
+2. **Evidence-ready chunk collection** — raw text segments with section/page metadata
+
+### Structured candidate profile fields
+
+| Group | Fields |
+|---|---|
+| Identity | full_name, headline, summary, emails, phones, locations, links |
+| Skills | name_raw, name_canonical, category, source_type, months_of_evidence, last_used, confidence |
+| Education | degree, specialization, institution_raw, institution_normalized, institution_tier, start_date, end_date, grade, completed, confidence |
+| Experience | experience_id, job_title, company, employment_type, start_date, end_date, is_current, duration_months, responsibilities, tools_and_skills, confidence |
+| Projects | project_id, name, organization, role, start_date, end_date, description, skills_used, url |
+| Certifications | name, issuer, issue_date, expiry_date, credential_id |
+| Languages | name, proficiency |
+| Computed | total_experience_months, latest_job_title, highest_degree, skill_canonical_map, role_signals |
+
+### Evidence-ready chunk fields
+
+Each chunk must store:
+
+- `chunk_id`, `candidate_id`, `document_id`
+- `page_number`, `section`, `chunk_type`, `text`
+- `char_start`, `char_end` (if useful)
+- `experience_type`: professional / academic / project / internship
+- `calculated_duration_months` (if chunk belongs to a dated experience block)
+- `skills_asserted` (if extractable from the chunk)
+
+This metadata is what lets the retrieval layer find skill evidence with proper context
+(e.g., distinguishing "Python" in a skills list vs "Python" used in a 3-year ML role).
+
+### Extraction design principles
+
+- **Do not invent** missing data — unknown values remain `null` / `[]`
+- **Preserve raw evidence** — store the original text alongside normalized values
+- **Normalize after capture** — dates, canonical skill names, institutions normalized
+  only after source values are preserved
+- **Mark uncertainty explicitly** — confidence scores at field and document level
+- **Keep extraction role-agnostic** — do not store `python_score` or `sales_score`
+  inside the resume JSON; those belong to downstream scoring artifacts
+
+### Full schema reference
+
+See [01_resume_extraction_json_schema.md](01_resume_extraction_json_schema.md) for the
+complete production JSON schema, null-handling rules, confidence model, field-to-evidence
+mapping format, and multi-role refinement guidelines.
+
+---
+
+## Chunking and Metadata Strategy
+
+Chunking is essential because later stages score candidates requirement by requirement,
+not by whole-resume similarity.
+
+### Chunking objective
+
+A chunk should be small enough to retrieve precise evidence, but large enough to preserve
+context (target: 400–600 characters, ~100-char overlap).
+
+### Why chunk metadata matters
+
+Proper metadata allows the system to distinguish:
+
+- skill listed in a summary vs skill used in professional work
+- academic project vs full-time industry experience
+- tool familiarity vs ownership of outcomes
+- design portfolio link vs generic mention of a design tool
+
+---
+
+## Requirement-wise Retrieval Layer
+
+For each requirement block, the system retrieves only the most relevant chunks for a
+given candidate using threshold-based cosine similarity (cosine ≥ θ, all hits, capped at
+`max_chunks_per_query`).
+
+Requirements should have preferred **section hints** to guide retrieval:
+
+| Requirement type | Preferred sections |
+|---|---|
+| Certification | Certifications, Education |
+| Key Responsibility | Experience, Projects |
+| Design Portfolio | Links, Projects |
+| Sales / Quota | Experience (quantified bullets) |
+| Technical Skill | Skills, Experience, Projects |
+
+Retrieval is **supporting evidence discovery**, not ranking. It does not directly
+determine candidate order.
+
+---
+
+## Rubric Evaluation Layer
+
+Each requirement must be evaluated using explicit sub-queries and anchored rubrics.
+
+### Common sub-query patterns
+
+- **binary existence** — does the skill/cert/degree appear anywhere?
+- **binary context** — is it from professional vs academic experience?
+- **float evidence-strength** — anchored band (0.0 / 0.25 / 0.5 / 0.75 / 1.0)
+- **years-experience** — ratio of candidate years to target years
+- **education/cert lookup** — exact match of degree or issuer
+- **responsibility-depth** — ownership level indicator
+
+### Rubric types supported
+
+- binary
+- float anchored band
+- 4-band qualitative rule
+- years-ratio / years-band rule
+- 2-band education rule
+- lookup-based tier rule
+
+### LLM role in rubric evaluation
+
+An LLM may help interpret evidence against a rubric, but only inside the rubric's
+boundaries.
+
+The LLM must not invent a new rubric, new requirement, or final ranking policy.
+
+---
+
+## Requirement Contribution Formula
+
+```text
+Sub-Score Sum            = SUM(all sub-query scores for a requirement)
+Normalized Req Score     = Sub-Score Sum / Number_of_Sub_Queries
+Weighted Contribution    = Recruiter_Weight × Normalized Req Score
+Final Candidate Score    = SUM(all weighted contributions)
+```
+
+This formula is a **platform-level invariant**. Role packs may change requirements,
+sub-query counts, rubrics, and weights, but not this aggregation logic.
+
+---
+
+## Deterministic Scoring Layer
+
+Once all requirement evaluations are complete, the final candidate score is computed in
+code. Inputs:
+
+- finalized job requirements
+- recruiter-approved weights
+- requirement evaluations with normalized scores
+- must-have disqualifier rules (if configured)
+
+Outputs:
+
+- per-requirement score breakdown
+- total candidate score (0–100)
+- rank within the candidate set
+- machine-readable audit artifact
+
+---
+
+## Explainability Layer
+
+A score explanation must show:
+
+- the requirement being scored
+- retrieved evidence used
+- rubric sub-scores (with `evidence_found` yes/no + `closest_evidence` text)
+- normalized requirement score
+- recruiter weight and weighted contribution
+- final summary sentence grounded in evidence
+
+### Resume chat
+
+Recruiters can ask follow-up questions grounded in:
+
+- stored resume chunks
+- field-evidence mappings
+- requirement evaluations
+- score explanations
+
+---
+
+## Multi-Role Scaling Strategy
+
+The platform scales by **adding role packs**, not by rebuilding the engine per job family.
+
+### Universal engine components (shared)
+
+- extraction pipeline + canonical schema
+- chunking strategy
+- retrieval engine
+- scoring formula
+- storage model
+- explanation framework
+
+### Role-specific components (vary by role)
+
+- requirement labels and sub-query sets
+- rubrics and anchor values
+- target years / depth thresholds
+- example weight distributions
+- role-specific clarifying questions
+
+### Authoring a new role
+
+1. Create role template
+2. Define requirement blocks under stable categories
+3. Define atomic sub-queries
+4. Define rubric anchors
+5. Define sample recruiter weights
+6. Validate with domain stakeholders
+7. Run test resumes through the pipeline
+8. Tune retrieval threshold and rubric clarity
+
+---
+
+## Validation and Review Layer
+
+### Validation checks
+
+- invalid email / phone format
+- impossible or overlapping dates
+- duplicate skills or education entries
+- empty critical sections after extraction
+- OCR confidence below threshold
+- too few retrievable chunks for must-have requirements
+
+### Review triggers
+
+A resume should be flagged for manual review when:
+
+- extraction confidence is too low
+- contact information is missing
+- date normalization fails significantly
+- evidence is too sparse for key requirements
+- OCR output is degraded
+
+> Validation and review affect **data trust**, not the scoring philosophy.
+
+---
+
+## What the System Must Never Do
+
+- Rank candidates using an unexplainable LLM judgment
+- Treat retrieval similarity as the final score
+- Invent missing resume data
+- Merge extraction logic with final scoring logic
+- Change recruiter weights silently
+- Hide the formula used to compute scores
+- Show explanations without evidence backing
+
+---
+
+## Final Working Logic (Summary)
+
+1. Define or select a role template
+2. Ingest and validate the job description
+3. Finalize requirement blocks and recruiter weights
+4. Ingest resumes and route through correct extraction path (text / OCR / mixed)
+5. Generate structured candidate profiles + evidence chunks
+6. Retrieve evidence for each requirement using threshold-based retrieval
+7. Evaluate requirement evidence using explicit sub-queries and rubrics
+8. Compute weighted contributions using deterministic formulas
+9. Rank candidates based on final aggregate score
+10. Generate grounded, recruiter-facing explanations
+
+This creates a hiring system that is evidence-based, recruiter-controlled, explainable,
+reproducible, and scalable across many roles.

@@ -29,7 +29,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
 from src.rag.section_routed import SectionEvidence
-from src.scoring.rubrics import RubricTemplate, SubQuestion, get_rubric
+from src.scoring.rubrics import RubricTemplate, SubQuestion, BINARY_ANCHORS
 
 logger = logging.getLogger(__name__)
 
@@ -180,8 +180,8 @@ def _format_employment_history(employment_history: Optional[List[Any]]) -> Optio
     # Header row makes the column layout explicit so the LLM can correctly
     # correlate job titles with skill bullets regardless of parse quirks.
     lines = [
-        "EMPLOYMENT HISTORY (computed deterministically from date ranges — use these"
-        " durations to answer `years_experience` sub-questions; correlate them with"
+        "EMPLOYMENT HISTORY (computed deterministically from date ranges — use this pre-computed employment history"
+        " to answer `years_experience` sub-questions; correlate them with"
         " the skill/bullets in the SECTION CONTENT):",
         "  Columns: Role | Company | Dates | Duration",
     ]
@@ -219,27 +219,19 @@ def _build_rubric_prompt(
     target_years: Optional[float] = None,
     employment_history: Optional[List[Any]] = None,
 ) -> str:
-    """Build the RUBRIC-SCORE-001 prompt for the LLM judge.
+    """Build the prompt for the LLM judge.
 
     Key constraints enforced by the prompt:
     * The weight is NOT included — the LLM never sees it.
     * The LLM must extract evidence BEFORE scoring.
-    * The LLM must pick from anchored scales, not free-form labels.
     * The LLM must return structured JSON.
 
     Args:
         requirement_name: The requirement from the JD (e.g., "Python").
         rubric: The rubric template for this dimension type.
-        evidence: The section-routed evidence (full section content).
-        target_years: The recruiter-defined target years (for linear sub-questions).
-        employment_history: Optional list of :class:`EmploymentEntry`
-            (or duck-typed dicts) from the parsed candidate's
-            structured profile. When non-empty, the prompt appends an
-            ``EMPLOYMENT HISTORY`` block right after the SECTION
-            CONTENT so the LLM can correlate skill mentions in the
-            retrieved chunks with the parser-computed role durations.
-            Mitigates the failure mode where Recursive chunking splits
-            a role's date line away from its bullet points.
+        evidence: The section-routed evidence (full text).
+        target_years: The recruiter-defined target years.
+        employment_history: Optional list of employment entries.
 
     Returns:
         The prompt string to send to the LLM.
@@ -254,34 +246,12 @@ def _build_rubric_prompt(
 
         if sq.type == "binary":
             sub_q_lines.append(f"    Answer: 0 (No) or 1 (Yes)")
-        elif sq.type == "linear":
-            # NOTE: The target_years value is intentionally NOT shown to the
-            # LLM. A small local model (qwen2.5:3b) may rationalize toward
-            # the target when it sees it. The LLM is asked only to extract
-            # the number of years; code applies the banded ratio afterwards
-            # (see _parse_llm_response → _banded_years_ratio).
+        elif sq.type == "four_band":
             sub_q_lines.append(
-                f"    Count the total years of experience the candidate has with this requirement."
+                "    Check if the resume content mentions explicit duration, dates, or years of experience for this skill.\n"
+                "    - If YES: extract the number of years in `extracted_years` (as a plain number, e.g. 3, 2.5) and set `level` to \"\".\n"
+                "    - If NO: leave `extracted_years` as null and set `level` to one of: \"substantial\" | \"some\" | \"few\" | \"none\"."
             )
-            sub_q_lines.append(
-                "    Return \"extracted_years\" as a plain NUMBER only (e.g. 3, 2.5, 0). "
-                "Do NOT write \"3 years\" or \"approximately 3\" — write only the digit. "
-                "Return null (JSON null, not the string \"null\") if there is absolutely no evidence."
-            )
-            sub_q_lines.append(
-                "    Also return \"sub_score\" as 0.0 (code will recompute it from extracted_years)."
-            )
-            if employment_history:
-                sub_q_lines.append(
-                    "    IMPORTANT: A pre-computed employment history is provided below. "
-                    "Sum the durations (in years) of all roles where this skill/requirement "
-                    "is mentioned in the SECTION CONTENT bullets. Do not re-parse raw dates."
-                )
-        elif sq.type == "anchored":
-            sub_q_lines.append(f"    Pick EXACTLY one anchor value from the list below (copy the number exactly):")
-            for anchor in sq.anchors:
-                sub_q_lines.append(f"      {anchor.value} — {anchor.description}")
-            sub_q_lines.append(f"    Return: \"sub_score\" set to that anchor number, \"anchor_description\" set to the anchor text.")
 
         if sq.extract_first:
             sub_q_lines.append(
@@ -292,9 +262,6 @@ def _build_rubric_prompt(
 
     sub_questions_text = "\n".join(sub_q_lines)
 
-    # The formula (for transparency, but the LLM does NOT compute it).
-    formula_text = rubric.formula
-
     employment_block = _format_employment_history(employment_history)
     employment_section = ""
     if employment_block:
@@ -303,15 +270,6 @@ def _build_rubric_prompt(
 ---
 
 """
-    # Build a pre-populated JSON skeleton so small models (qwen2.5:3b) do not
-    # decide how many array entries to produce — they only need to fill in the
-    # values. Without this, qwen2.5:3b typically outputs only the first entry
-    # and stops, leaving all subsequent sub-questions at 0.
-    #
-    # Each entry now includes two evidence fields:
-    #   evidence_found: "yes" or "no" — did the LLM confirm a direct match?
-    #   closest_evidence: the most relevant text found (even if not a direct match)
-    # This lets the report distinguish [ZERO_NO_EVIDENCE] from [ZERO_WRONG_INFERENCE].
     skeleton_entries: List[str] = []
     for sq in rubric.sub_questions:
         if sq.type == "binary":
@@ -323,10 +281,10 @@ def _build_rubric_prompt(
                 f'      "cited_text": "FILL: short exact quote",\n'
                 f'      "sub_score": FILL_0_OR_1,\n'
                 f'      "extracted_years": null,\n'
-                f'      "anchor_description": ""\n'
+                f'      "level": ""\n'
                 f'    }}'
             )
-        elif sq.type == "linear":
+        else:  # four_band
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
@@ -335,31 +293,13 @@ def _build_rubric_prompt(
                 f'      "cited_text": "FILL: short exact quote",\n'
                 f'      "sub_score": 0,\n'
                 f'      "extracted_years": FILL_NUMBER_OR_NULL,\n'
-                f'      "anchor_description": ""\n'
-                f'    }}'
-            )
-        else:  # anchored
-            anchor_vals = " / ".join(str(a.value) for a in sq.anchors)
-            entry = (
-                f'    {{\n'
-                f'      "key": "{sq.key}",\n'
-                f'      "evidence_found": FILL_yes_OR_no,\n'
-                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
-                f'      "cited_text": "FILL: short exact quote",\n'
-                f'      "sub_score": FILL_ONE_OF_{anchor_vals},\n'
-                f'      "extracted_years": null,\n'
-                f'      "anchor_description": "FILL: which anchor you chose and why"\n'
+                f'      "level": "FILL_substantial_OR_some_OR_few_OR_none_OR_empty"\n'
                 f'    }}'
             )
         skeleton_entries.append(entry)
 
     skeleton_json = ",\n".join(skeleton_entries)
 
-    # Semantic inference rules help qwen2.5:3b bridge the gap between
-    # implicit resume language and formal requirement keywords. Without
-    # these rules the 3B model performs surface-level keyword matching:
-    # "developing dashboards" does NOT trigger skill_presence=1 for
-    # "Data Visualization" unless it also sees "Tableau" or "matplotlib".
     semantic_rules = """
 SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
 - "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
@@ -397,7 +337,7 @@ SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
 
 REQUIREMENT: {requirement_name}
 {semantic_rules}
-RUBRIC sub-questions to answer:
+HEXAGON sub-questions to answer:
 {sub_questions_text}
 RESUME CONTENT:
 ---
@@ -406,7 +346,8 @@ RESUME CONTENT:
 {employment_section}
 TASK: Fill in the JSON below. Replace every FILL_... placeholder with the real value.
 - For binary keys: sub_score must be 0 or 1 (integer, no quotes).
-- For linear keys: extracted_years must be a plain number like 3 or 2.5, NOT a string. Use JSON null if no evidence.
+- For four_band keys: extracted_years must be a plain number like 3 or 2.5, NOT a string. Use JSON null if no evidence.
+- For level: use the qualitative level "substantial" | "some" | "few" | "none" if no explicit years are present.
 - For evidence_found: use the string "yes" if the resume directly proves the requirement (use SEMANTIC INFERENCE RULES above), else use "no".
 - For closest_evidence: always paste the most relevant text you found, even if it is indirect.
 - Do NOT add extra keys. Do NOT change the "key" values. Output ONLY the JSON, nothing else.
@@ -636,6 +577,34 @@ def _coerce_years(raw_val: Any) -> Optional[float]:
     return None
 
 
+def classify_subquery_type(sq: Dict[str, Any]) -> str:
+    """Classify the sub-query type based on text and key.
+
+    Args:
+        sq: Sub-query dict.
+
+    Returns:
+        One of "binary", "cgpa", "institution_rank", "certificate_rank", "four_band".
+    """
+    text = (sq.get("text") or "").lower()
+    key = (sq.get("key") or "").lower()
+    sq_type = (sq.get("type") or "").lower()
+
+    if sq_type in ("binary", "boolean", "bool"):
+        return "binary"
+
+    if "cgpa" in text or "percentage" in text or "marks" in text or "grade" in text:
+        return "cgpa"
+
+    if "tier of the institute" in text or "institute_tier" in key or "university tier" in text:
+        return "institution_rank"
+
+    if "tier of the certificate" in text or "provider_tier" in key or "certification tier" in text:
+        return "certificate_rank"
+
+    return "four_band"
+
+
 def _parse_llm_response(
     response: str,
     rubric: RubricTemplate,
@@ -643,28 +612,8 @@ def _parse_llm_response(
 ) -> List[SubScoreResult]:
     """Parse the LLM's JSON response into SubScoreResult objects.
 
-    The parser is deliberately lenient toward small-model quirks
-    (qwen2.5:3b):
-
-    * Uses :func:`_extract_json_lenient` to survive truncated JSON.
-    * Uses :func:`_coerce_years` to handle ``extracted_years`` values
-      that are strings (``"3 years"``) instead of JSON numbers.
-    * When ``extracted_years`` is ``null`` / ``None`` for a linear
-      sub-question but the LLM returned a non-zero ``sub_score``,
-      that clamped score is used as-is rather than forced to 0 — this
-      preserves partial credit when the LLM can't count years but at
-      least signals the skill is present.
-
-    Args:
-        response: The raw LLM response text.
-        rubric: The rubric template (for sub-question metadata).
-        target_years: Target years for linear sub-questions.
-
-    Returns:
-        List of SubScoreResult, one per sub-question in the rubric.
+    The parser is deliberately lenient toward small-model quirks (qwen2.5:3b).
     """
-    # Always log the raw response at DEBUG level so the years-parsing
-    # failure mode is immediately visible without adding print()s.
     logger.debug(
         "[rubric_scorer] raw LLM response (first 800 chars): %.800s",
         response or "(empty)",
@@ -704,94 +653,39 @@ def _parse_llm_response(
             continue
 
         raw_score = raw.get("sub_score")
-        # Defensive: handle "sub_score": null or missing → 0.0.
         if raw_score is None:
             sub_score = 0.0
         else:
             try:
                 sub_score = float(raw_score)
             except (TypeError, ValueError):
-                logger.warning(
-                    "[rubric_scorer] Invalid sub_score %r for key %s — defaulting to 0.0",
-                    raw_score, key,
-                )
                 sub_score = 0.0
-        # Clamp to 0.0–1.0.
         sub_score = max(0.0, min(1.0, sub_score))
 
-        # For binary, force to 0 or 1.
-        if sq.type == "binary":
-            sub_score = 1.0 if sub_score >= 0.5 else 0.0
-
-        # For linear sub-questions: robustly parse extracted_years (which
-        # small models often return as a string) then apply the banded ratio.
-        if sq.type == "linear":
-            raw_ey = raw.get("extracted_years")
-            # Use the robust coercer rather than a bare float() call.
-            # This handles "3 years", "~4", "approximately 3", etc.
-            extracted_years = _coerce_years(raw_ey)
-
-            if extracted_years is None and raw_ey is not None:
-                logger.warning(
-                    "[rubric_scorer] Could not coerce extracted_years %r for "
-                    "key %s to float — treating as None.",
-                    raw_ey, key,
-                )
-
-            if extracted_years is not None and target_years and target_years > 0:
-                # Banded years-ratio (owner spec 2026-07-07):
-                #   >= target → 1.0; >= 50% → 0.5; >= 25% → 0.25; else 0.0.
-                sub_score = _banded_years_ratio(extracted_years, target_years)
-                logger.debug(
-                    "[rubric_scorer] key=%s extracted_years=%.1f target=%.1f "
-                    "→ banded sub_score=%.2f",
-                    key, extracted_years, target_years, sub_score,
-                )
-            elif extracted_years is None and sub_score > 0:
-                # The LLM could not extract a years figure but it DID
-                # assign a non-zero sub_score. Trust the clamped score
-                # as partial credit rather than zeroing it out. This
-                # avoids the failure mode where the 3B model correctly
-                # identifies the skill but fails the years field format.
-                logger.debug(
-                    "[rubric_scorer] key=%s: extracted_years=None but "
-                    "LLM sub_score=%.2f retained as partial credit.",
-                    key, sub_score,
-                )
-            else:
-                # extracted_years is None AND sub_score == 0 (or target
-                # is missing). No credit — correct behaviour.
-                if target_years is None or target_years <= 0:
-                    logger.debug(
-                        "[rubric_scorer] key=%s: target_years is %r — "
-                        "no banded ratio applied; sub_score=%.2f kept.",
-                        key, target_years, sub_score,
-                    )
-
-            # Parse the new evidence_found field ("yes"/"no") from the LLM response.
-            # Falls back to False for backward compat if field is absent (old cache entries).
-            raw_ev_found = raw.get("evidence_found", "")
-            evidence_found = str(raw_ev_found).strip().lower() == "yes"
-
-            # Prefer the new closest_evidence field; fall back to old extracted_evidence.
-            closest_ev = raw.get("closest_evidence") or raw.get("extracted_evidence", "")
-
-            results.append(SubScoreResult(
-                key=key,
-                question=sq.question.replace("{skill}", ""),
-                sub_score=sub_score,
-                evidence_found=evidence_found,
-                closest_evidence=closest_ev,
-                cited_text=raw.get("cited_text", ""),
-                extracted_years=extracted_years,
-                target_years=target_years,
-            ))
-            continue
-
-        # Parse evidence_found / closest_evidence for non-linear sub-questions.
+        # Parse evidence_found / closest_evidence
         raw_ev_found = raw.get("evidence_found", "")
         evidence_found = str(raw_ev_found).strip().lower() == "yes"
         closest_ev = raw.get("closest_evidence") or raw.get("extracted_evidence", "")
+        cited_txt = raw.get("cited_text", "")
+
+        extracted_years = None
+
+        if sq.type == "binary":
+            from src.scoring.rubrics import score_binary
+            # Score using the binary function
+            sub_score = score_binary(sub_score >= 0.5 or evidence_found)
+        elif sq.type == "four_band":
+            raw_ey = raw.get("extracted_years")
+            extracted_years = _coerce_years(raw_ey)
+            level = raw.get("level") or ""
+
+            from src.scoring.rubrics import score_four_band_quantitative, score_four_band_qualitative
+
+            # Apply the either-or logic for quantitative vs qualitative
+            if extracted_years is not None:
+                sub_score = score_four_band_quantitative(extracted_years, target_years or 0.0)
+            else:
+                sub_score = score_four_band_qualitative(level)
 
         results.append(SubScoreResult(
             key=key,
@@ -799,8 +693,10 @@ def _parse_llm_response(
             sub_score=sub_score,
             evidence_found=evidence_found,
             closest_evidence=closest_ev,
-            cited_text=raw.get("cited_text", ""),
-            anchor_description=raw.get("anchor_description", ""),
+            cited_text=cited_txt,
+            extracted_years=extracted_years,
+            target_years=target_years if sq.type == "four_band" else None,
+            anchor_description=raw.get("level", "") if sq.type == "four_band" else "",
         ))
 
     # Ensure all rubric sub-questions are represented.
@@ -809,14 +705,13 @@ def _parse_llm_response(
         for sq in rubric.sub_questions:
             if sq.key not in existing_keys:
                 logger.debug(
-                    "[rubric_scorer] Sub-question key %r missing from LLM "
-                    "response — defaulting to 0.0.",
+                    "[rubric_scorer] Sub-question key %r missing from LLM response — defaulting to 0.01.",
                     sq.key,
                 )
                 results.append(SubScoreResult(
                     key=sq.key,
                     question=sq.question.replace("{skill}", ""),
-                    sub_score=0.0,
+                    sub_score=0.01,
                 ))
 
     return results
@@ -826,203 +721,37 @@ def _default_sub_scores(
     rubric: RubricTemplate,
     target_years: Optional[float] = None,
 ) -> List[SubScoreResult]:
-    """Return zero sub-scores for all sub-questions (fallback when LLM fails).
-
-    Args:
-        rubric: The rubric template.
-        target_years: Target years for linear sub-questions.
-
-    Returns:
-        List of SubScoreResult with sub_score=0.0.
-    """
+    """Return floor sub-scores for all sub-questions (fallback when LLM fails)."""
     return [
         SubScoreResult(
             key=sq.key,
             question=sq.question.replace("{skill}", ""),
-            sub_score=0.0,
-            target_years=target_years if sq.type == "linear" else None,
+            sub_score=0.01,
+            target_years=target_years if sq.type == "four_band" else None,
         )
         for sq in rubric.sub_questions
     ]
 
 
-# ---------------------------------------------------------------------------
-# Formula evaluation — compute the normalized score from sub-scores in code.
-# ---------------------------------------------------------------------------
-
 def _evaluate_formula(formula: str, sub_scores: List[SubScoreResult]) -> float:
-    """Evaluate the rubric formula to produce a normalized score (0.0–1.0).
+    """Evaluate the rubric formula to produce a normalized score.
 
-    The formula references sub-question keys. This function looks up each
-    key's sub_score and evaluates the formula safely.
-
-    Args:
-        formula: The formula string (e.g., "gate * years_ratio * relevance").
-        sub_scores: The list of sub-score results.
-
-    Returns:
-        Normalized score (0.0–1.0).
+    Under the new additive aggregation, Sub-Score is a simple sum of the sub-scores.
+    We return the sum of sub-scores.
     """
-    # Build a lookup of key → sub_score.
-    score_map = {s.key: s.sub_score for s in sub_scores}
+    return sum(s.sub_score for s in sub_scores)
 
-    # Map formula variable names to sub-question keys.
-    # The formula uses short names; we need to resolve them to actual keys.
-    # For the standard formulas, the mapping is:
-    #   gate / presence / match → the binary gate sub-question
-    #   years_ratio → the linear years sub-question
-    #   relevance → the anchored relevance sub-question
-    #   leadership_gate → the leadership_gate sub-question
-    #   complexity → the complexity sub-question
-    #   proficiency → the proficiency sub-question
-    #   communication_score → the communication_score sub-question
-    #   organization_score → the organization_score sub-question
-    #   degree_match → the degree_match sub-question
-    #   institute_tier_points → the institute_tier sub-question
-    #   cert_match → the cert_match sub-question
-    #   provider_tier_points → the provider_tier sub-question
-
-    # Strategy: try to match each variable name in the formula to a sub-question
-    # key. If the variable name is itself a key, use it directly. Otherwise,
-    # try common mappings.
-    var_map: Dict[str, float] = {}
-
-    # First pass: direct key matches.
-    for s in sub_scores:
-        var_map[s.key] = s.sub_score
-
-    # Second pass: formula-specific variable resolution.
-    # The formula references variables like "gate", "years_ratio", etc.
-    # We need to find which sub-question each variable refers to.
-    formula_vars = re.findall(r'[a-z_]+', formula)
-
-    # Binary gate resolution: find the first binary sub-question.
-    binary_keys = [s.key for s in sub_scores
-                   if any(sq.type == "binary" and sq.key == s.key
-                          for sq in get_rubric_formula_sub_questions(sub_scores))]
-
-    # Simpler approach: for each formula variable, try to find a matching
-    # sub-question key, or use a heuristic mapping.
-    for var in formula_vars:
-        if var in var_map:
-            continue  # Already resolved
-
-        # Try to find a sub-question key that contains the variable name.
-        for s in sub_scores:
-            if var in s.key or s.key in var:
-                var_map[var] = s.sub_score
-                break
-
-        if var not in var_map:
-            # Common mappings.
-            if var in ("gate", "presence", "match"):
-                # Find the first binary sub-question.
-                for s in sub_scores:
-                    if _is_binary_key(s.key, sub_scores):
-                        var_map[var] = s.sub_score
-                        break
-            elif var == "years_ratio":
-                # Find the linear sub-question.
-                for s in sub_scores:
-                    if s.target_years is not None or "years" in s.key:
-                        var_map[var] = s.sub_score
-                        break
-            elif var == "relevance":
-                for s in sub_scores:
-                    if "relevance" in s.key:
-                        var_map[var] = s.sub_score
-                        break
-            elif var == "complexity":
-                for s in sub_scores:
-                    if "complexity" in s.key:
-                        var_map[var] = s.sub_score
-                        break
-            elif var == "proficiency":
-                for s in sub_scores:
-                    if "proficiency" in s.key:
-                        var_map[var] = s.sub_score
-                        break
-
-        # If still not found, default to 1.0 (neutral element for multiplication).
-        if var not in var_map:
-            var_map[var] = 1.0
-            logger.debug("Formula variable '%s' not found in sub-scores; defaulting to 1.0", var)
-
-    # Evaluate the formula safely.
-    # Replace variable names with their values.
-    expr = formula
-    for var, val in sorted(var_map.items(), key=lambda x: -len(x[0])):
-        expr = expr.replace(var, str(val))
-
-    # Replace " * " with " * " (already correct), evaluate.
-    try:
-        result = eval(expr, {"__builtins__": {}}, {})
-        result = max(0.0, min(1.0, float(result)))
-    except Exception as exc:
-        logger.warning("Formula evaluation failed for '%s': %s", formula, exc)
-        # Fallback: multiply all sub-scores.
-        product = 1.0
-        for s in sub_scores:
-            product *= s.sub_score
-        result = max(0.0, min(1.0, product))
-
-    return result
-
-
-def get_rubric_formula_sub_questions(sub_scores: List[SubScoreResult]):
-    """Helper to get rubric sub-question metadata for formula resolution."""
-    # This is a placeholder — in practice, the rubric is passed alongside.
-    # For now, we return empty to force the key-based lookup.
-    return []
-
-
-def _is_binary_key(key: str, sub_scores: List[SubScoreResult]) -> bool:
-    """Check if a sub-question key is likely a binary gate."""
-    binary_indicators = ("presence", "gate", "match", "match_")
-    return any(ind in key for ind in binary_indicators)
-
-
-# ---------------------------------------------------------------------------
-# Public API — score a requirement with the rubric-bound LLM.
-# ---------------------------------------------------------------------------
 
 def _apply_partial_credit_for_unknown_years(
     sub_scores: List[SubScoreResult],
     rubric: RubricTemplate,
 ) -> None:
-    """Apply minimum partial credit when skill is confirmed but years unknown.
-
-    This fixes the most common qwen2.5:3b failure mode: the model correctly
-    identifies that the candidate has a skill (binary gate = 1) but returns
-    ``extracted_years = null`` for the linear years sub-question because it
-    sees dates in text format ("2016 - Ongoing") and can't compute duration.
-
-    Without this rescue, the formula ``gate * years_ratio`` evaluates to
-    ``1.0 * 0.0 = 0.0``, which is misleading — we KNOW the candidate has
-    the skill.
-
-    Resolution:
-    * If the binary sub-question has ``sub_score == 1.0``.
-    * AND the linear sub-question has ``sub_score == 0.0`` AND
-      ``extracted_years is None``.
-    * THEN set the linear sub_score to the minimum banded credit (0.25).
-
-    This is deliberately conservative: 0.25 corresponds to the
-    ``< 25% of target years`` banded band. The recruiter should treat this
-    as "skill confirmed, duration indeterminate" in the explanation.
-
-    The function mutates ``sub_scores`` in place.
-
-    Args:
-        sub_scores: Parsed sub-score results from the LLM response.
-        rubric: The rubric template used for scoring.
-    """
-    # Find binary and linear sub-questions in this rubric.
+    """Apply minimum partial credit when skill is confirmed but score was floor. Mutates in place."""
     binary_keys = {sq.key for sq in rubric.sub_questions if sq.type == "binary"}
-    linear_keys = {sq.key for sq in rubric.sub_questions if sq.type == "linear"}
+    four_band_keys = {sq.key for sq in rubric.sub_questions if sq.type == "four_band"}
 
-    if not binary_keys or not linear_keys:
-        return  # rubric doesn't have the gate+years pattern
+    if not binary_keys or not four_band_keys:
+        return
 
     # Check whether ANY binary gate passed.
     gate_passed = any(
@@ -1031,15 +760,15 @@ def _apply_partial_credit_for_unknown_years(
         if ss.key in binary_keys
     )
     if not gate_passed:
-        return  # skill not confirmed — zero is correct
+        return
 
-    # Apply minimum credit to linear sub-questions that have no years.
+    # Apply minimum credit of 0.25 to four_band sub-questions that have score <= 0.01 (meaning no years and no level)
     for ss in sub_scores:
-        if ss.key in linear_keys and ss.extracted_years is None and ss.sub_score == 0.0:
+        if ss.key in four_band_keys and ss.sub_score <= 0.01:
             ss.sub_score = 0.25
             logger.debug(
                 "[rubric_scorer] partial-credit rescue: key=%s gate passed "
-                "but extracted_years=None — applying minimum credit 0.25.",
+                "but score was floor — applying minimum credit 0.25.",
                 ss.key,
             )
 
@@ -1052,65 +781,66 @@ def score_requirement_with_rubric(
     target_years: Optional[float] = None,
     llm_caller: Optional[Callable[[str], str]] = None,
     employment_history: Optional[List[Any]] = None,
+    sub_queries: Optional[List[Dict[str, Any]]] = None,
 ) -> CachedScoringTrace:
     """Score a single requirement using the rubric-bound LLM evidence scoring.
 
-    This is the main entry point for Mode 2 scoring. It:
-    1. Looks up the rubric template for the dimension type.
-    2. Builds the RUBRIC-SCORE-001 prompt (weight NOT included).
-    3. Calls the LLM to get structured sub-scores.
-    4. Parses the response into SubScoreResult objects.
-    5. Evaluates the formula in code to get the normalized score.
-    6. Computes the weighted score (weight × normalized_score) in code.
-    7. Returns a CachedScoringTrace for later explanation.
-
-    Args:
-        requirement_name: The requirement from the JD (e.g., "Python").
-        dimension_type: The dimension type (e.g., "skill", "experience").
-        weight: The recruiter-assigned weight (0–10). NOT passed to the LLM.
-        evidence: The Section-Routed evidence (full section content).
-        target_years: Target/ideal years for linear sub-questions.
-        llm_caller: Callable that takes a prompt string and returns the LLM
-            response. If None, returns a zero-score trace.
-        employment_history: Optional list of ``EmploymentEntry`` (or
-            duck-typed dicts with the same shape) from the candidate's
-            structured profile. When non-empty, the prompt appends an
-            ``EMPLOYMENT HISTORY`` block so the LLM can correlate skill
-            mentions in the retrieved chunks with the parser-computed
-            role durations. Mitigates the failure mode where Recursive
-            chunking splits a role's date line away from its bullets.
-
-    Returns:
-        ``CachedScoringTrace`` with all sub-scores, evidence, and computed scores.
+    Constructs the RubricTemplate dynamically from parsed sub-queries.
     """
-    rubric = get_rubric(dimension_type)
+    if not sub_queries:
+        # Default sub-queries for backwards compatibility (e.g., unit tests)
+        sub_queries = [
+            {
+                "key": f"{dimension_type}_presence",
+                "text": f"Is there evidence of the candidate possessing {requirement_name}?",
+                "type": "Binary",
+            },
+            {
+                "key": f"{dimension_type}_depth",
+                "text": f"How strong is their experience with {requirement_name}?",
+                "type": "Float",
+            }
+        ]
 
-    # If no evidence was found AND no employment history is provided,
-    # return a zero trace. (When employment_history is provided but
-    # evidence.full_text is empty, we still call the LLM — the
-    # employment_history block alone may be enough for the LLM to
-    # score presence/years. The evidence-empty short-circuit only
-    # fires when BOTH inputs are empty.)
+    # Dynamically build RubricTemplate
+    sub_questions = []
+    for sq in sub_queries:
+        sq_key = sq.get("key") or ""
+        sq_txt = sq.get("text") or ""
+        sq_type = classify_subquery_type(sq)
+
+        sub_questions.append(SubQuestion(
+            key=sq_key,
+            question=sq_txt,
+            type=sq_type,
+            anchors=BINARY_ANCHORS if sq_type == "binary" else [],
+            target_field="expected_years" if "years" in sq_txt.lower() else None,
+            extract_first=True
+        ))
+
+    rubric = RubricTemplate(
+        dimension_type=dimension_type,
+        sub_questions=sub_questions,
+        formula="",
+        sections=evidence.sections,
+        description=requirement_name
+    )
+
     if not evidence.full_text and not employment_history:
         sub_scores = _default_sub_scores(rubric, target_years)
-        normalized = 0.0
-        weighted = 0.0
         return CachedScoringTrace(
             requirement_name=requirement_name,
             dimension_type=dimension_type,
             weight=weight,
             sub_scores=sub_scores,
-            normalized_score=normalized,
-            weighted_score=weighted,
+            normalized_score=0.0,
+            weighted_score=0.0,
             formula=rubric.formula,
             sections_read=evidence.sections,
             chunk_ids=[c.chunk_id for c in evidence.chunks],
         )
 
-    # Build the prompt (weight is NOT included). When employment_history
-    # is non-empty, the prompt includes an EMPLOYMENT HISTORY block right
-    # after the SECTION CONTENT so the LLM can correlate skill mentions
-    # in retrieved chunks with parser-computed role durations.
+    # Build the prompt
     prompt = _build_rubric_prompt(
         requirement_name,
         rubric,
@@ -1119,10 +849,18 @@ def score_requirement_with_rubric(
         employment_history=employment_history,
     )
 
-    # Call the LLM (or fall back to zero scores).
+    # Call the LLM
     if llm_caller is None:
         logger.warning("No LLM caller provided; returning zero scores for '%s'", requirement_name)
-        sub_scores = _default_sub_scores(rubric, target_years)
+        sub_scores = [
+            SubScoreResult(
+                key=sq.key,
+                question=sq.question.replace("{skill}", ""),
+                sub_score=0.0,
+                target_years=target_years if sq.type == "four_band" else None,
+            )
+            for sq in rubric.sub_questions
+        ]
     else:
         try:
             response = llm_caller(prompt)
@@ -1131,21 +869,15 @@ def score_requirement_with_rubric(
             logger.warning("LLM call failed for '%s': %s", requirement_name, exc)
             sub_scores = _default_sub_scores(rubric, target_years)
 
-    # Partial-credit rescue: if the binary gate passed (skill confirmed present)
-    # but the linear years sub-question returned null (model saw dates in text
-    # but can't compute duration — typical qwen2.5:3b failure), apply the
-    # minimum banded credit (0.25) rather than zeroing the entire REQ.
-    #
-    # Rationale: the candidate demonstrably HAS the skill (gate=1) so a zero
-    # contribution is misleading. 0.25 corresponds to the "<= 25% of target"
-    # banded band — the most conservative non-zero credit.
+    # Partial-credit rescue
     _apply_partial_credit_for_unknown_years(sub_scores, rubric)
 
-    # Evaluate the formula in code (never by the LLM).
+    # Evaluate sum sub-score
     normalized = _evaluate_formula(rubric.formula, sub_scores)
 
-    # Compute the weighted score in code.
-    weighted = weight * normalized
+    # Compute the weighted contribution score in code: weight * (SubScore / N)
+    n_queries = len(sub_scores)
+    weighted = weight * (normalized / n_queries) if n_queries > 0 else 0.0
 
     return CachedScoringTrace(
         requirement_name=requirement_name,
@@ -1160,27 +892,12 @@ def score_requirement_with_rubric(
     )
 
 
-# ---------------------------------------------------------------------------
-# Score explanation — narrate the cached trace (SCORE-EXPLAIN-001).
-# ---------------------------------------------------------------------------
-
 def explain_score_from_cache(trace: CachedScoringTrace) -> str:
-    """Narrate a cached scoring trace in recruiter-friendly language.
-
-    This is the SCORE-EXPLAIN-001 implementation. It reads the cached trace
-    (frozen at scoring time) and produces a human-readable explanation
-    without re-scoring.
-
-    Args:
-        trace: The cached scoring trace for one requirement.
-
-    Returns:
-        A recruiter-readable explanation string.
-    """
+    """Narrate a cached scoring trace in recruiter-friendly language."""
     parts: List[str] = []
     parts.append(f"Requirement: {trace.requirement_name}")
     parts.append(f"Weight: {trace.weight}")
-    parts.append(f"Normalized Score: {trace.normalized_score:.2f} / 1.0")
+    parts.append(f"Sum Sub-Score: {trace.normalized_score:.2f}")
     parts.append(f"Weighted Score: {trace.weighted_score:.1f} / {trace.weight}")
     parts.append("")
     parts.append("Breakdown:")
@@ -1188,8 +905,6 @@ def explain_score_from_cache(trace: CachedScoringTrace) -> str:
     for ss in trace.sub_scores:
         parts.append(f"  • {ss.key}: {ss.sub_score:.2f}")
         if ss.closest_evidence:
-            # Use evidence_found to distinguish confirmed evidence from
-            # "closest retrieved text" — makes zero-score auditing clear.
             if ss.evidence_found:
                 parts.append(f"    Evidence of: {ss.closest_evidence}")
             else:
@@ -1197,13 +912,12 @@ def explain_score_from_cache(trace: CachedScoringTrace) -> str:
         if ss.cited_text:
             parts.append(f"    Cited: \"{ss.cited_text}\"")
         if ss.anchor_description:
-            parts.append(f"    Anchor: {ss.anchor_description}")
+            parts.append(f"    Anchor/Level: {ss.anchor_description}")
         if ss.extracted_years is not None:
             target = ss.target_years or "unspecified"
             parts.append(f"    Years: {ss.extracted_years} (target: {target})")
 
     parts.append("")
-    parts.append(f"Formula: {trace.formula}")
     parts.append(f"Sections read: {', '.join(trace.sections_read)}")
 
     return "\n".join(parts)

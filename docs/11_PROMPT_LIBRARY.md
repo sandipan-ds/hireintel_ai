@@ -61,39 +61,89 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 ## RUBRIC-SCORE-001
 
-**Purpose:** Score candidate evidence against a recruiter-defined rubric for requirements that require judgment (skill depth, relevant/same-role/leadership experience, project complexity, domain expertise).
+**Purpose:** Score candidate evidence against a recruiter-defined rubric for requirements
+that require judgment (skill depth, relevant/same-role/leadership experience, project
+complexity, domain expertise).
 
 **Inputs:**
-- A single JD requirement (e.g. "5+ years in recommendation systems and clustering")
-- The full content of the mapped section(s) for this requirement (Section-Routed Evidence Retrieval — exact label match, not similarity-ranked)
-- A recruiter-defined rubric with explicit point scales (e.g. years used, project complexity, frameworks/tools, ownership level)
-- Decomposed sub-questions for the requirement
+- A single JD requirement name (e.g. "Data Visualization Tools")
+- The full content of retrieved evidence (threshold-based cosine ≥ θ, recursive chunks)
+- Pre-computed employment history block: `Role | Company | Dates | Duration`
+  (columns emitted in Role-first order so LLM correlates job titles with skill bullets)
+- A recruiter-defined rubric with atomic sub-questions
+- A pre-populated JSON skeleton (one entry per sub-question) — LLM fills in placeholders
 
-**Outputs:**
-- Extracted evidence: a structured list of what's relevant from the mapped section(s) (e.g. "list every role where Python appears, with dates")
-- Sub-scores per sub-question on a 0.0–1.0 scale:
-  - Binary gates (e.g. "Does the candidate know Python?") → 0 or 1
-  - Linear measures (e.g. "years of experience / target years") → `min(candidate_years / ideal_years, 1.0)`
-  - Relevance measures (e.g. "project relevance to JD") → 0.0 to 1.0
-- Cited evidence for each sub-score (exact resume text)
+**Outputs:**  
+A JSON object with `sub_scores` array; each entry contains:
+```json
+{
+  "key": "skill_presence",
+  "evidence_found": "yes",
+  "closest_evidence": "paste the most relevant resume text, even if indirect",
+  "cited_text": "short exact quote",
+  "sub_score": 1,
+  "extracted_years": null,
+  "anchor_description": ""
+}
+```
+
+**evidence_found / closest_evidence semantics:**
+- `evidence_found: "yes"` — LLM confirmed the resume directly proves the requirement
+  (using Semantic Inference Rules)
+- `evidence_found: "no"` — LLM found the closest text but no direct match
+- `closest_evidence` — always populated with the most relevant text found, even if indirect
+- This pair lets the report tag zero-scores as `[ZERO_NO_EVIDENCE]` vs
+  `[ZERO_WRONG_INFERENCE]` for targeted debugging
+
+**Semantic Inference Rules block (v2.0 addition):**
+
+The prompt includes a `SEMANTIC INFERENCE RULES` section instructing the LLM to map
+implicit resume language to formal requirement keywords before deciding `evidence_found`:
+
+| Resume language | Counts as |
+|---|---|
+| "dashboard", "chart", "plot", "BI", "Tableau", "matplotlib" | Data Visualization |
+| "clean", "preprocess", "ETL", "pipeline", "feature engineering" | Data Wrangling |
+| "deploy", "API", "Docker", "MLflow", "production", "endpoint" | Model Deployment / MLOps |
+| "Bachelor"/"B.Tech"/"B.S." in CS/Stats/Maths/Eng | Bachelor Degree Match |
+| "classification", "regression", "clustering", "XGBoost", "random forest" | ML Models |
+| "SQL", "PostgreSQL", "BigQuery", "Snowflake", "schema" | SQL / Databases |
+| "Spark", "Hadoop", "Databricks", "distributed" | Big Data |
+| "NLP", "sentiment", "ARIMA", "LSTM", "time series" | NLP / Time-Series |
+| "AWS", "Azure", "GCP", "SageMaker", "cloud" | Cloud Platforms |
 
 **Constraints:**
-- **The LLM must not see the requirement's weight** while scoring evidence against the rubric.
-- **The LLM must never compute the final weighted contribution** — weight application and aggregation are performed in code.
-- Score strictly against the recruiter-defined rubric — never against the LLM's own internal notion of "Advanced" or "Strong."
-- Extract evidence **before** scoring — this keeps the read systematic rather than holistic, and prevents the model from being influenced by content outside the mapped section.
-- Do not double-count overlapping experience (e.g. 6 years Python on cluster systems + 6 years managing recommendation projects ≠ 12 years).
-- If evidence is insufficient for a sub-question, return 0 for that sub-question — do not speculate.
+- **The LLM must not see the requirement's weight** while scoring evidence.
+- **The LLM must never compute the final weighted contribution** — code does that.
+- Score strictly against the recruiter-defined rubric — never against the LLM's own
+  notion of "Advanced" or "Strong."
+- Apply Semantic Inference Rules BEFORE deciding `evidence_found`.
+- For binary keys: `sub_score` must be 0 or 1 (integer, no quotes).
+- For linear keys: `extracted_years` must be a plain number (e.g. `3` or `2.5`), not
+  a string. Use `null` if no evidence.
+- Do NOT add extra keys. Do NOT change the `"key"` values.
+- Output ONLY the JSON object, nothing else.
 
 **Known Limitations:**
-- The LLM may struggle with ambiguous date ranges in resumes; `calculated_duration_months` is computed in code and provided to mitigate this.
-- Relevance scoring is inherently subjective; the rubric must define explicit anchors (0 = not relevant, 0.5 = partially relevant, 1.0 = exact match).
+- qwen2.5:3b (the current rubric model) performs surface matching; the Semantic Inference
+  Rules block in v2.0 partially compensates, but rare synonyms may still be missed.
+- `calculated_duration_months` is computed in code and passed in the employment history
+  block — LLM should use these durations, not re-compute from raw dates.
+- Column-order in the employment history is now `Role | Company | Dates | Duration`
+  (fixed in v2.0; prior versions emitted `Company | Role` which confused the LLM).
 
 **Version History:**
-- v0.1: Initial planned prompt specification per `WORKING_LOGIC.md` "Scoring Rubrics" and "Transforming the JD based requirements into sub-questions".
-- v1.0: Adopted as production prompt in `src/scoring/rubric_scorer.py`. Weight excluded from prompt; anchored scales enforced; extraction-before-scoring; cached scoring trace (`CachedScoringTrace`) frozen at scoring time.
+- v0.1: Initial planned prompt specification per WORKING_LOGIC.md
+- v1.0: Adopted as production prompt in `src/scoring/rubric_scorer.py`. Weight excluded
+  from prompt; anchored scales enforced; extraction-before-scoring; cached scoring trace
+  (`CachedScoringTrace`) frozen at scoring time.
+- v2.0 (2026-07-09): Added `evidence_found` + `closest_evidence` JSON fields replacing
+  `extracted_evidence`. Added SEMANTIC INFERENCE RULES block. Fixed employment history
+  to emit `Role | Company | Dates | Duration` with explicit column header. Updated
+  `SubScoreResult` dataclass and all parsing / explanation code accordingly.
 
 ---
+
 
 ## RESUME-PARSE-001
 

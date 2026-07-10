@@ -41,6 +41,8 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-032 | 2026-07-07 | **Widen chunk_size to 1000, chunk_overlap to 50% of chunk_size; lower default θ to 0.25.** Owner-specified refinement (2026-07-07). The prior defaults (`chunk_size=500`, `chunk_overlap=100`, `θ=0.30`) produced chunks small enough that a resume role's date line frequently landed in a different chunk from its bullet describing skill use, defeating the rubric LLM's ability to correlate skills with durations. Widened to `chunk_size=1000`, `chunk_overlap=500` (50% of chunk_size) so adjacent chunks share half their text — the date line in chunk N also appears in chunk N+1. New Optuna bounds: `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [floor(0.50 × chunk_size), floor(0.60 × chunk_size)]`. Default threshold lowered from `θ=0.30` to `θ=0.25` (bounds `[0.10, 0.50]` retained) to surface more date-bearing chunks per REQ. Embedding index rebuilt (6,670 → 4,763 chunks). | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_DESIGN_RATIONALE.md`, `CURRENT_PROGRESS.md`, `IMPLEMENTATION_ROADMAP.md`, `PROJECT_OVERVIEW.md` |
 | DEC-033 | 2026-07-07 | **Rubric LLM context enrichment + banded years-ratio + local Ollama backend.** Four combined fixes that turn the LLM rubric path from always-zero into a working scoring pipeline: (a) `score_requirement_with_rubric` accepts an optional `employment_history` kwarg; the rubric prompt appends an `EMPLOYMENT HISTORY (computed deterministically from date ranges)` block right after the SECTION CONTENT so the LLM can correlate skill mentions in retrieved chunks with the parser-computed role durations — without needing to re-parse sparse date strings from chunks. (b) Replaced the continuous `min(years/target, 1.0)` formula with a discrete 4-band rule (`≥ target → 1.0; ≥ 50% → 0.5; ≥ 25% → 0.25; else 0.0`) for audit-friendliness. (c) Added `_extract_json_lenient` in `rubric_scorer.py` to recover truncated LLM JSON responses mid-stream (free-tier cloud endpoints sometimes cap `completion_tokens` mid-JSON); added defensive `null` handling for `sub_score`. (d) Added `OllamaRubricCaller` + `get_rubric_caller` factory in `src/services/llm_caller.py`; `.env` now selects `LLM_BACKEND=ollama` with `qwen2.5:3b` as the production rubric LLM — the free-tier cloud (`nemotron-3-ultra-free` returned `choices=None`; `deepseek-v4-flash-free` truncated JSON) was unreliable. End-to-end smoke test: 1 DataScience candidate scored 2.25 (was 0.00), with real LLM sub-scores and `extracted_years=3.0` from the employment_history block. | Accepted | `WORKING_LOGIC.md`, `MODEL_REGISTRY.md`, `AI_DESIGN_RATIONALE.md`, `CURRENT_PROGRESS.md`, `RELEASE_NOTES.md`, `ARCHITECTURE_CHANGELOG.md` |
 | DEC-031 | 2026-07-08 | **Production wiring Track 7: subquery cache + batch CLI + Optuna ranking-stability reporter.** Umbrella decision for the three-track production-wiring effort that turns the composed scorer (DEC-028, Track 2-S) and the M0.5a RAG pipeline (DEC-027) into a runnable end-to-end batch scorer, plus the Prong 6 reporter (DEC-024) so Optuna can diagnose shortlist churn during the M0.5d sweep. (a) `src/rag/subquery_cache.py` (Track 7.1, ✅ 2026-07-06) — in-memory dict + optional on-disk `data/embeddings/subqueries_cache.npz`; file-hash-aware invalidation on `<Role>_SubQuery.md` change; wraps `embed_sub_queries`; the batch CLI passes a `cached_embedder` closure into `evaluate_candidate_composed`. Expected speedup vs naive: ~12 min/role saved by pre-encoding all 8 roles' SubQueries upfront. (b) Single-year date heuristic in `parse_temporal_context` (Track 7.2, ✅ 2026-07-06): when `dates` is a 4-digit year alone AND the entry has a real `company` + (`title` OR `details`), emit `calculated_duration_months = 12` with `inferred_full_year: True` flag; guard against cert/education mis-bucketing by skipping entries whose `title` is a section name. (c) `src/audit/no_evidence_flags.py` `flag_type: "inferred_full_year"` audit log (Track 7.3, ✅ 2026-07-06) — recruiter-visible "12 months credit from a single-year date" flag at `data/audit/inferred_full_year_flags.jsonl`. (d) `scripts/score_batch_composed.py` CLI (Track 7.4, ✅ 2026-07-06): load subquery cache → for each role, walk `data/processed/<role>/*.json`, run `evaluate_candidate_composed` per candidate, dump per-role rankings to `data/scores/composed/<role>_ranked.json` + per-candidate evaluation JSONs. 8 roles × 721 candidates = 5,768 evaluations target. Track 7.4.1 (✅ 2026-07-07) bug fix: shape mismatch where CLI was passing the 8-role dict to `evaluate_candidate_composed` as `role_subqueries`, while the function expected a single-role dict — every REQ defaulted to 100.00 under `--no-llm`. Track 7.4.2 (✅ 2026-07-07) scoring improvements: chunk_size 500→1000, overlap 100→500, theta 0.30→0.25, employment-history context block to rubric LLM, banded years-ratio, local Ollama `qwen2.5:3b` rubric LLM — see DEC-032 + DEC-033. (e) `src/reporting/rank_stability.py` (Track 7.5, ✅ 2026-07-08) — the Prong 6 reporter. Pure-function per-pair primitives (`top_k_jaccard`, `rank_shift_stats`, `distribution_correlations`, `newcomer_drop_rates`) + study-level `compute_rank_stability` + `load_study_file` / `write_stability_report` I/O. All unsigned magnitudes per spec's +/- cancellation guard. HP-axis R^2 via closed-form single-slope regression (no scikit-learn). 9 unit tests (spec called for 8). Suite 512/512. (f) Track 7.6 (✅ 2026-07-07 inline + 2026-07-08 doc-sync): full test suite run + docs update + headless-CLI smoke test on one role (DataScience) via `score_batch_composed.py`. | Accepted | `WORKING_LOGIC.md` (Prong 6 verbatim), `MODEL_REGISTRY.md`, `EVALUATION.md` (Prong 6 spec), `CURRENT_PROGRESS.md` (Track 7 table), `RELEASE_NOTES.md`, `ARCHITECTURE_CHANGELOG.md` |
+| DEC-034 | 2026-07-09 | **Additive Sub-Score Engine & 0.01 Floor Scaling.** Defer legacy multiplication scoring in favor of a scaled additive formula (`SQ1 + SQ2 + SQ3...`). Shift unlisted lookups and the 4-band minimum fallback scale from absolute zeroes (`0.0`) to a minimum floor of `0.01` to safeguard scoring contributions. Implement CGPA 2-band check targets ($\ge \text{target} \rightarrow 1.00$, else `0.50`). | Accepted | `WORKING_LOGIC.md`, `CURRENT_PROGRESS.md`, `DECISIONS.md`, all scoring guides |
+
 
 ---
 
@@ -1462,3 +1464,38 @@ Five combined fixes (each one tested independently):
 ### Related Documents
 
 `WORKING_LOGIC.md` (Experience Scoring § updated to banded rule, Retrieval § updated to mention employment_history block, file schema example updated), `MODEL_REGISTRY.md` (Rubric LLM row added, Chunking/Retrieval rows updated), `AI_DESIGN_RATIONALE.md` (banded years-ratio decision documented), `CURRENT_PROGRESS.md` (Track 7.4.2 row added), `RELEASE_NOTES.md` (Track 7.4.2 changes documented), `ARCHITECTURE_CHANGELOG.md` (2026-07-07 entry added).
+
+---
+
+## DEC-034: Additive Sub-Score Engine & 0.01 Floor Scaling
+
+**Date:** 2026-07-09
+**Status:** Accepted
+
+### Context
+
+Under the legacy implementation, candidate scoring aggregated sub-questions within a requirement using a multiplicative model (e.g. `SQ1 × SQ2 × SQ3`). If a candidate lacked evidence for any single sub-query, the resulting zero score would completely wipe out all other positive signals for that requirement. Additionally, fallbacks for unlisted tiers and unrated experience criteria resulted in absolute zeroes (`0.0`), heavily penalizing candidates.
+
+### Decision
+
+Transition the evaluation and scoring pipeline to a robust additive sum-and-scale model:
+1. **Additive Aggregation:** Sub-question scores are summed rather than multiplied: `Sub-Score = SQ1 + SQ2 + ... + SQ_N`.
+2. **Scaled Contribution:** The requirement contribution is scaled out of its allotted weight: `Weight × (Sub-Score / Number of Sub-Queries)`. The final candidate score is the sum of these scaled contributions, keeping the total normalized to 100.
+3. **0.01 Minimum Floor:** Safeguard qualitative/quantitative scales (relevance, project complexity) and unlisted educational tier lookups by mapping the minimum fallback score to `0.01` instead of `0.0` or `0.00`.
+4. **2-Band CGPA / Academic Target Check:** Standardize academic marks checks using a strict 2-band logic:
+   - `CGPA or percentage >= target` → `1.00`
+   - `CGPA or percentage < target` → `0.50` (ensuring partial credit when a degree is present).
+
+### Alternatives Considered
+
+- **Keep Multiplication with Small Offsets (e.g. SQ + 0.01):** Rejected. Multiplication degrades too rapidly even with offsets, and is extremely difficult for recruiters to verify and trace.
+- **Continuous Scaled Experience:** Rejected. The discrete 4-band and 2-band scales are highly auditable and directly explainable in candidate reports.
+
+### Tradeoffs
+
+- **Slightly higher density of mid-tier scores:** Candidates with partial evidence will receive fractional scores rather than clean zeroes. This is a positive trade-off as it reflects actual capabilities more accurately.
+
+### Related Documents
+
+`WORKING_LOGIC.md`, `CURRENT_PROGRESS.md`, `DECISIONS.md`, all `*_ScoringGuide.md` documents, all `*_SubQuery.md` documents.
+

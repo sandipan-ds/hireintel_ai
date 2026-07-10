@@ -6,6 +6,31 @@ This document records architecture changes that affect system structure, runtime
 
 ---
 
+## 2026-07-09 — Additive Sub-Score Engine & 0.01 Floor Scaling (DEC-034)
+
+### What changed
+
+- **Sub-Score Formula Update:** Changed the candidate rubric sub-score aggregation within a requirement from legacy multiplication (`SQ1 × SQ2 × ...`) to addition (`SQ1 + SQ2 + ...`).
+- **Final Aggregation Scaling:** Scaling contribution calculation uses the formula `Weight × (Sub-Score / Number of Sub-Queries)`. The total score is the sum of these scaled contributions, keeping the score out of 100.
+- **Minimum Floor Scaling (0.01 Fallback):** Replaced absolute zero fallbacks (`0.0` or `0.00`) with a minimum bound of `0.01` across quantitative/qualitative scales (4-band scale) and unlisted educational tier lookups to prevent zero cancellation.
+- **2-Band CGPA / Academic Check:** Academic criteria check uses strict 2-band check against target ($\ge \text{target} \rightarrow 1.00$, else `0.50` partial credit if degree present).
+- **All Role Documentation Updated:** Scoring guides for all 8 roles, sub-query decomposition files for BusinessAnalyst and DataScience, startup guides (`QUICK_START.md`, `README_SETUP.md`) for BusinessAnalyst and DataScience, and `WORKING_LOGIC.md` updated to reflect the new math.
+
+### Why
+
+- Under legacy multiplication, a candidate who scored zero on even one sub-query (due to lack of specific evidence details) would have their entire requirement score wiped out, even if they had excellent performance in other sub-queries. Summing provides a fairer, more balanced signal.
+- Absolute zeroes in unlisted tier lookups or qualitative scales would cancel out other queries; establishing a `0.01` floor ensures a minimal fallback signal for unlisted institutions or certifications.
+- Standardizing academic check to a 2-band system is simpler to audit and ensures that having a valid degree always awards partial credit (`0.50`) even if marks are below the target.
+
+### Affected files
+
+- **Updated:** `docs/WORKING_LOGIC.md` — scoring examples, RAG examples, experience, and lookup tables refactored.
+- **Updated:** `docs/DECISIONS.md` — added DEC-034.
+- **Updated:** `docs/CURRENT_PROGRESS.md` — reset progress tables updated.
+- **Updated:** `data/job_descriptions/` — all 8 `*_ScoringGuide.md` files, `BusinessAnalyst_SubQuery.md`, `DataScience_SubQuery.md`, and all `QUICK_START.md` / `README_SETUP.md` files updated.
+
+---
+
 ## 2026-07-08 (b) — MLflow experiment-tracking wiring shipped (DEC-020, M0.5c)
 
 ### What changed

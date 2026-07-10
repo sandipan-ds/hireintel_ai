@@ -10,10 +10,10 @@ The scoring rules are:
     Tier 1            → 100% of allotted points (1.0)
     Tier 2            → 75%  of allotted points (0.75)
     Tier 3            → 50%  of allotted points (0.50)
-    Not Listed        → 50%  of allotted points (0.50)
+    Not Listed        → 0.01 floor (minimum partial credit)
 
-Unlisted institutes/certifications get 0.50 — the same as Tier 3, unless
-evidence places them in Tier 1 or Tier 2. The degree/cert match itself is
+Unlisted institutes/certifications receive the minimum floor score of 0.01
+instead of the full 0.50 Tier 3 credit. The degree/cert match itself is
 scored separately by the scorer.
 
 The databases are stored as JSON files:
@@ -51,10 +51,10 @@ _TIER_POINTS = {
 }
 
 # Points for institutes/certs not found in any tier.
-# This is NOT 0.0 — a legitimate but unlisted institute still gets partial
-# credit for the quality multiplier. The degree/cert match itself is scored
-# separately by the scorer.
-_NOT_LISTED_POINTS = 0.50
+# Per implementation plan (DEC-011): unlisted institutions receive the 0.01
+# minimum floor — NOT 0.50 (Tier 3). This ensures only known-tier entries
+# earn meaningful quality credit.
+_NOT_LISTED_POINTS = 0.01
 
 
 # ---------------------------------------------------------------------------
@@ -103,8 +103,8 @@ def _lookup_tier(name: str, db: Dict[str, Any]) -> Tuple[Optional[str], float]:
     tier (tier_1, tier_2, tier_3). The first match wins, with tier_1
     checked first.
 
-    If no entry matches in any tier, the name returns ``(None, 0.0)`` —
-    unlisted institutes/certificates get 0 points for the quality multiplier.
+    If no entry matches in any tier, the name returns ``(None, _NOT_LISTED_POINTS)``
+    (currently 0.01) — the minimum floor for unlisted institutes/certificates.
     The degree/cert match itself is scored separately by the scorer.
 
     Args:
@@ -112,7 +112,7 @@ def _lookup_tier(name: str, db: Dict[str, Any]) -> Tuple[Optional[str], float]:
         db: Parsed tier database dict.
 
     Returns:
-        Tuple of (tier_name, points_multiplier). Returns (None, 0.0) if
+        Tuple of (tier_name, points_multiplier). Returns (None, 0.01) if
         the name is not found in any tier.
     """
     if not name or not db:
@@ -138,10 +138,7 @@ def _lookup_tier(name: str, db: Dict[str, Any]) -> Tuple[Optional[str], float]:
                     points = _TIER_POINTS.get(tier_name, 0.0)
                     return tier_name, points
 
-    # Not found in any tier — return the not-listed default (0.25).
-    # A legitimate but unlisted institute still gets partial credit for
-    # the quality multiplier. The degree/cert match itself is scored
-    # separately by the scorer.
+    # Not found in any tier — return the not-listed default (0.01).
     return None, _NOT_LISTED_POINTS
 
 
@@ -164,7 +161,7 @@ def lookup_institute_tier(
         - ("tier_1", 1.0) for premier institutes
         - ("tier_2", 0.75) for recognized institutes
         - ("tier_3", 0.50) for regional/other institutes
-        - (None, 0.50) if not found in any tier (not-listed default, same as Tier 3)
+        - (None, 0.01) if not found in any tier (floor minimum)
     """
     path = db_path or _INSTITUTES_PATH
     db = _load_tier_db(str(path))
@@ -186,7 +183,7 @@ def lookup_certificate_tier(
         - ("tier_1", 1.0) for top-tier certifications
         - ("tier_2", 0.75) for second-grade certifications
         - ("tier_3", 0.50) for local/other certifications
-        - (None, 0.50) if not found in any tier (not-listed default, same as Tier 3)
+        - (None, 0.01) if not found in any tier (not-listed default)
     """
     path = db_path or _CERTIFICATES_PATH
     db = _load_tier_db(str(path))
@@ -204,7 +201,7 @@ def get_institute_tier_points(
         db_path: Optional custom database path.
 
     Returns:
-        Points multiplier (1.0, 0.75, 0.50, or 0.0).
+        Points multiplier (1.0, 0.75, 0.50, or 0.01).
     """
     _, points = lookup_institute_tier(institute_name, db_path)
     return points
@@ -221,7 +218,7 @@ def get_certificate_tier_points(
         db_path: Optional custom database path.
 
     Returns:
-        Points multiplier (1.0, 0.75, 0.50, or 0.0).
+        Points multiplier (1.0, 0.75, 0.50, or 0.01).
     """
     _, points = lookup_certificate_tier(certificate_name, db_path)
     return points

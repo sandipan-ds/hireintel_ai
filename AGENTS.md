@@ -1,9 +1,44 @@
 AGENTS.md
 Agent Operating Instructions
 This document defines how coding agents must operate within this repository.
-Product requirements, architecture, implementation plans, and project vision are maintained in the /docs directory and must be treated as the source of truth.
+Product requirements, architecture, implementation plans, and project vision are maintained
+in the /docs directory and must be treated as the source of truth.
 
-Toknow about the project refer to- docs\PROJECT_OVERVIEW.md
+To know about the project, refer to docs/01_PROJECT_OVERVIEW.md
+
+## MANDATORY: Read Documentation in Sequence
+
+Before writing any code, a coding agent MUST read the docs/ folder documents in the
+following numbered sequence. Each document builds on the previous. Do NOT skip ahead.
+
+```
+docs/
+├── 01_PROJECT_OVERVIEW.md              ← what the product is and why it exists
+├── 02_WORKING_LOGIC.md                 ← canonical scoring/evaluation spec (DEC-011) ← READ FIRST
+├── 03_CURRENT_PROGRESS.md              ← what is built today vs what is planned
+├── 04_SYSTEM_ARCHITECTURE.md           ← how the system is structured
+├── 05_AI_ARCHITECTURE.md               ← AI-specific architecture (parsing, RAG, scoring)
+├── 06_RESUME_EXTRACTION_JSON_SCHEMA.md ← data contract: PDF → JSON (MUST-HAVE capability)
+├── 07_DATABASE_SCHEMA.md               ← storage schema for production
+├── 08_END_TO_END_PIPELINE.md           ← end-to-end flow: PDF upload → candidate ranking
+├── 09_AI_DESIGN_RATIONALE.md           ← why every AI decision was made
+├── 10_MODEL_REGISTRY.md                ← which models and strategies are live
+├── 11_PROMPT_LIBRARY.md                ← all production prompts with version history
+├── 12_RECRUITER_WORKFLOWS.md           ← how recruiters interact with the platform
+├── 13_IMPLEMENTATION_ROADMAP.md        ← what to build next
+├── 14_EVALUATION.md                    ← how to measure quality (metrics, eval methodology)
+├── 15_STYLE_GUIDE.md                   ← coding standards (read before writing code)
+├── 16_DECISIONS.md                     ← full decision log (reference)
+├── 17_ARCHITECTURE_CHANGELOG.md        ← architecture change history
+├── 18_RELEASE_NOTES.md                 ← version and release history
+├── 19_TROUBLESHOOTING.md               ← known issues and resolutions
+└── 20_ENVIRONMENT_NOTES.md             ← environment and setup notes
+├── 21_CODEBASE_MAP.md                  ← auto-generated module dependency map
+```
+
+All docs defer to `02_WORKING_LOGIC.md` for scoring, evaluation, and ranking details.
+`03_CURRENT_PROGRESS.md` is the single status doc ("what's done vs what's planned")
+mapped to every step of `02_WORKING_LOGIC.md`.
 
 ## Response Format
 
@@ -18,35 +53,15 @@ Do not output <think> tags.
 Return only the final answer, code, analysis, or implementation.
 
 For coding tasks, explain decisions briefly when useful, but never expose internal reasoning steps.
-________________________________________
-Documentation Structure
+
+---
+
+## Documentation Structure
+
 The following documents must be maintained throughout the project lifecycle.
-docs/
-├── WORKING_LOGIC.md          ← canonical scoring/evaluation spec (DEC-011)
-├── CURRENT_PROGRESS.md       ← status snapshot mapped to every WORKING_LOGIC step
-├── PROJECT_OVERVIEW.md
-├── SYSTEM_ARCHITECTURE.md
-├── AI_ARCHITECTURE.md
-├── AI_DESIGN_RATIONALE.md
-├── MODEL_REGISTRY.md
-├── PROMPT_LIBRARY.md
-├── EVALUATION.md
-├── RECRUITER_WORKFLOWS.md
-├── IMPLEMENTATION_ROADMAP.md
-├── RELEASE_NOTES.md
-├── DECISIONS.md
-├── ARCHITECTURE_CHANGELOG.md
-├── TROUBLESHOOTING.md
-├── ENVIRONMENT_NOTES.md
-|── STYLE_GUIDE.md
+All are numbered in the mandatory reading sequence above.
 
-All docs defer to `WORKING_LOGIC.md` for scoring, evaluation, and ranking
-details. `CURRENT_PROGRESS.md` is the single status doc ("what's done vs
-what's planned") mapped to every step of `WORKING_LOGIC.md`.
-________________________________________
-Document Responsibilities
-
-WORKING_LOGIC.md
+### 02_WORKING_LOGIC.md
 
 Contains:
 
@@ -54,12 +69,14 @@ Contains:
 • JD validation & clarification (Green / Yellow / Red).
 • Recruiter weight configuration (weights + expected_years).
 • Resume processing pipeline.
+• Resume Ingestion and Extraction Layer (MUST-HAVE: PDF → JSON for all formats).
 • Candidate Intelligence Report structure.
 • Deterministic scoring engine rules.
 • Quality-based evaluation (institution tiers, provider reputation).
 • Resume matching as a supporting signal.
 • Explainable scoring + RAG-based explanations.
 • Resume chat, candidate comparison, hiring recommendations.
+• Platform architecture appendix (multi-layer design, multi-role scaling).
 
 This document is the source of truth for "what the system should do" with
 respect to scoring and evaluation. All other docs defer to it.
@@ -70,7 +87,7 @@ respect to scoring and evaluation. All other docs defer to it.
 
 All code generation and refactoring must comply with:
 
-docs/STYLE_GUIDE.md
+docs/15_STYLE_GUIDE.md
 
 The style guide defines:
 - Code structure
@@ -83,11 +100,11 @@ The style guide takes precedence over default LLM coding patterns.
 
 ---
 
-CURRENT_PROGRESS.md
+### 03_CURRENT_PROGRESS.md
 
 Contains:
 
-• A status snapshot mapping every step of `WORKING_LOGIC.md` to ✅ / 🟡 / ⬜.
+• A status snapshot mapping every step of `02_WORKING_LOGIC.md` to ✅ / 🟡 / ⬜.
 • The recommended next unit of work.
 • How this doc relates to the other docs.
 
@@ -95,7 +112,7 @@ This document is the source of truth for "what the system does today".
 
 ---
 
-PROJECT_OVERVIEW.md
+### 01_PROJECT_OVERVIEW.md
 
 Contains:
 
@@ -110,11 +127,11 @@ Contains:
 • Technology overview
 
 This document explains what the system does and why it exists. It defers to
-`WORKING_LOGIC.md` for scoring details.
+`02_WORKING_LOGIC.md` for scoring details.
 
 ---
 
-SYSTEM_ARCHITECTURE.md
+### 04_SYSTEM_ARCHITECTURE.md
 
 Contains:
 
@@ -131,7 +148,7 @@ This document explains how the system is constructed.
 
 ---
 
-AI_ARCHITECTURE.md
+### 05_AI_ARCHITECTURE.md
 
 Contains:
 
@@ -153,7 +170,52 @@ This document is the source of truth for all AI-related architecture.
 
 ---
 
-AI_DESIGN_RATIONALE.md
+### 06_RESUME_EXTRACTION_JSON_SCHEMA.md
+
+Contains:
+
+• Production JSON schema for resume extraction output
+• Full field-level specification (skills, education, experience, certifications)
+• Evidence chunk format with metadata
+• Field-to-evidence traceability map
+• Null-handling rules
+• Confidence model
+• Minimal scoring payload for early development
+• Multi-role guidance (role-agnostic schema + role-pack pattern)
+
+This document is the data contract between resume parsing and JD matching.
+The platform MUST extract from PDFs of any design, template, or writing style.
+
+---
+
+### 07_DATABASE_SCHEMA.md
+
+Contains:
+
+• Three-layer storage strategy (relational + vector + object store)
+• Full PostgreSQL schema for all tables
+• Role template tables
+• Sub-query definition tables
+• Recruiter weight config snapshot table
+
+---
+
+### 08_END_TO_END_PIPELINE.md
+
+Contains:
+
+• 9-stage pipeline walkthrough (JD intake → recruiter weighting → resume ingestion
+  → extraction → chunking → retrieval → rubric evaluation → deterministic scoring
+  → explainable reporting)
+• JSON examples at each stage
+• Service decomposition recommendation
+• Multi-role generalization pattern
+
+Best onboarding document for new developers and stakeholders.
+
+---
+
+### 09_AI_DESIGN_RATIONALE.md
 
 Contains:
 
@@ -163,21 +225,11 @@ Contains:
 • Final decision rationale
 • Future upgrade paths
 
-Examples:
-
-• Why Document-Aware Chunking was selected
-• Why Semantic Chunking was selected
-• Why Agentic Chunking was rejected
-• Why a specific embedding model was selected
-• Why a specific vector database was selected
-• Why a specific LLM was selected
-• Why a deterministic scoring engine was selected
-
 Every significant AI decision must be documented.
 
 ---
 
-MODEL_REGISTRY.md
+### 10_MODEL_REGISTRY.md
 
 Contains:
 
@@ -195,83 +247,24 @@ This document tracks all production AI models and configurations.
 
 ---
 
-PROMPT_LIBRARY.md
+### 11_PROMPT_LIBRARY.md
 
 Contains:
 
 • Resume parsing prompts
 • Job description analysis prompts
+• Rubric scoring prompts (RUBRIC-SCORE-001 v2.0)
 • Candidate summarization prompts
 • Candidate comparison prompts
 • Resume chat prompts
 • Hiring recommendation prompts
 
-Each prompt must include:
-
-• Prompt ID
-• Purpose
-• Inputs
-• Outputs
-• Constraints
-• Known limitations
-• Version history
-
-All production prompts must be documented.
+Each prompt must include Prompt ID, Purpose, Inputs, Outputs, Constraints,
+Known limitations, and Version history. All production prompts must be documented.
 
 ---
 
-EVALUATION.md
-
-Contains:
-
-• Evaluation methodology
-• Evaluation datasets
-• Retrieval evaluation results
-• Generation evaluation results
-• Ranking evaluation results
-• Hallucination evaluation results
-• Business evaluation results
-
-Metrics may include:
-
-Resume Parsing
-
-• Precision
-• Recall
-• F1 Score
-
-Retrieval
-
-• Recall@K
-• Precision@K
-• MRR
-• nDCG
-
-Generation
-
-• Faithfulness
-• Groundedness
-• Answer Relevancy
-
-Ranking
-
-• Top-K Accuracy
-• Recruiter Agreement
-
-Hallucination
-
-• Hallucination Rate
-
-Business
-
-• Screening Efficiency
-• Recruiter Time Saved
-
-This document tracks AI system performance.
-
----
-
-RECRUITER_WORKFLOWS.md
+### 12_RECRUITER_WORKFLOWS.md
 
 Contains:
 
@@ -290,7 +283,7 @@ This document explains how recruiters interact with the platform.
 
 ---
 
-IMPLEMENTATION_ROADMAP.md
+### 13_IMPLEMENTATION_ROADMAP.md
 
 Contains:
 
@@ -305,14 +298,46 @@ This document is the execution plan for the project.
 
 ---
 
-RELEASE_NOTES.md
+### 14_EVALUATION.md
+
 Contains:
-•	Feature additions
-•	Bug fixes
-•	Breaking changes
-•	Version history
-________________________________________
-Documentation Maintenance Rules
+
+• Evaluation methodology
+• Evaluation datasets
+• Retrieval evaluation results
+• Generation evaluation results
+• Ranking evaluation results
+• Hallucination evaluation results
+• Business evaluation results
+
+This document tracks AI system performance.
+
+---
+
+### 18_RELEASE_NOTES.md
+Contains:
+• Feature additions
+• Bug fixes
+• Breaking changes
+• Version history
+
+### 21_CODEBASE_MAP.md
+
+Contains:
+
+• Per-module inventory: every class and function with line numbers
+• Internal import graph: which module depends on which
+• Third-party dependencies per module
+• Reverse reference map: which modules call symbols from a given module
+
+Auto-generated from `graphify-out/cache/ast/` AST analysis.
+Re-generate: `python scripts/generate_codebase_map.py`
+
+Use this to understand blast radius before editing a module, or to locate
+where a specific class or function is defined without reading source files.
+
+---
+
 Documentation must remain synchronized with implementation.
 Update documentation whenever:
 •	Requirements change
@@ -350,12 +375,12 @@ Prefer:
 Avoid large rewrites.
 ________________________________________
 Architecture Compliance
-Implementation must follow:
-1.	WORKING_LOGIC.md (canonical scoring/evaluation spec — DEC-011)
-2.	PROJECT_OVERVIEW.md
-3.	SYSTEM_ARCHITECTURE.md
-4.	AI_ARCHITECTURE.md
-5.	CURRENT_PROGRESS.md (status snapshot — must be updated when implementation changes)
+Implementation must follow (in reading order):
+1.	docs/02_WORKING_LOGIC.md (canonical scoring/evaluation spec — DEC-011)
+2.	docs/01_PROJECT_OVERVIEW.md
+3.	docs/04_SYSTEM_ARCHITECTURE.md
+4.	docs/05_AI_ARCHITECTURE.md
+5.	docs/03_CURRENT_PROGRESS.md (status snapshot — must be updated when implementation changes)
 If implementation requires deviation:
 •	Document the reason.
 •	Update architecture documents first.
@@ -443,7 +468,7 @@ ________________________________________
 Troubleshooting Workflow
 When debugging:
 Update:
-docs/TROUBLESHOOTING.md
+docs/19_TROUBLESHOOTING.md
 Include:
 •	Problem description
 •	Symptoms
@@ -456,7 +481,7 @@ ________________________________________
 Environment Workflow
 When environment or setup issues occur:
 Update:
-docs/ENVIRONMENT_NOTES.md
+docs/20_ENVIRONMENT_NOTES.md
 Examples:
 •	Python installation issues
 •	Package conflicts
@@ -555,12 +580,12 @@ The following AI-specific documents must be maintained.
 
 docs/
 
-├── AI_ARCHITECTURE.md
-├── AI_DESIGN_RATIONALE.md
-├── MODEL_REGISTRY.md
-├── PROMPT_LIBRARY.md
-├── EVALUATION.md
-├── RECRUITER_WORKFLOWS.md
+├── 05_AI_ARCHITECTURE.md
+├── 09_AI_DESIGN_RATIONALE.md
+├── 10_MODEL_REGISTRY.md
+├── 11_PROMPT_LIBRARY.md
+├── 14_EVALUATION.md
+├── 12_RECRUITER_WORKFLOWS.md
 
 ---
 
@@ -703,10 +728,10 @@ Before modifying:
 
 Update:
 
-1. DECISIONS.md
-2. AI_DESIGN_RATIONALE.md
-3. MODEL_REGISTRY.md
-4. AI_ARCHITECTURE.md
+1. docs/16_DECISIONS.md
+2. docs/09_AI_DESIGN_RATIONALE.md
+3. docs/10_MODEL_REGISTRY.md
+4. docs/05_AI_ARCHITECTURE.md
 
 Then implement.
 

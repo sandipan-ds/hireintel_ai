@@ -17,8 +17,8 @@ This document maps every step of the canonical spec
 > |---|---|
 > | Clear old cache, databases, and scores | ✅ Completed |
 > | Remove redundant ad-hoc scripts | ✅ Completed |
-> | Reset project vital documents | 🟡 In Progress |
-> | Re-initialize database & rebuild pipeline | ⬜ Planned |
+> | Reset project vital documents | ✅ Completed |
+> | Re-initialize database & rebuild pipeline | 🟡 In Progress |
 
 ---
 

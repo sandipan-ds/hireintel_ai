@@ -8,6 +8,13 @@ This document tracks notable changes to HireIntel AI, including features, fixes,
 
 ## Unreleased
 
+### Added — 2026-07-09: Additive Sub-Score Engine & 0.01 Floor Scaling (DEC-034)
+
+- **Additive Sub-Score Engine:** Refactored the core scoring mechanism. Candidate requirement sub-scores are calculated by summing sub-queries (`SQ1 + SQ2 + ...`) and scaling the total contribution out of the requirement's weight. This avoids the "multiplication cancellation" issue where a single missing query details would wipe out the entire requirement's score.
+- **0.01 Floor Scaling Fallback:** Qualitative/quantitative scales and unlisted institutions/certification provider lookups now use a minimum score bound of `0.01` instead of `0.0` or `0.00` to prevent zero score contributions.
+- **CGPA 2-Band Rule:** Standardized degree/academic mark evaluations using a strict 2-band check against target ($\ge \text{target} \rightarrow 1.00$, else `0.50` partial credit).
+- **Comprehensive Role Documentation Refactoring:** Updated scoring guides for all 8 roles, sub-query decomposition configuration files for BusinessAnalyst and DataScience, startup guides (`QUICK_START.md`, `README_SETUP.md`), and the canonical `WORKING_LOGIC.md` document.
+
 ### Added — 2026-07-08 (M0.5c): MLflow experiment-tracking wiring (DEC-020)
 
 - **`src/services/mlflow_wiring.py` (NEW)** — the single integration point between the HireIntel scoring pipeline and the local MLflow tracking server. Pipeline code (batch CLI, future Optuna drivers) never imports `mlflow` directly; every call routes through the typed helpers here so the DEC-020 contract (params / metrics / artifacts / tags) is centralized and auditable in one source of truth.
