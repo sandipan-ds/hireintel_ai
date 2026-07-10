@@ -104,30 +104,36 @@ Recruiters assign weights to each REQ via a FastAPI + HTMX web UI.
 
 ## Stage 3 — Resume Parsing (PDF → JSON)
 
-**Status: ⬜ Planned — current next step**
+**Status: 🟡 Pipeline built; batch extraction in progress**
 
-The system must extract structured JSON from resume PDFs of any design,
-template, or writing style. This is a MUST-HAVE capability per the project spec.
+The system extracts structured JSON from resume PDFs of any design, template,
+or writing style. This is a MUST-HAVE capability per the project spec.
 
 The target JSON schema is defined in `06_RESUME_EXTRACTION_JSON_SCHEMA.md`.
 The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 
 | Sub-step | Status |
 |---|---|
-| File classifier (native-text / scanned / mixed / DOCX) | ⬜ |
-| Route 1: Docling primary parser | ⬜ |
-| Route 2: Unstructured fallback parser | ⬜ |
-| Route 3: PaddleOCR + Surya for scanned / image-heavy resumes | ⬜ |
-| Section builder — canonical section grouping | ⬜ |
-| LLM normalization — schema-compliant JSON output | ⬜ |
-| Confidence scoring on extracted fields | ⬜ |
-| Batch re-parse all resumes under the new pipeline | ⬜ |
+| File classifier (native-text / scanned / mixed / DOCX) | ✅ `src/resume_parsing/extraction/file_classifier.py` |
+| Route 1: Docling primary parser | ✅ `src/resume_parsing/extraction/docling_parser.py` |
+| Route 2: Unstructured fallback parser | ✅ `src/resume_parsing/extraction/unstructured_parser.py` |
+| Route 3: PaddleOCR + Surya for scanned / image-heavy resumes | ✅ `src/resume_parsing/extraction/ocr_parser.py` |
+| Section builder — canonical section grouping | ✅ `src/resume_parsing/extraction/section_builder.py` |
+| LLM normalization — schema-compliant JSON output | ✅ `src/resume_parsing/extraction/llm_normalizer.py` |
+| Confidence scoring on extracted fields | ✅ `src/resume_parsing/extraction/schema_validator.py` |
+| Orchestrator pipeline (`extract_resume`) | ✅ `src/resume_parsing/extraction/pipeline.py` |
+| Batch extraction script | ✅ `scripts/batch_extract_resumes.py` |
+| Batch re-parse DataScience role (5 candidates — smoke test) | ✅ `data/processed/DataScience/` |
+| Batch re-parse all 8 roles (721 total resumes) | 🟡 In progress — run `scripts/batch_extract_resumes.py` |
 
-**Why the existing parser is insufficient:**
-`src/resume_parsing/parser.py` uses `pdfplumber` raw text extraction.
-It does not handle two-column layouts, graphical headers, sidebar sections,
-or scanned PDFs. Reading order is not preserved. Output does not follow the
-JSON schema in `06_RESUME_EXTRACTION_JSON_SCHEMA.md`.
+**Fallback chain (per file):**
+`Docling` → `Unstructured` → `PaddleOCR+Surya` → `pdfplumber raw text`
+
+**LLM Normalizer:**
+- Deterministic regex for contact fields (email, phone, URLs).
+- Dedicated system prompt for structured JSON extraction (not the rubric scorer prompt).
+- Checks local Ollama server with 1s health ping; falls back to cloud API on failure.
+- Strips markdown code fences from LLM response before JSON parse.
 
 ---
 
@@ -203,7 +209,8 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 
 | Feature | Notes |
 |---|---|
-| **PDF -> JSON extraction pipeline** (Stage 3) | Critical next step |
+| **Stage 3 batch extraction — all roles** | Run `scripts/batch_extract_resumes.py` (721 resumes) |
+| **Stage 4 embedding index rebuild** | After Stage 3 batch; run `scripts/build_index.py` |
 | Run reports (`run_reports/`) | `scripts/generate_run_report.py` not built |
 | JD clarification loop (Green / Yellow / Red) | Block ambiguous requirements |
 | Per-item `expected_years` in the recruiter UI | DB field exists; UI not exposed |

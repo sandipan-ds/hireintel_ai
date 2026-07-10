@@ -1,20 +1,129 @@
-# This module is responsible for normalizing raw section texts into the structured JSON schema.
+# This module normalizes raw resume section text into the structured JSON schema.
 #
 # It uses robust regexes for contact fields (name, email, phone, links)
-# and calls the configured LLM (Ollama or Opencode) for structural mapping of:
+# and calls an LLM with multi-provider key rotation for structural mapping of:
 # education, experience, skills, certifications, and languages.
+#
+# Provider rotation order (tried in sequence until one succeeds):
+#   1. Ollama (local) — fastest if running, zero cost
+#   2. OpenCode keys 1→2→3 (mimo-v2.5-free)
+#   3. OpenRouter key (google/gemma-4-31b-it)
+#   4. NVIDIA NIM keys (google/gemma-4-31b-it:free)
+# If all fail, an empty scaffold is returned so the batch never crashes.
 
 import re
 import json
 import logging
-from typing import Dict, List, Any, Optional
+from pathlib import Path
+from typing import Dict, List, Any, Optional, Tuple
 
-from src.services.llm_caller import _ENV
 from src.resume_parsing.parser import EMAIL_REGEX, PHONE_REGEX, _looks_like_name
 
 logger = logging.getLogger(__name__)
 
-# Link regexes
+# ---------------------------------------------------------------------------
+# .env loader — reads all keys, handles duplicate key names
+# ---------------------------------------------------------------------------
+
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_ENV_PATH = ROOT / ".env"
+
+
+def _load_env_raw() -> Dict[str, List[str]]:
+    """Load .env into key → [values] mapping (handles duplicate keys like NVIDIA_NIM_API_KEY_1)."""
+    result: Dict[str, List[str]] = {}
+    if not _ENV_PATH.exists():
+        return result
+    for raw_line in _ENV_PATH.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        k, _, v = line.partition("=")
+        key = k.strip()
+        val = v.strip().strip('"').strip("'")
+        if val:
+            result.setdefault(key, []).append(val)
+    return result
+
+
+_RAW_ENV = _load_env_raw()
+
+
+def _get_all(key: str) -> List[str]:
+    """Return all non-empty values for a .env key."""
+    return _RAW_ENV.get(key, [])
+
+
+def _get_first(key: str, default: str = "") -> str:
+    vals = _get_all(key)
+    return vals[0] if vals else default
+
+
+# ---------------------------------------------------------------------------
+# Ollama health check
+# ---------------------------------------------------------------------------
+
+def _ollama_is_alive(base_url: str) -> bool:
+    """Ping local Ollama root URL with a 1-second timeout."""
+    try:
+        import requests
+        root = base_url.replace("/v1", "").rstrip("/")
+        r = requests.get(root, timeout=1.0)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+
+# ---------------------------------------------------------------------------
+# Build ordered provider list: (api_key, base_url, model_name)
+# ---------------------------------------------------------------------------
+
+def _build_providers() -> List[Tuple[str, str, str]]:
+    """
+    Build the ordered list of (api_key, base_url, model) tuples to try.
+
+    Priority:
+      1. OpenRouter keys         (google/gemma-4-31b-it) — Primary
+      2. OpenCode keys 1, 2, 3   (minimax-m3 / cloud fallback)
+      3. NVIDIA NIM keys         (google/gemma-4-31b-it:free)
+
+    Returns:
+        List of provider tuples ready to iterate.
+    """
+    providers: List[Tuple[str, str, str]] = []
+
+    # 1. OpenRouter
+    or_base = "https://openrouter.ai/api/v1"
+    or_model = _get_first("MODEL", "google/gemma-4-31b-it")
+    for key in _get_all("OPENROUTER_API_KEY_1"):
+        providers.append((key, or_base, or_model))
+
+    # 2. OpenCode (3 numbered keys, same base/model)
+    oc_base = _get_first("base_url", "https://opencode.ai/zen/v1")
+    oc_model = _get_first("model", "minimax-m3")
+    for key in (_get_all("OPENCODE_API_KEY_1")
+                + _get_all("OPENCODE_API_KEY_2")
+                + _get_all("OPENCODE_API_KEY_3")):
+        providers.append((key, oc_base, oc_model))
+
+    # 3. NVIDIA NIM (3 keys all stored under same .env name)
+    nim_base = "https://integrate.api.nvidia.com/v1"
+    nim_model = _get_first("mode", "google/gemma-4-31b-it:free")
+    for key in _get_all("NVIDIA_NIM_API_KEY_1"):
+        providers.append((key, nim_base, nim_model))
+
+    if not providers:
+        logger.error("No LLM providers found in .env — normalization will produce empty scaffolds.")
+    return providers
+
+
+# Build once at module import; re-built lazily if empty
+_PROVIDERS: List[Tuple[str, str, str]] = _build_providers()
+
+# ---------------------------------------------------------------------------
+# Contact helpers
+# ---------------------------------------------------------------------------
+
 LINK_REGEX = re.compile(r"https?://[^\s,\"']+")
 
 def extract_contact_info(text: str) -> Dict[str, Any]:
@@ -67,42 +176,67 @@ def extract_name_from_raw_text(raw_text: str) -> Optional[str]:
             return line
     return None
 
+_SYSTEM_PROMPT = (
+    "You are an expert resume parser. Extract raw resume sections into valid JSON "
+    "matching the schema exactly. Return ONLY valid raw JSON — no markdown fences "
+    "(no ```json or ```), no explanation, no comments, no extra text."
+)
+
+
 def call_llm_normalizer(prompt: str) -> str:
-    """Make LLM request using custom system prompt designed for structured JSON extraction."""
-    api_key = _ENV.get("OPENCODE_API_KEY")
-    base_url = _ENV.get("base_url", "https://opencode.ai/zen/v1")
-    model = _ENV.get("model", "deepseek-v4-flash-free")
-    
-    if not api_key:
-        logger.warning("No OPENCODE_API_KEY found, cannot call LLM normalizer.")
-        return ""
-        
-    try:
-        from openai import OpenAI
-        client = OpenAI(api_key=api_key, base_url=base_url)
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an expert resume parser. Extract raw resume sections "
-                        "into valid JSON matching the schema. Return ONLY valid raw JSON. "
-                        "Do not wrap in markdown block (do NOT use ```json or ```). "
-                        "No explanation, no comment lines, no conversational text."
-                    )
-                },
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.0,
-            timeout=45.0
-        )
-        if not response.choices:
-            return ""
-        return (response.choices[0].message.content or "").strip()
-    except Exception as exc:
-        logger.error("LLM normalizer call failed: %s", exc)
-        return ""
+    """
+    Try each LLM provider in order until one succeeds.
+
+    Strategy:
+      - timeout=30s per provider (fast-fail on flaky APIs)
+      - max_retries=0 (we rotate manually — no exponential backoff hangs)
+      - On exception or empty response → immediately try next provider
+      - Returns the first non-empty response, or "" if all providers fail
+
+    Args:
+        prompt: Full user-side prompt with resume sections and JSON schema.
+
+    Returns:
+        Raw LLM response string (may still need markdown fence cleanup).
+    """
+    from openai import OpenAI
+
+    providers = _PROVIDERS or _build_providers()
+    total = len(providers)
+
+    for idx, (api_key, base_url, model) in enumerate(providers):
+        host = base_url.split("/")[2] if "/" in base_url else base_url
+        label = f"[{idx+1}/{total}] {host} ({model})"
+        try:
+            client = OpenAI(
+                api_key=api_key,
+                base_url=base_url,
+                max_retries=0,   # rotate manually, no exponential backoff
+                timeout=30.0,    # fast-fail per provider
+            )
+            response = client.chat.completions.create(
+                model=model,
+                messages=[
+                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
+                temperature=0.0,
+            )
+            if not response.choices:
+                logger.warning("%s returned empty choices — trying next", label)
+                continue
+            text = (response.choices[0].message.content or "").strip()
+            if not text:
+                logger.warning("%s returned empty content — trying next", label)
+                continue
+            logger.info("%s succeeded", label)
+            return text
+        except Exception as exc:
+            logger.warning("%s failed: %s — trying next", label, exc)
+            continue
+
+    logger.error("All %d LLM providers failed — returning empty string", total)
+    return ""
 
 def normalize_to_schema(sections: Dict[str, List[str]], raw_text: str, candidate_id: str) -> Dict[str, Any]:
     """
