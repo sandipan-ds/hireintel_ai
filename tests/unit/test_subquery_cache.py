@@ -282,8 +282,8 @@ def test_load_invalidates_when_subquery_file_changed(
 def test_preencode_role_data_science(isolated_cache, stub_embedder):
     n_added = isolated_cache.preencode_role("DataScience")
     assert n_added > 0
-    # The DataScience SubQuery file has 20 REQs / 55 sub-queries per Track 2-S.
-    assert len(isolated_cache) == 55
+    # The DataScience SubQuery file has 20 REQs / 56 sub-queries per Track 2-S.
+    assert len(isolated_cache) == 56
 
 
 @pytest.mark.skipif(
@@ -308,7 +308,7 @@ def test_preencode_all_roles_runs_without_error(isolated_cache, stub_embedder):
     # the stub embedder; the count is the total across all 8 SubQuery files.
     # If a role's SubQuery file is edited, this count updates on next run.
     total = sum(results.values())
-    assert total == 324, f"Expected 324 sub-queries total, got {total}: {results}"
+    assert total == 325, f"Expected 325 sub-queries total, got {total}: {results}"
 
 
 # ---------------------------------------------------------------------------

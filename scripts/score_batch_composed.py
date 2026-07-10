@@ -53,15 +53,16 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Path setup so the script can be invoked as ``python scripts/score_batch_composed.py``
 # without requiring ``pip install -e .``.
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from src.rag.per_req_retrieval import DEFAULT_EMBEDDING_MODEL
+from src.rag.recursive_chunker import RECURSIVE_CHUNK_OVERLAP, RECURSIVE_CHUNK_SIZE
 from src.rag.retriever import (
-    DEFAULT_CHUNKS_PATH,
     DEFAULT_INDEX_PATH,
     DEFAULT_MAX_CHUNKS_PER_QUERY,
     DEFAULT_THRESHOLD,
@@ -70,11 +71,22 @@ from src.rag.retriever import (
 )
 from src.rag.subquery_cache import SubQueryCache
 from src.resume_parsing.structured_profile import (
-    StructuredCandidateProfile,
     extract_structured_profile,
 )
-from src.scoring.unified_scorer import ComposedCandidateEvaluation, evaluate_candidate_composed
-from src.services.llm_caller import LLMRubricCaller, get_rubric_caller
+from src.scoring.unified_scorer import (
+    ComposedCandidateEvaluation,
+    evaluate_candidate_composed,
+)
+from src.services.llm_caller import get_rubric_caller
+from src.services.mlflow_wiring import (
+    DEFAULT_TRACKING_URI,
+    PipelineParams,
+    RetrievalMetrics,
+    start_run,
+)
+from src.services.mlflow_wiring import (
+    is_available as mlflow_available,
+)
 from src.services.subquery_parser import get_all_role_subqueries
 
 logger = logging.getLogger("score_batch_composed")
@@ -97,7 +109,7 @@ DOWNSTREAM_SUFFIXES = ("_intelligence_report.json", "_structured_profile.json")
 # ---------------------------------------------------------------------------
 
 
-def discover_roles() -> List[str]:
+def discover_roles() -> list[str]:
     """Return the sorted list of role-folders with both a SubQuery + WeightConfig."""
     roles = []
     for d in sorted(JOB_DESCRIPTIONS_DIR.iterdir()):
@@ -127,7 +139,7 @@ def find_weight_config(role: str) -> Path:
     return candidates[0]
 
 
-def iter_candidate_files(role: str, limit: Optional[int] = None) -> List[Path]:
+def iter_candidate_files(role: str, limit: int | None = None) -> list[Path]:
     """Yield parsed-resume JSON paths for ``role``, excluding downstream artifacts."""
     role_dir = PROCESSED_DIR / role
     if not role_dir.exists():
@@ -154,13 +166,13 @@ def score_role(
     role: str,
     retriever: ThresholdRetriever,
     cache: SubQueryCache,
-    llm_caller: Optional[Any],
-    role_subqueries: Optional[Dict[str, Any]] = None,
+    llm_caller: Any | None,
+    role_subqueries: dict[str, Any] | None = None,
     threshold: float = DEFAULT_THRESHOLD,
-    max_chunks_per_query: Optional[int] = None,
-    limit: Optional[int] = None,
+    max_chunks_per_query: int | None = None,
+    limit: int | None = None,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Score every candidate in ``role`` and write the ranking JSON.
 
     Returns:
@@ -205,7 +217,7 @@ def score_role(
             "weight_config_path": str(weight_config_path),
         }
 
-    evaluations: List[ComposedCandidateEvaluation] = []
+    evaluations: list[ComposedCandidateEvaluation] = []
     n_zero_evidence = 0
     for f in candidate_files:
         try:
@@ -285,7 +297,79 @@ def score_role(
 # ---------------------------------------------------------------------------
 
 
-def main(argv: List[str] = None) -> int:
+# A no-op context manager used when MLflow tracking is disabled. Returning
+# a ``with run or _NullCtx():`` keeps the loop body uniform regardless of
+# whether tracking is on, which avoids a fully duplicated code path.
+class _NullCtx:
+    """Trivial context manager that does nothing (used when MLflow is off)."""
+    def __enter__(self) -> _NullCtx:
+        return self
+    def __exit__(self, exc_type, exc, tb) -> None:
+        return None
+
+
+def _build_pipeline_params(args: argparse.Namespace) -> PipelineParams:
+    """Construct the DEC-020 :class:`PipelineParams` from the CLI args.
+
+    Args:
+        args: The parsed argparse Namespace.
+
+    Returns:
+        PipelineParams populated with the chunker / retriever / LLM config
+        actually used for this batch run.
+    """
+    llm_label = "off" if args.no_llm else "on"
+    return PipelineParams(
+        chunk_size=RECURSIVE_CHUNK_SIZE,
+        chunk_overlap=RECURSIVE_CHUNK_OVERLAP,
+        embedding_model=DEFAULT_EMBEDDING_MODEL,
+        vector_store="npz",
+        similarity="cosine",
+        retrieval_mode="threshold",
+        threshold=float(args.theta),
+        top_k=int(args.max_chunks) if args.max_chunks else DEFAULT_MAX_CHUNKS_PER_QUERY,
+        llm=llm_label,
+    )
+
+
+def _log_run_to_mlflow(
+    run,
+    summary: dict[str, Any],
+    role: str,
+    args: argparse.Namespace,
+) -> None:
+    """Log the per-role summary as MLflow params/metrics/artifacts after a run.
+
+    The retrieval-quality metrics from DEC-020 (recall_at_theta, mrr, ndcg,
+    faithfulness, etc.) are not computed by this CLI under the scoring-only
+    path — they require the eval-set harness (M0.5b). When those numbers are
+    unavailable the metrics are logged as ``0.0`` so every required key is
+    present per the contract; a real evaluator will overwrite them.
+
+    Args:
+        run: An opened :class:`MLflowRun` instance.
+        summary: Dict returned by :func:`score_role`.
+        role: Role identifier (also used as the artifact tag).
+        args: The parsed argparse Namespace (for param extraction).
+    """
+    params = _build_pipeline_params(args)
+    run.log_pipeline_params(params)
+    # Run-level rollups: useful for dashboards, not part of the DEC-020 metric
+    # contract. Logged separately from the required retrieval metrics set.
+    run.log_metric("n_candidates", float(summary["n_candidates"]))
+    run.log_metric("mean_score", float(summary["mean_score"]))
+    run.log_metric("n_zero_evidence_reqs", float(summary["n_zero_evidence_reqs"]))
+    run.log_metric("time_seconds", float(summary["time_seconds"]))
+    # DEC-020 contract metrics: populated with 0.0 here because the batch CLI
+    # does not run the eval harness. Real evaluator runs (M0.5d) will overwrite
+    # the same metric keys with measured values.
+    run.log_retrieval_metrics(RetrievalMetrics())
+    if summary.get("output_path") and Path(summary["output_path"]).exists():
+        run.log_artifact(Path(summary["output_path"]))
+    run.set_tag("weight_config_path", str(summary.get("weight_config_path", "")))
+
+
+def main(argv: list[str] = None) -> int:
     parser = argparse.ArgumentParser(
         description="Production batch scorer using the composed Mode1 × Mode2 scorer "
                     "(Track 7.4 / DEC-031).",
@@ -326,6 +410,29 @@ def main(argv: List[str] = None) -> int:
     parser.add_argument(
         "--verbose", "-v", action="store_true",
         help="Enable verbose logger output.",
+    )
+    # --- MLflow experiment tracking (DEC-020, M0.5c) -----------------------
+    parser.add_argument(
+        "--no-mlflow", action="store_true",
+        help="Disable MLflow tracking for this run. Default is to track if "
+             "the mlflow library is installed; pass this flag to skip even "
+             "when available.",
+    )
+    parser.add_argument(
+        "--experiment-set", default="batch_composed",
+        help="MLflow ``experiment_set`` tag value (DEC-020). Default: "
+             "'batch_composed'. Use a unique name when running Optuna "
+             "studies so they group separately.",
+    )
+    parser.add_argument(
+        "--tracking-uri", default=DEFAULT_TRACKING_URI,
+        help=f"MLflow tracking URI (default: {DEFAULT_TRACKING_URI}).",
+    )
+    parser.add_argument(
+        "--no-llm-track", action="store_true",
+        help="Suppress the MLflow run entirely when the LLM is disabled. "
+             "Useful for fast code-only smoke tests that should not pollute "
+             "the tracked-run history.",
     )
     args = parser.parse_args(argv)
 
@@ -405,20 +512,48 @@ def main(argv: List[str] = None) -> int:
     output_dir = Path(args.output_dir)
     t_total_start = time.time()
     summaries = []
+    track_mlflow = (
+        not args.no_mlflow
+        and mlflow_available()
+        and not (args.no_llm and args.no_llm_track)
+    )
+    if not args.no_mlflow and not mlflow_available():
+        logger.warning(
+            "mlflow library not installed; this run will not be tracked. "
+            "Install with `pip install mlflow` or pass --no-mlflow to silence."
+        )
     for role in roles:
         logger.info("=" * 70)
         logger.info("Scoring role: %s", role)
-        summary = score_role(
-            role=role,
-            retriever=retriever,
-            cache=cache,
-            llm_caller=llm_caller,
-            role_subqueries=role_subqueries,
-            threshold=float(args.theta),
-            max_chunks_per_query=int(args.max_chunks) if args.max_chunks else None,
-            limit=args.limit,
-            output_dir=output_dir,
-        )
+        if track_mlflow:
+            run = start_run(
+                experiment_name=args.experiment_set,
+                run_name=f"{role}_{int(time.time())}",
+                experiment_set=args.experiment_set,
+                role=role,
+                tracking_uri=args.tracking_uri,
+            )
+        else:
+            run = None
+        with run or _NullCtx():
+            summary = score_role(
+                role=role,
+                retriever=retriever,
+                cache=cache,
+                llm_caller=llm_caller,
+                role_subqueries=role_subqueries,
+                threshold=float(args.theta),
+                max_chunks_per_query=int(args.max_chunks) if args.max_chunks else None,
+                limit=args.limit,
+                output_dir=output_dir,
+            )
+            if run is not None:
+                _log_run_to_mlflow(
+                    run=run,
+                    summary=summary,
+                    role=role,
+                    args=args,
+                )
         summaries.append(summary)
         logger.info(
             "[%s] scored %d candidates in %.2fs (mean=%.2f; top-1 score=%.2f); "

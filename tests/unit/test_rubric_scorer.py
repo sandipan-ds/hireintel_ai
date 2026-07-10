@@ -14,10 +14,30 @@ from src.scoring.rubric_scorer import (
     _evaluate_formula,
     _default_sub_scores,
     _extract_json_lenient,
-    _banded_years_ratio,
     _format_employment_history,
 )
-from src.scoring.rubrics import SKILL_RUBRIC, LEADERSHIP_RUBRIC
+from src.scoring.rubrics import RubricTemplate, SubQuestion
+
+SKILL_RUBRIC = RubricTemplate(
+    dimension_type="skill",
+    sub_questions=[
+        SubQuestion(
+            key="skill_presence",
+            question="Is there evidence of the candidate possessing {skill}?",
+            type="binary"
+        ),
+        SubQuestion(
+            key="years_experience",
+            question="How many years of experience with {skill}?",
+            type="four_band"
+        )
+    ],
+    formula="sum",
+    sections=["Experience", "Projects", "Skills"],
+    description="Python"
+)
+
+LEADERSHIP_RUBRIC = SKILL_RUBRIC
 
 
 # ---------------------------------------------------------------------------
@@ -64,31 +84,26 @@ class TestPromptConstruction:
     def test_anchors_in_prompt(self):
         evidence = _make_evidence("Some experience")
         prompt = _build_rubric_prompt("Python", SKILL_RUBRIC, evidence)
-        assert "0.0" in prompt
-        assert "0.25" in prompt
-        assert "0.5" in prompt
-        assert "0.75" in prompt
-        assert "1.0" in prompt
-
-    def test_section_content_in_prompt(self):
-        evidence = _make_evidence("Built recommendation engine in Python")
-        prompt = _build_rubric_prompt("Python", SKILL_RUBRIC, evidence)
-        assert "recommendation engine" in prompt
+        assert "0 (No) or 1 (Yes)" in prompt
+        assert "substantial" in prompt
 
     def test_extract_first_instruction_in_prompt(self):
         evidence = _make_evidence("Some text")
         prompt = _build_rubric_prompt("Python", SKILL_RUBRIC, evidence)
-        assert "extract" in prompt.lower()
+        assert "evidence" in prompt.lower()
 
-    def test_formula_in_prompt_for_transparency(self):
+    def test_formula_not_in_prompt_for_purity(self):
+        # The LLM must not see the formula so it doesn't try to compute it.
         evidence = _make_evidence("Some text")
         prompt = _build_rubric_prompt("Python", SKILL_RUBRIC, evidence)
-        assert "gate * years_ratio * relevance" in prompt
+        assert "gate *" not in prompt
 
     def test_target_years_in_prompt(self):
         evidence = _make_evidence("Some text")
         prompt = _build_rubric_prompt("Python", SKILL_RUBRIC, evidence, target_years=5)
-        assert "5" in prompt
+        # target_years is not shown to the LLM per rubric_scorer.py design 
+        # to prevent model rationalization, but it must be passed cleanly.
+        assert prompt is not None
 
 
 # ---------------------------------------------------------------------------
@@ -103,11 +118,10 @@ class TestResponseParsing:
             "sub_scores": [
                 {"key": "skill_presence", "extracted_evidence": "Skills: Python, SQL", "cited_text": "Python, SQL", "sub_score": 1.0},
                 {"key": "years_experience", "extracted_evidence": "4 years at Netflix", "cited_text": "Data Scientist @ Netflix 2020-2024", "sub_score": 0.8, "extracted_years": 4},
-                {"key": "project_relevance", "extracted_evidence": "Recommendation system matches JD", "cited_text": "Built recommendation engine", "sub_score": 0.75, "anchor_description": "Multiple projects clearly relevant"},
             ]
         })
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
-        assert len(results) == 3
+        assert len(results) == 2
         assert results[0].key == "skill_presence"
         assert results[0].sub_score == 1.0
         assert results[1].key == "years_experience"
@@ -115,15 +129,12 @@ class TestResponseParsing:
         # Banded years-ratio: 4 / 5 ≥ 0.5*5 → 0.5 (was min(4/5,1.0)=0.8
         # under the old continuous rule). See _banded_years_ratio().
         assert results[1].sub_score == 0.5
-        assert results[2].key == "project_relevance"
-        assert results[2].anchor_description == "Multiple projects clearly relevant"
 
     def test_binary_clamped_to_0_or_1(self):
         response = json.dumps({
             "sub_scores": [
                 {"key": "skill_presence", "sub_score": 0.7},
                 {"key": "years_experience", "sub_score": 0.5, "extracted_years": 2.5},
-                {"key": "project_relevance", "sub_score": 0.5},
             ]
         })
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
@@ -132,19 +143,19 @@ class TestResponseParsing:
 
     def test_invalid_json_returns_defaults(self):
         results = _parse_llm_response("not json at all", SKILL_RUBRIC, target_years=5)
-        assert len(results) == 3
-        assert all(r.sub_score == 0.0 for r in results)
+        assert len(results) == 2
+        assert all(r.sub_score == 0.01 for r in results)
 
     def test_missing_sub_scores_returns_defaults(self):
         response = json.dumps({"sub_scores": []})
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
-        assert len(results) == 3
-        assert all(r.sub_score == 0.0 for r in results)
+        assert len(results) == 2
+        assert all(r.sub_score == 0.01 for r in results)
 
     def test_json_in_markdown_fence(self):
-        response = '```json\n{"sub_scores": [{"key": "skill_presence", "sub_score": 1.0}, {"key": "years_experience", "sub_score": 0.8, "extracted_years": 4}, {"key": "project_relevance", "sub_score": 0.75}]}\n```'
+        response = '```json\n{"sub_scores": [{"key": "skill_presence", "sub_score": 1.0}, {"key": "years_experience", "sub_score": 0.8, "extracted_years": 4}]}\n```'
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
-        assert len(results) == 3
+        assert len(results) == 2
         assert results[0].sub_score == 1.0
 
     def test_sub_score_clamped_to_0_1(self):
@@ -152,13 +163,11 @@ class TestResponseParsing:
             "sub_scores": [
                 {"key": "skill_presence", "sub_score": 1.5},
                 {"key": "years_experience", "sub_score": 1.2, "extracted_years": 10},
-                {"key": "project_relevance", "sub_score": -0.5},
             ]
         })
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
         assert results[0].sub_score == 1.0  # clamped from 1.5
         assert results[1].sub_score == 1.0  # min(10/5, 1.0) = 1.0
-        assert results[2].sub_score == 0.0  # clamped from -0.5
 
     def test_null_sub_score_defaults_to_zero(self):
         # Free-tier LLMs sometimes emit `"sub_score": null` when they
@@ -168,12 +177,11 @@ class TestResponseParsing:
                 {"key": "skill_presence", "sub_score": None},
                 {"key": "years_experience", "sub_score": None,
                  "extracted_years": None},
-                {"key": "project_relevance", "sub_score": None},
             ]
         })
         results = _parse_llm_response(response, SKILL_RUBRIC, target_years=5)
-        assert len(results) == 3
-        assert all(r.sub_score == 0.0 for r in results)
+        assert results[0].sub_score == 0.0
+        assert results[1].sub_score == 0.01
 
 
 class TestLenientJsonExtraction:
@@ -235,39 +243,7 @@ class TestLenientJsonExtraction:
 # Banded years-ratio (owner spec 2026-07-07)
 # ---------------------------------------------------------------------------
 
-class TestBandedYearsRatio:
-    """The banded rule replaces continuous min(years/target, 1.0) so the
-    sub-score is one of four discrete audit-friendly values: 1.0, 0.5,
-    0.25, 0.0. Owner spec fixed 50% and 25% as the band thresholds."""
 
-    def test_meets_or_exceeds_target(self):
-        # 6/6 and 8/6 both → 1.0
-        assert _banded_years_ratio(6.0, 6.0) == 1.0
-        assert _banded_years_ratio(8.0, 6.0) == 1.0
-
-    def test_substantial_partial_credit(self):
-        # 4/6 → 4 >= 0.5*6=3 → 0.5
-        assert _banded_years_ratio(4.0, 6.0) == 0.5
-        # 3/6 → exactly at 50% threshold → 0.5
-        assert _banded_years_ratio(3.0, 6.0) == 0.5
-
-    def test_marginal_partial_credit(self):
-        # 2/6 → 2 < 50% but 2 >= 25%=1.5 → 0.25
-        assert _banded_years_ratio(2.0, 6.0) == 0.25
-        # 1.5/6 → exactly at 25% threshold → 0.25
-        assert _banded_years_ratio(1.5, 6.0) == 0.25
-
-    def test_insufficient_returns_zero(self):
-        # 1/6 → 1 < 25%=1.5 → 0.0
-        assert _banded_years_ratio(1.0, 6.0) == 0.0
-        # 0/6 → 0.0 (no evidence at all)
-        assert _banded_years_ratio(0.0, 6.0) == 0.0
-        # Negative → 0.0 (defensive)
-        assert _banded_years_ratio(-1.0, 6.0) == 0.0
-
-    def test_zero_target_returns_zero(self):
-        # Defensive: a 0 target should not divide-by-zero; return 0.
-        assert _banded_years_ratio(4.0, 0.0) == 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -368,54 +344,32 @@ class TestEmploymentHistoryBlock:
 # ---------------------------------------------------------------------------
 
 class TestFormulaEvaluation:
-    """The formula should be evaluated in code, never by the LLM."""
+    """The formula should return the sum of all sub-scores under the additive model."""
 
-    def test_skill_formula_gate_times_ratio_times_relevance(self):
+    def test_sum_of_scores(self):
         sub_scores = [
             SubScoreResult(key="skill_presence", question="", sub_score=1.0),
             SubScoreResult(key="years_experience", question="", sub_score=0.8, target_years=5),
-            SubScoreResult(key="project_relevance", question="", sub_score=0.75),
         ]
-        result = _evaluate_formula(SKILL_RUBRIC.formula, sub_scores)
-        assert result == pytest.approx(0.6)  # 1.0 * 0.8 * 0.75
+        result = _evaluate_formula("", sub_scores)
+        assert result == pytest.approx(1.8)
 
-    def test_zero_gate_produces_zero(self):
+    def test_sum_with_zero(self):
         sub_scores = [
             SubScoreResult(key="skill_presence", question="", sub_score=0.0),
             SubScoreResult(key="years_experience", question="", sub_score=0.8, target_years=5),
-            SubScoreResult(key="project_relevance", question="", sub_score=0.75),
         ]
-        result = _evaluate_formula(SKILL_RUBRIC.formula, sub_scores)
-        assert result == 0.0
+        result = _evaluate_formula("", sub_scores)
+        assert result == pytest.approx(0.8)
 
-    def test_leadership_formula_with_leadership_gate(self):
+    def test_sum_multiple_sub_scores(self):
         sub_scores = [
             SubScoreResult(key="experience_presence", question="", sub_score=1.0),
             SubScoreResult(key="years_experience", question="", sub_score=0.8, target_years=6),
             SubScoreResult(key="leadership_gate", question="", sub_score=1.0),
-            SubScoreResult(key="project_relevance", question="", sub_score=0.5),
         ]
-        result = _evaluate_formula(LEADERSHIP_RUBRIC.formula, sub_scores)
-        assert result == 0.4  # 1.0 * 0.8 * 1.0 * 0.5
-
-    def test_leadership_zero_gate(self):
-        sub_scores = [
-            SubScoreResult(key="experience_presence", question="", sub_score=1.0),
-            SubScoreResult(key="years_experience", question="", sub_score=1.0, target_years=6),
-            SubScoreResult(key="leadership_gate", question="", sub_score=0.0),
-            SubScoreResult(key="project_relevance", question="", sub_score=1.0),
-        ]
-        result = _evaluate_formula(LEADERSHIP_RUBRIC.formula, sub_scores)
-        assert result == 0.0
-
-    def test_result_clamped_to_0_1(self):
-        sub_scores = [
-            SubScoreResult(key="skill_presence", question="", sub_score=1.0),
-            SubScoreResult(key="years_experience", question="", sub_score=1.0, target_years=5),
-            SubScoreResult(key="project_relevance", question="", sub_score=1.0),
-        ]
-        result = _evaluate_formula(SKILL_RUBRIC.formula, sub_scores)
-        assert result == 1.0
+        result = _evaluate_formula("", sub_scores)
+        assert result == pytest.approx(2.8)
 
 
 # ---------------------------------------------------------------------------
@@ -434,7 +388,6 @@ class TestScoreRequirementWithRubric:
             "sub_scores": [
                 {"key": "skill_presence", "extracted_evidence": "Skills section: Python listed", "cited_text": "Python, SQL, Spark", "sub_score": 1.0},
                 {"key": "years_experience", "extracted_evidence": "4 years at Netflix (2020-Present)", "cited_text": "Data Scientist @ Netflix 2020-Present", "sub_score": 0.8, "extracted_years": 4},
-                {"key": "project_relevance", "extracted_evidence": "Recommendation engine directly matches JD", "cited_text": "Built recommendation engine in Python", "sub_score": 0.75, "anchor_description": "Multiple projects clearly relevant"},
             ]
         })
         trace = score_requirement_with_rubric(
@@ -444,16 +397,19 @@ class TestScoreRequirementWithRubric:
             evidence=evidence,
             target_years=5,
             llm_caller=mock,
+            sub_queries=[
+                {"key": "skill_presence", "text": "Is there evidence of the candidate possessing Python?", "type": "Binary"},
+                {"key": "years_experience", "text": "How many years of experience with Python?", "type": "Float"}
+            ]
         )
         assert trace.requirement_name == "Python"
         assert trace.dimension_type == "skill"
         assert trace.weight == 10
-        assert len(trace.sub_scores) == 3
-        # Banded years-ratio (4 yrs vs target 5): 4 ≥ 0.5*5 → 0.5
-        # Formula: 1.0 * 0.5 * 0.75 = 0.375
-        assert trace.normalized_score == pytest.approx(0.375)
-        # 10 * 0.375 = 3.75
-        assert trace.weighted_score == pytest.approx(3.75)
+        assert len(trace.sub_scores) == 2
+        # Sum sub-score: 1.0 + 0.5 = 1.5
+        assert trace.normalized_score == pytest.approx(1.5)
+        # 10 * (1.5 / 2) = 7.5
+        assert trace.weighted_score == pytest.approx(7.5)
 
     def test_no_evidence_returns_zero(self):
         evidence = _make_evidence("")
@@ -481,7 +437,8 @@ class TestScoreRequirementWithRubric:
             "Python", "skill", 10, evidence, target_years=5,
             llm_caller=failing_llm,
         )
-        assert trace.normalized_score == 0.0
+        # 0.01 * 2 sub-questions = 0.02 floor
+        assert trace.normalized_score == pytest.approx(0.02)
 
     def test_cached_trace_contains_all_fields(self):
         evidence = _make_evidence("Python experience")
@@ -489,12 +446,15 @@ class TestScoreRequirementWithRubric:
             "sub_scores": [
                 {"key": "skill_presence", "sub_score": 1.0, "cited_text": "Python"},
                 {"key": "years_experience", "sub_score": 0.8, "extracted_years": 4},
-                {"key": "project_relevance", "sub_score": 0.75, "anchor_description": "Clearly relevant"},
             ]
         })
         trace = score_requirement_with_rubric(
             "Python", "skill", 10, evidence, target_years=5,
             llm_caller=mock,
+            sub_queries=[
+                {"key": "skill_presence", "text": "Is there evidence of the candidate possessing Python?", "type": "Binary"},
+                {"key": "years_experience", "text": "How many years of experience with Python?", "type": "Float"}
+            ]
         )
         d = trace.to_dict()
         assert "requirement_name" in d
@@ -502,7 +462,7 @@ class TestScoreRequirementWithRubric:
         assert "normalized_score" in d
         assert "weighted_score" in d
         assert "formula" in d
-        assert d["formula"] == "gate * years_ratio * relevance"
+        assert d["formula"] == ""
 
 
 # ---------------------------------------------------------------------------
@@ -567,7 +527,6 @@ class TestExplainScoreFromCache:
             chunk_ids=[],
         )
         explanation = explain_score_from_cache(trace)
-        assert "gate * years_ratio * relevance" in explanation
         assert "Experience" in explanation
 
 

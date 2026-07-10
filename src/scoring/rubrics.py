@@ -30,6 +30,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
+from src.scoring.tier_lookup import lookup_institute_tier, lookup_certificate_tier
+
 
 # ---------------------------------------------------------------------------
 # Data classes for rubric structure.
@@ -117,494 +119,135 @@ class RubricTemplate:
 
 
 # ---------------------------------------------------------------------------
-# Shared anchor sets.
+# Anchors
 # ---------------------------------------------------------------------------
 
-# Binary gate: 0 or 1.
 BINARY_ANCHORS = [
     Anchor(0.0, "No — the requirement is not met"),
     Anchor(1.0, "Yes — the requirement is met"),
 ]
 
-# Project relevance anchored scale (per WORKING_LOGIC.md).
-RELEVANCE_ANCHORS = [
-    Anchor(0.0, "No relevant projects or experience"),
-    Anchor(0.25, "Tangential mention, no real project work in this area"),
-    Anchor(0.5, "One project partially relevant to the JD requirement"),
-    Anchor(0.75, "Multiple projects clearly relevant to the JD requirement"),
-    Anchor(1.0, "Projects directly match the JD requirement (exact match)"),
-]
-
-# Project complexity / depth anchored scale.
-COMPLEXITY_ANCHORS = [
-    Anchor(0.0, "No project work demonstrated"),
-    Anchor(0.25, "Simple/tutorial-level projects only"),
-    Anchor(0.5, "One substantial project with real complexity"),
-    Anchor(0.75, "Multiple projects with clear depth and ownership"),
-    Anchor(1.0, "Complex, production-grade projects with significant impact"),
-]
-
-# Language proficiency anchored scale.
-PROFICIENCY_ANCHORS = [
-    Anchor(0.0, "No knowledge of this language"),
-    Anchor(0.25, "Basic — can read simple text"),
-    Anchor(0.5, "Intermediate — can converse on familiar topics"),
-    Anchor(0.75, "Professional working proficiency"),
-    Anchor(1.0, "Native or bilingual proficiency"),
-]
-
-# Communication quality anchored scale (subjective).
-COMMUNICATION_ANCHORS = [
-    Anchor(0.0, "Resume is disorganized, unclear, or poorly written"),
-    Anchor(0.25, "Resume has significant clarity issues"),
-    Anchor(0.5, "Resume is adequately written but lacks polish"),
-    Anchor(0.75, "Resume is well-organized with clear, professional language"),
-    Anchor(1.0, "Exceptional communication — concise, impactful, well-structured"),
-]
-
-# Resume organization anchored scale (subjective).
-ORGANIZATION_ANCHORS = [
-    Anchor(0.0, "No clear structure — sections blend together"),
-    Anchor(0.25, "Minimal structure, hard to find key information"),
-    Anchor(0.5, "Basic structure present but inconsistent"),
-    Anchor(0.75, "Clear section structure, easy to navigate"),
-    Anchor(1.0, "Excellent organization — every section clearly labeled and ordered"),
-]
-
 
 # ---------------------------------------------------------------------------
-# Rubric templates — one per dimension type.
+# Named Rubric Scoring Functions
 # ---------------------------------------------------------------------------
 
-SKILL_RUBRIC = RubricTemplate(
-    dimension_type="skill",
-    description=(
-        "Evaluates a skill requirement (e.g., Python, Power BI). "
-        "The LLM extracts every role/project where the skill appears, "
-        "then scores presence, years, and project relevance."
-    ),
-    sections=["Experience", "Projects", "Skills"],
-    formula="gate * years_ratio * relevance",
-    sub_questions=[
-        SubQuestion(
-            key="skill_presence",
-            question="Does the candidate know {skill}?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="years_experience",
-            question="How many years of relevant experience does the candidate have with {skill}?",
-            type="linear",
-            target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the candidate's projects to the JD requirement for {skill}?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-EXPERIENCE_RUBRIC = RubricTemplate(
-    dimension_type="experience",
-    description=(
-        "Evaluates a general experience requirement (e.g., '5+ years in data science'). "
-        "The LLM extracts all relevant experience and scores presence, years, and relevance."
-    ),
-    sections=["Experience"],
-    formula="gate * years_ratio * relevance",
-    sub_questions=[
-        SubQuestion(
-            key="experience_presence",
-            question="Is the candidate experienced in this area?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="years_experience",
-            question="How many years of relevant experience does the candidate have?",
-            type="linear",
-            target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant is the candidate's experience to the JD requirement?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-LEADERSHIP_RUBRIC = RubricTemplate(
-    dimension_type="leadership",
-    description=(
-        "Evaluates a leadership experience requirement (e.g., '6 years in a leadership role'). "
-        "Adds a binary leadership gate on top of the experience rubric."
-    ),
-    sections=["Experience"],
-    formula="gate * years_ratio * leadership_gate * relevance",
-    sub_questions=[
-        SubQuestion(
-            key="experience_presence",
-            question="Is the candidate experienced?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="years_experience",
-            question="How many years of relevant experience?",
-            type="linear",
-            target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="leadership_gate",
-            question="Has the candidate served in a leadership or similar responsible role? (e.g., team lead, project owner, senior IC with mentoring)",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the candidate's projects to the JD requirement?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-SAME_ROLE_RUBRIC = RubricTemplate(
-    dimension_type="same_role",
-    description=(
-        "Evaluates same/similar-role experience (e.g., 'has worked as a Business Analyst'). "
-        "The binary gate checks for a similar role — not necessarily identical. "
-        "The relevance sub-score then judges how close the match is."
-    ),
-    sections=["Experience"],
-    formula="gate * years_ratio * relevance",
-    sub_questions=[
-        SubQuestion(
-            key="role_presence",
-            question="Has the candidate served in a similar role? (not necessarily the same title — e.g., 'Business Analyst' is similar to 'Data Analyst')",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="years_experience",
-            question="How many years has the candidate spent in a similar role?",
-            type="linear",
-            target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant is this role experience to the JD requirement? (This judges the actual degree of similarity.)",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-DOMAIN_RUBRIC = RubricTemplate(
-    dimension_type="domain",
-    description=(
-        "Evaluates industry/domain experience (e.g., 'healthcare domain experience'). "
-        "The binary gate checks for a similar domain — not necessarily identical. "
-        "The relevance sub-score then judges how close the domain match is "
-        "(e.g., 'finance' and 'banking' are similar, not the same)."
-    ),
-    sections=["Experience", "Projects"],
-    formula="gate * years_ratio * relevance",
-    sub_questions=[
-        SubQuestion(
-            key="domain_presence",
-            question="Has the candidate served in a similar domain/industry? (not necessarily the same — e.g., 'finance' is similar to 'banking')",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="years_experience",
-            question="How many years of experience in a similar domain?",
-            type="linear",
-            target_field="expected_years",
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the domain-specific projects to the JD requirement? (This judges the actual degree of domain similarity.)",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-EDUCATION_RUBRIC = RubricTemplate(
-    dimension_type="education",
-    description=(
-        "Evaluates an education requirement (e.g., 'BTech in Computer Science'). "
-        "Code-only: degree match from structured profile + institute tier lookup. "
-        "The LLM is NOT involved — this is fully deterministic."
-    ),
-    sections=["Education"],
-    formula="degree_match * institute_tier_points",
-    sub_questions=[
-        SubQuestion(
-            key="degree_match",
-            question="Does the candidate hold the required degree?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=False,
-        ),
-        SubQuestion(
-            key="institute_tier",
-            question="What is the tier of the candidate's institute? (code-only lookup)",
-            type="anchored",
-            anchors=[
-                Anchor(1.0, "Tier 1 — premier institute (IIT, NIT, IISc, world top 100)"),
-                Anchor(0.75, "Tier 2 — recognized institute (state university, good private)"),
-                Anchor(0.50, "Tier 3 — regional/accredited institute or not listed"),
-            ],
-            target_field=None,
-            extract_first=False,
-        ),
-    ],
-)
-
-CERTIFICATION_RUBRIC = RubricTemplate(
-    dimension_type="certification",
-    description=(
-        "Evaluates a certification requirement (e.g., 'AWS Certified'). "
-        "Code-only: cert match + provider tier lookup. The LLM is NOT involved."
-    ),
-    sections=["Certifications"],
-    formula="cert_match * provider_tier_points",
-    sub_questions=[
-        SubQuestion(
-            key="cert_match",
-            question="Does the candidate hold the required certification?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=False,
-        ),
-        SubQuestion(
-            key="provider_tier",
-            question="What is the tier of the certification provider? (code-only lookup)",
-            type="anchored",
-            anchors=[
-                Anchor(1.0, "Tier 1 — top-tier cert (AWS, Microsoft, Google, PMP, etc.)"),
-                Anchor(0.75, "Tier 2 — second-grade cert (Coursera, NPTEL, etc.)"),
-                Anchor(0.50, "Tier 3 — local/bootcamp or not listed"),
-            ],
-            target_field=None,
-            extract_first=False,
-        ),
-    ],
-)
-
-PROJECT_RUBRIC = RubricTemplate(
-    dimension_type="project",
-    description=(
-        "Evaluates project relevance and depth. "
-        "The LLM extracts project descriptions and scores relevance and complexity."
-    ),
-    sections=["Projects", "Experience"],
-    formula="presence * relevance * complexity",
-    sub_questions=[
-        SubQuestion(
-            key="project_presence",
-            question="Does the candidate have any projects?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_relevance",
-            question="How relevant are the candidate's projects to the JD requirement?",
-            type="anchored",
-            anchors=RELEVANCE_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="project_complexity",
-            question="What is the complexity/depth of the candidate's projects?",
-            type="anchored",
-            anchors=COMPLEXITY_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-LANGUAGE_RUBRIC = RubricTemplate(
-    dimension_type="language",
-    description=(
-        "Evaluates a language requirement (e.g., 'English proficiency'). "
-        "The LLM checks presence and proficiency level."
-    ),
-    sections=["Languages"],
-    formula="presence * proficiency",
-    sub_questions=[
-        SubQuestion(
-            key="language_presence",
-            question="Does the candidate know this language?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=True,
-        ),
-        SubQuestion(
-            key="language_proficiency",
-            question="What is the candidate's proficiency level in this language?",
-            type="anchored",
-            anchors=PROFICIENCY_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-LOCATION_RUBRIC = RubricTemplate(
-    dimension_type="location",
-    description=(
-        "Evaluates a location requirement. Code-only — binary match from "
-        "the structured profile. No LLM involved."
-    ),
-    sections=["Personal_Info"],
-    formula="match",
-    sub_questions=[
-        SubQuestion(
-            key="location_match",
-            question="Does the candidate's location match the JD requirement?",
-            type="binary",
-            anchors=BINARY_ANCHORS,
-            extract_first=False,
-        ),
-    ],
-)
-
-COMMUNICATION_RUBRIC = RubricTemplate(
-    dimension_type="communication",
-    description=(
-        "Evaluates communication quality (subjective). "
-        "The LLM assesses the resume's writing quality, clarity, and structure."
-    ),
-    sections=["Experience", "Personal_Info"],
-    formula="communication_score",
-    sub_questions=[
-        SubQuestion(
-            key="communication_score",
-            question="How would you rate the candidate's communication quality based on the resume?",
-            type="anchored",
-            anchors=COMMUNICATION_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-RESUME_ORGANIZATION_RUBRIC = RubricTemplate(
-    dimension_type="resume_organization",
-    description=(
-        "Evaluates resume organization (subjective). "
-        "The LLM assesses the structure, labeling, and navigability of the resume."
-    ),
-    sections=["Experience", "Education", "Projects", "Skills",
-              "Certifications", "Languages", "Personal_Info"],
-    formula="organization_score",
-    sub_questions=[
-        SubQuestion(
-            key="organization_score",
-            question="How would you rate the resume's organization and structure?",
-            type="anchored",
-            anchors=ORGANIZATION_ANCHORS,
-            extract_first=True,
-        ),
-    ],
-)
-
-
-# ---------------------------------------------------------------------------
-# Registry — maps dimension type → rubric template.
-# ---------------------------------------------------------------------------
-
-RUBRIC_REGISTRY: Dict[str, RubricTemplate] = {
-    "skill": SKILL_RUBRIC,
-    "experience": EXPERIENCE_RUBRIC,
-    "leadership": LEADERSHIP_RUBRIC,
-    "same_role": SAME_ROLE_RUBRIC,
-    "domain": DOMAIN_RUBRIC,
-    "education": EDUCATION_RUBRIC,
-    "certification": CERTIFICATION_RUBRIC,
-    "project": PROJECT_RUBRIC,
-    "language": LANGUAGE_RUBRIC,
-    "location": LOCATION_RUBRIC,
-    "communication": COMMUNICATION_RUBRIC,
-    "resume_organization": RESUME_ORGANIZATION_RUBRIC,
-}
-
-
-def get_rubric(dimension_type: str) -> RubricTemplate:
-    """Retrieve the rubric template for a dimension type.
+def score_binary(condition_met: bool) -> float:
+    """
+    Binary gate: 1.0 if condition met, 0.0 otherwise.
 
     Args:
-        dimension_type: One of the keys in ``RUBRIC_REGISTRY``
-            (e.g., "skill", "education", "certification").
+        condition_met: True if condition is met.
 
     Returns:
-        ``RubricTemplate`` for the given dimension type.
-
-    Raises:
-        KeyError: If no rubric exists for the dimension type.
+        1.0 or 0.0 float value.
     """
-    if dimension_type not in RUBRIC_REGISTRY:
-        raise KeyError(
-            f"No rubric template for dimension type '{dimension_type}'. "
-            f"Available types: {list(RUBRIC_REGISTRY.keys())}"
-        )
-    return RUBRIC_REGISTRY[dimension_type]
+    return 1.0 if condition_met else 0.0
 
 
-def is_code_only(dimension_type: str) -> bool:
-    """Check whether a dimension type is scored code-only (no LLM).
-
-    Code-only dimensions use structured-profile lookups and tier databases.
-    The LLM is not involved at all.
+def score_four_band_qualitative(level: str) -> float:
+    """
+    4-band scale for qualitative experience (no timelines/dates mentioned).
 
     Args:
-        dimension_type: The dimension type to check.
+        level: Level of experience/tasks ("substantial", "some", "few", "none").
 
     Returns:
-        True if the dimension is code-only, False if it requires the LLM judge.
+        Mapped points multiplier: 1.00 / 0.50 / 0.25 / 0.01.
     """
-    return dimension_type in ("education", "certification", "location")
+    if not level:
+        return 0.01
+    val = level.lower().strip()
+    if any(x in val for x in ("substantial", "high", "strong", "expert", "meets-or-exceeds")):
+        return 1.00
+    elif any(x in val for x in ("some", "moderate", "medium", "partial")):
+        return 0.50
+    elif any(x in val for x in ("few", "basic", "low", "limited", "minimal")):
+        return 0.25
+    return 0.01
 
 
-def is_rubric_bound_llm(dimension_type: str) -> bool:
-    """Check whether a dimension type requires the rubric-bound LLM judge.
+def score_four_band_quantitative(
+    extracted_years: Optional[float],
+    target_years: float,
+) -> float:
+    """
+    4-band scale for quantitative experience (timeline/duration present).
 
     Args:
-        dimension_type: The dimension type to check.
+        extracted_years: Years detected in resume.
+        target_years: Expectation target years.
 
     Returns:
-        True if the dimension requires the LLM judge, False if it's code-only.
+        Banded points multiplier: 1.00 / 0.50 / 0.25 / 0.01.
     """
-    return not is_code_only(dimension_type)
+    if extracted_years is None or target_years <= 0:
+        return 0.01
+    if extracted_years >= target_years:
+        return 1.00
+    if extracted_years >= 0.5 * target_years:
+        return 0.50
+    if extracted_years >= 0.25 * target_years:
+        return 0.25
+    return 0.01
 
 
-def all_rubric_types() -> List[str]:
-    """Return all registered dimension types.
+def score_cgpa(score: Optional[float], target: float) -> float:
+    """
+    2-band check for CGPA/percentage marks against academic target.
+
+    Args:
+        score: Extracted CGPA or percentage marks.
+        target: Target marks criteria.
 
     Returns:
-        List of dimension type strings.
+        1.00 if score >= target, 0.50 if score < target (partial credit), 0.01 if absent.
     """
-    return list(RUBRIC_REGISTRY.keys())
+    if score is None:
+        return 0.01
+    
+    # Scale normalization:
+    s = float(score)
+    t = float(target)
+    
+    # If target is percentage (e.g. 70) and score is CGPA (e.g. 8.5), convert score to percentage (85.0)
+    if t > 10.0 and s <= 10.0:
+        s = s * 10.0
+    # If target is CGPA (e.g. 7.0) and score is percentage (e.g. 85.0), convert score to CGPA (8.5)
+    elif t <= 10.0 and s > 10.0:
+        s = s / 10.0
+        
+    return 1.00 if s >= t else 0.50
+
+
+def score_institution_rank(institute_name: str) -> float:
+    """
+    Tier lookup points multiplier for a university/institute.
+
+    Args:
+        institute_name: Name of the institute.
+
+    Returns:
+        Tier points multiplier: 1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3) / 0.01 (Unlisted).
+    """
+    if not institute_name:
+        return 0.01
+    _, points = lookup_institute_tier(institute_name)
+    return points
+
+
+def score_certificate_rank(provider_name: str) -> float:
+    """
+    Tier lookup points multiplier for a certification provider.
+
+    Args:
+        provider_name: Name of the provider.
+
+    Returns:
+        Tier points multiplier: 1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3) / 0.01 (Unlisted).
+    """
+    if not provider_name:
+        return 0.01
+    _, points = lookup_certificate_tier(provider_name)
+    return points
+

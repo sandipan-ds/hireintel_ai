@@ -85,7 +85,7 @@ class TestInstituteTierLookup:
     def test_unknown_institute_gets_not_listed_default(self):
         tier, points = lookup_institute_tier("Some Unknown Regional College")
         assert tier is None
-        assert points == 0.50
+        assert points == 0.01
 
     def test_empty_name(self):
         tier, points = lookup_institute_tier("")
@@ -95,7 +95,7 @@ class TestInstituteTierLookup:
     def test_convenience_points_only(self):
         assert get_institute_tier_points("IIT Delhi") == 1.0
         assert get_institute_tier_points("VIT Vellore") == 0.75
-        assert get_institute_tier_points("Unknown College") == 0.50
+        assert get_institute_tier_points("Unknown College") == 0.01
 
     def test_calcutta_university_is_tier_3(self):
         tier, points = lookup_institute_tier("University of Calcutta")
@@ -199,7 +199,7 @@ class TestCertificateTierLookup:
     def test_unknown_certificate_gets_not_listed_default(self):
         tier, points = lookup_certificate_tier("Some Random Local Certificate")
         assert tier is None
-        assert points == 0.50
+        assert points == 0.01
 
     def test_empty_name(self):
         tier, points = lookup_certificate_tier("")
@@ -209,7 +209,7 @@ class TestCertificateTierLookup:
     def test_convenience_points_only(self):
         assert get_certificate_tier_points("AWS Solutions Architect Associate") == 1.0
         assert get_certificate_tier_points("Coursera Specialization") == 0.75
-        assert get_certificate_tier_points("Unknown Certificate") == 0.50
+        assert get_certificate_tier_points("Unknown Certificate") == 0.01
 
     def test_red_hat_rhcsa_is_tier_2(self):
         tier, points = lookup_certificate_tier("RHCSA - Red Hat Certified System Administrator")

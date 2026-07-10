@@ -47,7 +47,14 @@ from src.scoring.rubric_scorer import (
     SubScoreResult,
     score_requirement_with_rubric,
 )
-from src.scoring.rubrics import is_code_only, get_rubric
+from src.scoring.rubrics import RubricTemplate, SubQuestion
+
+
+def is_code_only(dim_type: str) -> bool:
+    """Check whether a dimension type is scored code-only (no LLM)."""
+    return dim_type in ("education", "certification", "location")
+
+
 from src.scoring.tier_lookup import get_institute_tier_points, get_certificate_tier_points
 from src.resume_parsing.structured_profile import StructuredCandidateProfile
 
@@ -936,6 +943,149 @@ class ComposedCandidateEvaluation:
             "reqs": [r.to_dict() for r in self.reqs],
         }
 
+def classify_subquery_type(sq: Dict[str, Any]) -> str:
+    """Classify the sub-query type based on text and key.
+
+    Args:
+        sq: Sub-query dict.
+
+    Returns:
+        One of "binary", "cgpa", "institution_rank", "certificate_rank", "four_band".
+    """
+    text = (sq.get("text") or "").lower()
+    key = (sq.get("key") or "").lower()
+    sq_type = (sq.get("type") or "").lower()
+
+    if sq_type in ("binary", "boolean", "bool"):
+        return "binary"
+
+    if "cgpa" in text or "percentage" in text or "marks" in text or "grade" in text:
+        return "cgpa"
+
+    if "tier of the institute" in text or "institute_tier" in key or "university tier" in text:
+        return "institution_rank"
+
+    if "tier of the certificate" in text or "provider_tier" in key or "certification tier" in text:
+        return "certificate_rank"
+
+    return "four_band"
+
+
+def extract_cgpa_from_profile(profile: Dict[str, Any]) -> Optional[float]:
+    """Scan the education entries or the raw text of the resume for CGPA or percentage marks."""
+    import re
+    text = ""
+    education = profile.get("education") or {}
+    for entry in education.get("entries") or []:
+        text += " " + (entry.get("description") or "")
+    text += " " + profile.get("raw_text", "")
+
+    # Try to find CGPA or GPA out of 10 or 4
+    cgpa_matches = re.findall(r'\b(?:cgpa|gpa|marks|percentage)?\s*(?::|of)?\s*([0-9]+(?:\.[0-9]+)?)\s*(?:/\s*(10|4))?\b', text, re.IGNORECASE)
+    pct_matches = re.findall(r'\b([0-9]+(?:\.[0-9]+)?)\s*(?:%|\s*percent)\b', text, re.IGNORECASE)
+
+    for val_str, scale in cgpa_matches:
+        try:
+            val = float(val_str)
+            if scale == "10":
+                return val
+            if scale == "4":
+                return val
+            if 0.0 < val <= 10.0:
+                return val
+        except ValueError:
+            continue
+
+    for val_str in pct_matches:
+        try:
+            val = float(val_str)
+            if 0.0 < val <= 100.0:
+                return val
+        except ValueError:
+            continue
+
+    return None
+
+
+def _evaluate_code_only_sq(
+    sq: Dict[str, Any],
+    requirement_name: str,
+    profile: Dict[str, Any],
+    structured_profile: StructuredCandidateProfile,
+) -> float:
+    """Evaluate a code-only sub-query in Python using structured_profile and tier lookup databases."""
+    from src.scoring.rubrics import (
+        score_binary,
+        score_cgpa,
+        score_institution_rank,
+        score_certificate_rank,
+    )
+
+    sq_type = classify_subquery_type(sq)
+
+    if sq_type == "binary":
+        # Check matching degree
+        degree_matched = False
+        for degree_entry in structured_profile.degrees:
+            if _token_boundary_match(requirement_name, degree_entry.degree) or \
+               _token_boundary_match(degree_entry.degree, requirement_name):
+                degree_matched = True
+                break
+        if not degree_matched and structured_profile.degrees:
+            if any(kw in requirement_name.lower() for kw in ("degree", "graduation", "bachelor", "master", "education")):
+                degree_matched = True
+
+        # Check matching certification
+        cert_matched = False
+        for cert_entry in structured_profile.certifications:
+            if _token_boundary_match(requirement_name, cert_entry.name):
+                cert_matched = True
+                break
+
+        # Check matching location
+        location_matched = False
+        raw_text = profile.get("raw_text", "")
+        location_term = requirement_name.lower()
+        for prefix in ("location:", "location", "city:", "city"):
+            if location_term.startswith(prefix):
+                location_term = location_term[len(prefix):].strip()
+                break
+        if location_term and location_term in raw_text.lower():
+            location_matched = True
+
+        condition_met = degree_matched or cert_matched or location_matched
+        return score_binary(condition_met)
+
+    elif sq_type == "cgpa":
+        extracted_cgpa = extract_cgpa_from_profile(profile)
+        # Default target CGPA
+        target = 7.0
+        # Check if the subquery specifies a custom target
+        sq_text = sq.get("text") or ""
+        import re
+        m = re.search(r"(\d+(?:\.\d+)?)", sq_text)
+        if m:
+            target = float(m.group(1))
+        return score_cgpa(extracted_cgpa, target)
+
+    elif sq_type == "institution_rank":
+        matched_institution = ""
+        for degree_entry in structured_profile.degrees:
+            matched_institution = degree_entry.institution
+            if matched_institution:
+                break
+        return score_institution_rank(matched_institution)
+
+    elif sq_type == "certificate_rank":
+        matched_provider = ""
+        for cert_entry in structured_profile.certifications:
+            matched_provider = cert_entry.provider or cert_entry.name
+            if matched_provider:
+                break
+        return score_certificate_rank(matched_provider)
+
+    return 0.01
+
 
 # ---------------------------------------------------------------------------
 # Main entry point: composed Mode1 × Mode2 scoring per REQ.
@@ -956,90 +1106,10 @@ def evaluate_candidate_composed(
     chunker_id: str = "Recursive",
     sq_embedder: Optional[Callable[[List[Tuple[str, str]]], "np.ndarray"]] = None,
 ) -> ComposedCandidateEvaluation:
-    """Score a candidate with the canonical Mode1 × Mode2 composition.
+    """Score a candidate with the new composed Mode1 / Mode2 scoring logic.
 
-    For each REQ in the weight config:
-
-        1. Look up the REQ's sub-queries from the SubQuery file (parsed
-           by :mod:`src.services.subquery_parser`).
-        2. Classify each sub-query:
-             * Binary type → code-only presence gate.
-             * Float/Linear type with "years" in text → code-only
-               years-proportional ``min(years / expected, 1.0)``.
-             * Other Float/Linear type → rubric-bound LLM judge.
-        3. Score code-only SQs against the parsed profile using the
-           legacy :func:`graded_scorer._search_profile` helpers
-           (synonym match, regex years detection).
-        4. Score rubric SQs with a single LLM call per REQ after
-           retrieving evidence via
-           :func:`per_req_retrieval.retrieve_evidence_for_req`. The
-           rubric LLM's ``normalized_score`` is used directly as the
-           entire ``Rubric_LLM_part`` (one LLM call per REQ, not per
-           SQ — rubric templates score multiple sub-questions in one
-           call).
-        5. Aggregate:
-
-             Code_only_part  = Π code_only_sq_scores     (1.0 if none)
-             Rubric_LLM_part = rubric_normalized_score   (1.0 if none)
-             Sub-Score       = Code_only_part × Rubric_LLM_part
-             Contribution    = weight_percentage × Sub-Score
-             Total           = Σ Contribution            (lands in [0, 100])
-
-    Blocking rules:
-        * A years-type code-only SQ with no ``expected_years`` (from
-          weight config or recoverable via regex on the SubQuery text)
-          blocks the entire REQ: ``code_only_part = 0`` and
-          ``contribution = 0``, with a flag.
-        * A rubric REQ with zero retrieved evidence OR no LLM caller
-          blocks the rubric part: ``rubric_llm_part = 0`` and
-          ``contribution = 0``, with a flag written to
-          ``audit_flags_path`` (default
-          ``reports/audit/no_evidence_flags.jsonl``).
-        * A REQ with no sub-queries at all (parser mismatch) is treated
-          as fully blocked and flagged.
-
-    Args:
-        profile: The parsed candidate profile dict.
-        weights: The recruiter weight config dict with a
-            ``requirements_weights`` flat list.
-        retriever: The :class:`ThresholdRetriever` for per-REQ
-            evidence retrieval. May be ``None``, in which case all
-            rubric SQs get score 0 (the rubric path is bypassed but
-            the code-only path still runs).
-        structured_profile: The deterministic structured profile
-            (unused at present — kept for forward-compat with tier
-            lookups that the LLM part might need). May be ``None``.
-        llm_caller: Optional callable for the rubric-bound LLM judge.
-            When ``None``, rubric SQs get score 0 (zero-out).
-        role_subqueries: Pre-loaded SubQuery data for the candidate's
-            role (as returned by
-            :func:`subquery_parser.get_all_role_subqueries`). When
-            ``None``, the parser is invoked lazily using
-            ``role_name``.
-        role_name: Role bucket to look up the SubQuery file when
-            ``role_subqueries`` is ``None``. Falls back to
-            ``weights["role"]``.
-        threshold: Cosine threshold for ``retrieve_evidence_for_req``.
-            Defaults to :data:`retriever.DEFAULT_THRESHOLD`.
-        max_chunks_per_query: Optional cap on retrieved chunks per REQ.
-            Defaults to the retriever's own ``max_chunks_per_query``.
-        audit_flags_path: Path to the JSONL audit log for zero-evidence
-            flags. When ``None`` the default
-            ``reports/audit/no_evidence_flags.jsonl`` is used.
-        chunker_id: Human-readable chunker identifier for the audit
-            log (e.g. ``"Recursive(chunk_size=500, chunk_overlap=100)"``).
-        sq_embedder: Optional callable that takes a list of
-            ``(sq_key, sq_text)`` tuples and returns an
-            ``(N, D)`` float32 numpy matrix of sub-query embeddings.
-            When ``None``, the default
-            :func:`per_req_retrieval.embed_sub_queries` is used (loads
-            MiniLM-L6-v2 on first call). Tests pass a stub embedder
-            that returns vectors aligned to a synthetic toy index so
-            the rubric path can be exercised without loading the real
-            model.
-
-    Returns:
-        :class:`ComposedCandidateEvaluation`.
+    Aggregates sub-queries additively: Sub-Score = SQ1 + SQ2 + ...
+    Scales contribution: Weight * (Sub-Score / Number of Sub-Queries).
     """
     candidate_id = (
         profile.get("candidate_id")
@@ -1049,9 +1119,7 @@ def evaluate_candidate_composed(
     )
     role = role_name or weights.get("role", "")
 
-    # ------------------------------------------------------------------
-    # Resolve the SubQuery data: each REQ's ``sub_queries`` list.
-    # ------------------------------------------------------------------
+    # Resolve the SubQuery data
     if role_subqueries is None:
         if not role:
             raise ValueError(
@@ -1064,15 +1132,7 @@ def evaluate_candidate_composed(
                 f"evaluate_candidate_composed: no SubQuery data for role "
                 f"{role!r}. Check data/job_descriptions/{role}/{role}_SubQuery.md."
             )
-    # ``role_subqueries`` may be passed in two equivalent shapes:
-    #   (a) single-role: ``{requirements: [...], role_name: ...}``
-    #       (as produced by ``get_all_role_subqueries().get(role)``).
-    #   (b) all-roles: ``{DataScience: {requirements: ...}, ...}``
-    #       (as produced by ``get_all_role_subqueries()`` directly — the
-    #       shape the ``scripts/score_batch_composed.py`` CLI passes).
-    # Detect the all-roles shape by the absence of a ``requirements``
-    # key, then slice out the single-role dict post-hoc so that
-    # downstream code uniformly sees shape (a).
+
     if "requirements" not in role_subqueries:
         if not role:
             raise ValueError(
@@ -1084,8 +1144,7 @@ def evaluate_candidate_composed(
         if single is None:
             raise ValueError(
                 f"evaluate_candidate_composed: role_subqueries is the "
-                f"all-roles dict but role {role!r} is not present. "
-                f"Check the role name spelling or SubQuery files."
+                f"all-roles dict but role {role!r} is not present."
             )
         role_subqueries = single
     subquery_reqs = role_subqueries.get("requirements", [])
@@ -1103,7 +1162,6 @@ def evaluate_candidate_composed(
 
         sq_data = sq_by_id.get(req_id)
         sub_queries = sq_data.get("sub_queries", []) if sq_data else []
-        scoring_formula = sq_data.get("scoring_formula", "") if sq_data else ""
 
         result = ComposedREQResult(
             requirement_id=req_id,
@@ -1113,207 +1171,213 @@ def evaluate_candidate_composed(
             sub_queries=sub_queries,
         )
 
-        # ==============================================================
-        # 1. Code-only SQ scoring (binary presence + years-proportional).
-        # ==============================================================
-        code_only_sq_scores: Dict[str, float] = {}
+        if not sub_queries:
+            # Block and return floor if no sub-queries are parsed
+            result.blocked = True
+            result.blocked_reason = f"No sub-queries found/parsed for {req_id} ({name})."
+            result.sub_score = 0.0
+            result.contribution = 0.0
+            reqs_results.append(result)
+            continue
+
+        # Check for expected_years block on any years-proportional SQ
+        # (even if skip_code_only is True, because missing expected_years
+        # is a hard contract violation that blocks the entire REQ).
         years_blocked = False
         years_blocked_reason = ""
-
         for sq in sub_queries:
-            sq_key = sq.get("key") or ""
-            sq_txt = sq.get("text") or ""
-
-            if _is_binary_subquery(sq):
-                code_only_sq_scores[sq_key] = _score_presence_sq(
-                    sq, requirement_name=name, profile=profile,
-                )
-            elif _is_years_subquery(sq):
-                score, years_detected, expected = _score_years_sq(
-                    sq, requirement_name=name, profile=profile,
-                )
-                code_only_sq_scores[sq_key] = score
-                if expected is None:
+            if _is_years_subquery(sq):
+                ey = extract_expected_years(sq.get("text") or "")
+                if ey is None:
+                    # check weights config expected_years too
+                    explicit_ey = req.get("expected_years")
+                    if explicit_ey is not None:
+                        try:
+                            ey = float(explicit_ey)
+                        except (TypeError, ValueError):
+                            pass
+                if ey is None:
                     years_blocked = True
                     years_blocked_reason = (
-                        f"Years-proportional SQ {sq_key!r} for {req_id} "
-                        f"has no recoverable expected_years from its text "
-                        f"(SQ text: {sq_txt[:80]!r}). REQ blocked."
+                        f"Years-proportional SQ {sq.get('key') or ''!r} for {req_id} "
+                        f"has no recoverable expected_years from its "
+                        f"text or config. REQ blocked."
                     )
-            # Else: it's a rubric SQ; skip here.
-        # Compute the code-only part.
+                    break
+
         if years_blocked:
-            result.code_only_part = 0.0
             result.blocked = True
             result.blocked_reason = years_blocked_reason
-        elif code_only_sq_scores:
-            prod = 1.0
-            for v in code_only_sq_scores.values():
-                prod *= float(v)
-            result.code_only_part = round(prod, 4)
-        else:
-            # No code-only SQs on this REQ — multiplicative identity.
-            result.code_only_part = 1.0
-        result.code_only_sq_scores = code_only_sq_scores
+            result.sub_score = 0.0
+            result.contribution = 0.0
+            reqs_results.append(result)
+            continue
 
-        # ==============================================================
-        # 2. Rubric LLM scoring (one call per REQ, after per-REQ retrieval).
-        # ==============================================================
-        rubric_sq_keys = [
-            sq.get("key") for sq in sub_queries
-            if _is_rubric_subquery(sq)
-        ]
-        rubric_sq_scores: Dict[str, float] = {}
+        req_dim_type = classify_requirement_type(cat, name)
+        skip_code_only = req_dim_type not in ("education", "certification", "location")
 
-        if not rubric_sq_keys:
-            # No rubric SQs on this REQ — multiplicative identity.
-            result.rubric_llm_part = 1.0
+        # ------------------------------------------------------------------
+        # 1. Code-Only Path (Education, Certifications, Location)
+        # ------------------------------------------------------------------
+        if not skip_code_only:
+            code_only_sq_scores = {}
+            for sq in sub_queries:
+                sq_key = sq.get("key") or ""
+                sq_score = _evaluate_code_only_sq(
+                    sq=sq,
+                    requirement_name=name,
+                    profile=profile,
+                    structured_profile=structured_profile,
+                )
+                code_only_sq_scores[sq_key] = sq_score
+
+            result.code_only_sq_scores = code_only_sq_scores
             result.rubric_sq_scores = {}
-        elif llm_caller is None or retriever is None:
-            # Rubric SQs exist but no LLM / no retriever → zero out
-            # the rubric part. NOT flagged (when no LLM caller is
-            # supplied the user explicitly opted out of rubric scoring).
-            result.rubric_llm_part = 0.0
-            result.rubric_skipped = True
-            for k in rubric_sq_keys:
-                rubric_sq_scores[k] = 0.0
-            result.rubric_sq_scores = rubric_sq_scores
+
+            # Sum of sub-queries
+            sub_score_sum = sum(code_only_sq_scores.values())
+            result.code_only_part = sub_score_sum
+            result.rubric_llm_part = 1.0
+            result.sub_score = sub_score_sum
+
+            # Weight * (Sum / N)
+            n_queries = len(code_only_sq_scores)
+            result.contribution = round(weight_pct * (sub_score_sum / n_queries), 4) if n_queries > 0 else 0.0
+
+        # ------------------------------------------------------------------
+        # 2. Rubric LLM Path (Skills, Experience, Leadership, Domain, Key Responsibilities)
+        # ------------------------------------------------------------------
         else:
-            # ---- The real rubric path: retrieve evidence, call LLM. ----
-            sq_pairs: List[Tuple[str, str]] = [
-                (sq.get("key") or "", sq.get("text") or "") for sq in sub_queries
-            ]
-            try:
-                sq_vecs = (
-                    sq_embedder(sq_pairs)
-                    if sq_embedder is not None
-                    else embed_sub_queries(sq_pairs)
-                )
-            except Exception as e:
-                logger.warning(
-                    "composed: embed_sub_queries failed for %s %s: %s — "
-                    "rubric part zeroed",
-                    candidate_id, req_id, e,
-                )
+            rubric_sq_keys = [sq.get("key") for sq in sub_queries]
+            rubric_sq_scores = {}
+
+            result.code_only_sq_scores = {}
+
+            if llm_caller is None or retriever is None:
+                # Skipped / no LLM
                 result.rubric_llm_part = 0.0
+                result.rubric_skipped = True
                 for k in rubric_sq_keys:
                     rubric_sq_scores[k] = 0.0
                 result.rubric_sq_scores = rubric_sq_scores
-                reqs_results.append(result)
-                continue
-
-            retrieved = retrieve_evidence_for_req(
-                retriever=retriever,
-                candidate_id=candidate_id,
-                sub_queries=sq_pairs,
-                sub_query_vectors=sq_vecs,
-                threshold=threshold,
-                max_chunks_per_query=max_chunks_per_query,
-            )
-            result.retrieved_chunks = retrieved
-
-            if not retrieved:
-                # Zero-evidence block: write a flag and zero out the
-                # rubric part. The contribution will land at 0 because
-                # Sub-Score = code_only_part × 0 = 0.
-                write_no_evidence_flag(
-                    candidate_id=candidate_id,
-                    role=role,
-                    req_id=req_id,
-                    requirement_name=name,
-                    sub_query_keys=rubric_sq_keys,
-                    theta=threshold,
-                    chunker=chunker_id,
-                    path=audit_flags_path or "reports/audit/no_evidence_flags.jsonl",
-                )
-                result.rubric_llm_part = 0.0
-                result.blocked = True
-                result.blocked_reason = (
-                    f"Zero retrieved evidence for {req_id} at θ={threshold:.3f}. "
-                    f"Rubric part zeroed; flagged for human review."
-                )
-                for k in rubric_sq_keys:
-                    rubric_sq_scores[k] = 0.0
+                result.sub_score = 0.0
+                result.contribution = 0.0
             else:
-                # Build a SectionEvidence-compatible wrapper from the
-                # retrieved ScoredChunks so the existing rubric_scorer
-                # can consume them unchanged.
-                section_evidence = _build_section_evidence(
-                    req_id=req_id,
-                    requirement_name=name,
-                    dim_type=classify_requirement_type(cat, name),
-                    retrieved=retrieved,
-                )
-                # target_years recovered from any years-type SQ on
-                # this REQ (if any) → pass to the rubric LLM.
-                target_years: Optional[float] = None
-                for sq in sub_queries:
-                    if _is_years_subquery(sq):
-                        ey = extract_expected_years(sq.get("text") or "")
-                        if ey is not None:
-                            target_years = ey
-                            break
-                # Extract expected_years from the weight config item.
-                explicit_ey = req.get("expected_years")
-                if explicit_ey is not None:
-                    try:
-                        target_years = float(explicit_ey)
-                    except (TypeError, ValueError):
-                        pass
+                sq_pairs = [(sq.get("key") or "", sq.get("text") or "") for sq in sub_queries]
                 try:
-                    trace = score_requirement_with_rubric(
-                        requirement_name=name,
-                        dimension_type=classify_requirement_type(cat, name),
-                        weight=weight_pct,
-                        evidence=section_evidence,
-                        target_years=target_years,
-                        llm_caller=llm_caller,
-                        employment_history=(
-                            structured_profile.employment_history
-                            if structured_profile is not None
-                            else None
-                        ),
-                    )
+                    sq_vecs = sq_embedder(sq_pairs) if sq_embedder is not None else embed_sub_queries(sq_pairs)
                 except Exception as e:
                     logger.warning(
-                        "composed: rubric LLM call failed for %s %s: %s — "
-                        "rubric part zeroed",
+                        "composed: embed_sub_queries failed for %s %s: %s — rubric part floor",
                         candidate_id, req_id, e,
                     )
-                    result.rubric_llm_part = 0.0
+                    result.rubric_llm_part = 0.01 * len(rubric_sq_keys)
                     for k in rubric_sq_keys:
-                        rubric_sq_scores[k] = 0.0
+                        rubric_sq_scores[k] = 0.01
                     result.rubric_sq_scores = rubric_sq_scores
+                    result.sub_score = 0.01 * len(rubric_sq_keys)
+                    result.contribution = round(weight_pct * (0.01), 4)
                     reqs_results.append(result)
                     continue
 
-                result.rubric_trace = trace
-                # The rubric LLM scores multiple sub-questions and
-                # produces a normalized_score (the product across
-                # rubric-template sub-questions). We use it directly as
-                # the entire Rubric_LLM_part for this REQ. ALL rubric
-                # SQs in the SubQuery file get the same score (the LLM
-                # is called once per REQ, not per SubQuery-SQ).
-                rubric_normalized = float(trace.normalized_score or 0.0)
-                rubric_normalized = max(0.0, min(1.0, rubric_normalized))
-                result.rubric_llm_part = round(rubric_normalized, 4)
-                for k in rubric_sq_keys:
-                    rubric_sq_scores[k] = result.rubric_llm_part
-            result.rubric_sq_scores = rubric_sq_scores
+                retrieved = retrieve_evidence_for_req(
+                    retriever=retriever,
+                    candidate_id=candidate_id,
+                    sub_queries=sq_pairs,
+                    sub_query_vectors=sq_vecs,
+                    threshold=threshold,
+                    max_chunks_per_query=max_chunks_per_query,
+                )
+                result.retrieved_chunks = retrieved
 
-        # ==============================================================
-        # 3. Sub-Score + Contribution.
-        # ==============================================================
-        if result.blocked:
-            # Either years_blocked or zero_evidence_blocked — the
-            # contribution is forced to 0 for audit loudness.
-            result.sub_score = 0.0
-            result.contribution = 0.0
-        else:
-            result.sub_score = round(
-                result.code_only_part * result.rubric_llm_part, 4,
-            )
-            result.contribution = round(weight_pct * result.sub_score, 4)
+                if not retrieved:
+                    write_no_evidence_flag(
+                        candidate_id=candidate_id,
+                        role=role,
+                        req_id=req_id,
+                        requirement_name=name,
+                        sub_query_keys=rubric_sq_keys,
+                        theta=threshold,
+                        chunker=chunker_id,
+                        path=audit_flags_path or "reports/audit/no_evidence_flags.jsonl",
+                    )
+                    result.rubric_llm_part = 0.0
+                    result.blocked = True
+                    result.blocked_reason = (
+                        f"Zero retrieved evidence for {req_id} at θ={threshold:.3f}. "
+                        f"Rubric part zeroed; flagged for human review."
+                    )
+                    for k in rubric_sq_keys:
+                        rubric_sq_scores[k] = 0.01
+                    result.rubric_sq_scores = rubric_sq_scores
+                    result.sub_score = 0.0
+                    result.contribution = 0.0
+                else:
+                    section_evidence = _build_section_evidence(
+                        req_id=req_id,
+                        requirement_name=name,
+                        dim_type=req_dim_type,
+                        retrieved=retrieved,
+                    )
+                    target_years = None
+                    for sq in sub_queries:
+                        if "years" in (sq.get("text") or "").lower():
+                            ey = extract_expected_years(sq.get("text") or "")
+                            if ey is not None:
+                                target_years = ey
+                                break
+                    explicit_ey = req.get("expected_years")
+                    if explicit_ey is not None:
+                        try:
+                            target_years = float(explicit_ey)
+                        except (TypeError, ValueError):
+                            pass
+
+                    try:
+                        trace = score_requirement_with_rubric(
+                            requirement_name=name,
+                            dimension_type=req_dim_type,
+                            weight=weight_pct,
+                            evidence=section_evidence,
+                            target_years=target_years,
+                            llm_caller=llm_caller,
+                            employment_history=(
+                                structured_profile.employment_history
+                                if structured_profile is not None
+                                else None
+                            ),
+                            sub_queries=sub_queries,
+                        )
+                    except Exception as e:
+                        logger.warning(
+                            "composed: rubric LLM call failed for %s %s: %s — rubric part floor",
+                            candidate_id, req_id, e,
+                        )
+                        result.rubric_llm_part = 0.01 * len(rubric_sq_keys)
+                        for k in rubric_sq_keys:
+                            rubric_sq_scores[k] = 0.01
+                        result.rubric_sq_scores = rubric_sq_scores
+                        result.sub_score = 0.01 * len(rubric_sq_keys)
+                        result.contribution = round(weight_pct * (0.01), 4)
+                        reqs_results.append(result)
+                        continue
+
+                    result.rubric_trace = trace
+
+                    # Fill individual sub-scores
+                    for ss in trace.sub_scores:
+                        rubric_sq_scores[ss.key] = ss.sub_score
+                    result.rubric_sq_scores = rubric_sq_scores
+
+                    # Sum of sub-queries
+                    sub_score_sum = sum(rubric_sq_scores.values())
+                    result.rubric_llm_part = sub_score_sum
+                    result.code_only_part = 1.0
+                    result.sub_score = sub_score_sum
+
+                    # Weight * (Sum / N)
+                    n_queries = len(rubric_sq_scores)
+                    result.contribution = round(weight_pct * (sub_score_sum / n_queries), 4) if n_queries > 0 else 0.0
 
         reqs_results.append(result)
 

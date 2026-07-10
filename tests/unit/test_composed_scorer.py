@@ -705,7 +705,7 @@ class TestComposedScorer:
         # weight_pct × code_only × rubric_llm_part.
         assert req1.rubric_llm_part is not None
         assert req1.contribution == pytest.approx(
-            60.0 * req1.code_only_part * req1.rubric_llm_part, abs=1e-3,
+            60.0 * (req1.rubric_llm_part / len(req1.rubric_sq_scores)), abs=1e-3,
         )
         # Total = contribution_req1 + contribution_req2.
         assert result.total == pytest.approx(

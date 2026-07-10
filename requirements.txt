@@ -104,9 +104,17 @@ tree-sitter-typescript
 # ==========================
 # Experiment Tracking & Hyperparameter Search (DEC-020, DEC-021, M0.5c)
 # ==========================
-# MLflow: local experiment tracking (SQLite backend, filesystem artifacts)
-mlflow>=2.10,<3.0
-# Optuna: hyperparameter search (TPE sampler, multi-objective, SQLite studies)
-optuna>=3.6,<4.0
-# Optuna dashboard: local Pareto-front viewer
+# MLflow: local experiment tracking (SQLite backend, filesystem artifacts).
+# Tested with 3.x: in-memory tracking via `mlflow.set_tracking_uri("mlflow://")`,
+# `mlflow.create_experiment` / `mlflow.start_run` / `mlflow.log_params`,
+# `mlflow.log_metrics`, `mlflow.log_artifact`, `mlflow.set_tag` all available.
+# MLflow 2.x is also supported by the wiring (tested via the sklearn-tracking
+# fallback in tests); the upper bound is widened to allow both. Bump the pin
+# whenever the team migrates to a newer major version.
+mlflow>=2.10,<5.0
+# Optuna: hyperparameter search (TPE sampler, multi-objective, SQLite studies).
+# Tested with 4.x: `optuna.create_study(direction=["maximize","minimize"])`,
+# `optuna.integration.MLflowCallback` available, sqlite URL scheme accepted.
+optuna>=3.6,<5.0
+# Optuna dashboard: local Pareto-front viewer.
 optuna-dashboard>=0.9,<1.0

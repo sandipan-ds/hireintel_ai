@@ -306,9 +306,10 @@ class TestEvaluateCandidateUnified:
         assert skill_item is not None
         assert skill_item.scoring_mode == "rubric_llm"
         assert skill_item.scoring_trace is not None
-        # Banded years-ratio (4 yrs vs target 5): 4 ≥ 0.5*5 → 0.5
-        # Formula: 1.0 * 0.5 * 0.75 = 0.375; 10 * 0.375 = 3.75
-        assert skill_item.raw_score == pytest.approx(3.75)
+        # Under the new additive model:
+        # skill_presence = 1.0, skill_depth gets 0.25 rescue credit.
+        # Sum = 1.25. raw_score = 10 * (1.25 / 2) = 6.25
+        assert skill_item.raw_score == pytest.approx(6.25)
 
     def test_education_routed_to_code_only(self):
         chunks = _make_chunks()
