@@ -6,7 +6,7 @@
 
 import re
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
@@ -184,7 +184,7 @@ def extract_resume(path: str | Path, registry: Optional[CandidateRegistry] = Non
             "ingestion_type": file_type.value,
             "source_language": "en",
             "page_count": len(set(chunk["page_number"] for chunk in evidence_chunks)) or 1,
-            "parsed_at": datetime.utcnow().isoformat() + "Z",
+            "parsed_at": datetime.now(timezone.utc).isoformat(),
             "ocr_used": ocr_used,
             "parser_name": "docling+llm-normalizer",
             "parser_version": "1.0.0"

@@ -557,6 +557,8 @@ def _entry_to_text(entry: Any) -> str:
     if not isinstance(entry, dict):
         return str(entry or "").strip()
     parts: List[str] = []
+    
+    # 1. Experience-specific fields
     title = (entry.get("title") or "").strip()
     company = (entry.get("company") or "").strip()
     description = (entry.get("description") or "").strip()
@@ -566,13 +568,29 @@ def _entry_to_text(entry: Any) -> str:
         parts.append(title)
     elif company:
         parts.append(company)
-    elif description:
+        
+    # 2. Education-specific fields
+    degree = (entry.get("degree") or "").strip()
+    specialization = (entry.get("specialization") or "").strip()
+    institution = (entry.get("institution_normalized") or entry.get("institution_raw") or "").strip()
+    if degree and institution:
+        deg_spec = f"{degree} in {specialization}" if specialization else degree
+        parts.append(f"{deg_spec} at {institution}")
+    elif degree:
+        deg_spec = f"{degree} in {specialization}" if specialization else degree
+        parts.append(deg_spec)
+    elif institution:
+        parts.append(institution)
+
+    if description:
         parts.append(description)
+
     dates = (entry.get("dates") or "").strip()
     location = (entry.get("location") or "").strip()
     if dates or location:
         meta = " | ".join(x for x in (dates, location) if x)
         parts.append(meta)
+
     details = [str(d).strip() for d in (entry.get("details") or []) if d and str(d).strip()]
     for bullet in details:
         parts.append(f"- {bullet}")

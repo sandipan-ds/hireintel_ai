@@ -151,7 +151,7 @@ The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 | Embedding model: `all-MiniLM-L6-v2`, 384-dim | ✅ `src/rag/build_index.py` |
 | Zero-evidence audit log | ✅ `src/audit/no_evidence_flags.py` |
 
-> The embedding index was successfully rebuilt on the schema-compliant nested candidate profile outputs (4,247 chunks generated and indexed in `data/embeddings/recursive_chunking/`).
+> The embedding index was successfully rebuilt on the schema-compliant nested candidate profile outputs on **2026-07-12** (4,870 chunks generated and indexed in `data/embeddings/recursive_chunking/`, resolving the 19 candidates previously missing due to empty education chunking).
 
 ---
 
@@ -174,7 +174,7 @@ Implements a formal five-layer quality audit for all extracted candidate JSONs p
 
 ## Stage 5 — Scoring Engine
 
-**Status: ✅ Built; pending clean data from Stage 3**
+**Status: ✅ Complete — 721 candidates scored**
 
 ### Scoring Formula (DEC-034 — Additive)
 
@@ -197,7 +197,7 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 | `src/scoring/tier_lookup.py` — institute + cert tier lookup | ✅ |
 | `src/services/subquery_parser.py` — parse SubQuery tables | ✅ |
 | `src/scoring/unified_scorer.evaluate_candidate_composed` | ✅ |
-| `scripts/score_batch_composed.py` — batch CLI | ✅ |
+| `scripts/score_batch_composed.py` — batch CLI with `--resume` ledger support | ✅ |
 | `src/services/llm_caller.py` — Ollama backend (qwen2.5:3b) | ✅ |
 | `data/Institutes/institute_tiers.json` — 115 Tier-1 institutions | ✅ |
 | `data/Certificates/certificate_tiers.json` — 115 certs | ✅ |
@@ -211,7 +211,7 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 
 ## Stage 6 — Candidate Ranking
 
-**Status: ✅ Engine built; awaiting clean data from Stage 3**
+**Status: ✅ Complete**
 
 | Component | Status |
 |---|---|
@@ -219,6 +219,8 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 | Output: `data/scores/composed/<role>_ranked.json` | ✅ |
 | Per-candidate evaluation JSON with per-item evidence | ✅ |
 | LLM never ranks (enforced by design) | ✅ |
+| Progress ledger (`run_reports/scoring_progress.json`) for resume-on-interrupt | ✅ |
+| Post-scoring Markdown report generator (`scripts/generate_run_report.py`) | ✅ |
 
 ---
 
@@ -226,7 +228,6 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 
 | Feature | Notes |
 |---|---|
-| Run reports (`run_reports/`) | `scripts/generate_run_report.py` not built |
 | JD clarification loop (Green / Yellow / Red) | Block ambiguous requirements |
 | Per-item `expected_years` in the recruiter UI | DB field exists; UI not exposed |
 | Resume Chat (RAG-grounded Q&A) | Prompt spec exists; not wired |

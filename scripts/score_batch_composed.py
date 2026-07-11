@@ -52,6 +52,7 @@ import json
 import logging
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -102,6 +103,119 @@ DEFAULT_OUTPUT_DIR = Path("data/scores/composed")
 # originally produced these as downstream artifacts; they are not parses
 # themselves and must not appear in the candidate count.
 DOWNSTREAM_SUFFIXES = ("_intelligence_report.json", "_structured_profile.json")
+
+# ---------------------------------------------------------------------------
+# Progress ledger helpers & loading wrapper for --resume
+# ---------------------------------------------------------------------------
+
+PROGRESS_FILE = Path("run_reports/scoring_progress.json")
+
+class LoadedComposedEvaluation:
+    """Wrapper that duck-types ComposedCandidateEvaluation for resume-on-disk loads."""
+    def __init__(self, data: dict) -> None:
+        self._data = data
+        self.candidate_id = data["candidate_id"]
+        self.role = data.get("role", "")
+        self.total = data["total"]
+        
+    @property
+    def zero_evidence_reqs(self) -> list[dict]:
+        return [
+            r for r in self._data.get("reqs", [])
+            if r.get("rubric_sq_scores")
+            and r.get("rubric_llm_part") == 0.0
+            and not r.get("blocked")
+            and not r.get("rubric_skipped")
+        ]
+        
+    @property
+    def reqs(self) -> list[Any]:
+        class DictWrapper:
+            def __init__(self, d: dict) -> None:
+                self.requirement_name = d.get("requirement_name")
+                self.requirement_id = d.get("requirement_id", "")
+                self.category = d.get("category", "")
+                self.weight_percentage = d.get("weight_percentage", 0.0)
+                self.code_only_sq_scores = d.get("code_only_sq_scores", {})
+                self.rubric_sq_scores = d.get("rubric_sq_scores", {})
+                self.code_only_part = d.get("code_only_part", 1.0)
+                self.rubric_llm_part = d.get("rubric_llm_part", 1.0)
+                self.sub_score = d.get("sub_score", 0.0)
+                self.contribution = d.get("contribution", 0.0)
+                self.rubric_skipped = d.get("rubric_skipped", False)
+                self.blocked = d.get("blocked", False)
+                self.blocked_reason = d.get("blocked_reason", "")
+                self.retrieved_chunks = d.get("retrieved_chunks", [])
+                
+                trace = d.get("rubric_trace")
+                if trace:
+                    class TraceWrapper:
+                        def __init__(self, t: dict) -> None:
+                            self.sub_scores = [
+                                type("SubScore", (), {
+                                    "sub_score": ss.get("sub_score", 0.0),
+                                    "evidence_found": ss.get("evidence_found", False),
+                                    "key": ss.get("key", ""),
+                                    "closest_evidence": ss.get("closest_evidence", "")
+                                })()
+                                for ss in t.get("sub_scores", [])
+                            ]
+                    self.rubric_trace = TraceWrapper(trace)
+                else:
+                    self.rubric_trace = None
+        return [DictWrapper(r) for r in self._data.get("reqs", [])]
+        
+    def to_dict(self) -> dict:
+        return self._data
+
+def load_progress() -> dict:
+    """Load the progress ledger, or return a fresh empty ledger."""
+    if PROGRESS_FILE.exists():
+        try:
+            with PROGRESS_FILE.open("r", encoding="utf-8") as fh:
+                return json.load(fh)
+        except Exception as exc:
+            logger.warning("Failed to load progress ledger from %s: %s. Starting fresh.", PROGRESS_FILE, exc)
+    return {"completed_roles": [], "scored_candidates": {}}
+
+def save_progress(progress: dict) -> None:
+    """Atomically write the progress ledger to disk."""
+    PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = PROGRESS_FILE.with_suffix(".tmp")
+    try:
+        with tmp_path.open("w", encoding="utf-8") as fh:
+            json.dump(progress, fh, indent=2)
+        tmp_path.replace(PROGRESS_FILE)
+    except Exception as exc:
+        logger.error("Failed to save progress ledger: %s", exc)
+
+def is_role_complete(progress: dict, role: str) -> bool:
+    """Return True if the role is marked complete in progress."""
+    return role in progress.get("completed_roles", [])
+
+def is_candidate_scored(progress: dict, role: str, candidate_id: str) -> bool:
+    """Return True if candidate_id has been scored for role."""
+    return candidate_id in progress.get("scored_candidates", {}).get(role, [])
+
+def mark_candidate_done(progress: dict, role: str, candidate_id: str) -> None:
+    """Record candidate_id as completed in ledger and flush to disk."""
+    if "scored_candidates" not in progress:
+        progress["scored_candidates"] = {}
+    if role not in progress["scored_candidates"]:
+        progress["scored_candidates"][role] = []
+    if candidate_id not in progress["scored_candidates"][role]:
+        progress["scored_candidates"][role].append(candidate_id)
+        progress["last_updated"] = datetime.now().isoformat()
+        save_progress(progress)
+
+def mark_role_done(progress: dict, role: str) -> None:
+    """Record role as completed in ledger and flush to disk."""
+    if "completed_roles" not in progress:
+        progress["completed_roles"] = []
+    if role not in progress["completed_roles"]:
+        progress["completed_roles"].append(role)
+        progress["last_updated"] = datetime.now().isoformat()
+        save_progress(progress)
 
 
 # ---------------------------------------------------------------------------
@@ -172,6 +286,8 @@ def score_role(
     max_chunks_per_query: int | None = None,
     limit: int | None = None,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
+    progress: dict | None = None,
+    resume: bool = False,
 ) -> dict[str, Any]:
     """Score every candidate in ``role`` and write the ranking JSON.
 
@@ -208,24 +324,49 @@ def score_role(
         logger.warning("[%s] no candidate files found under %s", role, PROCESSED_DIR / role)
         return {
             "role": role,
+            "weight_config_path": str(weight_config_path),
+            "theta": float(threshold),
+            "max_chunks_per_query": int(max_chunks_per_query) if max_chunks_per_query else DEFAULT_MAX_CHUNKS_PER_QUERY,
             "n_candidates": 0,
             "mean_score": 0.0,
             "top_5": [],
+            "n_zero_evidence_reqs": 0,
             "time_seconds": time.time() - t_start,
             "output_path": None,
-            "n_zero_evidence": 0,
-            "weight_config_path": str(weight_config_path),
         }
 
-    evaluations: list[ComposedCandidateEvaluation] = []
+    evaluations: list[Any] = []
     n_zero_evidence = 0
+    diagnostic_lines: list[str] = []
+    
+    per_cand_dir = output_dir / role
+    per_cand_dir.mkdir(parents=True, exist_ok=True)
+    
     for f in candidate_files:
+        candidate_id = f.stem
+        
+        # --- RESUME: skip already-scored candidates ---
+        if resume and progress and is_candidate_scored(progress, role, candidate_id):
+            scored_file = per_cand_dir / f"{candidate_id}.json"
+            if scored_file.exists():
+                try:
+                    with scored_file.open("r", encoding="utf-8") as fh:
+                        eval_data = json.load(fh)
+                    eval_result = LoadedComposedEvaluation(eval_data)
+                    evaluations.append(eval_result)
+                    n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    logger.info("[%s] Loaded scored candidate %s from disk (resume)", role, candidate_id)
+                    continue
+                except Exception as exc:
+                    logger.warning("[%s] Failed to load saved candidate %s: %s. Re-scoring.", role, candidate_id, exc)
+
         try:
             with f.open(encoding="utf-8") as fh:
                 profile = json.load(fh)
         except (OSError, json.JSONDecodeError) as exc:
             logger.warning("[%s] skipping malformed candidate file %s: %s", role, f.name, exc)
             continue
+            
         # Re-extract the structured profile (Track 7.2 inferred-full-year
         # logic is in ``extract_structured_profile`` so we use the freshest
         # record, not the on-disk snapshot which may predate the fix).
@@ -243,28 +384,23 @@ def score_role(
             chunker_id=chunker_id,
             sq_embedder=cached_embedder,
         )
+        
         evaluations.append(eval_result)
-        # Use the dataclass's own ``zero_evidence_reqs`` property which
-        # canonicalizes the count (REQs where the rubric LLM was called
-        # but got zero chunks, excluding blocked REQs which are counted
-        # separately via ``blocked_reqs``).
         n_zero_evidence += len(eval_result.zero_evidence_reqs)
 
-        # -----------------------------------------------------------------
-        # Structured diagnostic tags — grepped from run logs to analyse
-        # zero-score root causes across the batch without re-running.
-        #
-        # [ZERO_NO_EVIDENCE]   — LLM was called; evidence_found=False on a
-        #   zero-scoring sub-question.  Meaning: the resume genuinely does
-        #   not mention the requirement.  Action: no score change needed.
-        #
-        # [ZERO_WRONG_INFERENCE] — LLM was called; evidence_found=True on a
-        #   zero-scoring sub-question.  Meaning: resume HAS relevant text
-        #   but the LLM still scored 0.  Action: check the rubric prompt /
-        #   semantic inference rules; likely a prompt calibration issue.
-        #
-        # Usage: grep "[ZERO_NO_EVIDENCE]" run.log | cut -d'|' -f3 | sort | uniq -c
-        # -----------------------------------------------------------------
+        # Write per-candidate JSON immediately
+        try:
+            with (per_cand_dir / f"{candidate_id}.json").open("w", encoding="utf-8") as fh:
+                json.dump(eval_result.to_dict(), fh, ensure_ascii=False, indent=2)
+        except Exception as exc:
+            logger.error("[%s] Failed to write candidate JSON for %s: %s", role, candidate_id, exc)
+
+        # Mark candidate done in progress ledger
+        if progress is not None:
+            mark_candidate_done(progress, role, candidate_id)
+            
+    # Re-build diagnostic lines for ALL evaluations (including loaded ones)
+    for eval_result in evaluations:
         for req in eval_result.reqs:
             if req.rubric_skipped or req.blocked or req.rubric_trace is None:
                 # Skip: LLM never ran for this REQ — not a scoring quality issue.
@@ -283,6 +419,21 @@ def score_role(
                     ss.evidence_found,
                     (ss.closest_evidence or "")[:120],
                 )
+                tag_padded = f"[{tag}]"
+                tag_padded = f"{tag_padded:<24}"
+                msg = "no matching text found" if tag == "ZERO_NO_EVIDENCE" else "text found but LLM did not infer"
+                diagnostic_lines.append(
+                    f"{tag_padded} {eval_result.candidate_id} {req.requirement_name} {ss.key} — {msg}"
+                )
+
+    # Write zero-score diagnostics to run_reports/
+    if diagnostic_lines:
+        run_reports_dir = Path("run_reports")
+        run_reports_dir.mkdir(parents=True, exist_ok=True)
+        diag_file = run_reports_dir / f"score_diagnostic_{role}.txt"
+        with diag_file.open("w", encoding="utf-8") as df:
+            df.write("\n".join(diagnostic_lines) + "\n")
+        logger.info("[%s] Wrote %d zero-score diagnostics to %s", role, len(diagnostic_lines), diag_file)
 
     # Sort by total score desc.
     evaluations.sort(key=lambda e: e.total, reverse=True)
@@ -442,6 +593,10 @@ def main(argv: list[str] = None) -> int:
              "batch run is then cache-hot from the start.",
     )
     parser.add_argument(
+        "--resume", action="store_true",
+        help="Resume a previously interrupted scoring run using progress ledger.",
+    )
+    parser.add_argument(
         "--verbose", "-v", action="store_true",
         help="Enable verbose logger output.",
     )
@@ -556,7 +711,36 @@ def main(argv: list[str] = None) -> int:
             "mlflow library not installed; this run will not be tracked. "
             "Install with `pip install mlflow` or pass --no-mlflow to silence."
         )
+
+    # Initialize progress ledger
+    progress = None
+    if args.resume:
+        progress = load_progress()
+        logger.info("Resuming scoring batch run. Loaded progress ledger with %d completed roles.", len(progress.get("completed_roles", [])))
+    else:
+        if PROGRESS_FILE.exists():
+            try:
+                PROGRESS_FILE.unlink()
+                logger.info("Fresh run: Deleted old progress ledger at %s.", PROGRESS_FILE)
+            except Exception as exc:
+                logger.warning("Failed to delete old progress ledger: %s", exc)
+        progress = {"completed_roles": [], "scored_candidates": {}}
+
     for role in roles:
+        # Check if role is already completed in ledger
+        if args.resume and is_role_complete(progress, role):
+            logger.info("Role '%s' already fully completed. Skipping.", role)
+            ranked_file = output_dir / f"{role}_ranked.json"
+            if ranked_file.exists():
+                try:
+                    with ranked_file.open("r", encoding="utf-8") as fh:
+                        summaries.append(json.load(fh))
+                    continue
+                except Exception as exc:
+                    logger.warning("Failed to load completed roleranked JSON for '%s': %s. Re-scoring.", role, exc)
+            else:
+                logger.warning("Role ranked JSON not found for completed role '%s'. Re-scoring.", role)
+
         logger.info("=" * 70)
         logger.info("Scoring role: %s", role)
         if track_mlflow:
@@ -580,6 +764,8 @@ def main(argv: list[str] = None) -> int:
                 max_chunks_per_query=int(args.max_chunks) if args.max_chunks else None,
                 limit=args.limit,
                 output_dir=output_dir,
+                progress=progress,
+                resume=args.resume,
             )
             if run is not None:
                 _log_run_to_mlflow(
@@ -589,6 +775,13 @@ def main(argv: list[str] = None) -> int:
                     args=args,
                 )
         summaries.append(summary)
+        
+        # Mark role as fully done in ledger if all candidates for the role were scored
+        if progress is not None and summary.get("n_candidates", 0) > 0:
+            unlimited_files = len(iter_candidate_files(role, limit=None))
+            if summary.get("n_candidates", 0) == unlimited_files:
+                mark_role_done(progress, role)
+            
         logger.info(
             "[%s] scored %d candidates in %.2fs (mean=%.2f; top-1 score=%.2f); "
             "ranked → %s",
