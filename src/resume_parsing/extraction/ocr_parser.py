@@ -9,8 +9,6 @@
 import logging
 from pathlib import Path
 from typing import Optional, List
-import numpy as np
-from PIL import Image
 
 from src.resume_parsing.extraction.element import ExtractedElement
 
@@ -65,8 +63,15 @@ def extract_with_ocr(path: str | Path) -> Optional[List[ExtractedElement]]:
     Returns:
         List of ExtractedElement objects, or None if OCR is unavailable/fails.
     """
+    # Lazy imports: numpy and PIL are only needed here (OCR path).
+    # Importing them at module level would crash the whole pipeline on startup
+    # for environments where Pillow/numpy is not installed, even for native PDFs
+    # that never reach this function.
+    import numpy as np  # noqa: PLC0415
+    from PIL import Image  # noqa: PLC0415
+
     _init_libraries()
-    
+
     path_obj = Path(path)
     if not path_obj.exists():
         logger.error("OCR parser target not found: %s", path)
@@ -118,8 +123,10 @@ def extract_with_ocr(path: str | Path) -> Optional[List[ExtractedElement]]:
     logger.error("No working OCR engine available to parse scanned resume.")
     return None
 
-def _extract_paddle_surya(images: List[Image.Image]) -> List[ExtractedElement]:
+def _extract_paddle_surya(images: List["Image.Image"]) -> List[ExtractedElement]:
     """Extract elements using PaddleOCR + Surya."""
+    import numpy as np  # noqa: PLC0415
+    from PIL import Image  # noqa: PLC0415
     from paddleocr import PaddleOCR
     from surya.inference import SuryaInferenceManager
     from surya.layout import LayoutPredictor
@@ -193,8 +200,10 @@ def _extract_paddle_surya(images: List[Image.Image]) -> List[ExtractedElement]:
 
     return elements
 
-def _extract_rapidocr(images: List[Image.Image]) -> List[ExtractedElement]:
+def _extract_rapidocr(images: List["Image.Image"]) -> List[ExtractedElement]:
     """Extract elements using RapidOCR (highly robust ONNX model)."""
+    import numpy as np  # noqa: PLC0415
+    from PIL import Image  # noqa: PLC0415
     from rapidocr import RapidOCR
     engine = RapidOCR()
     

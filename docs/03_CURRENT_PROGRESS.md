@@ -36,10 +36,11 @@ For the full decision history, see `18_DECISIONS.md`.
 |---|---|---|
 | 1 | **JD Formation** — 8 roles with full SubQuery decomposition | ✅ |
 | 2 | **Recruiter Weight Configuration** — FastAPI + HTMX UI | ✅ |
-| 3 | **Resume Parsing (PDF → JSON)** — routed pipeline for any format | 🟡 Pipeline built; batch extraction in progress |
-| 4 | **Chunking & Embedding Index** — RecursiveChunker + ThresholdRetriever | ⬜ **NEXT** — rebuild after Stage 3 batch completes |
-| 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ built; pending Stage 3 data |
-| 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ built; pending Stage 3 data |
+| 3 | **Resume Parsing (PDF → JSON)** — routed pipeline for any format | ✅ |
+| 4A| **Chunking & Embedding Index** — RecursiveChunker + ThresholdRetriever | ✅ |
+| 4B| **JSON Quality Audit** — five-layer extraction audit (DEC-036) | ✅ |
+| 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ |
+| 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ |
 
 ---
 
@@ -104,7 +105,7 @@ Recruiters assign weights to each REQ via a FastAPI + HTMX web UI.
 
 ## Stage 3 — Resume Parsing (PDF → JSON)
 
-**Status: 🟡 Pipeline built; batch extraction in progress**
+**Status: ✅ Complete**
 
 The system extracts structured JSON from resume PDFs of any design, template,
 or writing style. This is a MUST-HAVE capability per the project spec.
@@ -124,7 +125,7 @@ The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 | Orchestrator pipeline (`extract_resume`) | ✅ `src/resume_parsing/extraction/pipeline.py` |
 | Batch extraction script | ✅ `scripts/batch_extract_resumes.py` |
 | Batch re-parse DataScience role (5 candidates — smoke test) | ✅ `data/processed/DataScience/` |
-| Batch re-parse all 8 roles (721 total resumes) | 🟡 In progress — run `scripts/batch_extract_resumes.py` |
+| Batch re-parse all 8 roles (721 total resumes) | ✅ Complete — 721 resumes processed and stored |
 
 **Fallback chain (per file):**
 `Docling` → `Unstructured` → `PaddleOCR+Surya` → `pdfplumber raw text`
@@ -137,9 +138,9 @@ The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 
 ---
 
-## Stage 4 — Chunking & Embedding Index
+## Stage 4A — Chunking & Embedding Index
 
-**Status: 🟡 Foundation built; must be rebuilt after Stage 3**
+**Status: ✅ Complete**
 
 | Component | Status |
 |---|---|
@@ -150,8 +151,24 @@ The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 | Embedding model: `all-MiniLM-L6-v2`, 384-dim | ✅ `src/rag/build_index.py` |
 | Zero-evidence audit log | ✅ `src/audit/no_evidence_flags.py` |
 
-> The embedding index was built on the old parser output.
-> It must be rebuilt once the new PDF -> JSON pipeline (Stage 3) is complete.
+> The embedding index was successfully rebuilt on the schema-compliant nested candidate profile outputs (4,247 chunks generated and indexed in `data/embeddings/recursive_chunking/`).
+
+---
+
+## Stage 4B — JSON Quality Audit (DEC-036)
+
+**Status: ✅ Complete**
+
+Implements a formal five-layer quality audit for all extracted candidate JSONs prior to candidate matching/scoring.
+
+| Audit Layer | Scope | Status |
+|---|---|---|
+| **Layer A: Schema** | Fields, types, dates (YYYY-MM/YYYY format), structures | ✅ `layer_a_schema.py` |
+| **Layer B: Completeness** | Regex-validated emails, phones, education keywords | ✅ `layer_b_completeness.py` |
+| **Layer C: Evidence** | Bidirectional mapping between JSON fields and evidence chunks | ✅ `layer_c_evidence.py` |
+| **Layer D: Semantic** | LLM-assisted verification comparing raw text against summary | ✅ `layer_d_semantic.py` |
+| **Layer E: Cross-Parser** | Levenshtein edit distance agreement with legacy parser | ✅ `layer_e_cross_parser.py` |
+| **Scorer & Reports** | Overall extraction quality score formula & queue reports | ✅ `scorer.py` / `generate_review_queue.py` |
 
 ---
 
@@ -209,8 +226,6 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 
 | Feature | Notes |
 |---|---|
-| **Stage 3 batch extraction — all roles** | Run `scripts/batch_extract_resumes.py` (721 resumes) |
-| **Stage 4 embedding index rebuild** | After Stage 3 batch; run `scripts/build_index.py` |
 | Run reports (`run_reports/`) | `scripts/generate_run_report.py` not built |
 | JD clarification loop (Green / Yellow / Red) | Block ambiguous requirements |
 | Per-item `expected_years` in the recruiter UI | DB field exists; UI not exposed |

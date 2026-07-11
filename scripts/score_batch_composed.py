@@ -250,6 +250,40 @@ def score_role(
         # separately via ``blocked_reqs``).
         n_zero_evidence += len(eval_result.zero_evidence_reqs)
 
+        # -----------------------------------------------------------------
+        # Structured diagnostic tags — grepped from run logs to analyse
+        # zero-score root causes across the batch without re-running.
+        #
+        # [ZERO_NO_EVIDENCE]   — LLM was called; evidence_found=False on a
+        #   zero-scoring sub-question.  Meaning: the resume genuinely does
+        #   not mention the requirement.  Action: no score change needed.
+        #
+        # [ZERO_WRONG_INFERENCE] — LLM was called; evidence_found=True on a
+        #   zero-scoring sub-question.  Meaning: resume HAS relevant text
+        #   but the LLM still scored 0.  Action: check the rubric prompt /
+        #   semantic inference rules; likely a prompt calibration issue.
+        #
+        # Usage: grep "[ZERO_NO_EVIDENCE]" run.log | cut -d'|' -f3 | sort | uniq -c
+        # -----------------------------------------------------------------
+        for req in eval_result.reqs:
+            if req.rubric_skipped or req.blocked or req.rubric_trace is None:
+                # Skip: LLM never ran for this REQ — not a scoring quality issue.
+                continue
+            for ss in req.rubric_trace.sub_scores:
+                if ss.sub_score > 0.0:
+                    # Non-zero sub-score: no diagnostic needed.
+                    continue
+                tag = "ZERO_NO_EVIDENCE" if not ss.evidence_found else "ZERO_WRONG_INFERENCE"
+                logger.debug(
+                    "[%s] cand=%s | req=%s | sq=%s | evidence_found=%s | closest=%s",
+                    tag,
+                    eval_result.candidate_id,
+                    req.requirement_name,
+                    ss.key,
+                    ss.evidence_found,
+                    (ss.closest_evidence or "")[:120],
+                )
+
     # Sort by total score desc.
     evaluations.sort(key=lambda e: e.total, reverse=True)
 

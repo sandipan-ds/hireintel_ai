@@ -161,7 +161,12 @@ def extract_resume(path: str | Path, registry: Optional[CandidateRegistry] = Non
             for skill in profile_data.get("skills", [])
             if skill.get("name_raw")
         },
-        "location_normalized": profile_data.get("locations")[0].get("normalized") if profile_data.get("locations") else None,
+        # BUG 1 fix: locations is not included in the LLM output prompt so it is
+        # almost always absent. Using safe chained access prevents a crash when the
+        # LLM hallucinates `"locations": null` (JSON null → Python None).
+        "location_normalized": (
+            (profile_data.get("locations") or [{}])[0].get("normalized")
+        ),
         "work_authorization": None
     }
 

@@ -20,22 +20,24 @@ docs/
 ├── 05_AI_ARCHITECTURE.md                   ← AI-specific architecture (parsing, RAG, scoring)
 ├── 06_RESUME_EXTRACTION_JSON_SCHEMA.md     ← data contract: PDF → JSON field schema
 ├── 07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md  ← HOW-TO: routing pipeline for all PDF formats
-├── 08_RETRIEVAL_STRATEGY_SPEC.md           ← Hybrid RAG retrieval architecture spec
-├── 09_DATABASE_SCHEMA.md                   ← storage schema for production
-├── 10_END_TO_END_PIPELINE.md               ← end-to-end flow: PDF upload → candidate ranking
-├── 11_AI_DESIGN_RATIONALE.md               ← why every AI decision was made
-├── 12_MODEL_REGISTRY.md                    ← which models and strategies are live
-├── 13_PROMPT_LIBRARY.md                    ← all production prompts with version history
-├── 14_RECRUITER_WORKFLOWS.md               ← how recruiters interact with the platform
-├── 15_IMPLEMENTATION_ROADMAP.md            ← what to build next
-├── 16_EVALUATION.md                        ← how to measure quality (metrics, eval methodology)
-├── 17_STYLE_GUIDE.md                       ← coding standards (read before writing code)
-├── 18_DECISIONS.md                         ← full decision log (reference)
-├── 19_ARCHITECTURE_CHANGELOG.md            ← architecture change history
-├── 20_RELEASE_NOTES.md                     ← version and release history
-├── 21_TROUBLESHOOTING.md                   ← known issues and resolutions
-├── 22_ENVIRONMENT_NOTES.md                 ← environment and setup notes
-└── 23_CODEBASE_MAP.md                      ← auto-generated module dependency map
+├── 08_JSON_QUALITY_AUDIT_SPEC.md           ← post-extraction JSON quality audit specification
+├── 09_CHUNKING_AND_METADATA_SPEC.md        ← how to chunk resume content + chunk metadata schema
+├── 10_RETRIEVAL_STRATEGY_SPEC.md           ← Hybrid RAG retrieval architecture spec (extended)
+├── 11_DATABASE_SCHEMA.md                   ← storage schema for production
+├── 12_END_TO_END_PIPELINE.md               ← end-to-end flow: PDF upload → candidate ranking
+├── 13_AI_DESIGN_RATIONALE.md               ← why every AI decision was made
+├── 14_MODEL_REGISTRY.md                    ← which models and strategies are live
+├── 15_PROMPT_LIBRARY.md                    ← all production prompts with version history
+├── 16_RECRUITER_WORKFLOWS.md               ← how recruiters interact with the platform
+├── 17_IMPLEMENTATION_ROADMAP.md            ← what to build next
+├── 18_EVALUATION.md                        ← how to measure quality (metrics, eval methodology)
+├── 19_STYLE_GUIDE.md                       ← coding standards (read before writing code)
+├── 20_DECISIONS.md                         ← full decision log (reference)
+├── 21_ARCHITECTURE_CHANGELOG.md            ← architecture change history
+├── 22_RELEASE_NOTES.md                     ← version and release history
+├── 23_TROUBLESHOOTING.md                   ← known issues and resolutions
+├── 24_ENVIRONMENT_NOTES.md                 ← environment and setup notes
+└── 25_CODEBASE_MAP.md                      ← auto-generated module dependency map
 ```
 
 All docs defer to `02_WORKING_LOGIC.md` for scoring, evaluation, and ranking details.
@@ -89,7 +91,7 @@ respect to scoring and evaluation. All other docs defer to it.
 
 All code generation and refactoring must comply with:
 
-docs/17_STYLE_GUIDE.md
+docs/19_STYLE_GUIDE.md
 
 The style guide defines:
 - Code structure
@@ -210,7 +212,43 @@ This is the HOW-TO implementation guide that pairs with 06_RESUME_EXTRACTION_JSO
 
 ---
 
-### 08_RETRIEVAL_STRATEGY_SPEC.md
+### 08_JSON_QUALITY_AUDIT_SPEC.md
+
+Contains:
+
+• The formal quality-audit specification for extracted resume JSON
+• Five audit layers: schema validation, field completeness, evidence coverage, semantic missing-info, cross-parser consistency
+• Required audit inputs: source document artifacts, extracted JSON, mapping artifacts, optional ensemble artifacts
+• Canonical machine-readable audit output schema
+• Extraction-quality scoring model (schema_validity, field_completeness, section_completeness, evidence_coverage, parser_agreement, ocr_quality)
+• Review triggers: severity levels (info / warning / error / critical) and automatic escalation rules
+• Human review policy: review queue actions and corrected-output storage
+• What the audit layer must never do (invent fields, hide conflicts, confuse extraction quality with candidate quality)
+
+This document must be read after 06 and 07 (which define WHAT to extract and HOW to extract it)
+and before 09 (chunking), because only audited, high-confidence JSON should enter the chunking
+and retrieval pipeline. The audit score is not a candidate quality score.
+
+---
+
+### 09_CHUNKING_AND_METADATA_SPEC.md
+
+Contains:
+
+• What a chunk is: a small, coherent, retrievable evidence unit (not arbitrary fixed-size text slices)
+• Why resumes must be represented in two parallel forms: structured JSON fields + chunked evidence units
+• Chunk metadata schema: section type, source resume, confidence, field traceability
+• How chunks are linked back to structured JSON fields for hybrid retrieval
+• Section-aware chunking rules per resume section (experience, skills, education, certifications, projects)
+• Chunk size guidance and overlap strategy
+• How chunks feed into the retrieval layer (10) and rubric scoring
+
+This document fills the gap between extraction (06/07/08) and retrieval (10). It defines WHAT
+a chunk is and HOW to build it. Must be read before 10_RETRIEVAL_STRATEGY_SPEC.md.
+
+---
+
+### 10_RETRIEVAL_STRATEGY_SPEC.md
 
 Contains:
 
@@ -218,19 +256,21 @@ Contains:
 • Two retrieval modes and when to use each:
   - Structured lookup: exact factual fields (degree, email, total_experience_months)
   - Chunk-based semantic retrieval: contextual evidence (skill depth, leadership evidence, domain context)
-• Retrieval routing layer design
+• Retrieval routing layer design (mode-based: structured / semantic / lexical / hybrid)
 • How retrieval connects to deterministic requirement scoring and explainability
 • Threshold-based cosine similarity retrieval (vs BM25 hybrid)
 • Section-aware retrieval hints per requirement type
 • Why retrieval similarity is NOT the final score
+• Extended operational spec: when to use each retrieval mode, routing decision rules
 
 This is the authoritative retrieval architecture spec. Pairs with 05_AI_ARCHITECTURE.md
-(which describes what components exist) and 02_WORKING_LOGIC.md (which defines the scoring rules
+(which describes what components exist), 09_CHUNKING_AND_METADATA_SPEC.md (which defines
+what is being retrieved), and 02_WORKING_LOGIC.md (which defines the scoring rules
 that retrieval must serve).
 
 ---
 
-### 09_DATABASE_SCHEMA.md
+### 11_DATABASE_SCHEMA.md
 
 Contains:
 
@@ -242,7 +282,7 @@ Contains:
 
 ---
 
-### 10_END_TO_END_PIPELINE.md
+### 11_END_TO_END_PIPELINE.md
 
 Contains:
 
@@ -257,7 +297,7 @@ Best onboarding document for new developers and stakeholders.
 
 ---
 
-### 11_AI_DESIGN_RATIONALE.md
+### 13_AI_DESIGN_RATIONALE.md
 
 Contains:
 
@@ -271,7 +311,7 @@ Every significant AI decision must be documented.
 
 ---
 
-### 12_MODEL_REGISTRY.md
+### 14_MODEL_REGISTRY.md
 
 Contains:
 
@@ -289,7 +329,7 @@ This document tracks all production AI models and configurations.
 
 ---
 
-### 13_PROMPT_LIBRARY.md
+### 15_PROMPT_LIBRARY.md
 
 Contains:
 
@@ -306,7 +346,7 @@ Known limitations, and Version history. All production prompts must be documente
 
 ---
 
-### 14_RECRUITER_WORKFLOWS.md
+### 16_RECRUITER_WORKFLOWS.md
 
 Contains:
 
@@ -325,7 +365,7 @@ This document explains how recruiters interact with the platform.
 
 ---
 
-### 15_IMPLEMENTATION_ROADMAP.md
+### 16_IMPLEMENTATION_ROADMAP.md
 
 Contains:
 
@@ -340,7 +380,7 @@ This document is the execution plan for the project.
 
 ---
 
-### 16_EVALUATION.md
+### 17_EVALUATION.md
 
 Contains:
 
@@ -356,14 +396,14 @@ This document tracks AI system performance.
 
 ---
 
-### 20_RELEASE_NOTES.md
+### 21_RELEASE_NOTES.md
 Contains:
 • Feature additions
 • Bug fixes
 • Breaking changes
 • Version history
 
-### 23_CODEBASE_MAP.md
+### 25_CODEBASE_MAP.md
 
 Contains:
 
@@ -427,9 +467,11 @@ Implementation must follow (in reading order):
 For PDF extraction work, also read:
 6.	docs/06_RESUME_EXTRACTION_JSON_SCHEMA.md (data contract)
 7.	docs/07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md (implementation HOW-TO)
+8.	docs/08_JSON_QUALITY_AUDIT_SPEC.md (post-extraction quality audit — read before chunking)
 
-For retrieval / RAG work, also read:
-8.	docs/08_RETRIEVAL_STRATEGY_SPEC.md (Hybrid RAG retrieval spec)
+For chunking / RAG work, also read:
+9.	docs/09_CHUNKING_AND_METADATA_SPEC.md (chunk definition + metadata schema)
+10.	docs/10_RETRIEVAL_STRATEGY_SPEC.md (Hybrid RAG retrieval spec — extended)
 If implementation requires deviation:
 •	Document the reason.
 •	Update architecture documents first.
@@ -517,7 +559,7 @@ ________________________________________
 Troubleshooting Workflow
 When debugging:
 Update:
-docs/21_TROUBLESHOOTING.md
+docs/23_TROUBLESHOOTING.md
 Include:
 •	Problem description
 •	Symptoms
@@ -530,7 +572,7 @@ ________________________________________
 Environment Workflow
 When environment or setup issues occur:
 Update:
-docs/22_ENVIRONMENT_NOTES.md
+docs/24_ENVIRONMENT_NOTES.md
 Examples:
 •	Python installation issues
 •	Package conflicts
@@ -630,12 +672,14 @@ The following AI-specific documents must be maintained.
 docs/
 
 ├── 05_AI_ARCHITECTURE.md
-├── 08_RETRIEVAL_STRATEGY_SPEC.md
-├── 11_AI_DESIGN_RATIONALE.md
-├── 12_MODEL_REGISTRY.md
-├── 13_PROMPT_LIBRARY.md
-├── 16_EVALUATION.md
-├── 14_RECRUITER_WORKFLOWS.md
+├── 08_JSON_QUALITY_AUDIT_SPEC.md
+├── 09_CHUNKING_AND_METADATA_SPEC.md
+├── 10_RETRIEVAL_STRATEGY_SPEC.md
+├── 13_AI_DESIGN_RATIONALE.md
+├── 14_MODEL_REGISTRY.md
+├── 15_PROMPT_LIBRARY.md
+├── 16_RECRUITER_WORKFLOWS.md
+├── 18_EVALUATION.md
 
 ---
 
@@ -778,11 +822,13 @@ Before modifying:
 
 Update:
 
-1. docs/18_DECISIONS.md
-2. docs/11_AI_DESIGN_RATIONALE.md
-3. docs/12_MODEL_REGISTRY.md
+1. docs/20_DECISIONS.md
+2. docs/13_AI_DESIGN_RATIONALE.md
+3. docs/14_MODEL_REGISTRY.md
 4. docs/05_AI_ARCHITECTURE.md
-5. docs/08_RETRIEVAL_STRATEGY_SPEC.md
+5. docs/08_JSON_QUALITY_AUDIT_SPEC.md
+6. docs/09_CHUNKING_AND_METADATA_SPEC.md
+7. docs/10_RETRIEVAL_STRATEGY_SPEC.md
 
 Then implement.
 

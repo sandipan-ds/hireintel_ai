@@ -5,11 +5,15 @@
 # education, experience, skills, certifications, and languages.
 #
 # Provider rotation order (tried in sequence until one succeeds):
-#   1. Ollama (local) — fastest if running, zero cost
-#   2. OpenCode keys 1→2→3 (mimo-v2.5-free)
-#   3. OpenRouter key (google/gemma-4-31b-it)
-#   4. NVIDIA NIM keys (google/gemma-4-31b-it:free)
+#   1. Google AI Studio 1→2  (models/gemma-4-31b-it — Gemma 4 31B multimodal)
+#   2. NVIDIA NIM key 1,2,3   (meta/llama-3.2-90b-vision-instruct / 49b-nemotron)
+#   3. Google AI Studio 1→2  (models/gemini-2.0-flash — fallback)
+#   4. OpenCode keys 1→2→3  (minimax-m3 via /go/v1 — when credits restored)
+#   5. OpenRouter keys        (google/gemma-4-31b-it — fallback)
+#   6. Ollama (local)         — LAST RESORT only
 # If all fail, an empty scaffold is returned so the batch never crashes.
+# Timeout: 120s per provider.
+# LLM_WORKER_ID env var rotates the list so parallel workers use different keys.
 
 import re
 import json
@@ -60,7 +64,7 @@ def _get_first(key: str, default: str = "") -> str:
 
 
 # ---------------------------------------------------------------------------
-# Ollama health check
+# Ollama health check (used only as last-resort fallback)
 # ---------------------------------------------------------------------------
 
 def _ollama_is_alive(base_url: str) -> bool:
@@ -78,42 +82,104 @@ def _ollama_is_alive(base_url: str) -> bool:
 # Build ordered provider list: (api_key, base_url, model_name)
 # ---------------------------------------------------------------------------
 
+# Hard-coded base URLs per provider to avoid ambiguity caused by duplicate
+# `base_url` key names in .env (each provider section reuses the same key).
+_OPENCODE_BASE    = "https://opencode.ai/zen/go/v1"                          # /go/ = low-cost routing
+_GOOGLE_BASE      = "https://generativelanguage.googleapis.com/v1beta/openai/"  # Google AI Studio (OpenAI-compat)
+_OPENROUTER_BASE  = "https://openrouter.ai/api/v1"
+_NVIDIA_BASE      = "https://integrate.api.nvidia.com/v1"
+
+# Preferred multimodal models per provider.
+# NVIDIA: llama-3.2-11b-vision-instruct is confirmed working (vision-capable).
+# 90b-vision exists but has higher latency — kept as fallback.
+_NVIDIA_MULTIMODAL_MODELS = [
+    "meta/llama-3.2-11b-vision-instruct",   # Vision — confirmed 200 OK
+    "meta/llama-3.2-90b-vision-instruct",   # Vision 90B — slower, fallback
+]
+
+
 def _build_providers() -> List[Tuple[str, str, str]]:
     """
     Build the ordered list of (api_key, base_url, model) tuples to try.
 
-    Priority:
-      1. OpenRouter keys         (google/gemma-4-31b-it) — Primary
-      2. OpenCode keys 1, 2, 3   (minimax-m3 / cloud fallback)
-      3. NVIDIA NIM keys         (google/gemma-4-31b-it:free)
+    Priority (multimodal models, large parameter count preferred):
+      1. OpenCode keys 1,2,3    (/go/v1 endpoint, minimax-m3 — low-cost multimodal)
+      2. Google AI Studio 1,2   (gemini-2.0-flash — large multimodal, free tier)
+      3. OpenRouter keys 1,2,3  (google/gemma-4-31b-it — 31B multimodal)
+      4. NVIDIA NIM keys        (llama-3.2-vision — vision-capable)
+      5. Ollama local           (last resort — only if running)
+
+    If LLM_WORKER_ID env var is set (by parallel launcher), the list is
+    rotated by that many positions so each parallel worker leads with a
+    different API key, spreading load across providers.
 
     Returns:
         List of provider tuples ready to iterate.
     """
+    import os
     providers: List[Tuple[str, str, str]] = []
 
-    # 1. OpenRouter
-    or_base = "https://openrouter.ai/api/v1"
-    or_model = _get_first("MODEL", "google/gemma-4-31b-it")
-    for key in _get_all("OPENROUTER_API_KEY_1"):
-        providers.append((key, or_base, or_model))
+    # --- 1. Google AI Studio (PRIMARY — gemma-4-31b-it multimodal) -------
+    # Models on Google OpenAI endpoint need the 'models/' prefix.
+    # Gemma 4 31B is multimodal and fits the >=30B parameter preference perfectly.
+    g_model = "models/gemma-4-31b-it"
+    for key in (_get_all("GOOGLE_API_KEY_1") + _get_all("GOOGLE_API_KEY_2")):
+        providers.append((key, _GOOGLE_BASE, g_model))
 
-    # 2. OpenCode (3 numbered keys, same base/model)
-    oc_base = _get_first("base_url", "https://opencode.ai/zen/v1")
-    oc_model = _get_first("model", "minimax-m3")
+    # --- 2. NVIDIA NIM (SECONDARY — 90B and 49B working models) -----------
+    # Priority 1: meta/llama-3.2-90b-vision-instruct (90B multimodal vision)
+    # Priority 2: nvidia/llama-3.3-nemotron-super-49b-v1 (49B multimodal instruct)
+    # Interleave them so worker_id rotation gives Worker 0 -> Key 1, Worker 1 -> Key 2, etc.
+    nim_keys = _get_all("NVIDIA_NIM_API_KEY_1")
+    for key in nim_keys:
+        providers.append((key, _NVIDIA_BASE, "meta/llama-3.2-90b-vision-instruct"))
+    for key in nim_keys:
+        providers.append((key, _NVIDIA_BASE, "nvidia/llama-3.3-nemotron-super-49b-v1"))
+
+    # --- 3. Google AI Studio Fallback (gemini-2.0-flash) -----------------
+    g_fallback = "models/gemini-2.0-flash"
+    for key in (_get_all("GOOGLE_API_KEY_1") + _get_all("GOOGLE_API_KEY_2")):
+        providers.append((key, _GOOGLE_BASE, g_fallback))
+
+    # --- 4. OpenCode /go/v1 (when credits restored) -----------------------
+    oc_model = "minimax-m3"
     for key in (_get_all("OPENCODE_API_KEY_1")
                 + _get_all("OPENCODE_API_KEY_2")
                 + _get_all("OPENCODE_API_KEY_3")):
-        providers.append((key, oc_base, oc_model))
+        providers.append((key, _OPENCODE_BASE, oc_model))
 
-    # 3. NVIDIA NIM (3 keys all stored under same .env name)
-    nim_base = "https://integrate.api.nvidia.com/v1"
-    nim_model = _get_first("mode", "google/gemma-4-31b-it:free")
-    for key in _get_all("NVIDIA_NIM_API_KEY_1"):
-        providers.append((key, nim_base, nim_model))
+    # --- 5. OpenRouter (when credits restored) ----------------------------
+    or_model = "google/gemma-4-31b-it"
+    for key in _get_all("OPENROUTER_API_KEY_1"):
+        providers.append((key, _OPENROUTER_BASE, or_model))
+
+    # --- 6. Ollama (last resort) ------------------------------------------
+    ollama_base = _get_first("ollama_base_url", "http://localhost:11434/v1")
+    ollama_model = _get_first("ollama_model", "gemma3:27b")
+    if _ollama_is_alive(ollama_base):
+        providers.append(("ollama", ollama_base, ollama_model))
+        logger.info("Ollama is running — added as last-resort provider (%s)", ollama_model)
+    else:
+        logger.debug("Ollama not reachable — skipped")
 
     if not providers:
         logger.error("No LLM providers found in .env — normalization will produce empty scaffolds.")
+        return providers
+
+    # --- Worker-ID rotation (for parallel batch extraction) ---------------
+    # LLM_WORKER_ID rotates the list so worker N leads with a different key.
+    # Worker 0 = no rotation, Worker 1 = rotate by 1, etc.
+    worker_id = int(os.environ.get("LLM_WORKER_ID", "0"))
+    if worker_id > 0 and len(providers) > 1:
+        shift = worker_id % len(providers)
+        providers = providers[shift:] + providers[:shift]
+        logger.debug("LLM_WORKER_ID=%d — provider list rotated by %d", worker_id, shift)
+
+    logger.info(
+        "Provider list built: %d entries (worker_id=%d) — leading with %s:%s",
+        len(providers), worker_id,
+        providers[0][1].split('/')[2], providers[0][2]
+    )
     return providers
 
 
@@ -177,9 +243,16 @@ def extract_name_from_raw_text(raw_text: str) -> Optional[str]:
     return None
 
 _SYSTEM_PROMPT = (
-    "You are an expert resume parser. Extract raw resume sections into valid JSON "
-    "matching the schema exactly. Return ONLY valid raw JSON — no markdown fences "
-    "(no ```json or ```), no explanation, no comments, no extra text."
+    "You are an expert resume parser. Extract raw resume text into valid JSON matching the schema exactly. "
+    "STRICT RULES: "
+    "(1) Return ONLY valid raw JSON — no markdown fences (no ```json), no explanation, no comments. "
+    "(2) Dates MUST be in YYYY-MM format (e.g. 2021-03, not 03-2021 or March 2021). Use null if unknown. "
+    "(3) responsibilities[] must be individual short bullet points (1 sentence each), NOT a single paragraph dump. "
+    "Split multi-sentence paragraphs into separate array items. "
+    "(4) Each skill in skills[] must be a single discrete technology or skill name, NOT a full sentence. "
+    "Bad: 'Experience with relational databases'. Good: 'SQL', 'PostgreSQL'. "
+    "(5) full_name must be the candidate's actual name (First Last), not a placeholder or section header. "
+    "(6) If a field has no data, set it to null or []. Never invent data."
 )
 
 
@@ -211,8 +284,7 @@ def call_llm_normalizer(prompt: str) -> str:
             client = OpenAI(
                 api_key=api_key,
                 base_url=base_url,
-                max_retries=0,   # rotate manually, no exponential backoff
-                timeout=30.0,    # fast-fail per provider
+                max_retries=0,   # rotate manually — no exponential backoff hangs
             )
             response = client.chat.completions.create(
                 model=model,
@@ -261,26 +333,36 @@ def normalize_to_schema(sections: Dict[str, List[str]], raw_text: str, candidate
             sections_prompt_input += f"=== SECTION: {sec_name.upper()} ===\n"
             sections_prompt_input += "\n".join(blocks) + "\n\n"
 
-    prompt = f"""
-Analyze the following resume sections and extract structured information into the requested JSON schema.
-Ensure dates are in "YYYY-MM" format (or "YYYY" or null if not specified).
-Set is_current = true/false for experience entries.
-Ensure no text or markdown wrapper is returned; return ONLY valid raw JSON matching the schema.
+    prompt = f"""Extract the resume below into the JSON schema specified. Follow ALL rules strictly.
 
+RULES:
+- Dates: ALWAYS use YYYY-MM format (e.g. 2021-03). If only year known, use YYYY-01. Use null if completely unknown.
+- responsibilities[]: Split into INDIVIDUAL bullet points (one action per item). Never dump a full paragraph as one item.
+  BAD:  ["Worked on databases and APIs and also handled deployments"]
+  GOOD: ["Designed and maintained PostgreSQL databases", "Built REST APIs", "Managed CI/CD deployments"]
+- skills[]: Each entry must be ONE discrete skill/technology (e.g. "Python", "React", "Docker").
+  Do NOT include full sentences. Extract atomic skill names only.
+- name_canonical in skills: standardize names (e.g. "Node Js" -> "Node.js", "postgres" -> "PostgreSQL").
+- full_name: Extract the candidate's actual name. If a template placeholder (e.g. "YOUR NAME"), set null.
+- summary: The professional summary paragraph from the resume. Set null if not present.
+- headline: The job title or professional title line. Set null if not present.
+- If no data exists for a section, return an empty array [].
+
+RESUME TEXT:
 ---
 {sections_prompt_input}
 ---
 
-JSON SCHEMA TO RETURN:
+Return this JSON structure (filled with real data from the resume above):
 {{
-  "full_name": "{name or 'null'}",
-  "headline": "headline/job title summary or null",
-  "summary": "professional summary or null",
+  "full_name": {json.dumps(name)},
+  "headline": "Professional title line or null",
+  "summary": "Professional summary paragraph or null",
   "skills": [
     {{
-      "name_raw": "raw skill name as listed",
-      "name_canonical": "canonical standardized skill name (e.g. Node Js -> Node.js, postgres -> PostgreSQL)",
-      "category": "e.g. frontend, backend, database, mobile, devops, cloud, methodology, or other",
+      "name_raw": "exact skill text from resume",
+      "name_canonical": "standardized name (Python, Node.js, PostgreSQL, AWS, etc.)",
+      "category": "one of: frontend / backend / database / mobile / devops / cloud / methodology / data_science / security / other",
       "source_type": "explicit",
       "last_used": "YYYY-MM or null",
       "months_of_evidence": 0
@@ -288,10 +370,10 @@ JSON SCHEMA TO RETURN:
   ],
   "education": [
     {{
-      "degree": "Degree name, e.g. B.Tech, M.Tech, MBA, BS, MS, PhD",
-      "specialization": "Specialization, e.g. Computer Science",
-      "institution_raw": "Raw institution name from resume",
-      "institution_normalized": "Cleaned institution name",
+      "degree": "e.g. B.Tech / M.Tech / MBA / BS / MS / PhD / Bachelor's / Master's",
+      "specialization": "e.g. Computer Science / Business Administration",
+      "institution_raw": "exact institution name from resume",
+      "institution_normalized": "cleaned full institution name",
       "start_date": "YYYY-MM or null",
       "end_date": "YYYY-MM or null",
       "grade": "GPA, CGPA or percentage or null",
@@ -300,41 +382,41 @@ JSON SCHEMA TO RETURN:
   ],
   "experience": [
     {{
-      "job_title": "Job title",
-      "company": "Company name",
-      "employment_type": "full_time, contract, part_time, internship or null",
+      "job_title": "Exact job title",
+      "company": "Company name or null",
+      "employment_type": "full_time / contract / part_time / internship or null",
       "start_date": "YYYY-MM or null",
-      "end_date": "YYYY-MM or null",
+      "end_date": "YYYY-MM or null (null if current)",
       "is_current": false,
-      "location": "Location or null",
-      "responsibilities": ["bullet 1", "bullet 2"],
-      "tools_and_skills": ["skill1", "skill2"]
+      "location": "City, State/Country or null",
+      "responsibilities": ["Individual bullet point 1", "Individual bullet point 2", "..."],
+      "tools_and_skills": ["Python", "Django", "PostgreSQL"]
     }}
   ],
   "projects": [
     {{
       "name": "Project name",
-      "organization": "Organization name or null",
-      "role": "Role in project or null",
+      "organization": "Company or university or null",
+      "role": "Your role in the project or null",
       "start_date": "YYYY-MM or null",
       "end_date": "YYYY-MM or null",
-      "description": ["bullet 1"],
-      "skills_used": ["skill1"]
+      "description": ["What the project did", "Your contribution"],
+      "skills_used": ["Python", "React"]
     }}
   ],
   "certifications": [
     {{
       "name": "Certification name",
-      "issuer": "Issuer or null",
+      "issuer": "Issuer organization or null",
       "issue_date": "YYYY-MM or null",
       "expiry_date": "YYYY-MM or null",
-      "credential_id": "Credential ID or null"
+      "credential_id": "ID string or null"
     }}
   ],
   "languages": [
     {{
-      "name": "Language name",
-      "proficiency": "native, fluent, professional, conversational, basic or null"
+      "name": "Language name (e.g. English, Spanish)",
+      "proficiency": "native / fluent / professional / conversational / basic or null"
     }}
   ]
 }}
@@ -342,8 +424,19 @@ JSON SCHEMA TO RETURN:
 
     response = call_llm_normalizer(prompt)
     
-    # Clean response (sometimes LLM adds markdown code block backticks despite system instructions)
+    # Clean response (strip thought blocks and markdown wrappers)
     response_clean = response.strip()
+    
+    # Strip <thought>...</thought> blocks if present (common in reasoning models)
+    if "</thought>" in response_clean:
+        idx = response_clean.find("</thought>")
+        response_clean = response_clean[idx + len("</thought>"):].strip()
+    elif "<thought>" in response_clean:
+        idx = response_clean.find("{")
+        if idx != -1:
+            response_clean = response_clean[idx:].strip()
+
+    # Strip markdown code blocks
     if response_clean.startswith("```json"):
         response_clean = response_clean[7:]
     elif response_clean.startswith("```"):
@@ -351,6 +444,12 @@ JSON SCHEMA TO RETURN:
     if response_clean.endswith("```"):
         response_clean = response_clean[:-3]
     response_clean = response_clean.strip()
+    
+    # Strip trailing conversational fluff after the final JSON bracket if present
+    if response_clean and not response_clean.endswith("}"):
+        idx = response_clean.rfind("}")
+        if idx != -1:
+            response_clean = response_clean[:idx+1].strip()
 
     try:
         data = json.loads(response_clean)
@@ -362,8 +461,15 @@ JSON SCHEMA TO RETURN:
     data["emails"] = contact["emails"]
     data["phones"] = contact["phones"]
     data["links"] = contact["links"]
-    if not data.get("full_name") or data["full_name"] == "null":
+
+    # BUG 3 fix: guard against null-like name strings the LLM may echo back.
+    # When name is None the prompt injects JSON null, but if the LLM hallucinates
+    # "None", "null", "N/A", or an empty string, fall back to the regex-extracted name.
+    _NULL_NAME_STRINGS = {"null", "none", "n/a", "na", ""}
+    llm_name = data.get("full_name")
+    if not llm_name or str(llm_name).strip().lower() in _NULL_NAME_STRINGS:
         data["full_name"] = name
+
 
     # Add default field confidence estimates
     for skill in data.get("skills", []):

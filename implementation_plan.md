@@ -1,363 +1,546 @@
-# Stage 3 — PDF Resume → JSON Extraction Pipeline (DEC-035)
+# Stage 4 — Embedding Index Rebuild + JSON Quality Audit Layer (DEC-036)
 
 ## What this solves
 
-The existing `src/resume_parsing/parser.py` extracts raw text using `pdfplumber`.
-It breaks on two-column layouts, graphical headers, sidebar sections, scanned PDFs,
-and DOCX files. The output is unstructured text — it does not follow
-`06_RESUME_EXTRACTION_JSON_SCHEMA.md`, which is the data contract all downstream
-scoring depends on.
+Stage 3 produced 721 extracted JSON files in `data/processed/<role>/`.
+Before any of these can enter scoring with confidence, two things must happen:
 
-This plan implements a **routed extraction pipeline** that produces schema-compliant
-JSON from any resume format, per `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
+1. **Rebuild the embedding index** — the RAG layer still indexes old pre-extraction
+   chunks. Until rebuilt over the new structured JSON, retrieval surfaces stale text
+   and scoring is wrong regardless of schema fixes.
+
+2. **Run the JSON Quality Audit Layer** — per `08_JSON_QUALITY_AUDIT_SPEC.md`,
+   extracted JSON must never be treated as unquestionable truth. The audit layer
+   determines whether each extraction is trustworthy enough to score automatically,
+   needs human review, or should be re-extracted.
+
+Without this stage, Stage 5 (Candidate Scoring) scores on unverified data.
 
 ---
 
-## Why this is the critical path
+## Why this order matters
 
-Without correct JSON extraction:
-- Chunking produces noise chunks from broken reading order
-- Retrieval surfaces irrelevant text
-- The scoring LLM gets wrong evidence
-- Scores are wrong regardless of the scoring formula
+```
+Stage 3: PDF → JSON extraction          ← DONE (721/721)
+         ↓
+Stage 4A: Rebuild embedding index       ← DO FIRST — RAG depends on it
+         ↓
+Stage 4B: JSON Quality Audit Layer      ← Audit all 721 JSONs before scoring
+         ↓
+Stage 5: Candidate Scoring              ← Only score audit-passed candidates
+```
 
-All downstream stages (4 → 5 → 6) depend on Stage 3 output.
+Stage 4A must run before 4B because the evidence coverage audit (Layer C) reads
+`evidence_chunks` and `field_evidence_map` that the indexer enriches.
 
 ---
 
 ## Architecture
 
 ```
-Input (PDF / DOCX / image)
+data/processed/<role>/<candidate_id>.json   (721 files)
         │
         ▼
-┌─────────────────────┐
-│   File Classifier   │  → native_pdf / scanned_pdf / mixed_pdf / docx
-└─────────────────────┘
+┌────────────────────┐
+│  4A: Index Rebuild │  → src/rag/build_index.py (existing, verify + re-run)
+└────────────────────┘
         │
-   ┌────┴────────────────────────────────┐
-   │                                              │
-   ▼                                              ▼
-Route A: Native PDF / DOCX                  Route B: Scanned / Image PDF
-  Step 1: Docling (primary parser)            Step 1: PaddleOCR (text detection)
-  Step 2: Unstructured (fallback)             Step 2: Surya (layout + reading order)
-        │                                          │
-        └──────────┬────────────────────┘
-                   ▼
-         ┌────────────────────┐
-         │   Section Builder   │  → group into 7 canonical sections
-         └────────────────────┘
-                   │
-                   ▼
-         ┌────────────────────┐
-         │   LLM Normalization │  → dates, degrees, skill names → structured fields
-         └────────────────────┘
-                   │
-                   ▼
-         ┌────────────────────┐
-         │  Schema Validation  │  → required fields check + confidence score
-         └────────────────────┘
-                   │
-                   ▼
-         Output JSON (per 06_RESUME_EXTRACTION_JSON_SCHEMA.md)
+        ▼
+┌────────────────────────────────────────────────────────┐
+│                 4B: JSON Audit Engine                  │
+│                                                        │
+│  Layer A: Schema Validation                            │
+│  Layer B: Field & Section Completeness                 │
+│  Layer C: Evidence Coverage                            │
+│  Layer D: Semantic Missing-Info  (LLM-assisted)        │
+│  Layer E: Cross-Parser Consistency                     │
+│                                                        │
+│  → Quality Score  (0.0–1.0)                            │
+│  → Status: passed / review_required / failed           │
+│  → Review Triggers (info/warning/error/critical)       │
+└────────────────────────────────────────────────────────┘
+        │
+        ├─ passed          → ready for Stage 5 scoring
+        ├─ review_required → review queue Markdown report
+        └─ failed          → logged, skipped from scoring
 ```
 
 ---
 
 ## Proposed Changes
 
-### New Package: `src/resume_parsing/extraction/`
+---
 
-#### [NEW] `src/resume_parsing/extraction/__init__.py`
-Empty init file.
+### Stage 4A — Rebuild Embedding Index
 
-#### [NEW] `src/resume_parsing/extraction/file_classifier.py`
-- `classify_file(path: str) -> FileType`
-- `FileType` enum: `NATIVE_PDF`, `SCANNED_PDF`, `MIXED_PDF`, `DOCX`, `TEXT`
-- Detection: try `pdfplumber` text extraction; if < 50 chars/page → classify `SCANNED_PDF`
-- DOCX: check extension + `python-docx` content sniff
+#### [MODIFY] `src/rag/build_index.py`
 
-#### [NEW] `src/resume_parsing/extraction/docling_parser.py`
-- `extract_with_docling(path: str) -> ExtractionResult`
-- Primary parser for native PDFs using **Docling**
-- Produces reading-order-correct elements: paragraphs, headings, tables, lists
-- Returns `None` gracefully if Docling not installed or fails
+- Already exists. Verify it reads the new JSON schema keys correctly:
+  `candidate_profile`, `evidence_chunks`, `field_evidence_map`, `confidence`.
+- If it still reads old schema keys (pre-Stage-3), update the reader.
+- Re-run to replace stale index.
+- Output written to `data/index/` (create if missing).
 
-#### [NEW] `src/resume_parsing/extraction/unstructured_parser.py`
-- `extract_with_unstructured(path: str) -> ExtractionResult`
-- Fallback parser using **Unstructured**
-- Element-level output: `Title`, `NarrativeText`, `ListItem`, `Table`
-- Supports PDF and DOCX
-
-#### [NEW] `src/resume_parsing/extraction/ocr_parser.py`
-- `extract_with_ocr(path: str) -> ExtractionResult`
-- **PaddleOCR** for text detection and recognition
-- **Surya** for layout analysis and reading-order recovery
-- Handles multi-column layouts
-- Only loaded/instantiated when the file classifier routes to this path
-
-#### [NEW] `src/resume_parsing/extraction/section_builder.py`
-- `build_sections(elements: list[Element]) -> dict[str, list[str]]`
-- Groups elements into 7 canonical sections:
-  `summary`, `skills`, `experience`, `education`, `certifications`, `projects`, `other`
-- Uses the existing `SECTION_HEADERS` synonym table from `parser.py`
-- Handles heading→body grouping
-
-#### [NEW] `src/resume_parsing/extraction/llm_normalizer.py`
-- `normalize_to_schema(sections: dict, candidate_id: str) -> ResumeJSON`
-- Deterministic regex for: name, email, phone, URLs (fast, no LLM)
-- LLM (Ollama `qwen2.5:3b`) for: dates, durations, degree names, skill list normalization
-- Strict JSON-only output prompt; cites text literally, no hallucination
-
-#### [NEW] `src/resume_parsing/extraction/schema_validator.py`
-- `validate(resume_json: dict) -> ValidationResult`
-- `ValidationResult`: `is_valid: bool`, `missing_fields: list[str]`, `confidence_score: float`
-- Checks all required fields per `06_RESUME_EXTRACTION_JSON_SCHEMA.md`
-- Flags low-confidence fields (< 0.70) for review
-
-#### [NEW] `src/resume_parsing/extraction/pipeline.py`
-- `extract_resume(path: str, candidate_id: str) -> ResumeJSON`
-- Orchestrates the full pipeline: classify → route → build sections → normalize → validate
-- The single entry point for all downstream code
+No new files needed for 4A — it is a re-run task, not a code task.
 
 ---
 
-### Batch Script
+### Stage 4B — JSON Quality Audit Layer
 
-#### [NEW] `scripts/batch_extract_resumes.py`
-- Walk `data/original/<role>/` for all 8 roles
-- Run `extract_resume()` per file
-- Write output to `data/processed/<role>/<candidate_id>.json`
-- Log failures and low-confidence extractions to `run_reports/`
-- Progress bar (tqdm)
+New package: `src/resume_parsing/audit/`
 
 ---
 
-### Tests
-
-#### [NEW] `tests/unit/test_file_classifier.py` — 5 test cases
-#### [NEW] `tests/unit/test_section_builder.py` — 10 test cases
-#### [NEW] `tests/unit/test_schema_validator.py` — 8 test cases
-#### [NEW] `tests/integration/test_extraction_pipeline.py` — 3 real resume fixtures
+#### [NEW] `src/resume_parsing/audit/__init__.py`
+Empty init.
 
 ---
 
-## Dependencies to Add (`requirements.txt`)
+#### [NEW] `src/resume_parsing/audit/models.py`
+
+Defines all shared data types for the audit system.
+
+```python
+from dataclasses import dataclass, field
+from typing import Optional
+
+@dataclass
+class AuditCheck:
+    """A single audit finding from any layer."""
+    check_id: str
+    severity: str          # "info" | "warning" | "error" | "critical"
+    layer: str             # "schema" | "field" | "section" | "evidence" | "semantic" | "cross_parser"
+    field: str             # dotted path e.g. "candidate_profile.experience[1].start_date"
+    issue: str
+    expected: str = ""
+    actual: str = ""
+
+@dataclass
+class MissingCandidate:
+    """Information present in the resume but absent in the extracted JSON."""
+    field_family: str      # "experience" | "certifications" | "skills" | ...
+    resume_evidence: str   # exact text found in raw resume
+    source_chunk_id: str   # chunk ID if mappable, else ""
+    reason: str
+    confidence: float
+
+@dataclass
+class ParserConflict:
+    """Disagreement between two extraction routes on the same field."""
+    field: str
+    parser_a: str
+    parser_b: str
+    severity: str
+
+@dataclass
+class QualityScores:
+    """Extraction-quality scores. NOT candidate quality scores."""
+    schema_validity: float
+    field_completeness: float
+    section_completeness: float
+    evidence_coverage: float
+    parser_agreement: float
+    ocr_quality: float
+    overall_extraction_quality: float
+
+@dataclass
+class AuditResult:
+    """Complete audit output for one candidate."""
+    audit_version: str
+    document_id: str
+    candidate_id: str
+    audit_status: str      # "passed" | "review_required" | "failed"
+    schema_checks: list[AuditCheck] = field(default_factory=list)
+    field_checks: list[AuditCheck] = field(default_factory=list)
+    section_checks: list[AuditCheck] = field(default_factory=list)
+    evidence_coverage_checks: list[AuditCheck] = field(default_factory=list)
+    semantic_checks: list[AuditCheck] = field(default_factory=list)
+    missing_candidates: list[MissingCandidate] = field(default_factory=list)
+    conflicts: list[ParserConflict] = field(default_factory=list)
+    quality_scores: Optional[QualityScores] = None
+    review_triggers: list[AuditCheck] = field(default_factory=list)
+    summary: dict = field(default_factory=dict)
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/layer_a_schema.py`
+
+**Layer A — Schema Validation**
+
+Checks structural correctness. No LLM needed — pure deterministic rules.
+
+Rules:
+- Required top-level keys: `schema_version`, `candidate_id`, `candidate_profile`,
+  `evidence_chunks`, `field_evidence_map`, `validation`, `confidence`, `raw`
+- `candidate_profile` keys: `full_name`, `skills`, `experience`, `education`,
+  `certifications`, `projects`, `emails`, `phones`, `links`, `languages`
+- Array fields are actually arrays: `skills`, `experience`, `education`, `certifications`
+- Date strings match `YYYY-MM` or `YYYY` on every experience/education entry
+- `confidence.document_confidence` is float in `[0.0, 1.0]`
+- `experience[].end_date` is null only when `is_current == True`
+- `skills[].name` is non-empty string
+
+```python
+def run(resume_json: dict) -> tuple[list[AuditCheck], float]:
+    """
+    Run schema validation layer.
+
+    Returns:
+        (checks, schema_validity_score) where schema_validity_score
+        is 1.0 - weighted_error_fraction.
+    """
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/layer_b_completeness.py`
+
+**Layer B — Field & Section Completeness**
+
+Heuristic pattern matching on `raw.raw_text` to detect likely missing fields.
+
+| Detector | Pattern | JSON field checked |
+|---|---|---|
+| Email | RFC-like regex | `candidate_profile.emails` non-empty |
+| Phone | `\+?[\d\s\-\(\)]{7,}` | `candidate_profile.phones` non-empty |
+| LinkedIn/GitHub URL | `linkedin.com`, `github.com` | `candidate_profile.links` non-empty |
+| Experience block | company + date-range heuristic | `experience` count vs detected blocks |
+| Education block | degree keyword + institution pattern | `education` count vs detected blocks |
+| Certification keyword | `Certified|Certification|AWS|Azure|GCP|PMP|Scrum` | `certifications` non-empty |
+| Skills heading | `Skills:|Technical Skills:` | `skills` count > 0 |
+
+Logic:
+- Pattern fires in raw text + JSON field empty/null → `warning`
+- Detected count > 2× extracted count → `warning` (likely missed entries)
+- Education section heading found but `education` array empty → `error`
+
+```python
+def run(resume_json: dict) -> tuple[list[AuditCheck], float]:
+    """
+    Run field and section completeness layer.
+
+    Returns:
+        (checks, field_completeness_score) where score =
+        1 - (missing_field_fraction).
+    """
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/layer_c_evidence.py`
+
+**Layer C — Evidence Coverage**
+
+Reads `field_evidence_map` and `evidence_chunks` to check forward and reverse coverage.
+
+**Forward coverage** — for each JSON field referenced in `field_evidence_map`:
+- Do the chunk IDs exist in `evidence_chunks`?
+- Is the chunk text non-empty?
+- Flag broken references as `error`.
+
+**Reverse coverage** — for each chunk in `evidence_chunks`:
+- Is it referenced in `field_evidence_map`?
+- If not: it is unmapped. Check if its text contains certification/experience/skill
+  keywords → emit `warning` (silent extraction miss).
+
+```python
+def run(resume_json: dict) -> tuple[list[AuditCheck], float]:
+    """
+    Run evidence coverage layer.
+
+    Returns:
+        (checks, evidence_coverage_score) where score =
+        mapped_chunks / total_meaningful_chunks.
+    """
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/layer_d_semantic.py`
+
+**Layer D — Semantic Missing-Info Audit (LLM-assisted)**
+
+Sends a focused prompt to the LLM asking it to identify information present in the
+raw resume text but absent or underrepresented in the extracted JSON.
+
+**Cost control:** Layer D runs **only** if Layer B or C emit at least one `warning`
+or higher. For clean extractions (all green), the LLM call is skipped entirely.
+This reduces API calls by ~60% in practice.
+
+Uses the same provider rotation as `llm_normalizer.py`:
+Google AI Studio → NVIDIA NIM → fallback.
+
+**Prompt template:**
 
 ```
-docling>=2.0          # primary document parser
-unstructured>=0.16    # fallback element-level parser
-paddleocr>=2.9        # OCR for scanned resumes
-surya-ocr>=0.6        # layout analysis + reading order
-python-docx>=1.1      # DOCX support
+You are an extraction auditor. Your task is to identify information that is
+explicitly present in a resume but was missed during structured extraction.
+Do NOT invent new data. Only report items with clear textual evidence.
+
+RAW RESUME TEXT:
+{raw_text}
+
+EXTRACTED JSON SUMMARY:
+- Name: {full_name}
+- Emails: {emails}
+- Skills count: {skills_count}
+- Experience entries: {experience_count}
+- Education entries: {education_count}
+- Certifications: {certifications_count}
+- Projects: {projects_count}
+
+Return ONLY a JSON array. Each item:
+{{"field_family": "experience|certifications|skills|education|contact|project",
+  "resume_evidence": "the exact text from the resume",
+  "reason": "why it appears to be missing or underrepresented",
+  "confidence": 0.0-1.0}}
+
+If nothing is missing, return [].
 ```
 
-> [!IMPORTANT]
-> `PaddleOCR` and `Surya` are large packages with model downloads on first use.
-> They should only be instantiated when the file classifier routes to OCR.
-> Add a `--no-ocr` flag to the batch script to skip scanned PDFs during testing.
+```python
+def run(
+    resume_json: dict,
+    skip_if_clean: bool = True,
+    prior_checks: list[AuditCheck] | None = None,
+) -> tuple[list[AuditCheck], list[MissingCandidate], float]:
+    """
+    Run semantic missing-info audit.
+
+    Args:
+        resume_json: Extracted candidate JSON.
+        skip_if_clean: If True, skip LLM call when no prior warnings exist.
+        prior_checks: Checks from Layers A/B/C to determine if LLM is needed.
+
+    Returns:
+        (checks, missing_candidates, semantic_score) where semantic_score
+        = 1 - min(len(missing_candidates) / 5, 1.0).
+    """
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/layer_e_cross_parser.py`
+
+**Layer E — Cross-Parser Consistency**
+
+Compares primary extraction against a lightweight re-run of the old `parser.py`
+(Route D, kept as last-resort fallback) on the same source file.
+
+Fields compared:
+- `full_name` — Levenshtein distance ≤ 2 counts as agreement
+- `emails` — set intersection check
+- `experience` count — flag if delta > 1
+- `education` count — flag if delta > 1
+
+This is intentionally lightweight. Only run it when Layers A–D already flag issues.
+Controlled by `--cross-parser` flag in the batch script (off by default).
+
+```python
+def run(resume_json: dict, source_path: str) -> tuple[list[ParserConflict], float]:
+    """
+    Run cross-parser consistency check.
+
+    Returns:
+        (conflicts, parser_agreement_score) where score =
+        agreements / (agreements + conflicts).
+    """
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/scorer.py`
+
+**Quality Score Computation + Review Status**
+
+Applies the weighted formula from `08_JSON_QUALITY_AUDIT_SPEC.md §14.2`:
+
+```python
+WEIGHTS = {
+    "schema_validity":      0.20,
+    "field_completeness":   0.25,
+    "section_completeness": 0.20,   # derived from Layer B section checks
+    "evidence_coverage":    0.20,
+    "parser_agreement":     0.10,
+    "ocr_quality":          0.05,
+}
+```
+
+OCR quality is the average `field_confidence` when `raw.ocr_text` is non-null.
+Defaults to `1.0` if OCR was not used.
+
+**Review status thresholds:**
+
+| Score | Status |
+|---|---|
+| ≥ 0.85 | `passed` |
+| 0.65 – 0.84 | `review_required` |
+| < 0.65 | `failed` |
+
+Any `critical` severity trigger → always `review_required` regardless of score.
+
+```python
+def compute_scores(...) -> QualityScores: ...
+def assign_status(scores: QualityScores, checks: list[AuditCheck]) -> str: ...
+def extract_review_triggers(checks: list[AuditCheck]) -> list[AuditCheck]: ...
+```
+
+---
+
+#### [NEW] `src/resume_parsing/audit/engine.py`
+
+**Audit Orchestrator — single public entry point.**
+
+Runs all layers in the order specified by `08_JSON_QUALITY_AUDIT_SPEC.md §18`.
+
+```python
+def audit_resume(
+    resume_json: dict,
+    source_path: str,
+    run_semantic: bool = True,
+    run_cross_parser: bool = False,
+) -> AuditResult:
+    """
+    Run the full JSON Quality Audit for one candidate.
+
+    Args:
+        resume_json:      Extracted candidate JSON (loaded from data/processed/).
+        source_path:      Original PDF/DOCX path (for Layer E).
+        run_semantic:     Call the LLM for Layer D (slower but catches more misses).
+        run_cross_parser: Compare against old parser output (Layer E).
+
+    Returns:
+        AuditResult with status, all checks, quality scores, review triggers.
+
+    Raises:
+        ValueError: If resume_json is missing required top-level keys.
+    """
+```
+
+Execution order inside `audit_resume`:
+1. Layer A: schema
+2. Layer B: field + section completeness
+3. Layer C: evidence coverage
+4. Layer D: semantic (conditional on prior warnings + `run_semantic` flag)
+5. Layer E: cross-parser (conditional on `run_cross_parser` flag)
+6. `scorer.py`: compute `QualityScores` + `audit_status`
+7. Build and return `AuditResult`
+
+---
+
+### Batch Audit Script
+
+#### [NEW] `scripts/run_audit.py`
+
+Walks all JSONs in `data/processed/` and runs the audit engine on each.
+
+```
+python scripts/run_audit.py [--role ROLE] [--no-semantic] [--cross-parser] [--limit N]
+```
+
+- Writes per-candidate audit JSON → `data/audit/<role>/<candidate_id>_audit.json`
+- Writes role-level Markdown summary → `run_reports/audit_<role>_<timestamp>.md`
+- Prints final summary:
+
+```
+Audit Complete — DataScience (42 candidates)
+  passed:           36  (85.7%)
+  review_required:   5  (11.9%)
+  failed:            1   (2.4%)
+  Avg quality score: 0.83
+  Review queue:      run_reports/audit_DataScience_review_queue.md
+```
+
+---
+
+#### [NEW] `scripts/generate_review_queue.py`
+
+Reads all `data/audit/` files and generates a prioritized cross-role review queue:
+
+```markdown
+# Review Queue — 2026-07-12
+
+## Critical (block from scoring)
+- cand_XXXX [WebDesigning] score=0.52
+  Experience section likely incomplete (3 role blocks detected, 1 extracted)
+
+## Warning (review recommended, may score provisionally)
+- cand_YYYY [DataScience] score=0.71
+  "AWS Certified Developer" in raw text, absent from certifications JSON
+```
+
+---
+
+## Files Summary
+
+| File | Type | Purpose |
+|---|---|---|
+| `src/rag/build_index.py` | MODIFY | Verify new JSON schema keys; re-run |
+| `src/resume_parsing/audit/__init__.py` | NEW | Package init |
+| `src/resume_parsing/audit/models.py` | NEW | All shared dataclasses |
+| `src/resume_parsing/audit/layer_a_schema.py` | NEW | Schema validation (deterministic) |
+| `src/resume_parsing/audit/layer_b_completeness.py` | NEW | Field & section completeness (regex) |
+| `src/resume_parsing/audit/layer_c_evidence.py` | NEW | Evidence coverage (forward + reverse) |
+| `src/resume_parsing/audit/layer_d_semantic.py` | NEW | LLM semantic missing-info audit |
+| `src/resume_parsing/audit/layer_e_cross_parser.py` | NEW | Cross-parser consistency |
+| `src/resume_parsing/audit/scorer.py` | NEW | Quality scoring + review status |
+| `src/resume_parsing/audit/engine.py` | NEW | Audit orchestrator (public API) |
+| `scripts/run_audit.py` | NEW | Batch audit runner (all 721 candidates) |
+| `scripts/generate_review_queue.py` | NEW | Cross-role review queue generator |
+
+---
+
+## Dependencies
+
+No new packages required.
+
+- Layer D reuses the LLM provider rotation from `llm_normalizer.py`
+- Layer E reuses `src/resume_parsing/parser.py` (old parser, kept as Route D)
+- Schema validation uses standard `re` and Python `dataclasses`
 
 ---
 
 ## Open Questions
 
 > [!IMPORTANT]
-> **LLM normalization scope:** Should the LLM normalize all fields, or only
-> ambiguous ones (dates, degree names, skill normalization)?
-> **Recommendation:** deterministic regex for contact info + simple fields;
-> LLM only for dates, experience bullet normalization, education parsing.
+> **Layer D API cost:** With `skip_if_clean=True`, Layer D calls the LLM only for
+> candidates where Layers B/C already fired warnings (estimated ~100–200 of 721).
+> Recommend running `--no-semantic` first for a fast baseline, then re-running
+> semantic-only on `review_required` cases.
 
 > [!IMPORTANT]
-> **Keep old `parser.py` as a fallback or retire it?**
-> It works for simple single-column native PDFs.
-> **Recommendation:** keep it as Route D (last resort), clearly labeled.
+> **Scoring policy for `review_required` candidates:** Two options:
+> - **Option A (strict):** Skip from scoring until manually approved.
+> - **Option B (lenient):** Score anyway but flag report with `[AUDIT: review_required]`.
+> Confirm before Stage 5. Recommendation: **Option B** — avoids blocking the entire
+> scoring run on a small set of edge-case candidates.
 
 > [!NOTE]
-> **Re-parse all 721 existing resumes immediately?**
-> **Recommendation:** yes — re-parse all to get a consistent data layer,
-> then rebuild the embedding index. The old `data/processed/` JSONs do not
-> follow `06_RESUME_EXTRACTION_JSON_SCHEMA.md`.
+> **Layer E (cross-parser):** Disabled by default (`--cross-parser` flag required).
+> The old `parser.py` is a weak baseline and will generate noise. Enable only for
+> candidates where Layers A–D already flag `error` or `critical`.
 
 ---
 
 ## Verification Plan
 
-1. Install dependencies: `pip install docling unstructured paddleocr surya-ocr python-docx`
-2. Run on 5 DataScience resumes: `python scripts/batch_extract_resumes.py --role DataScience --limit 5`
-3. Inspect output JSON — confirm all schema fields are populated
-4. Manually verify 2 complex resumes (two-column layout, scanned)
-5. Check confidence scores — flag any < 0.70
-6. Rebuild embedding index: `python src/rag/build_index.py`
-7. Run scoring: `python scripts/score_batch_composed.py --role DataScience --limit 5`
-8. Confirm scores are meaningfully higher than the current broken-parser output
+1. `python src/rag/build_index.py` — confirm index rebuilds cleanly, `data/index/` populated
+2. `python scripts/run_audit.py --role DataScience --no-semantic --limit 5` — fast spot-check
+3. Inspect 3 `data/audit/DataScience/*.json` files — confirm `AuditResult` structure
+4. Check role summary report for sensible pass/review/fail distribution
+5. `python scripts/run_audit.py --role DataScience` — with semantic layer enabled
+6. Compare Layer D findings vs Layer B — confirm LLM catches real misses, not hallucinating
+7. `python scripts/run_audit.py` — full run, all 8 roles
+8. `python scripts/generate_review_queue.py` — confirm review queue is generated
+9. Confirm `data/audit/` contains 721 audit JSON files
 
 ---
 
 ## Decision Record
 
-**DEC-035: PDF → JSON Extraction Pipeline** — to be formally recorded in `18_DECISIONS.md` after approval.
+**DEC-036: JSON Quality Audit Layer** — to be recorded in `docs/20_DECISIONS.md`.
 
 Documents to update after implementation:
-`03_CURRENT_PROGRESS.md`, `18_DECISIONS.md`, `19_ARCHITECTURE_CHANGELOG.md`, `20_RELEASE_NOTES.md`
-
-
----
-
-## Failure Mode 1 — Wrong Evidence Retrieved (RAG mismatch)
-
-**Examples:**
-- `cand_3b6b638c310c` REQ-011 (Visualization): Evidence shown is *"analyzing large datasets, developing dashboards..."* — no mention of Tableau/Power BI/matplotlib. Yet the candidate clearly built dashboards!
-- `cand_49c7271f22cf` REQ-016 (Bachelor's Degree): Evidence shown is *"Madison University... Computer Science... GPA 3.7"* — that IS a CS degree. Score should be 1, but LLM gave 0.
-- `cand_49c7271f22cf` REQ-011 (Visualization): Evidence = *"Developed insights into performance of Network/Studio programs..."* — clearly the wrong chunk retrieved.
-
-**Root cause:** Section routing is fetching text from the wrong section, or the skill keyword (e.g., "Tableau", "matplotlib") is not present in the retrieved chunk, so the LLM correctly concludes "no evidence" — but the evidence retrieved was already the wrong one.
-
----
-
-## Failure Mode 2 — LLM Sees Evidence but Still Scores 0 (Inference Failure)
-
-**Examples (your specific ones):**
-- `cand_3b6b638c310c` REQ-011: Evidence *contains* "developing visualizations... 3 new dashboards" — this IS data visualization. LLM should say `skill_presence = 1`. It said 0.
-- `cand_49c7271f22cf` REQ-016: Evidence is literally *"Madison University Department of Computer Science"* — this IS a CS degree, yet `degree_match = 0`.
-- `cand_2998bbbd6f03` REQ-018: Evidence contains "Designed, developed and deployed statistical data models" — directly maps to "Design & Develop ML Models". LLM gave `skill_presence = 0`.
-- `cand_98344c47897a` REQ-002: Evidence = *"Masters... Advanced Statistics for Health"* — clearly relevant. LLM gave `experience_presence = 0`.
-
-**Root cause:** The `qwen2.5:3b` model is performing **surface-level keyword matching** instead of semantic reasoning. "developing visualizations" ≠ "Tableau/matplotlib" to a small 3B model. It is not inferring that "dashboards = data visualization tools" without explicit tool names in the text.
-
----
-
-## Failure Mode 3 — The "Contradictory Evidence" Problem
-
-The LLM returns `extracted_evidence` that contains content from completely irrelevant sections (e.g., `"SAS Enterprise and SAS Miner (60 hours)"` as evidence for REQ-014 "Proven Track Record"). This happens when:
-- The retrieved chunk for that requirement is from certifications/courses section
-- The LLM faithfully quotes from what it was given, but it makes no sense
-
-This means the `extracted_evidence` field in the report **is currently lying** — it says "Evidence:" but it's actually the closest thing retrieved, which may be irrelevant. The user correctly identifies this: we need to distinguish:
-- **`evidence_found`**: `yes` / `no` — did the LLM actually find matching content?
-- **`closest_evidence`**: the text it retrieved (regardless of whether it matched)
-
----
-
-## Failure Mode 4 — Employment History Swapped Columns Bug
-
-As documented earlier: the `_format_employment_history` renders rows as:
-```
-- {company} | {role} | {dates} | {months}
-```
-But the parsed employment history has `company` holding layout artifacts (`Oct`, `68`, `Ç2`) and `role` holding actual company names. The LLM cannot correlate skill mentions with correct job durations.
-
----
-
-## Proposed Fixes
-
-### Fix 1 — Add `evidence_found` + `closest_evidence` fields to the prompt & SubScoreResult
-
-**What changes:**
-- In the JSON skeleton sent to the LLM (`_build_rubric_prompt`), replace:
-  ```json
-  "extracted_evidence": "FILL: paste relevant resume text here"
-  ```
-  with two fields:
-  ```json
-  "evidence_found": "yes" or "no",
-  "closest_evidence": "FILL: paste the most relevant text you found, even if it doesn't directly prove the skill"
-  ```
-- Add explicit instruction: *"Set `evidence_found` to `yes` only if the text directly proves the skill. Set to `no` if you are citing the closest available text but it does not prove the requirement."*
-- Update `SubScoreResult` dataclass to store both `evidence_found: bool` and `closest_evidence: str`.
-- The report generator and `explain_score_from_cache()` use these to emit either `"Evidence of..."` or `"No direct evidence (closest: ...)"`.
-
-**Why this matters:**
-- Makes it immediately visible WHY the LLM gave a 0 — was it truly absent, or was wrong text retrieved?
-- Removes the misleading "Evidence:" label when the text shown has nothing to do with the requirement.
-
----
-
-### Fix 2 — Semantic Inference Hint in Prompt
-
-**What changes:**
-- In the system prompt instruction block, add a brief inference table for common equivalences:
-
-```
-SEMANTIC INFERENCE RULES (apply these before deciding evidence_found = no):
-- "dashboard", "report", "visualization", "chart", "plot" → counts as Data Visualization
-- "clean", "preprocess", "transform", "wrangle", "ETL" → counts as Data Wrangling
-- "deploy", "serve", "containerize", "API", "endpoint" → counts as Model Deployment
-- "Bachelor" / "B.Sc" / "B.Tech" / "B.E." in CS, Stats, Maths, Engineering → counts as Degree Match
-- "Master" / "M.Sc" / "M.Tech" / "MBA (quantitative)" → counts as Advanced Degree
-```
-
-This addresses the qwen2.5:3b surface-level keyword matching failure directly.
-
----
-
-### Fix 3 — Employment History Column Order Fix
-
-**What changes:**
-- In `_format_employment_history()`, swap `company` and `role` in the template:
-  ```python
-  # Current (broken): f"- {company} | {role} | ..."
-  # Fixed: f"- {role} | {company} | ..."  
-  ```
-  And add a header row so the LLM knows the column meaning:
-  ```
-  EMPLOYMENT HISTORY: Role | Company | Dates | Duration
-  - Data Scientist | General Motor - NewYork | Oct 2018 - Present | 103 months (~8.6 yrs)
-  ```
-
----
-
-### Fix 4 — Log Enrichment: Zero-Evidence Flagging
-
-**What changes:**
-- When generating run reports, any sub-score where `evidence_found = "no"` and `sub_score = 0` is flagged as `ZERO_NO_EVIDENCE`.
-- Any sub-score where `evidence_found = "yes"` and `sub_score = 0` is flagged as `ZERO_WRONG_INFERENCE` — a LLM reasoning failure we can target with better prompts.
-- The log file written to `run_reports/` now includes a structured section:
-  ```
-  [ZERO_NO_EVIDENCE]    cand_X REQ-001 skill_presence — no matching text found
-  [ZERO_WRONG_INFERENCE] cand_Y REQ-011 skill_presence — text found but LLM did not infer
-  ```
-
----
-
-## Files to Change
-
-### `src/scoring/rubric_scorer.py`
-- `SubScoreResult`: add `evidence_found: bool = False`, rename `extracted_evidence` → `closest_evidence`
-- `_build_rubric_prompt()`: update skeleton JSON to use new field names + add semantic inference rules
-- `_parse_llm_response()`: parse new `evidence_found` field, propagate to `SubScoreResult`
-- `explain_score_from_cache()`: use `evidence_found` to choose label ("Evidence of..." vs "No direct evidence (closest:...)")
-
-### `scripts/score_batch_composed.py` (or wherever the run report is generated)
-- Enrich the zero-score logging with `[ZERO_NO_EVIDENCE]` / `[ZERO_WRONG_INFERENCE]` tags
-
-### `run_reports/` generation (report writer script)
-- Update the Markdown report template to emit `evidence_found: yes/no` and `closest_evidence`
-
----
-
-## Open Questions
-
-> [!IMPORTANT]
-> **Should `evidence_found` be a hard gate?**  
-> Option A: `evidence_found = "no"` forces `sub_score = 0` (strict — no inference allowed).  
-> Option B: `evidence_found = "no"` only affects reporting, not the score (LLM can still infer and give partial credit).  
-> My recommendation: **Option B** — keep scoring lenient, use `evidence_found` only for diagnostics.
-
-> [!IMPORTANT]
-> **Semantic inference rules: hardcoded vs. LLM-generated?**  
-> The rules above are static. If a new role type is added, they need updating. Alternatively, the JD extraction step could generate these hints per-role. For now, a static table per dimension type is pragmatic.
-
-> [!NOTE]
-> **Does fixing the employment history column order require re-parsing all resumes?**  
-> No — the fix is in the prompt formatting function only. No re-parsing needed.  
-> The cached sub-query results will need to be flushed (`--flush-cache`) on the next run.
-
----
-
-## Verification Plan
-
-1. Run `score_batch_composed.py --role DataScience --limit 5 --flush-cache` after changes.
-2. Check that `cand_3b6b638c310c` REQ-011 now shows `evidence_found: yes` with score > 0.
-3. Check that `cand_49c7271f22cf` REQ-016 now shows `degree_match = 1`.
-4. Check the run report `run_reports/run_DataScience_2.md` for reduced `[ZERO_NO_EVIDENCE]` counts.
-5. Confirm total scores increase meaningfully (candidate 1 should exceed 31.5/100).
+`docs/03_CURRENT_PROGRESS.md`, `docs/20_DECISIONS.md`,
+`docs/21_ARCHITECTURE_CHANGELOG.md`, `docs/22_RELEASE_NOTES.md`

@@ -2,13 +2,20 @@
 """Batch extraction script to parse all original resumes into schema-compliant JSON.
 
 Usage:
-    python scripts/batch_extract_resumes.py [--role RoleName] [--limit N] [--batch-size N] [--dry-run] [--overwrite]
+    # Process all roles sequentially:
+    python scripts/batch_extract_resumes.py [--batch-size N] [--overwrite]
+
+    # Process specific roles only (used by parallel launcher):
+    python scripts/batch_extract_resumes.py --roles JavaDeveloper,ReactDeveloper
+
+    # Use a custom registry path (used by parallel launcher to avoid conflicts):
+    python scripts/batch_extract_resumes.py --registry-path data/registry_worker_0.json
 
 This script:
-1. Loads the candidate registry from data/candidate_registry.json.
+1. Loads the candidate registry (default: data/candidate_registry.json).
 2. Finds raw resume PDFs under data/original/<role>/.
 3. Runs the Stage 3 routed extraction pipeline (Docling/Unstructured/OCR -> JSON)
-   with LLM key rotation across Ollama, OpenCode×3, OpenRouter, NVIDIA NIM.
+   with LLM key rotation across providers defined in llm_normalizer.py.
 4. Saves JSONs to data/processed/<role>/<candidate_id>.json.
 5. Saves the updated candidate registry after every batch chunk (default: 10).
 6. Skips already-extracted resumes by default (pass --overwrite to force re-run).
@@ -54,7 +61,14 @@ def parse_args():
     parser.add_argument(
         "--role",
         choices=ROLES,
-        help="Run extraction for a specific role only (runs all if not specified)."
+        help="Run extraction for a single specific role (mutually exclusive with --roles)."
+    )
+    parser.add_argument(
+        "--roles",
+        type=str,
+        default=None,
+        help="Comma-separated list of roles to process (e.g. JavaDeveloper,ReactDeveloper). "
+             "Used by the parallel launcher to assign role groups to workers."
     )
     parser.add_argument(
         "--limit",
@@ -77,21 +91,32 @@ def parse_args():
         default=10,
         dest="batch_size",
         help="Number of resumes per processing chunk. Registry is saved after each chunk. "
-             "Use smaller values (e.g. 5) with slow local models (default: 10)."
+             "Use smaller values (e.g. 5) with slow APIs (default: 10)."
+    )
+    parser.add_argument(
+        "--registry-path",
+        type=str,
+        default=None,
+        dest="registry_path",
+        help="Path to the candidate registry JSON file. Defaults to data/candidate_registry.json. "
+             "Set to a worker-specific path when running parallel workers to avoid write conflicts."
     )
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    
-    # Load candidate registry
-    registry_path = Path(_PROJECT_ROOT) / DEFAULT_REGISTRY_PATH
+
+    # Resolve registry path: use --registry-path if supplied, else default.
+    if args.registry_path:
+        registry_path = Path(args.registry_path)
+    else:
+        registry_path = Path(_PROJECT_ROOT) / DEFAULT_REGISTRY_PATH
+
     if args.dry_run:
         logger.info("[DRY RUN] In-memory registry used; changes will not be saved.")
         registry = CandidateRegistry()
     else:
         logger.info("Loading candidate registry from %s", registry_path)
-        # Create empty registry if it doesn't exist yet
         if not registry_path.exists():
             registry_path.parent.mkdir(parents=True, exist_ok=True)
             registry = CandidateRegistry(path=str(registry_path))
@@ -99,7 +124,17 @@ def main():
         else:
             registry = CandidateRegistry.load(registry_path)
 
-    roles_to_process = [args.role] if args.role else ROLES
+    # Resolve which roles to process.
+    # Priority: --roles (parallel launcher) > --role (single) > all roles.
+    if args.roles:
+        roles_to_process = [r.strip() for r in args.roles.split(",") if r.strip() in ROLES]
+        invalid = [r.strip() for r in args.roles.split(",") if r.strip() not in ROLES]
+        if invalid:
+            logger.warning("Unknown roles ignored: %s", invalid)
+    elif args.role:
+        roles_to_process = [args.role]
+    else:
+        roles_to_process = ROLES
     
     total_processed = 0
     total_failed = 0

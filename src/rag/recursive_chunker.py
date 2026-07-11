@@ -438,13 +438,17 @@ class RecursiveChunker:
         """
         candidate_id = profile.get("candidate_id") or "cand_unknown"
         source_file = profile.get("source_file", "")
+        if not source_file and "document" in profile:
+            source_file = profile["document"].get("file_name", "") or ""
+
+        target_profile = profile.get("candidate_profile") or profile
 
         # Per-section input text + the section's "label" we use for
         # ``ChunkRecord.section``. Order matches the Document-Aware
         # chunker to keep downstream consumers stable.
         sections: List[tuple[str, str]] = []  # (section_name, text)
 
-        summary = profile.get("summary") or {}
+        summary = target_profile.get("summary") or {}
         if isinstance(summary, dict):
             summary_text = (summary.get("value") or summary.get("text") or "").strip()
         else:
@@ -452,7 +456,7 @@ class RecursiveChunker:
         if summary_text:
             sections.append(("summary", summary_text))
 
-        experience = profile.get("experience") or {}
+        experience = target_profile.get("experience") or {}
         # ``experience`` is canonically a dict with an ``entries`` list, but
         # downstream artifacts sometimes store it as a list or a string.
         # Coerce to the canonical shape so chunk_profile doesn't crash.
@@ -465,7 +469,7 @@ class RecursiveChunker:
         for i, entry in enumerate(exp_entries):
             sections.append((f"experience_{i}", _entry_to_text(entry)))
 
-        education = profile.get("education") or {}
+        education = target_profile.get("education") or {}
         # Same defensive coercion as for ``experience``: ``education`` may be
         # a dict (canonical), a list (downstream artifact), a string, or null.
         if isinstance(education, dict):
@@ -477,14 +481,14 @@ class RecursiveChunker:
         for i, entry in enumerate(edu_entries):
             sections.append((f"education_{i}", _entry_to_text(entry)))
 
-        projects = profile.get("projects") or []
+        projects = target_profile.get("projects") or []
         if isinstance(projects, list):
             for i, proj in enumerate(projects):
                 sections.append((f"project_{i}", str(proj).strip()))
         elif isinstance(projects, str) and projects.strip():
             sections.append(("projects", projects.strip()))
 
-        skills = profile.get("skills") or []
+        skills = target_profile.get("skills") or []
         if isinstance(skills, list):
             skills_text = ", ".join(str(s) for s in skills if s)
         else:
@@ -492,7 +496,7 @@ class RecursiveChunker:
         if skills_text.strip():
             sections.append(("skills", skills_text))
 
-        certifications = profile.get("certifications") or []
+        certifications = target_profile.get("certifications") or []
         if isinstance(certifications, list):
             certs_text = ", ".join(str(c) for c in certifications if c)
         else:
@@ -500,7 +504,7 @@ class RecursiveChunker:
         if certs_text.strip():
             sections.append(("certifications", certs_text))
 
-        languages = profile.get("languages") or []
+        languages = target_profile.get("languages") or []
         if isinstance(languages, list):
             langs_text = ", ".join(str(l) for l in languages if l)
         else:

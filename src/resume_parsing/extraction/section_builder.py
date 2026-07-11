@@ -25,16 +25,17 @@ def match_section_header(text: str) -> Optional[str]:
             cleaned_syn = clean_header(syn)
             # Match exact, prefix, suffix, or word boundary containment
             if cleaned == cleaned_syn or cleaned.startswith(cleaned_syn + " ") or cleaned.endswith(" " + cleaned_syn):
-                # Map 'languages' to 'other' to fit the 7 canonical sections contract
-                if section == "languages":
-                    return "other"
                 return section
     return None
 
 def build_sections(elements: List[ExtractedElement]) -> Dict[str, List[str]]:
     """
-    Group extracted elements into 7 canonical sections:
-    summary, skills, experience, education, certifications, projects, other.
+    Group extracted elements into 8 canonical sections:
+    summary, skills, experience, education, certifications, projects, languages, other.
+
+    'languages' is kept as its own section (not merged into 'other') so that the
+    LLM normalization prompt receives a clearly labelled LANGUAGES block and can
+    accurately populate the languages[] field in the output JSON.
 
     Args:
         elements: List of ExtractedElement objects.
@@ -49,6 +50,7 @@ def build_sections(elements: List[ExtractedElement]) -> Dict[str, List[str]]:
         "education": [],
         "certifications": [],
         "projects": [],
+        "languages": [],
         "other": []
     }
 
