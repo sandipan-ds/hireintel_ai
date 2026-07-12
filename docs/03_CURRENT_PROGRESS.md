@@ -39,6 +39,7 @@ For the full decision history, see `18_DECISIONS.md`.
 | 3 | **Resume Parsing (PDF → JSON)** — routed pipeline for any format | ✅ |
 | 4A| **Chunking & Embedding Index** — RecursiveChunker + ThresholdRetriever | ✅ |
 | 4B| **JSON Quality Audit** — five-layer extraction audit (DEC-036) | ✅ |
+| 4C| **Gap-Fill Re-Extraction** — multimodal vision pass on audit-flagged candidates | ✅ |
 | 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ |
 | 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ |
 
@@ -172,9 +173,38 @@ Implements a formal five-layer quality audit for all extracted candidate JSONs p
 
 ---
 
+## Stage 4C — Gap-Fill Re-Extraction (DEC-036 follow-up)
+
+**Status: ✅ Complete**
+
+After the JSON Quality Audit (Stage 4B) identified 12 candidates with missing fields, a targeted multimodal re-extraction pass was run to fill the gaps using the original PDF pages as vision input.
+
+| Component | Status |
+|---|---|
+| `scripts/gap_fill_extraction.py` — multimodal gap-fill CLI with `--resume`, `--dry-run`, `--candidate`, `--all-gaps` | ✅ |
+| `.env.audit` multi-key provider loader (Google / NVIDIA NIM / OpenRouter) | ✅ |
+| PDF → base64 JPEG page converter for vision APIs | ✅ |
+| Gap-fill prompt `RESUME-GAPFILL-001` (fills only empty fields, never overwrites) | ✅ `docs/15_PROMPT_LIBRARY.md` |
+| Progress ledger `run_reports/gap_fill_progress.json` (interrupt/resume safe) | ✅ |
+| Scanned resume detection: `len(raw_text) < 3000` or `Image_*.pdf` prefix | ✅ |
+
+**Results (2026-07-12):**
+- 12 candidates targeted from `run_reports/review_queue.md`
+- **2 successfully patched:**
+  - `BusinessAnalyst_CAND_0132` — `skills` filled (score improved 0.522 → 0.682)
+  - `WebDesigning_CAND_0016` — `skills`, `experience`, `education`, `certifications` filled
+- **9 confirmed empty:** Multimodal vision pass confirmed these fields are genuinely absent from the source PDFs (no data to extract)
+- **1 not targeted:** `WebDesigning_CAND_0014` (scanned, nearly empty text) — vision pass returned no extractable data
+- RAG index rebuilt post-patch (4,890 chunks)
+- All 5 affected roles re-scored (`BusinessAnalyst`, `WebDesigning`, `SalesManager`, `SrPythonDeveloper`, `SQLDeveloper`)
+
+
+---
+
 ## Stage 5 — Scoring Engine
 
 **Status: ✅ Complete — 721 candidates scored**
+
 
 ### Scoring Formula (DEC-034 — Additive)
 

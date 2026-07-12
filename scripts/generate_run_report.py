@@ -297,7 +297,7 @@ def generate_report(target_roles: list[str]) -> Path:
             cid = cand["candidate_id"]
             warning = ""
             if cid in flagged_candidates:
-                warning = "🛑 CRITICAL" if flagged_candidates[cid] == "CRITICAL" else "⚠️ WARNING"
+                warning = "🛑 CRITICAL" if flagged_candidates[cid]["severity"] == "CRITICAL" else "⚠️ WARNING"
                 
             # Collect details about candidate gaps from their trace if present
             gap_summary = "N/A"

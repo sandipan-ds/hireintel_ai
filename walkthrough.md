@@ -1,107 +1,56 @@
-# Walkthrough - JSON Quality Audit Layer & Test Integration
+# Walkthrough — JSON Quality Audit & Post-Scoring Integration Verification
 
-This document details the verification, test creation, and scoring diagnostic updates implemented to finalize the extraction and scoring pipeline verification stages.
-
----
-
-## 1. Quality Audit Implementation Summary
-
-We implemented and verified all five layers of the quality audit:
-1. **Layer A (Schema Validation):** Validates nested keys, data types, date strings (must conform to `YYYY-MM` or `YYYY`), and array shapes.
-2. **Layer B (Field Completeness):** Uses regex and structural heuristics to verify emails, phone formats, and keyword presence (e.g. check for missing university degrees or experience).
-3. **Layer C (Evidence Coverage):** Checks bidirectional mappings between the extracted fields and source chunks in the vector store.
-4. **Layer D (Semantic Audit):** LLM-assisted verification comparing raw resume text against extracted summaries to flag missing items, using a **cost-control skip** if prior deterministic layers are clean.
-5. **Layer E (Cross-Parser Agreement):** Compares extraction results against the legacy parser using Levenshtein distance.
+This document summarizes the final execution, bug resolution, and verification steps implemented to validate the gap-fill re-extraction, RAG indexing, and scoring reporting layers.
 
 ---
 
-## 2. Infrastructure Resilience & Timeout Fixes
+## 1. Quality Audit Flagged Candidates — Scoring Cross-Reference
 
-During verification of the semantic audit layer, we encountered network-level hangs on remote LLM endpoints. To guarantee pipeline resilience, we made the following enhancements:
-- **Client Timeout:** Configured a strict **60-second timeout** on the `OpenAI` client instantiation within [layer_d_semantic.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/src/resume_parsing/audit/layer_d_semantic.py).
-- **Automated Fallback:** Verified that if a provider (e.g. Google Gemma) hangs or returns error codes (500/503), the audit engine automatically times out after 60 seconds and falls back to subsequent keys and models (NVIDIA NIM Llama 90B/Nemotron 49B) in the rotation.
-- **Schema Key Conformance:** Standardized [layer_a_schema.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/src/resume_parsing/audit/layer_a_schema.py) to validate `links` as a dictionary (per schema specification) and to check skills using `name_raw` / `name_canonical` keys, reducing false-positive validation errors to zero.
+We fixed a bug in [generate_run_report.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/scripts/generate_run_report.py) (line 300) where the severity check compared the raw candidate dictionary against a string (`flagged_candidates[cid] == "CRITICAL"`) rather than accessing the `"severity"` field. This was resolved to correctly fetch and format the severity tag.
 
----
+We regenerated the composed scoring run report. The final report is located at [run_reports/run_report_20260712_145217.md](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/run_reports/run_report_20260712_145217.md) and contains a complete, auditable table cross-referencing all 12 candidates flagged in the extraction quality audit review queue against their actual scoring ranks and provisional scores:
 
-## 3. Global Batch Audit Results
-
-We executed the global batch audit over all **721 extracted resumes** across all 8 roles:
-
-```bash
-python scripts/run_audit.py --no-semantic
-```
-
-### Overall Stats
-* **Total Resumes Audited:** 721
-* **Passed (Score >= 0.85):** 709 (98.3%)
-* **Review Required (Score 0.50 - 0.84):** 11 (1.5%)
-* **Failed (Score < 0.50):** 1 (0.1%)
-* **Average Quality Score:** **0.95** (95%)
-* **Execution Time:** 2.1 seconds (fast baseline)
-
-All 721 candidates have been successfully verified as clean and are ready for downstream scoring!
+| Candidate ID | Role | Severity | Extr. Quality | Scoring Rank | Provisional Score | Top Extraction Issues |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| 🛑 WebDesigning_CAND_0016 | WebDesigning | CRITICAL | 0.62 | 92 | 0.375 | Phone & Certifications missing in profile |
+| ⚠️ WebDesigning_CAND_0014 | WebDesigning | WARNING | 0.69 | 80 | 0.535 | Experience, Education & Skills empty |
+| ⚠️ SalesManager_CAND_0158 | SalesManager | WARNING | 0.75 | 133 | 0.660 | Phone & Experience empty |
+| ⚠️ BusinessAnalyst_CAND_0128 | BusinessAnalyst | WARNING | 0.79 | 57 | 0.792 | Experience & Education empty |
+| ⚠️ BusinessAnalyst_CAND_0132 | BusinessAnalyst | WARNING | 0.79 | 91 | 0.682 | Skills & Experience anomalies |
+| ⚠️ WebDesigning_CAND_0009 | WebDesigning | WARNING | 0.79 | 65 | 0.665 | Education & Skills empty |
+| ⚠️ SQLDeveloper_CAND_0038 | SQLDeveloper | WARNING | 0.82 | 44 | 0.745 | Phone, Certifications & Education empty |
+| ⚠️ SrPythonDeveloper_CAND_0038 | SrPythonDeveloper | WARNING | 0.82 | 26 | 0.740 | Phone & Certifications empty |
+| ⚠️ SrPythonDeveloper_CAND_0045 | SrPythonDeveloper | WARNING | 0.82 | 27 | 0.740 | Phone & Certifications empty |
+| ⚠️ SrPythonDeveloper_CAND_0062 | SrPythonDeveloper | WARNING | 0.82 | 32 | 0.740 | Phone & Certifications empty |
+| ⚠️ WebDesigning_CAND_0003 | WebDesigning | WARNING | 0.82 | 91 | 0.385 | Phone & Certifications empty |
+| ⚠️ SalesManager_CAND_0046 | SalesManager | WARNING | 0.82 | 135 | 0.640 | Phone & Certifications empty |
 
 ---
 
-## 4. Scoring Fix 4: Zero-Score Diagnostics Report
+## 2. Multimodal Gap-Fill Verification
 
-We implemented diagnostic logging in `score_batch_composed.py` to identify the root cause of zero scores in candidate requirements.
+We updated [gap_fill_extraction.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/scripts/gap_fill_extraction.py) to enable **NVIDIA NIM (`minimax-m3`)** multimodal vision models as high-priority fallback endpoints, and corrected the check for scanned resumes to trigger base64 image-rendering for any candidate profile with under 3,000 characters of raw text or carrying an `Image_*` PDF filename prefix.
 
-Each zero-scoring sub-question is analyzed and categorized:
-- **`[ZERO_NO_EVIDENCE]`**: LLM was called but the resume genuinely does not contain matching text for the requirement.
-- **`[ZERO_WRONG_INFERENCE]`**: LLM was called and retrieved matching text, but the LLM failed to infer the correct score (calibration issue).
-
-For each batch scoring run, these diagnostics are written to `run_reports/score_diagnostic_<role>.txt` in the following format:
-```
-[ZERO_NO_EVIDENCE]       cand_X REQ-001 skill_presence — no matching text found
-[ZERO_WRONG_INFERENCE]   cand_Y REQ-011 skill_presence — text found but LLM did not infer
-```
+A diagnostics diagnostic run was performed on all active keys in `.env.audit` confirming 100% success on NVIDIA and OpenRouter primary keys. The execution loop successfully processed all remaining target candidates:
+- **`BusinessAnalyst_CAND_0132`**: Patched successfully. Newly extracted `skills` (e.g. *Business Architecture, Requirements Analysis, Functional Testing*) were merged.
+- **9 Gaps Skipped**: The script verified that the remaining missing fields are genuinely absent from the candidates' original PDFs (e.g. candidates with no education/certifications listed at all in their source layouts).
+- **Ledger Status**: The ledger tracks overall progress to prevent redundant cloud completions.
 
 ---
 
-## 5. Unit and Integration Test suite (Stage 3 Verification)
+## 3. RAG Index Reconstruction & Composed Re-scoring
 
-We implemented all deferred test cases for the extraction pipeline. A total of **27 new test cases** were added and validated:
-
-* **File Classifier (`tests/unit/test_file_classifier.py`):** 7 tests covering Docx, TXT, Native PDF, Scanned PDF, and Mixed PDF classification.
-* **Section Builder (`tests/unit/test_section_builder.py`):** 10 tests verifying synonym-matching, cleaning, grouping, and separate language mapping.
-* **Schema Validator (`tests/unit/test_schema_validator.py`):** 8 tests validating required fields, warnings, and confidence averaging.
-* **Extraction Pipeline Integration (`tests/integration/test_extraction_pipeline.py`):** 3 integration tests running the full end-to-end pipeline over real candidate PDF fixtures.
-
-### Running the tests:
-```bash
-pytest tests/unit/test_file_classifier.py tests/unit/test_section_builder.py tests/unit/test_schema_validator.py tests/integration/test_extraction_pipeline.py -v
-```
-**Status: 27/27 PASSED (100% Green)**
-
----
-
-## 6. Batch Scorer Resilience & Full Production Scoring Run
-
-We enhanced the batch scoring infrastructure to support long-running, fault-tolerant production executions.
-
-### Progress Ledger and `--resume` Support
-- **Ledger Persistence:** Added a session ledger file (`run_reports/scoring_progress.json`) that logs completed candidate IDs for each role.
-- **Per-Candidate Output:** Instead of writing output only at the end of a role run, we now write candidate score JSONs immediately after evaluation to `data/scores/composed/<Role>/<candidate_id>.json`.
-- **Resume Capabilities:** If a run crashes, passing `--resume` will check the ledger, load previously completed candidate results from disk using a duck-typed `LoadedComposedEvaluation` helper, score only the remaining candidates, and compile the final `<Role>_ranked.json` seamlessly.
-- **Pre-encoding Cache Preservation:** Added automatic caching of sub-query vectors per-role, and preserved/flushed these cache structures during resumes.
-
-### Embedding Index Reconstruction
-- **Empty Education Chunking Fixed:** Patched a layout-aware recovery bug in both `recursive_chunker.py` and `document_aware_chunker.py` where education entries returning empty texts caused 19 profiles to lose their education sections.
-- **Index Rebuilt:** Re-generated 4,870 chunks (up from 4,247) representing all 721 unique candidates across the 8 roles.
-
-### Production Execution & Diagnostics Report
-- **Global Batch Scoring:** Successfully executed the scoring run for all **721 candidates** across the 8 roles.
-- **Execution CLI:** `python scripts/score_batch_composed.py --flush-cache --no-mlflow`
-- **Scoring Results Summary:**
-  - **BusinessAnalyst**: 133 candidates, mean=0.67, top-1=0.79
-  - **DataScience**: 42 candidates, mean=0.69, top-1=0.88
-  - **JavaDeveloper**: 72 candidates, mean=0.45, top-1=0.71
-  - **ReactDeveloper**: 18 candidates, mean=0.50, top-1=0.75
-  - **SalesManager**: 164 candidates, mean=0.72, top-1=0.90
-  - **SQLDeveloper**: 82 candidates, mean=0.70, top-1=0.86
-  - **SrPythonDeveloper**: 98 candidates, mean=0.59, top-1=0.89
-  - **WebDesigning**: 112 candidates, mean=0.60, top-1=0.83
-- **Run Report Generated:** Created `scripts/generate_run_report.py` to extract diagnostic warnings, compute stats, and compile candidate standings under `run_reports/run_report_<datetime>.md`.
-
+1. **RAG Index Rebuilt**: Re-ran the vector index builder to parse the newly patched profile JSONs and generate the semantic embedding weights:
+   ```bash
+   python -m src.rag.build_index
+   ```
+   *Result:* Discovered all 721 profiles, chunked into 4,890 embedding vectors (up from 4,870).
+2. **Re-scored Roles**: Executed compose mode re-scoring for the affected candidate groups (`BusinessAnalyst` and `WebDesigning`) to update provisional stand-alone rankings:
+   ```bash
+   python scripts/score_batch_composed.py --role BusinessAnalyst --tracking-uri sqlite:///data/mlflow/mlflow.db
+   python scripts/score_batch_composed.py --role WebDesigning --tracking-uri sqlite:///data/mlflow/mlflow.db
+   ```
+   *Result:*
+   - `BusinessAnalyst_CAND_0132` score rose from **0.522** (Rank 111) to **0.682** (Rank 91) due to successfully extracted skills matching the requirements.
+   - `WebDesigning_CAND_0016` score remained stable at **0.375** (Rank 92) due to lower rubric matching scores.
+   - Per-role summaries are completely integrated into the SQLite Tracking DB.

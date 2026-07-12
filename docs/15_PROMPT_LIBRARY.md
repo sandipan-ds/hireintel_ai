@@ -24,6 +24,7 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 | RESUME-CHAT-001 | Answer recruiter questions using retrieved resume chunks | Planned (LLM service scaffolded; no chat method or strict-grounding fallback implemented yet) |
 | SCORE-EXPLAIN-001 | Narrate a per-item score using retrieved evidence + scorer output | Active (used by score-explanation flow) |
 | HIRING-RECOMMENDATION-001 | Generate evidence-backed hiring recommendation text | Planned |
+| RESUME-GAPFILL-001 | Re-extract missing profile fields from audit-flagged candidates using multimodal vision + text | Active (`scripts/gap_fill_extraction.py`) |
 
 ---
 
@@ -251,4 +252,36 @@ implicit resume language to formal requirement keywords before deciding `evidenc
 - v0.1: Adopted as the production prompt in `scripts/compare_two.py`.
 
 ---
+
+## RESUME-GAPFILL-001
+
+**Purpose:** Re-extract structured profile information from a resume using multimodal inputs (images + text) to fill missing fields (gaps) identified in the quality audit.
+
+**Inputs:**
+- Raw resume text
+- Registry candidate name (for name verification/safety)
+- Renders of PDF pages as base64 JPEG images (multimodal vision inputs)
+
+**Outputs:**
+A JSON object matching the standard `candidate_profile` schema containing:
+- `full_name`
+- `headline`
+- `summary`
+- `skills`
+- `education`
+- `experience`
+- `projects`
+- `certifications`
+- `languages`
+
+**Constraints:**
+- Dates must conform to YYYY-MM format.
+- responsibilities[] must be single short bullet points (never a single paragraph).
+- skills[] must contain discrete technologies or concepts (never full sentences).
+- If no data exists for a field, return an empty array `[]` or `null`.
+- The output JSON must not contain markdown fences or formatting code tags.
+
+**Version History:**
+- v1.0 (2026-07-12): Implemented in `scripts/gap_fill_extraction.py` using OpenRouter/Google/NVIDIA NIM multimodal engines to rescue OCR-failed and scanned profiles.
+
 
