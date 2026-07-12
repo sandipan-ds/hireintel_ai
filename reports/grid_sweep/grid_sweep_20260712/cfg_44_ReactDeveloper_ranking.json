@@ -1,0 +1,92 @@
+[
+  {
+    "candidate_id": "ReactDeveloper_CAND_0011",
+    "total_score": 9.20338,
+    "rank": 1
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0003",
+    "total_score": 8.025115,
+    "rank": 2
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0010",
+    "total_score": 7.976853,
+    "rank": 3
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0013",
+    "total_score": 5.59924,
+    "rank": 4
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0009",
+    "total_score": 4.353787,
+    "rank": 5
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0018",
+    "total_score": 4.219567,
+    "rank": 6
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0016",
+    "total_score": 3.423685,
+    "rank": 7
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0015",
+    "total_score": 2.761525,
+    "rank": 8
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0014",
+    "total_score": 2.570452,
+    "rank": 9
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0017",
+    "total_score": 2.534992,
+    "rank": 10
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0008",
+    "total_score": 1.930512,
+    "rank": 11
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0012",
+    "total_score": 1.50733,
+    "rank": 12
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0001",
+    "total_score": 1.451351,
+    "rank": 13
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0007",
+    "total_score": 1.332726,
+    "rank": 14
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0002",
+    "total_score": 0.801331,
+    "rank": 15
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0004",
+    "total_score": 0.0,
+    "rank": 16
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0005",
+    "total_score": 0.0,
+    "rank": 17
+  },
+  {
+    "candidate_id": "ReactDeveloper_CAND_0006",
+    "total_score": 0.0,
+    "rank": 18
+  }
+]

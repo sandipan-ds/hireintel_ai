@@ -1,0 +1,667 @@
+[
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0084",
+    "total_score": 33.212409,
+    "rank": 1
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0050",
+    "total_score": 32.727654,
+    "rank": 2
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0096",
+    "total_score": 32.389309,
+    "rank": 3
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0072",
+    "total_score": 31.903094,
+    "rank": 4
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0090",
+    "total_score": 31.787099,
+    "rank": 5
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0067",
+    "total_score": 31.329521,
+    "rank": 6
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0085",
+    "total_score": 31.251652,
+    "rank": 7
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0108",
+    "total_score": 30.991062,
+    "rank": 8
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0128",
+    "total_score": 30.881094,
+    "rank": 9
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0044",
+    "total_score": 30.82524,
+    "rank": 10
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0032",
+    "total_score": 30.663945,
+    "rank": 11
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0034",
+    "total_score": 30.550183,
+    "rank": 12
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0003",
+    "total_score": 30.48547,
+    "rank": 13
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0037",
+    "total_score": 30.318741,
+    "rank": 14
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0059",
+    "total_score": 30.31118,
+    "rank": 15
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0028",
+    "total_score": 30.205359,
+    "rank": 16
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0082",
+    "total_score": 30.192165,
+    "rank": 17
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0125",
+    "total_score": 30.192165,
+    "rank": 18
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0018",
+    "total_score": 30.15032,
+    "rank": 19
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0088",
+    "total_score": 30.118447,
+    "rank": 20
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0131",
+    "total_score": 29.990862,
+    "rank": 21
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0089",
+    "total_score": 29.97702,
+    "rank": 22
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0077",
+    "total_score": 29.915416,
+    "rank": 23
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0076",
+    "total_score": 29.875774,
+    "rank": 24
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0007",
+    "total_score": 29.836779,
+    "rank": 25
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0062",
+    "total_score": 29.782737,
+    "rank": 26
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0110",
+    "total_score": 29.743249,
+    "rank": 27
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0133",
+    "total_score": 29.730844,
+    "rank": 28
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0015",
+    "total_score": 29.682175,
+    "rank": 29
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0117",
+    "total_score": 29.625511,
+    "rank": 30
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0069",
+    "total_score": 29.624238,
+    "rank": 31
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0046",
+    "total_score": 29.541456,
+    "rank": 32
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0013",
+    "total_score": 29.538981,
+    "rank": 33
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0127",
+    "total_score": 29.538981,
+    "rank": 34
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0021",
+    "total_score": 29.477511,
+    "rank": 35
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0024",
+    "total_score": 29.457746,
+    "rank": 36
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0098",
+    "total_score": 29.265062,
+    "rank": 37
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0118",
+    "total_score": 29.255737,
+    "rank": 38
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0041",
+    "total_score": 29.232635,
+    "rank": 39
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0022",
+    "total_score": 29.185523,
+    "rank": 40
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0040",
+    "total_score": 29.127512,
+    "rank": 41
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0074",
+    "total_score": 29.126953,
+    "rank": 42
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0119",
+    "total_score": 29.103984,
+    "rank": 43
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0109",
+    "total_score": 28.940158,
+    "rank": 44
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0006",
+    "total_score": 28.898276,
+    "rank": 45
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0091",
+    "total_score": 28.872814,
+    "rank": 46
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0083",
+    "total_score": 28.846552,
+    "rank": 47
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0065",
+    "total_score": 28.801799,
+    "rank": 48
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0093",
+    "total_score": 28.759486,
+    "rank": 49
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0008",
+    "total_score": 28.719283,
+    "rank": 50
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0005",
+    "total_score": 28.586197,
+    "rank": 51
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0101",
+    "total_score": 28.552354,
+    "rank": 52
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0104",
+    "total_score": 28.538368,
+    "rank": 53
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0124",
+    "total_score": 28.538368,
+    "rank": 54
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0047",
+    "total_score": 28.486156,
+    "rank": 55
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0130",
+    "total_score": 28.4813,
+    "rank": 56
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0126",
+    "total_score": 28.372743,
+    "rank": 57
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0002",
+    "total_score": 28.3069,
+    "rank": 58
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0057",
+    "total_score": 28.212021,
+    "rank": 59
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0042",
+    "total_score": 28.173556,
+    "rank": 60
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0066",
+    "total_score": 28.147044,
+    "rank": 61
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0020",
+    "total_score": 28.132773,
+    "rank": 62
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0035",
+    "total_score": 28.025898,
+    "rank": 63
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0051",
+    "total_score": 27.945062,
+    "rank": 64
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0009",
+    "total_score": 27.924355,
+    "rank": 65
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0010",
+    "total_score": 27.869873,
+    "rank": 66
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0105",
+    "total_score": 27.780735,
+    "rank": 67
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0026",
+    "total_score": 27.752005,
+    "rank": 68
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0078",
+    "total_score": 27.697009,
+    "rank": 69
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0052",
+    "total_score": 27.642337,
+    "rank": 70
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0122",
+    "total_score": 27.627498,
+    "rank": 71
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0102",
+    "total_score": 27.624313,
+    "rank": 72
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0045",
+    "total_score": 27.556018,
+    "rank": 73
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0107",
+    "total_score": 27.532715,
+    "rank": 74
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0081",
+    "total_score": 27.391018,
+    "rank": 75
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0030",
+    "total_score": 27.297411,
+    "rank": 76
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0039",
+    "total_score": 27.234223,
+    "rank": 77
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0106",
+    "total_score": 27.215352,
+    "rank": 78
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0111",
+    "total_score": 27.215352,
+    "rank": 79
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0115",
+    "total_score": 27.123682,
+    "rank": 80
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0073",
+    "total_score": 27.097186,
+    "rank": 81
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0099",
+    "total_score": 27.029519,
+    "rank": 82
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0100",
+    "total_score": 27.029519,
+    "rank": 83
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0064",
+    "total_score": 27.015174,
+    "rank": 84
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0086",
+    "total_score": 26.96332,
+    "rank": 85
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0001",
+    "total_score": 26.839548,
+    "rank": 86
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0049",
+    "total_score": 26.821178,
+    "rank": 87
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0113",
+    "total_score": 26.780557,
+    "rank": 88
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0116",
+    "total_score": 26.780557,
+    "rank": 89
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0038",
+    "total_score": 26.755645,
+    "rank": 90
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0061",
+    "total_score": 26.735853,
+    "rank": 91
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0063",
+    "total_score": 26.70721,
+    "rank": 92
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0132",
+    "total_score": 26.667114,
+    "rank": 93
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0094",
+    "total_score": 26.661615,
+    "rank": 94
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0048",
+    "total_score": 26.604471,
+    "rank": 95
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0095",
+    "total_score": 26.566115,
+    "rank": 96
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0097",
+    "total_score": 26.566115,
+    "rank": 97
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0014",
+    "total_score": 26.186503,
+    "rank": 98
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0012",
+    "total_score": 26.148486,
+    "rank": 99
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0053",
+    "total_score": 26.122373,
+    "rank": 100
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0075",
+    "total_score": 26.006188,
+    "rank": 101
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0060",
+    "total_score": 25.909234,
+    "rank": 102
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0011",
+    "total_score": 25.878971,
+    "rank": 103
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0080",
+    "total_score": 25.828754,
+    "rank": 104
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0079",
+    "total_score": 25.630464,
+    "rank": 105
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0004",
+    "total_score": 25.442486,
+    "rank": 106
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0031",
+    "total_score": 25.167685,
+    "rank": 107
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0029",
+    "total_score": 25.006372,
+    "rank": 108
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0071",
+    "total_score": 24.788296,
+    "rank": 109
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0087",
+    "total_score": 24.587705,
+    "rank": 110
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0016",
+    "total_score": 24.48824,
+    "rank": 111
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0092",
+    "total_score": 24.402417,
+    "rank": 112
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0023",
+    "total_score": 23.980234,
+    "rank": 113
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0103",
+    "total_score": 23.424195,
+    "rank": 114
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0114",
+    "total_score": 23.376589,
+    "rank": 115
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0036",
+    "total_score": 23.376492,
+    "rank": 116
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0058",
+    "total_score": 23.351068,
+    "rank": 117
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0112",
+    "total_score": 22.838719,
+    "rank": 118
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0055",
+    "total_score": 22.209022,
+    "rank": 119
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0054",
+    "total_score": 22.185025,
+    "rank": 120
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0068",
+    "total_score": 21.835795,
+    "rank": 121
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0121",
+    "total_score": 21.795821,
+    "rank": 122
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0025",
+    "total_score": 21.053355,
+    "rank": 123
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0056",
+    "total_score": 20.93913,
+    "rank": 124
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0043",
+    "total_score": 20.471031,
+    "rank": 125
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0033",
+    "total_score": 20.451517,
+    "rank": 126
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0070",
+    "total_score": 18.002986,
+    "rank": 127
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0019",
+    "total_score": 17.809356,
+    "rank": 128
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0017",
+    "total_score": 16.379369,
+    "rank": 129
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0120",
+    "total_score": 15.745468,
+    "rank": 130
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0123",
+    "total_score": 15.745468,
+    "rank": 131
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0129",
+    "total_score": 15.473311,
+    "rank": 132
+  },
+  {
+    "candidate_id": "BusinessAnalyst_CAND_0027",
+    "total_score": 1.0,
+    "rank": 133
+  }
+]

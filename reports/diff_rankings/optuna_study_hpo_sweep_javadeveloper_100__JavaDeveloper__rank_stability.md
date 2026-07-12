@@ -1,0 +1,41 @@
+# Rank Stability Report — hpo_sweep_javadeveloper_100 / JavaDeveloper
+
+- **Schema version:** 1.0
+- **Created at:** 2026-07-12T13:02:11Z
+- **Trials:** 100
+- **Pairs compared:** 4950
+
+## Shortlist overlap
+
+- **top_10_jaccard:** `0.4632` (soft target ≥ 0.60)
+- **top_50_jaccard:** `0.8664`
+
+## Positional movement
+
+- **max_rank_shift:** `64.00` (soft target ≤ 50)
+- **mean_abs_rank_shift:** `7.3858` (soft target ≤ 15)
+
+## Distribution shape agreement
+
+- **kendall_tau:** `0.7147` (soft target ≥ 0.60)
+- **spearman_rho:** `0.8591` (soft target ≥ 0.65)
+
+## Shortlist churn
+
+- **newcomer_rate_top_10:** `0.4009` (soft target ≤ 0.30)
+- **drop_rate_top_10:** `0.4009`
+
+## HP axis explained variance (R^2 of mean_abs_rank_shift)
+
+| HP axis | R^2 |
+| --- | ---: |
+| `threshold` | `0.7135` |
+| `chunk_size` | `0.0116` |
+| `chunk_overlap` | `0.0060` |
+| `top_k` | `0.0022` |
+
+## Flags (informational — review before promotion)
+
+- top_10_jaccard=0.463 < 0.60 shortlist overlap is below the soft target
+- max_rank_shift=64.0 > 50 a candidate swings more than the soft cap across HP perturbations
+- newcomer_rate_top_10=0.401 > 0.30 shortlist turnover exceeds the soft target

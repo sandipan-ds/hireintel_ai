@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "study_name": "hpo_sweep_sqldeveloper_100",
+  "role": "SQLDeveloper",
+  "created_at": "2026-07-12T13:27:58Z",
+  "trial_count": 100,
+  "pair_count": 4950,
+  "top_10_jaccard": 0.5772,
+  "top_50_jaccard": 0.7093,
+  "max_rank_shift": 77.0,
+  "mean_abs_rank_shift": 12.1335,
+  "kendall_tau": 0.5967,
+  "spearman_rho": 0.7261,
+  "newcomer_rate_top_10": 0.286,
+  "drop_rate_top_10": 0.286,
+  "hp_axis_explained_variance": {
+    "chunk_overlap": 0.0003,
+    "chunk_size": 0.0,
+    "threshold": 0.4935,
+    "top_k": 0.0001
+  },
+  "soft_targets": {
+    "top_10_jaccard_min": 0.6,
+    "max_rank_shift_max": 50.0,
+    "mean_abs_rank_shift_max": 15.0,
+    "kendall_tau_min": 0.6,
+    "spearman_rho_min": 0.65,
+    "newcomer_rate_top_10_max": 0.3
+  },
+  "flags": [
+    "top_10_jaccard=0.577 < 0.60 shortlist overlap is below the soft target",
+    "max_rank_shift=77.0 > 50 a candidate swings more than the soft cap across HP perturbations",
+    "kendall_tau=0.597 < 0.60 pairwise ordering agreement is below the soft target"
+  ]
+}

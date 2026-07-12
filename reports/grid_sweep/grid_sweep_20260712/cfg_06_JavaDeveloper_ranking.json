@@ -1,0 +1,362 @@
+[
+  {
+    "candidate_id": "JavaDeveloper_CAND_0044",
+    "total_score": 33.361516,
+    "rank": 1
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0068",
+    "total_score": 33.265666,
+    "rank": 2
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0016",
+    "total_score": 32.94967,
+    "rank": 3
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0035",
+    "total_score": 32.516255,
+    "rank": 4
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0015",
+    "total_score": 32.172092,
+    "rank": 5
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0033",
+    "total_score": 31.735826,
+    "rank": 6
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0006",
+    "total_score": 30.633113,
+    "rank": 7
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0026",
+    "total_score": 30.39831,
+    "rank": 8
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0071",
+    "total_score": 30.326621,
+    "rank": 9
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0040",
+    "total_score": 30.078097,
+    "rank": 10
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0009",
+    "total_score": 29.972494,
+    "rank": 11
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0007",
+    "total_score": 29.895699,
+    "rank": 12
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0005",
+    "total_score": 29.864629,
+    "rank": 13
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0060",
+    "total_score": 29.601506,
+    "rank": 14
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0032",
+    "total_score": 29.57007,
+    "rank": 15
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0004",
+    "total_score": 29.135797,
+    "rank": 16
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0052",
+    "total_score": 28.974288,
+    "rank": 17
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0057",
+    "total_score": 28.872798,
+    "rank": 18
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0048",
+    "total_score": 28.701073,
+    "rank": 19
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0021",
+    "total_score": 28.623289,
+    "rank": 20
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0059",
+    "total_score": 28.554329,
+    "rank": 21
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0028",
+    "total_score": 28.498933,
+    "rank": 22
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0054",
+    "total_score": 28.375905,
+    "rank": 23
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0037",
+    "total_score": 28.326797,
+    "rank": 24
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0030",
+    "total_score": 28.301343,
+    "rank": 25
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0050",
+    "total_score": 28.258715,
+    "rank": 26
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0012",
+    "total_score": 27.99751,
+    "rank": 27
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0019",
+    "total_score": 27.230204,
+    "rank": 28
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0065",
+    "total_score": 27.145408,
+    "rank": 29
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0022",
+    "total_score": 27.093068,
+    "rank": 30
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0061",
+    "total_score": 26.987683,
+    "rank": 31
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0049",
+    "total_score": 26.707984,
+    "rank": 32
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0003",
+    "total_score": 26.669375,
+    "rank": 33
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0024",
+    "total_score": 26.328183,
+    "rank": 34
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0046",
+    "total_score": 26.282587,
+    "rank": 35
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0072",
+    "total_score": 26.272475,
+    "rank": 36
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0042",
+    "total_score": 26.245688,
+    "rank": 37
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0056",
+    "total_score": 26.220326,
+    "rank": 38
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0062",
+    "total_score": 26.198503,
+    "rank": 39
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0008",
+    "total_score": 26.030048,
+    "rank": 40
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0051",
+    "total_score": 25.905766,
+    "rank": 41
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0002",
+    "total_score": 25.612277,
+    "rank": 42
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0070",
+    "total_score": 25.534574,
+    "rank": 43
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0058",
+    "total_score": 25.39149,
+    "rank": 44
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0011",
+    "total_score": 25.203464,
+    "rank": 45
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0034",
+    "total_score": 24.928384,
+    "rank": 46
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0043",
+    "total_score": 24.850324,
+    "rank": 47
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0020",
+    "total_score": 24.85025,
+    "rank": 48
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0017",
+    "total_score": 24.268104,
+    "rank": 49
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0063",
+    "total_score": 23.953371,
+    "rank": 50
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0036",
+    "total_score": 23.831889,
+    "rank": 51
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0018",
+    "total_score": 23.387211,
+    "rank": 52
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0053",
+    "total_score": 23.191785,
+    "rank": 53
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0069",
+    "total_score": 23.01609,
+    "rank": 54
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0045",
+    "total_score": 22.925357,
+    "rank": 55
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0067",
+    "total_score": 22.535295,
+    "rank": 56
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0066",
+    "total_score": 21.233922,
+    "rank": 57
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0010",
+    "total_score": 20.747409,
+    "rank": 58
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0047",
+    "total_score": 20.533847,
+    "rank": 59
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0064",
+    "total_score": 20.41096,
+    "rank": 60
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0013",
+    "total_score": 20.273978,
+    "rank": 61
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0031",
+    "total_score": 20.185032,
+    "rank": 62
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0055",
+    "total_score": 19.098518,
+    "rank": 63
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0014",
+    "total_score": 18.724743,
+    "rank": 64
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0029",
+    "total_score": 17.206301,
+    "rank": 65
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0001",
+    "total_score": 16.779526,
+    "rank": 66
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0025",
+    "total_score": 15.886131,
+    "rank": 67
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0023",
+    "total_score": 12.566878,
+    "rank": 68
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0041",
+    "total_score": 8.765044,
+    "rank": 69
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0027",
+    "total_score": 1.0,
+    "rank": 70
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0038",
+    "total_score": 1.0,
+    "rank": 71
+  },
+  {
+    "candidate_id": "JavaDeveloper_CAND_0039",
+    "total_score": 1.0,
+    "rank": 72
+  }
+]

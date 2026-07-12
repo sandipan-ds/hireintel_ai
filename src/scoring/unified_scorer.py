@@ -686,18 +686,34 @@ from src.audit.no_evidence_flags import write_flag as write_no_evidence_flag
 def _is_years_subquery(sq: Dict[str, Any]) -> bool:
     """Heuristic: does this sub-query ask for a years-proportional score?
 
-    The SubQuery file marks type as one of ``"Binary"``, ``"Float"``,
-    ``"Linear"``. Years-proportional SQs are ``"Float"`` (or
-    ``"Linear"``) AND have ``"years"`` or ``"relative"`` in the sub-query
-    text. Pure binary presence SQs (``"Binary"``) are answered by
-    :func:`_score_presence_sq` below; depth/judgment SQs (``"Float"``
-    without years phrasing) are answered by the rubric-bound LLM.
+    A sub-query is years-proportional when it satisfies BOTH conditions:
+      1. Its text or scale contains ``"year"`` or ``"relative"`` (indicating
+         a years-based question).
+      2. Its ``assessment_method`` contains ``"formula"`` (indicating it uses
+         a mathematical ratio formula like ``min(years / expected, 1.0)``).
+
+    This two-signal requirement prevents false positives on rubric-bound Float
+    SQs whose question text incidentally mentions years as context
+    (e.g. "How strong is their expertise (years and complexity level)?").
+    Such SQs have ``"Rubric:"`` in their ``assessment_method``, not
+    ``"Formula:"``, so they correctly fall through to the rubric-LLM path.
+
+    A sub-query classified as years-proportional is scored code-only via
+    :func:`_score_years_sq`; a sub-query that fails this check (but is not
+    binary) is scored by the rubric-bound LLM in :func:`_score_rubric_sq`.
     """
     txt = (sq.get("text") or "").lower()
     scale = (sq.get("scale") or "").lower()
-    if "year" in txt or "relative" in txt or "year" in scale:
-        return True
-    return False
+    has_years_signal = "year" in txt or "relative" in txt or "year" in scale
+
+    if not has_years_signal:
+        return False
+
+    # Guard: only classify as years-proportional when the assessment
+    # method explicitly uses a formula (not a rubric anchor table).
+    assessment = (sq.get("assessment_method") or "").lower()
+    has_formula = "formula" in assessment or "min(" in assessment
+    return has_formula
 
 
 def _is_binary_subquery(sq: Dict[str, Any]) -> bool:

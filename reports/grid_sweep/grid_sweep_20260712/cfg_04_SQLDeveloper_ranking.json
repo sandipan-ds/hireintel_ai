@@ -1,0 +1,412 @@
+[
+  {
+    "candidate_id": "SQLDeveloper_CAND_0052",
+    "total_score": 24.781186,
+    "rank": 1
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0077",
+    "total_score": 23.742236,
+    "rank": 2
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0023",
+    "total_score": 23.541745,
+    "rank": 3
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0080",
+    "total_score": 17.765415,
+    "rank": 4
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0003",
+    "total_score": 17.751955,
+    "rank": 5
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0008",
+    "total_score": 17.699976,
+    "rank": 6
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0054",
+    "total_score": 17.695128,
+    "rank": 7
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0022",
+    "total_score": 16.878344,
+    "rank": 8
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0073",
+    "total_score": 16.01989,
+    "rank": 9
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0082",
+    "total_score": 15.9784,
+    "rank": 10
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0060",
+    "total_score": 15.444379,
+    "rank": 11
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0056",
+    "total_score": 15.124997,
+    "rank": 12
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0039",
+    "total_score": 15.050035,
+    "rank": 13
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0049",
+    "total_score": 14.920987,
+    "rank": 14
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0010",
+    "total_score": 14.904187,
+    "rank": 15
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0021",
+    "total_score": 14.857398,
+    "rank": 16
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0027",
+    "total_score": 14.645988,
+    "rank": 17
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0036",
+    "total_score": 14.024984,
+    "rank": 18
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0059",
+    "total_score": 13.856837,
+    "rank": 19
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0063",
+    "total_score": 13.722058,
+    "rank": 20
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0076",
+    "total_score": 13.083394,
+    "rank": 21
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0068",
+    "total_score": 12.854121,
+    "rank": 22
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0011",
+    "total_score": 12.73201,
+    "rank": 23
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0009",
+    "total_score": 12.51711,
+    "rank": 24
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0042",
+    "total_score": 12.404527,
+    "rank": 25
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0064",
+    "total_score": 12.208748,
+    "rank": 26
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0053",
+    "total_score": 12.134811,
+    "rank": 27
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0030",
+    "total_score": 11.972764,
+    "rank": 28
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0046",
+    "total_score": 11.735089,
+    "rank": 29
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0005",
+    "total_score": 11.471299,
+    "rank": 30
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0065",
+    "total_score": 11.437675,
+    "rank": 31
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0020",
+    "total_score": 11.4037,
+    "rank": 32
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0066",
+    "total_score": 11.396256,
+    "rank": 33
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0014",
+    "total_score": 11.336477,
+    "rank": 34
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0013",
+    "total_score": 11.332784,
+    "rank": 35
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0032",
+    "total_score": 11.197648,
+    "rank": 36
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0079",
+    "total_score": 10.631249,
+    "rank": 37
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0050",
+    "total_score": 10.463331,
+    "rank": 38
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0069",
+    "total_score": 10.217633,
+    "rank": 39
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0041",
+    "total_score": 10.081416,
+    "rank": 40
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0037",
+    "total_score": 9.908138,
+    "rank": 41
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0012",
+    "total_score": 9.883164,
+    "rank": 42
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0044",
+    "total_score": 9.797315,
+    "rank": 43
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0006",
+    "total_score": 9.732552,
+    "rank": 44
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0016",
+    "total_score": 9.732552,
+    "rank": 45
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0051",
+    "total_score": 9.732552,
+    "rank": 46
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0061",
+    "total_score": 9.732552,
+    "rank": 47
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0062",
+    "total_score": 9.732552,
+    "rank": 48
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0078",
+    "total_score": 9.732552,
+    "rank": 49
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0004",
+    "total_score": 9.691688,
+    "rank": 50
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0018",
+    "total_score": 9.691688,
+    "rank": 51
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0055",
+    "total_score": 9.691688,
+    "rank": 52
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0072",
+    "total_score": 9.691688,
+    "rank": 53
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0031",
+    "total_score": 9.655327,
+    "rank": 54
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0028",
+    "total_score": 9.597213,
+    "rank": 55
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0071",
+    "total_score": 9.440656,
+    "rank": 56
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0038",
+    "total_score": 8.948451,
+    "rank": 57
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0017",
+    "total_score": 8.92947,
+    "rank": 58
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0002",
+    "total_score": 8.778176,
+    "rank": 59
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0019",
+    "total_score": 8.570148,
+    "rank": 60
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0034",
+    "total_score": 8.349543,
+    "rank": 61
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0058",
+    "total_score": 8.07834,
+    "rank": 62
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0048",
+    "total_score": 7.516169,
+    "rank": 63
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0026",
+    "total_score": 7.267125,
+    "rank": 64
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0057",
+    "total_score": 7.267125,
+    "rank": 65
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0035",
+    "total_score": 7.079822,
+    "rank": 66
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0033",
+    "total_score": 6.347992,
+    "rank": 67
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0029",
+    "total_score": 4.308195,
+    "rank": 68
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0043",
+    "total_score": 3.782819,
+    "rank": 69
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0045",
+    "total_score": 2.106905,
+    "rank": 70
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0074",
+    "total_score": 2.065609,
+    "rank": 71
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0040",
+    "total_score": 2.048822,
+    "rank": 72
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0067",
+    "total_score": 2.045144,
+    "rank": 73
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0015",
+    "total_score": 2.025881,
+    "rank": 74
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0075",
+    "total_score": 2.004879,
+    "rank": 75
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0024",
+    "total_score": 1.959761,
+    "rank": 76
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0007",
+    "total_score": 1.939131,
+    "rank": 77
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0047",
+    "total_score": 1.825336,
+    "rank": 78
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0025",
+    "total_score": 1.807898,
+    "rank": 79
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0001",
+    "total_score": 1.541021,
+    "rank": 80
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0070",
+    "total_score": 1.0,
+    "rank": 81
+  },
+  {
+    "candidate_id": "SQLDeveloper_CAND_0081",
+    "total_score": 0.0,
+    "rank": 82
+  }
+]

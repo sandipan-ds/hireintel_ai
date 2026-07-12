@@ -18,7 +18,7 @@ from collections import defaultdict
 ROOT       = Path(r"C:\Users\sandi\Desktop\ML Working Folder\hireintel_ai")
 CACHE_AST  = ROOT / "graphify-out" / "cache" / "ast"
 STAT_INDEX = ROOT / "graphify-out" / "cache" / "stat-index.json"
-OUT_FILE   = ROOT / "docs" / "21_CODEBASE_MAP.md"
+OUT_FILE   = ROOT / "docs" / "25_CODEBASE_MAP.md"
 
 INCLUDE_PREFIXES = ("src/", "scripts/")
 

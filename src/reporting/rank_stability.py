@@ -770,16 +770,162 @@ def _render_flags_section(report: RankStabilityReport) -> list[str]:
     ]
 
 
+@dataclass
+class BaselineCentricStabilityReport:
+    """The metric bundle for baseline-centric stability analysis."""
+
+    schema_version: str = SCHEMA_VERSION
+    role: str = ""
+    created_at: str = ""
+    config_count: int = 0
+    mean_top_10_jaccard: float = 0.0
+    mean_top_50_jaccard: float = 0.0
+    worst_case_max_rank_shift: float = 0.0
+    mean_abs_rank_shift: float = 0.0
+    median_abs_rank_shift: float = 0.0
+    p95_abs_rank_shift: float = 0.0
+    kendall_tau: float = 0.0
+    spearman_rho: float = 0.0
+    mean_newcomer_rate_top_10: float = 0.0
+    mean_drop_rate_top_10: float = 0.0
+    hp_axis_explained_variance: dict[str, float] = field(default_factory=dict)
+    configs: list[dict[str, Any]] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _baseline_hp_axis_explained_variance(
+    baseline_params: dict[str, Any],
+    configs: Sequence[dict[str, Any]],
+) -> dict[str, float]:
+    """Calculate R^2 of mean_abs_rank_shift per hyperparameter axis vs baseline."""
+    hp_keys = set()
+    for cfg in configs:
+        hp_keys.update(cfg["params"].keys())
+
+    y = np.array([cfg["mean_abs_rank_shift"] for cfg in configs], dtype=float)
+    y_mean = y.mean()
+    ss_tot = float(((y - y_mean) ** 2).sum())
+    if ss_tot == 0.0 or not hp_keys:
+        return {key: 0.0 for key in sorted(hp_keys)}
+
+    r2_scores = {}
+    for key in sorted(hp_keys):
+        base_val = float(baseline_params.get(key, 0.0))
+        x = np.array([
+            abs(float(cfg["params"].get(key, 0.0)) - base_val)
+            for cfg in configs
+        ], dtype=float)
+        x_mean = x.mean()
+        ss_xx = float(((x - x_mean) ** 2).sum())
+        if ss_xx == 0.0:
+            r2_scores[key] = 0.0
+            continue
+        ss_xy = float(((x - x_mean) * (y - y_mean)).sum())
+        slope = ss_xy / ss_xx
+        intercept = y_mean - slope * x_mean
+        y_hat = slope * x + intercept
+        ss_res = float(((y - y_hat) ** 2).sum())
+        r2_scores[key] = max(0.0, 1.0 - ss_res / ss_tot)
+
+    return r2_scores
+
+
+def compute_baseline_centric_stability(
+    role: str,
+    baseline_params: dict[str, Any],
+    baseline_ranking: Sequence[str],
+    comparison_configs: Sequence[dict[str, Any]],
+    *,
+    iso_now: str | None = None,
+    top_k: int = DEFAULT_TOP_K,
+    top_k_wide: int = DEFAULT_TOP_K_WIDE,
+) -> BaselineCentricStabilityReport:
+    """Compute stability metrics for multiple configurations compared against a baseline.
+
+    Args:
+        role: The role name.
+        baseline_params: Hyperparameter dictionary for the baseline config.
+        baseline_ranking: Candidate IDs in rank order from baseline config.
+        comparison_configs: List of dicts with keys 'config_id', 'params', 'ranking'.
+        iso_now: Optional creation ISO timestamp override.
+        top_k: Top band shortlist size (default 10).
+        top_k_wide: Wide band shortlist size (default 50).
+
+    Returns:
+        BaselineCentricStabilityReport populated with aggregates and per-config results.
+    """
+    configs_metrics = []
+    for cfg in comparison_configs:
+        cfg_id = cfg["config_id"]
+        params = cfg["params"]
+        rank_b = cfg["ranking"]
+
+        j10 = top_k_jaccard(baseline_ranking, rank_b, top_k)
+        j50 = top_k_jaccard(baseline_ranking, rank_b, top_k_wide)
+        max_shift, mean_shift = rank_shift_stats(baseline_ranking, rank_b)
+        tau, rho = distribution_correlations(baseline_ranking, rank_b)
+        new_rate, drop_rate = newcomer_drop_rates(baseline_ranking, rank_b, top_k)
+
+        configs_metrics.append({
+            "config_id": cfg_id,
+            "params": params,
+            "top_10_jaccard": round(j10, 4),
+            "top_50_jaccard": round(j50, 4),
+            "max_rank_shift": round(max_shift, 2),
+            "mean_abs_rank_shift": round(mean_shift, 4),
+            "kendall_tau": round(tau, 4),
+            "spearman_rho": round(rho, 4),
+            "newcomer_rate_top_10": round(new_rate, 4),
+            "drop_rate_top_10": round(drop_rate, 4),
+        })
+
+    if not configs_metrics:
+        raise ValueError("Cannot compute baseline centric stability with zero comparison configs.")
+
+    top_10_jaccards = [c["top_10_jaccard"] for c in configs_metrics]
+    top_50_jaccards = [c["top_50_jaccard"] for c in configs_metrics]
+    max_shifts = [c["max_rank_shift"] for c in configs_metrics]
+    mean_abs_shifts = [c["mean_abs_rank_shift"] for c in configs_metrics]
+    kendall_taus = [c["kendall_tau"] for c in configs_metrics]
+    spearman_rhos = [c["spearman_rho"] for c in configs_metrics]
+    newcomer_rates = [c["newcomer_rate_top_10"] for c in configs_metrics]
+    drop_rates = [c["drop_rate_top_10"] for c in configs_metrics]
+
+    hp_variance = _baseline_hp_axis_explained_variance(baseline_params, configs_metrics)
+
+    return BaselineCentricStabilityReport(
+        role=role,
+        created_at=iso_now or _now_iso(),
+        config_count=len(configs_metrics),
+        mean_top_10_jaccard=float(np.mean(top_10_jaccards)),
+        mean_top_50_jaccard=float(np.mean(top_50_jaccards)),
+        worst_case_max_rank_shift=float(np.max(max_shifts)),
+        mean_abs_rank_shift=float(np.mean(mean_abs_shifts)),
+        median_abs_rank_shift=float(np.median(mean_abs_shifts)),
+        p95_abs_rank_shift=float(np.percentile(mean_abs_shifts, 95)),
+        kendall_tau=float(np.mean(kendall_taus)),
+        spearman_rho=float(np.mean(spearman_rhos)),
+        mean_newcomer_rate_top_10=float(np.mean(newcomer_rates)),
+        mean_drop_rate_top_10=float(np.mean(drop_rates)),
+        hp_axis_explained_variance={k: round(v, 4) for k, v in hp_variance.items()},
+        configs=configs_metrics,
+    )
+
+
 __all__ = [
     "SCHEMA_VERSION",
     "DEFAULT_TOP_K",
     "DEFAULT_TOP_K_WIDE",
     "RankStabilityReport",
+    "BaselineCentricStabilityReport",
     "top_k_jaccard",
     "rank_shift_stats",
     "distribution_correlations",
     "newcomer_drop_rates",
     "compute_rank_stability",
+    "compute_baseline_centric_stability",
     "load_study_file",
     "write_stability_report",
 ]

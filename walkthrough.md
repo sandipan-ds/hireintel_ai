@@ -1,56 +1,57 @@
-# Walkthrough — JSON Quality Audit & Post-Scoring Integration Verification
+# Walkthrough: True Score Evaluation Using Judge LLMs
 
-This document summarizes the final execution, bug resolution, and verification steps implemented to validate the gap-fill re-extraction, RAG indexing, and scoring reporting layers.
-
----
-
-## 1. Quality Audit Flagged Candidates — Scoring Cross-Reference
-
-We fixed a bug in [generate_run_report.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/scripts/generate_run_report.py) (line 300) where the severity check compared the raw candidate dictionary against a string (`flagged_candidates[cid] == "CRITICAL"`) rather than accessing the `"severity"` field. This was resolved to correctly fetch and format the severity tag.
-
-We regenerated the composed scoring run report. The final report is located at [run_reports/run_report_20260712_145217.md](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/run_reports/run_report_20260712_145217.md) and contains a complete, auditable table cross-referencing all 12 candidates flagged in the extraction quality audit review queue against their actual scoring ranks and provisional scores:
-
-| Candidate ID | Role | Severity | Extr. Quality | Scoring Rank | Provisional Score | Top Extraction Issues |
-| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| 🛑 WebDesigning_CAND_0016 | WebDesigning | CRITICAL | 0.62 | 92 | 0.375 | Phone & Certifications missing in profile |
-| ⚠️ WebDesigning_CAND_0014 | WebDesigning | WARNING | 0.69 | 80 | 0.535 | Experience, Education & Skills empty |
-| ⚠️ SalesManager_CAND_0158 | SalesManager | WARNING | 0.75 | 133 | 0.660 | Phone & Experience empty |
-| ⚠️ BusinessAnalyst_CAND_0128 | BusinessAnalyst | WARNING | 0.79 | 57 | 0.792 | Experience & Education empty |
-| ⚠️ BusinessAnalyst_CAND_0132 | BusinessAnalyst | WARNING | 0.79 | 91 | 0.682 | Skills & Experience anomalies |
-| ⚠️ WebDesigning_CAND_0009 | WebDesigning | WARNING | 0.79 | 65 | 0.665 | Education & Skills empty |
-| ⚠️ SQLDeveloper_CAND_0038 | SQLDeveloper | WARNING | 0.82 | 44 | 0.745 | Phone, Certifications & Education empty |
-| ⚠️ SrPythonDeveloper_CAND_0038 | SrPythonDeveloper | WARNING | 0.82 | 26 | 0.740 | Phone & Certifications empty |
-| ⚠️ SrPythonDeveloper_CAND_0045 | SrPythonDeveloper | WARNING | 0.82 | 27 | 0.740 | Phone & Certifications empty |
-| ⚠️ SrPythonDeveloper_CAND_0062 | SrPythonDeveloper | WARNING | 0.82 | 32 | 0.740 | Phone & Certifications empty |
-| ⚠️ WebDesigning_CAND_0003 | WebDesigning | WARNING | 0.82 | 91 | 0.385 | Phone & Certifications empty |
-| ⚠️ SalesManager_CAND_0046 | SalesManager | WARNING | 0.82 | 135 | 0.640 | Phone & Certifications empty |
+We have successfully implemented and verified the sample-based score validation protocol defined in [19_EVALUATION.md](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/docs/19_EVALUATION.md).
 
 ---
 
-## 2. Multimodal Gap-Fill Verification
+## 1. Implementation Details
 
-We updated [gap_fill_extraction.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/scripts/gap_fill_extraction.py) to enable **NVIDIA NIM (`minimax-m3`)** multimodal vision models as high-priority fallback endpoints, and corrected the check for scanned resumes to trigger base64 image-rendering for any candidate profile with under 3,000 characters of raw text or carrying an `Image_*` PDF filename prefix.
+We implemented the evaluation framework under a new package `src.evaluation` and a set of command-line scripts, ensuring full isolation from production scoring directories:
 
-A diagnostics diagnostic run was performed on all active keys in `.env.audit` confirming 100% success on NVIDIA and OpenRouter primary keys. The execution loop successfully processed all remaining target candidates:
-- **`BusinessAnalyst_CAND_0132`**: Patched successfully. Newly extracted `skills` (e.g. *Business Architecture, Requirements Analysis, Functional Testing*) were merged.
-- **9 Gaps Skipped**: The script verified that the remaining missing fields are genuinely absent from the candidates' original PDFs (e.g. candidates with no education/certifications listed at all in their source layouts).
-- **Ledger Status**: The ledger tracks overall progress to prevent redundant cloud completions.
+### Core Modules
+1. **`src/evaluation/score_comparator.py`**:
+   - Calculates the **true mathematical candidate scores** based on sub-query scores (preventing LLM arithmetic errors from affecting the comparative metrics).
+   - Computes all 8 metrics: Schema Agreement, Arithmetic Consistency, Per-Criterion Absolute Error, Total Score Absolute Error, Relative Percentage Error, Deviation Direction, Bias Direction, and batch-level stats (MAE, RMSE, StdDev, Max deviation).
+   - Flagging logic: flags candidate evaluations for manual review if their relative error exceeds ±10% or if any structural/arithmetic errors occur.
+
+2. **`src/evaluation/judge_prompt_builder.py`**:
+   - Compiles a single comprehensive, multimodal prompt containing the entire SubQuery rubric (categories, subqueries, scales, assessment instructions), weight configuration, and strict JSON output formatting guidelines.
+
+### Command-Line Scripts
+3. **`scripts/run_judge_eval.py`**:
+   - Manages candidate sampling (default: stratified 10% sample per role, min 2 candidates).
+   - Resolves original PDF paths from registry and renders the first 5 pages to base64 JPEGs via `pypdfium2`.
+   - Coordinates dual-judge API execution against Gemini 2.5/3.1 Flash and Minimax-M3.
+   - Reuses a unified **5-key circular rotation pool** with rate-limit cooldown management.
+   - Tracks batch execution state via a progress ledger (`progress.json`) to allow seamless resumption via the `--resume` flag.
+
+4. **`scripts/generate_judge_eval_report.py`**:
+   - Compiles all metrics across candidate folders, generating `comparison_report.json` (machine-readable metrics), `flagged_for_review.json` (flagged candidate list), and `comparison_report.md` (detailed Markdown report with candidate summary and requirement-level divergence analytics).
 
 ---
 
-## 3. RAG Index Reconstruction & Composed Re-scoring
+## 2. Verification Results
 
-1. **RAG Index Rebuilt**: Re-ran the vector index builder to parse the newly patched profile JSONs and generate the semantic embedding weights:
-   ```bash
-   python -m src.rag.build_index
-   ```
-   *Result:* Discovered all 721 profiles, chunked into 4,890 embedding vectors (up from 4,870).
-2. **Re-scored Roles**: Executed compose mode re-scoring for the affected candidate groups (`BusinessAnalyst` and `WebDesigning`) to update provisional stand-alone rankings:
-   ```bash
-   python scripts/score_batch_composed.py --role BusinessAnalyst --tracking-uri sqlite:///data/mlflow/mlflow.db
-   python scripts/score_batch_composed.py --role WebDesigning --tracking-uri sqlite:///data/mlflow/mlflow.db
-   ```
-   *Result:*
-   - `BusinessAnalyst_CAND_0132` score rose from **0.522** (Rank 111) to **0.682** (Rank 91) due to successfully extracted skills matching the requirements.
-   - `WebDesigning_CAND_0016` score remained stable at **0.375** (Rank 92) due to lower rubric matching scores.
-   - Per-role summaries are completely integrated into the SQLite Tracking DB.
+We executed a full evaluation run on the `ReactDeveloper` role to verify the end-to-end pipeline:
+
+```bash
+python scripts/run_judge_eval.py --role ReactDeveloper --seed 42
+```
+
+### Log Execution Summary
+- **Key Queue Initialization**: Circular pools established for Google (2 keys) and NVIDIA (3 keys).
+- **Candidate Sampling**: Sampled 2 out of 18 React candidates (`ReactDeveloper_CAND_0004` and `ReactDeveloper_CAND_0001`).
+- **Multimodal LLM Calls**: Successful page renderings and completion calls on both Gemini 2.5 Flash and Minimax-M3.
+- **Key Rotation Verification**: Verified that for Candidate 1, it used key `KEY_1`, and round-robin rotated to `KEY_2` for Candidate 2 for both Google and NVIDIA providers.
+- **Report Generation**: Successfully compiled metrics and generated JSON, flagged, and Markdown reports under `data/eval/judge_eval/batch_20260712_223647/`.
+
+### Comparative Metrics Analysis
+The evaluation report shows a massive score gap between the production scorer (qwen2.5:3b) and the multimodal judge LLMs:
+
+- **Mean Absolute Error (MAE)**: **70.96** points (on a 0–100 scale).
+- **Flagged Candidates**: 2 / 2 (both flagged with ~99% relative error).
+- **Root Cause of Divergence**:
+  - The production scorer blocked 15 out of 19 requirements because it could not retrieve evidence or because target years were unresolvable from context.
+  - The multimodal judges, inspecting the original PDF pages directly, easily found the evidence and successfully awarded scores (resulting in totals of 58.39 and 85.21 vs scorer's 0.84 floor totals).
+
+This confirms the value of the True Score Evaluation audit: it highlights where the production scorer is failing structurally, without relying on naive ranking stability.

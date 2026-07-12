@@ -1,0 +1,822 @@
+[
+  {
+    "candidate_id": "SalesManager_CAND_0067",
+    "total_score": 38.414768,
+    "rank": 1
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0012",
+    "total_score": 37.510494,
+    "rank": 2
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0005",
+    "total_score": 35.75069,
+    "rank": 3
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0127",
+    "total_score": 35.75069,
+    "rank": 4
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0114",
+    "total_score": 35.259036,
+    "rank": 5
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0088",
+    "total_score": 34.752393,
+    "rank": 6
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0045",
+    "total_score": 34.638553,
+    "rank": 7
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0085",
+    "total_score": 34.162341,
+    "rank": 8
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0091",
+    "total_score": 33.947489,
+    "rank": 9
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0013",
+    "total_score": 33.672788,
+    "rank": 10
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0096",
+    "total_score": 33.505216,
+    "rank": 11
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0052",
+    "total_score": 33.004942,
+    "rank": 12
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0130",
+    "total_score": 32.734302,
+    "rank": 13
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0118",
+    "total_score": 32.586691,
+    "rank": 14
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0100",
+    "total_score": 32.50865,
+    "rank": 15
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0093",
+    "total_score": 32.470756,
+    "rank": 16
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0123",
+    "total_score": 32.459819,
+    "rank": 17
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0110",
+    "total_score": 32.4418,
+    "rank": 18
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0086",
+    "total_score": 32.418108,
+    "rank": 19
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0020",
+    "total_score": 32.153057,
+    "rank": 20
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0040",
+    "total_score": 32.14179,
+    "rank": 21
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0132",
+    "total_score": 32.088761,
+    "rank": 22
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0077",
+    "total_score": 31.962197,
+    "rank": 23
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0108",
+    "total_score": 31.962197,
+    "rank": 24
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0002",
+    "total_score": 31.791134,
+    "rank": 25
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0049",
+    "total_score": 31.753067,
+    "rank": 26
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0003",
+    "total_score": 31.713602,
+    "rank": 27
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0148",
+    "total_score": 31.613371,
+    "rank": 28
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0102",
+    "total_score": 31.610231,
+    "rank": 29
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0078",
+    "total_score": 31.558832,
+    "rank": 30
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0161",
+    "total_score": 31.558832,
+    "rank": 31
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0087",
+    "total_score": 31.075059,
+    "rank": 32
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0042",
+    "total_score": 30.981156,
+    "rank": 33
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0073",
+    "total_score": 30.981156,
+    "rank": 34
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0135",
+    "total_score": 30.921391,
+    "rank": 35
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0143",
+    "total_score": 30.803923,
+    "rank": 36
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0146",
+    "total_score": 30.623168,
+    "rank": 37
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0163",
+    "total_score": 30.388787,
+    "rank": 38
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0058",
+    "total_score": 30.213809,
+    "rank": 39
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0079",
+    "total_score": 30.133633,
+    "rank": 40
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0099",
+    "total_score": 30.1271,
+    "rank": 41
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0054",
+    "total_score": 30.12342,
+    "rank": 42
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0142",
+    "total_score": 30.12342,
+    "rank": 43
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0011",
+    "total_score": 30.086182,
+    "rank": 44
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0134",
+    "total_score": 29.887484,
+    "rank": 45
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0019",
+    "total_score": 29.822884,
+    "rank": 46
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0056",
+    "total_score": 29.798074,
+    "rank": 47
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0153",
+    "total_score": 29.741329,
+    "rank": 48
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0072",
+    "total_score": 29.51158,
+    "rank": 49
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0097",
+    "total_score": 29.244713,
+    "rank": 50
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0063",
+    "total_score": 29.088956,
+    "rank": 51
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0113",
+    "total_score": 28.932624,
+    "rank": 52
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0021",
+    "total_score": 28.867914,
+    "rank": 53
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0136",
+    "total_score": 28.859465,
+    "rank": 54
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0147",
+    "total_score": 28.536614,
+    "rank": 55
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0036",
+    "total_score": 28.517118,
+    "rank": 56
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0151",
+    "total_score": 28.502522,
+    "rank": 57
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0105",
+    "total_score": 28.450205,
+    "rank": 58
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0057",
+    "total_score": 28.394724,
+    "rank": 59
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0092",
+    "total_score": 28.262728,
+    "rank": 60
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0089",
+    "total_score": 28.10486,
+    "rank": 61
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0038",
+    "total_score": 28.077167,
+    "rank": 62
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0103",
+    "total_score": 27.721661,
+    "rank": 63
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0053",
+    "total_score": 27.596104,
+    "rank": 64
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0022",
+    "total_score": 27.465272,
+    "rank": 65
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0160",
+    "total_score": 27.458561,
+    "rank": 66
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0159",
+    "total_score": 27.423519,
+    "rank": 67
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0082",
+    "total_score": 27.252397,
+    "rank": 68
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0106",
+    "total_score": 27.220911,
+    "rank": 69
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0128",
+    "total_score": 27.202855,
+    "rank": 70
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0133",
+    "total_score": 27.193549,
+    "rank": 71
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0122",
+    "total_score": 27.13196,
+    "rank": 72
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0051",
+    "total_score": 27.113864,
+    "rank": 73
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0023",
+    "total_score": 27.102759,
+    "rank": 74
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0120",
+    "total_score": 27.001133,
+    "rank": 75
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0126",
+    "total_score": 26.991338,
+    "rank": 76
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0090",
+    "total_score": 26.967315,
+    "rank": 77
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0098",
+    "total_score": 26.857544,
+    "rank": 78
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0162",
+    "total_score": 26.819833,
+    "rank": 79
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0071",
+    "total_score": 26.772943,
+    "rank": 80
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0109",
+    "total_score": 26.64741,
+    "rank": 81
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0026",
+    "total_score": 26.152468,
+    "rank": 82
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0111",
+    "total_score": 26.1329,
+    "rank": 83
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0062",
+    "total_score": 26.132553,
+    "rank": 84
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0144",
+    "total_score": 25.99232,
+    "rank": 85
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0083",
+    "total_score": 25.858119,
+    "rank": 86
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0075",
+    "total_score": 25.582694,
+    "rank": 87
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0119",
+    "total_score": 25.266047,
+    "rank": 88
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0164",
+    "total_score": 25.214582,
+    "rank": 89
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0004",
+    "total_score": 25.076293,
+    "rank": 90
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0074",
+    "total_score": 24.95625,
+    "rank": 91
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0149",
+    "total_score": 24.77005,
+    "rank": 92
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0027",
+    "total_score": 24.751235,
+    "rank": 93
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0010",
+    "total_score": 24.608173,
+    "rank": 94
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0043",
+    "total_score": 24.508024,
+    "rank": 95
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0137",
+    "total_score": 24.190783,
+    "rank": 96
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0131",
+    "total_score": 24.107174,
+    "rank": 97
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0101",
+    "total_score": 24.032453,
+    "rank": 98
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0080",
+    "total_score": 24.019702,
+    "rank": 99
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0124",
+    "total_score": 23.997915,
+    "rank": 100
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0060",
+    "total_score": 23.927743,
+    "rank": 101
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0065",
+    "total_score": 23.880847,
+    "rank": 102
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0107",
+    "total_score": 23.096858,
+    "rank": 103
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0115",
+    "total_score": 23.048149,
+    "rank": 104
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0157",
+    "total_score": 22.647446,
+    "rank": 105
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0018",
+    "total_score": 22.594873,
+    "rank": 106
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0035",
+    "total_score": 22.179445,
+    "rank": 107
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0047",
+    "total_score": 22.032302,
+    "rank": 108
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0017",
+    "total_score": 21.652638,
+    "rank": 109
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0033",
+    "total_score": 21.626429,
+    "rank": 110
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0152",
+    "total_score": 21.555805,
+    "rank": 111
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0016",
+    "total_score": 21.515724,
+    "rank": 112
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0064",
+    "total_score": 21.455861,
+    "rank": 113
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0138",
+    "total_score": 21.416356,
+    "rank": 114
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0039",
+    "total_score": 21.370233,
+    "rank": 115
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0034",
+    "total_score": 21.366549,
+    "rank": 116
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0104",
+    "total_score": 21.252707,
+    "rank": 117
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0006",
+    "total_score": 20.859557,
+    "rank": 118
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0158",
+    "total_score": 20.71606,
+    "rank": 119
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0048",
+    "total_score": 20.630691,
+    "rank": 120
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0095",
+    "total_score": 20.481197,
+    "rank": 121
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0068",
+    "total_score": 20.321379,
+    "rank": 122
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0024",
+    "total_score": 20.282435,
+    "rank": 123
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0001",
+    "total_score": 20.255511,
+    "rank": 124
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0084",
+    "total_score": 20.170862,
+    "rank": 125
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0037",
+    "total_score": 20.134493,
+    "rank": 126
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0009",
+    "total_score": 20.122209,
+    "rank": 127
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0055",
+    "total_score": 19.724232,
+    "rank": 128
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0014",
+    "total_score": 19.656344,
+    "rank": 129
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0008",
+    "total_score": 19.34266,
+    "rank": 130
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0044",
+    "total_score": 19.124006,
+    "rank": 131
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0030",
+    "total_score": 18.682871,
+    "rank": 132
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0066",
+    "total_score": 18.502913,
+    "rank": 133
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0150",
+    "total_score": 18.381165,
+    "rank": 134
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0070",
+    "total_score": 18.118354,
+    "rank": 135
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0046",
+    "total_score": 18.004695,
+    "rank": 136
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0076",
+    "total_score": 17.863344,
+    "rank": 137
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0141",
+    "total_score": 17.658441,
+    "rank": 138
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0069",
+    "total_score": 17.425136,
+    "rank": 139
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0015",
+    "total_score": 16.763155,
+    "rank": 140
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0094",
+    "total_score": 15.628148,
+    "rank": 141
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0129",
+    "total_score": 15.234138,
+    "rank": 142
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0025",
+    "total_score": 13.981332,
+    "rank": 143
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0041",
+    "total_score": 13.719332,
+    "rank": 144
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0145",
+    "total_score": 13.686222,
+    "rank": 145
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0121",
+    "total_score": 13.680391,
+    "rank": 146
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0154",
+    "total_score": 13.448556,
+    "rank": 147
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0031",
+    "total_score": 13.270229,
+    "rank": 148
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0117",
+    "total_score": 12.997152,
+    "rank": 149
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0116",
+    "total_score": 10.533333,
+    "rank": 150
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0156",
+    "total_score": 9.669212,
+    "rank": 151
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0155",
+    "total_score": 8.50043,
+    "rank": 152
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0029",
+    "total_score": 8.142765,
+    "rank": 153
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0059",
+    "total_score": 8.062458,
+    "rank": 154
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0112",
+    "total_score": 6.747436,
+    "rank": 155
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0081",
+    "total_score": 6.433242,
+    "rank": 156
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0140",
+    "total_score": 6.205897,
+    "rank": 157
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0050",
+    "total_score": 5.147669,
+    "rank": 158
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0032",
+    "total_score": 3.502752,
+    "rank": 159
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0139",
+    "total_score": 3.471336,
+    "rank": 160
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0125",
+    "total_score": 1.571641,
+    "rank": 161
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0007",
+    "total_score": 1.0,
+    "rank": 162
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0028",
+    "total_score": 1.0,
+    "rank": 163
+  },
+  {
+    "candidate_id": "SalesManager_CAND_0061",
+    "total_score": 1.0,
+    "rank": 164
+  }
+]

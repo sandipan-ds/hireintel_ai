@@ -1,0 +1,562 @@
+[
+  {
+    "candidate_id": "WebDesigning_CAND_0084",
+    "total_score": 22.165637,
+    "rank": 1
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0104",
+    "total_score": 21.830856,
+    "rank": 2
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0049",
+    "total_score": 21.053568,
+    "rank": 3
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0046",
+    "total_score": 20.112847,
+    "rank": 4
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0086",
+    "total_score": 20.082078,
+    "rank": 5
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0089",
+    "total_score": 19.739768,
+    "rank": 6
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0078",
+    "total_score": 19.085108,
+    "rank": 7
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0080",
+    "total_score": 18.821834,
+    "rank": 8
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0088",
+    "total_score": 18.617266,
+    "rank": 9
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0111",
+    "total_score": 18.331539,
+    "rank": 10
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0057",
+    "total_score": 18.316062,
+    "rank": 11
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0053",
+    "total_score": 18.129368,
+    "rank": 12
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0081",
+    "total_score": 18.129368,
+    "rank": 13
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0030",
+    "total_score": 18.024726,
+    "rank": 14
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0036",
+    "total_score": 18.024726,
+    "rank": 15
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0048",
+    "total_score": 18.024726,
+    "rank": 16
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0098",
+    "total_score": 18.024726,
+    "rank": 17
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0085",
+    "total_score": 18.015398,
+    "rank": 18
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0070",
+    "total_score": 17.818367,
+    "rank": 19
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0059",
+    "total_score": 17.128644,
+    "rank": 20
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0019",
+    "total_score": 17.00535,
+    "rank": 21
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0006",
+    "total_score": 16.953705,
+    "rank": 22
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0002",
+    "total_score": 16.54855,
+    "rank": 23
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0087",
+    "total_score": 16.352894,
+    "rank": 24
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0107",
+    "total_score": 16.204514,
+    "rank": 25
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0091",
+    "total_score": 16.188124,
+    "rank": 26
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0095",
+    "total_score": 16.176078,
+    "rank": 27
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0108",
+    "total_score": 16.176078,
+    "rank": 28
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0109",
+    "total_score": 16.176078,
+    "rank": 29
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0008",
+    "total_score": 16.176077,
+    "rank": 30
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0060",
+    "total_score": 16.176077,
+    "rank": 31
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0062",
+    "total_score": 16.176077,
+    "rank": 32
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0065",
+    "total_score": 16.176077,
+    "rank": 33
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0072",
+    "total_score": 16.176077,
+    "rank": 34
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0083",
+    "total_score": 16.176077,
+    "rank": 35
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0090",
+    "total_score": 16.176077,
+    "rank": 36
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0097",
+    "total_score": 16.176077,
+    "rank": 37
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0100",
+    "total_score": 16.176077,
+    "rank": 38
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0102",
+    "total_score": 16.176077,
+    "rank": 39
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0055",
+    "total_score": 16.175534,
+    "rank": 40
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0032",
+    "total_score": 15.850588,
+    "rank": 41
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0039",
+    "total_score": 15.850588,
+    "rank": 42
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0040",
+    "total_score": 15.850588,
+    "rank": 43
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0051",
+    "total_score": 15.850588,
+    "rank": 44
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0054",
+    "total_score": 15.850588,
+    "rank": 45
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0056",
+    "total_score": 15.850588,
+    "rank": 46
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0066",
+    "total_score": 15.850588,
+    "rank": 47
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0075",
+    "total_score": 15.850588,
+    "rank": 48
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0077",
+    "total_score": 15.850588,
+    "rank": 49
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0082",
+    "total_score": 15.850588,
+    "rank": 50
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0092",
+    "total_score": 15.850588,
+    "rank": 51
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0096",
+    "total_score": 15.850588,
+    "rank": 52
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0071",
+    "total_score": 15.670839,
+    "rank": 53
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0073",
+    "total_score": 15.397595,
+    "rank": 54
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0023",
+    "total_score": 14.835812,
+    "rank": 55
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0021",
+    "total_score": 14.728824,
+    "rank": 56
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0038",
+    "total_score": 14.617295,
+    "rank": 57
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0074",
+    "total_score": 14.146219,
+    "rank": 58
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0015",
+    "total_score": 13.960349,
+    "rank": 59
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0013",
+    "total_score": 13.496915,
+    "rank": 60
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0045",
+    "total_score": 13.044584,
+    "rank": 61
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0011",
+    "total_score": 12.845379,
+    "rank": 62
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0009",
+    "total_score": 12.542775,
+    "rank": 63
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0014",
+    "total_score": 12.512447,
+    "rank": 64
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0042",
+    "total_score": 12.348259,
+    "rank": 65
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0041",
+    "total_score": 12.262216,
+    "rank": 66
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0035",
+    "total_score": 11.615532,
+    "rank": 67
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0026",
+    "total_score": 10.577582,
+    "rank": 68
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0005",
+    "total_score": 9.929318,
+    "rank": 69
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0058",
+    "total_score": 9.213725,
+    "rank": 70
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0020",
+    "total_score": 9.06697,
+    "rank": 71
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0068",
+    "total_score": 9.058176,
+    "rank": 72
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0028",
+    "total_score": 8.95088,
+    "rank": 73
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0106",
+    "total_score": 8.710786,
+    "rank": 74
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0003",
+    "total_score": 8.597476,
+    "rank": 75
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0027",
+    "total_score": 8.566223,
+    "rank": 76
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0047",
+    "total_score": 8.511704,
+    "rank": 77
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0067",
+    "total_score": 8.392728,
+    "rank": 78
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0112",
+    "total_score": 8.01336,
+    "rank": 79
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0017",
+    "total_score": 7.986806,
+    "rank": 80
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0069",
+    "total_score": 7.950725,
+    "rank": 81
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0016",
+    "total_score": 7.010588,
+    "rank": 82
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0052",
+    "total_score": 6.806587,
+    "rank": 83
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0025",
+    "total_score": 6.786591,
+    "rank": 84
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0033",
+    "total_score": 6.331404,
+    "rank": 85
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0063",
+    "total_score": 5.895068,
+    "rank": 86
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0037",
+    "total_score": 5.855055,
+    "rank": 87
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0050",
+    "total_score": 5.84278,
+    "rank": 88
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0064",
+    "total_score": 5.446979,
+    "rank": 89
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0022",
+    "total_score": 5.026927,
+    "rank": 90
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0018",
+    "total_score": 4.977958,
+    "rank": 91
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0044",
+    "total_score": 4.644894,
+    "rank": 92
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0007",
+    "total_score": 4.339262,
+    "rank": 93
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0110",
+    "total_score": 4.27841,
+    "rank": 94
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0099",
+    "total_score": 3.896775,
+    "rank": 95
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0004",
+    "total_score": 3.482667,
+    "rank": 96
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0031",
+    "total_score": 3.327944,
+    "rank": 97
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0029",
+    "total_score": 3.211468,
+    "rank": 98
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0076",
+    "total_score": 2.859881,
+    "rank": 99
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0024",
+    "total_score": 2.718451,
+    "rank": 100
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0101",
+    "total_score": 2.687848,
+    "rank": 101
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0079",
+    "total_score": 2.646434,
+    "rank": 102
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0010",
+    "total_score": 1.940989,
+    "rank": 103
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0103",
+    "total_score": 1.094294,
+    "rank": 104
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0001",
+    "total_score": 1.0,
+    "rank": 105
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0012",
+    "total_score": 1.0,
+    "rank": 106
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0034",
+    "total_score": 1.0,
+    "rank": 107
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0061",
+    "total_score": 1.0,
+    "rank": 108
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0094",
+    "total_score": 1.0,
+    "rank": 109
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0043",
+    "total_score": 0.0,
+    "rank": 110
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0093",
+    "total_score": 0.0,
+    "rank": 111
+  },
+  {
+    "candidate_id": "WebDesigning_CAND_0105",
+    "total_score": 0.0,
+    "rank": 112
+  }
+]

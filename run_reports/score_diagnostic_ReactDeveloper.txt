@@ -1,0 +1,6 @@
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 React & Modern JavaScript (ES6+) SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 Building Production React Applications SQ031 — no matching text found

@@ -40,6 +40,7 @@ For the full decision history, see `18_DECISIONS.md`.
 | 4A| **Chunking & Embedding Index** — RecursiveChunker + ThresholdRetriever | ✅ |
 | 4B| **JSON Quality Audit** — five-layer extraction audit (DEC-036) | ✅ |
 | 4C| **Gap-Fill Re-Extraction** — multimodal vision pass on audit-flagged candidates | ✅ |
+| 4D| **RAG Hyperparameter Optimization** — Optuna multi-objective sweep + rank stability | ✅ |
 | 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ |
 | 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ |
 
@@ -199,6 +200,26 @@ After the JSON Quality Audit (Stage 4B) identified 12 candidates with missing fi
 - All 5 affected roles re-scored (`BusinessAnalyst`, `WebDesigning`, `SalesManager`, `SrPythonDeveloper`, `SQLDeveloper`)
 
 
+
+---
+
+## Stage 4D — RAG Parameter Sweep & Stability Evaluation
+
+**Status: ✅ Complete**
+
+Implements uniform grid sweep parameter evaluation for RAG chunking and retrieval parameters to verify rank stability and shortlist robustness per `18_EVALUATION.md`.
+
+| Component | Status |
+|---|---|
+| Locked baseline hyperparameter configuration (`data/eval/baseline_config.json`) | ✅ |
+| Determinism check validation (`scripts/run_determinism_check.py`) | ✅ Passed (100% byte-identical) |
+| Grid sweep runner CLI (`scripts/run_grid_sweep.py`) with 45 configurations across all 8 roles | ✅ |
+| In-memory candidate-level VectorIndex caching for sub-second trial execution | ✅ |
+| Extended rank stability analyzer with `baseline_centric` mode (`src/reporting/rank_stability.py`) | ✅ |
+| Grid search stability report generator (`scripts/generate_grid_stability_report.py`) | ✅ |
+| Role-level summaries and cross-role consolidated stability report | ✅ `reports/grid_sweep/grid_sweep_20260712/` |
+| Pass/Review/Fail bands and role classifications updated in `docs/18_EVALUATION.md` | ✅ |
+
 ---
 
 ## Stage 5 — Scoring Engine
@@ -263,7 +284,6 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 | Resume Chat (RAG-grounded Q&A) | Prompt spec exists; not wired |
 | Candidate Comparison UI | Score deltas computed; no UI |
 | Hiring Recommendations | Planned for later |
-| Optuna sweep (theta, chunk_size, chunk_overlap) | Not run yet |
 
 ---
 

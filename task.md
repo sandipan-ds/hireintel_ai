@@ -1,15 +1,10 @@
-# Task Checklist - Gap-Fill Re-Extraction
+# Tasks: True Score Evaluation Using Judge LLMs
 
-- [ ] Create `scripts/gap_fill_extraction.py`
-  - [ ] Implement `.env.audit` key and provider configuration loader
-  - [ ] Implement PDF page to base64 image converter using `pdf2image` (with fallback if missing/fails)
-  - [ ] Implement OpenAI-compatible multimodal LLM caller
-  - [ ] Implement gap-fill schema prompts and candidate profile merger logic
-  - [ ] Implement command line argument parser and progress ledger
-- [ ] Add `RESUME-GAPFILL-001` to `docs/15_PROMPT_LIBRARY.md`
-- [ ] Smoke test with `--dry-run` to verify setup
-- [ ] Run gap-filler script on the 12 flagged candidates
-- [ ] Rebuild RAG index
-- [ ] Re-run scoring script to update candidate scores
-- [ ] Regenerate run report to verify the gaps are filled and candidates scored
-- [ ] Update `docs/03_CURRENT_PROGRESS.md` and write `walkthrough.md`
+- [x] Create isolated evaluation directory structure under `data/eval/judge_eval/`
+- [x] Implement `src/evaluation/score_comparator.py` containing comparison metrics (8 categories)
+- [x] Implement `src/evaluation/judge_prompt_builder.py` to build the multimodal judge prompt and format the rubric and candidate/weight configurations
+- [x] Implement `scripts/run_judge_eval.py` to run the evaluation loop, handle 10% sampling, render PDFs, execute APIs with the 5-key rotation pool, and save candidate evaluations
+- [x] Implement `scripts/generate_judge_eval_report.py` to compile comparison metrics, output JSON report, and generate Markdown report with flagged candidates
+- [x] Dry-run the evaluation to verify sampling, file checking, and configuration validation
+- [x] Perform a full run with Gemini 2.5 Flash and Minimax-M3 across all roles
+- [x] Generate and verify the final evaluation report (`comparison_report.md`)

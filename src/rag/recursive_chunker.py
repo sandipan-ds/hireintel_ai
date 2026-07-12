@@ -484,13 +484,14 @@ class RecursiveChunker:
         projects = target_profile.get("projects") or []
         if isinstance(projects, list):
             for i, proj in enumerate(projects):
-                sections.append((f"project_{i}", str(proj).strip()))
+                sections.append((f"project_{i}", _project_to_text(proj)))
         elif isinstance(projects, str) and projects.strip():
             sections.append(("projects", projects.strip()))
 
         skills = target_profile.get("skills") or []
         if isinstance(skills, list):
-            skills_text = ", ".join(str(s) for s in skills if s)
+            skill_lines = [_skill_to_text(s) for s in skills if s]
+            skills_text = "\n".join(line for line in skill_lines if line)
         else:
             skills_text = str(skills)
         if skills_text.strip():
@@ -498,7 +499,8 @@ class RecursiveChunker:
 
         certifications = target_profile.get("certifications") or []
         if isinstance(certifications, list):
-            certs_text = ", ".join(str(c) for c in certifications if c)
+            certs_lines = [_cert_to_text(c) for c in certifications if c]
+            certs_text = "\n".join(line for line in certs_lines if line)
         else:
             certs_text = str(certifications)
         if certs_text.strip():
@@ -506,7 +508,8 @@ class RecursiveChunker:
 
         languages = target_profile.get("languages") or []
         if isinstance(languages, list):
-            langs_text = ", ".join(str(l) for l in languages if l)
+            langs_lines = [_lang_to_text(l) for l in languages if l]
+            langs_text = "\n".join(line for line in langs_lines if line)
         else:
             langs_text = str(languages)
         if langs_text.strip():
@@ -547,6 +550,134 @@ def _renumber_chunks(chunks: List[ChunkRecord], candidate_id: str) -> List[Chunk
         )
     return out
 
+
+# ---------------------------------------------------------------------------
+# Section-specific text renderers — convert structured dicts to readable text
+# so that chunk embeddings are semantically meaningful.
+#
+# Each renderer must produce a short natural-language sentence or phrase:
+# e.g. "React (frontend, 3 years)" rather than a raw Python repr string.
+# ---------------------------------------------------------------------------
+
+
+def _skill_to_text(skill: Any) -> str:
+    """Render a skill entry as a readable string.
+
+    Handles three shapes:
+      - ``str``  → returned as-is (already readable)
+      - ``dict`` with ``name_canonical``/``name_raw`` → structured render
+      - anything else → ``str()`` fallback
+
+    Examples::
+
+        _skill_to_text("Python")                         # -> "Python"
+        _skill_to_text({"name_canonical": "React",
+                        "category": "frontend",
+                        "months_of_evidence": 36})        # -> "React (frontend, 3 years)"
+    """
+    if isinstance(skill, str):
+        return skill.strip()
+    if not isinstance(skill, dict):
+        return str(skill).strip()
+
+    name = (
+        skill.get("name_canonical")
+        or skill.get("name_raw")
+        or skill.get("name")
+        or ""
+    ).strip()
+    if not name:
+        return ""
+
+    parts: List[str] = [name]
+    category = (skill.get("category") or "").strip()
+    months = skill.get("months_of_evidence") or 0
+    try:
+        months = int(months)
+    except (TypeError, ValueError):
+        months = 0
+
+    meta_parts: List[str] = []
+    if category:
+        meta_parts.append(category)
+    if months > 0:
+        years = round(months / 12, 1)
+        meta_parts.append(f"{years} years")
+
+    if meta_parts:
+        parts.append(f"({', '.join(meta_parts)})")
+
+    return " ".join(parts)
+
+
+def _cert_to_text(cert: Any) -> str:
+    """Render a certification entry as a readable string."""
+    if isinstance(cert, str):
+        return cert.strip()
+    if not isinstance(cert, dict):
+        return str(cert).strip()
+
+    name = (
+        cert.get("name")
+        or cert.get("title")
+        or cert.get("certification")
+        or ""
+    ).strip()
+    issuer = (cert.get("issuer") or cert.get("provider") or "").strip()
+    year = cert.get("year") or cert.get("date") or ""
+
+    parts: List[str] = []
+    if name:
+        parts.append(name)
+    if issuer:
+        parts.append(f"issued by {issuer}")
+    if year:
+        parts.append(f"({year})")
+    return " ".join(parts) if parts else str(cert).strip()
+
+
+def _lang_to_text(lang: Any) -> str:
+    """Render a language entry as a readable string."""
+    if isinstance(lang, str):
+        return lang.strip()
+    if not isinstance(lang, dict):
+        return str(lang).strip()
+
+    name = (lang.get("language") or lang.get("name") or "").strip()
+    level = (lang.get("proficiency") or lang.get("level") or "").strip()
+    if name and level:
+        return f"{name} ({level})"
+    return name or str(lang).strip()
+
+
+def _project_to_text(proj: Any) -> str:
+    """Render a project entry as a readable string."""
+    if isinstance(proj, str):
+        return proj.strip()
+    if not isinstance(proj, dict):
+        return str(proj).strip()
+
+    parts: List[str] = []
+    name = (proj.get("name") or proj.get("title") or "").strip()
+    raw_desc = proj.get("description") or proj.get("summary") or ""
+    if isinstance(raw_desc, list):
+        description = " ".join(str(x) for x in raw_desc if x).strip()
+    else:
+        description = str(raw_desc).strip()
+    techs = proj.get("technologies") or proj.get("tech_stack") or proj.get("skills") or []
+
+    if name:
+        parts.append(name)
+    if description:
+        parts.append(description)
+    if isinstance(techs, list) and techs:
+        tech_str = ", ".join(
+            t if isinstance(t, str) else (t.get("name") or str(t))
+            for t in techs if t
+        )
+        if tech_str:
+            parts.append(f"Technologies: {tech_str}")
+    return "\n".join(parts).strip() or str(proj).strip()
 
 def _entry_to_text(entry: Any) -> str:
     """Render an experience/education entry as a single human-readable block.

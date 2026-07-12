@@ -1,0 +1,212 @@
+[
+  {
+    "candidate_id": "DataScience_CAND_0022",
+    "total_score": 7.103738,
+    "rank": 1
+  },
+  {
+    "candidate_id": "DataScience_CAND_0017",
+    "total_score": 6.958487,
+    "rank": 2
+  },
+  {
+    "candidate_id": "DataScience_CAND_0016",
+    "total_score": 4.465688,
+    "rank": 3
+  },
+  {
+    "candidate_id": "DataScience_CAND_0028",
+    "total_score": 4.326567,
+    "rank": 4
+  },
+  {
+    "candidate_id": "DataScience_CAND_0040",
+    "total_score": 4.316538,
+    "rank": 5
+  },
+  {
+    "candidate_id": "DataScience_CAND_0010",
+    "total_score": 4.110288,
+    "rank": 6
+  },
+  {
+    "candidate_id": "DataScience_CAND_0024",
+    "total_score": 3.41233,
+    "rank": 7
+  },
+  {
+    "candidate_id": "DataScience_CAND_0006",
+    "total_score": 3.311413,
+    "rank": 8
+  },
+  {
+    "candidate_id": "DataScience_CAND_0014",
+    "total_score": 3.249021,
+    "rank": 9
+  },
+  {
+    "candidate_id": "DataScience_CAND_0023",
+    "total_score": 3.187987,
+    "rank": 10
+  },
+  {
+    "candidate_id": "DataScience_CAND_0035",
+    "total_score": 3.159618,
+    "rank": 11
+  },
+  {
+    "candidate_id": "DataScience_CAND_0007",
+    "total_score": 2.689486,
+    "rank": 12
+  },
+  {
+    "candidate_id": "DataScience_CAND_0020",
+    "total_score": 1.573766,
+    "rank": 13
+  },
+  {
+    "candidate_id": "DataScience_CAND_0005",
+    "total_score": 1.552297,
+    "rank": 14
+  },
+  {
+    "candidate_id": "DataScience_CAND_0004",
+    "total_score": 1.54211,
+    "rank": 15
+  },
+  {
+    "candidate_id": "DataScience_CAND_0008",
+    "total_score": 1.536581,
+    "rank": 16
+  },
+  {
+    "candidate_id": "DataScience_CAND_0038",
+    "total_score": 1.529868,
+    "rank": 17
+  },
+  {
+    "candidate_id": "DataScience_CAND_0039",
+    "total_score": 1.517083,
+    "rank": 18
+  },
+  {
+    "candidate_id": "DataScience_CAND_0019",
+    "total_score": 1.157865,
+    "rank": 19
+  },
+  {
+    "candidate_id": "DataScience_CAND_0030",
+    "total_score": 1.075709,
+    "rank": 20
+  },
+  {
+    "candidate_id": "DataScience_CAND_0025",
+    "total_score": 1.073637,
+    "rank": 21
+  },
+  {
+    "candidate_id": "DataScience_CAND_0031",
+    "total_score": 1.050833,
+    "rank": 22
+  },
+  {
+    "candidate_id": "DataScience_CAND_0012",
+    "total_score": 1.050079,
+    "rank": 23
+  },
+  {
+    "candidate_id": "DataScience_CAND_0009",
+    "total_score": 1.014531,
+    "rank": 24
+  },
+  {
+    "candidate_id": "DataScience_CAND_0018",
+    "total_score": 1.0,
+    "rank": 25
+  },
+  {
+    "candidate_id": "DataScience_CAND_0041",
+    "total_score": 1.0,
+    "rank": 26
+  },
+  {
+    "candidate_id": "DataScience_CAND_0001",
+    "total_score": 0.0,
+    "rank": 27
+  },
+  {
+    "candidate_id": "DataScience_CAND_0002",
+    "total_score": 0.0,
+    "rank": 28
+  },
+  {
+    "candidate_id": "DataScience_CAND_0003",
+    "total_score": 0.0,
+    "rank": 29
+  },
+  {
+    "candidate_id": "DataScience_CAND_0011",
+    "total_score": 0.0,
+    "rank": 30
+  },
+  {
+    "candidate_id": "DataScience_CAND_0013",
+    "total_score": 0.0,
+    "rank": 31
+  },
+  {
+    "candidate_id": "DataScience_CAND_0015",
+    "total_score": 0.0,
+    "rank": 32
+  },
+  {
+    "candidate_id": "DataScience_CAND_0021",
+    "total_score": 0.0,
+    "rank": 33
+  },
+  {
+    "candidate_id": "DataScience_CAND_0026",
+    "total_score": 0.0,
+    "rank": 34
+  },
+  {
+    "candidate_id": "DataScience_CAND_0027",
+    "total_score": 0.0,
+    "rank": 35
+  },
+  {
+    "candidate_id": "DataScience_CAND_0029",
+    "total_score": 0.0,
+    "rank": 36
+  },
+  {
+    "candidate_id": "DataScience_CAND_0032",
+    "total_score": 0.0,
+    "rank": 37
+  },
+  {
+    "candidate_id": "DataScience_CAND_0033",
+    "total_score": 0.0,
+    "rank": 38
+  },
+  {
+    "candidate_id": "DataScience_CAND_0034",
+    "total_score": 0.0,
+    "rank": 39
+  },
+  {
+    "candidate_id": "DataScience_CAND_0036",
+    "total_score": 0.0,
+    "rank": 40
+  },
+  {
+    "candidate_id": "DataScience_CAND_0037",
+    "total_score": 0.0,
+    "rank": 41
+  },
+  {
+    "candidate_id": "DataScience_CAND_0042",
+    "total_score": 0.0,
+    "rank": 42
+  }
+]

@@ -103,6 +103,39 @@ See [`WORKING_LOGIC.md`](WORKING_LOGIC.md) for the full rules.
 
 ---
 
+## Detailed Pipeline Data Flow
+
+The platform decouples unstructured ingestion from structured, auditable evaluation using the following data flow:
+
+```mermaid
+graph TD
+    A[1. PDF Resume] -->|Layout-Aware Parser| B[2. Parsed Text]
+    B -->|LLM Normalization| C[3. Structured JSON Resume]
+    C -->|Section-Aware Chunking| D[4. RAG Vector Index]
+    E[5. JD Requirement] -->|Decomposed Into| F[6. Sub-Queries]
+    F -->|Retrieval Query| G[7. RAG Semantic Search]
+    D -.->|Retrieve Best Chunks| G
+    G -->|Evidence Chunks + Rubrics| H[8. LLM Grading Judge]
+    H -->|Qualitative Grades| I[9. Deterministic Scoring Engine]
+    J[Recruiter Weights] -->|Configured Weights| I
+    I -->|Total Numeric Score| K[10. Sorted Leaderboard]
+```
+
+### How Resumes are Parsed, Grounded, and Sorted
+
+1. **PDF to JSON Normalization (LLM Ingestion)**: 
+   During resume upload, a layout-aware parser reads the PDF. An LLM parses and extracts layout-recovered text into a standardized JSON schema (skills, employment history, education, credentials). This acts as the candidate's canonical data model.
+2. **In-Memory RAG Indexing**: 
+   The structured JSON resume is split into small, contextual chunks (such as individual job entries or degree blocks) and converted into vector embeddings. This index is used for candidate-level retrieval.
+3. **Requirement Decomposition to Sub-Queries**: 
+   When evaluating a candidate, each requirement in the locked hiring configuration decomposes into simple, semantic sub-queries. The RAG retriever searches the candidate's vector index to gather only the relevant evidence chunks.
+4. **LLM Evidence Grading (The Local Judge)**: 
+   The LLM does *not* read the whole resume or calculate scores. It receives only the retrieved evidence chunks and a strict grading rubric. It outputs a grade (`1.0`, `0.50`, `0.25`, `0.01`) and writes out a text trace showing reasoning and quotes.
+5. **Deterministic Scoring and Sorting**: 
+   A Python-based scoring engine sums the sub-query grades, multiplies them by the recruiter's weights (which always sum to 100%), and aggregates the total score out of 100. A simple sorted ranking of these scores creates the leaderboard.
+
+---
+
 # Phase 1: Job Description Intelligence
 
 ## Objective

@@ -1,75 +1,57 @@
-# Implementation Plan — Gap-Fill Re-Extraction for Audit-Flagged Candidates
+# Implementation Plan — True Score Evaluation Using Judge LLMs
 
-## Background
-
-The quality audit identified **12 candidates** (1 CRITICAL + 11 WARNING) in `run_reports/review_queue.md`
-whose extracted JSONs are missing key fields (`experience`, `education`, `skills`, `certifications`).
-
-A re-extraction pass using multimodal LLMs can fill these gaps by:
-1. Sending the **original PDF** as a base64 image (for scanned/OCR-failed resumes) **plus** the existing
-   raw text to a multimodal model.
-2. Using the **same JSON schema and extraction prompt** that `llm_normalizer.py` already uses.
-3. Only patching the **specific empty fields** — never overwriting fields that were successfully extracted.
-4. Writing the patched JSON back to `data/processed/<Role>/<candidate_id>.json`.
+Implement the sample-based score validation protocol defined in [19_EVALUATION.md](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/docs/19_EVALUATION.md). The production scorer (qwen2.5:3b via Ollama) is evaluated by sending original **PDF resumes** to stronger multimodal judges that score from the source document directly, then comparing subscores and totals.
 
 ---
 
-## Pre-Flight Audit Results
-
-| Candidate | Raw Text | PDF on Disk | Gaps |
-|---|---|---|---|
-| WebDesigning_CAND_0016 | 1,877 ch | ✅ | skills, experience, education, certifications |
-| WebDesigning_CAND_0014 | **188 ch** | ✅ | skills, experience, education ← scanned |
-| SalesManager_CAND_0158 | 578 ch | ✅ | skills, experience, certifications |
-| BusinessAnalyst_CAND_0128 | 1,633 ch | ✅ | experience, education, certifications |
-| BusinessAnalyst_CAND_0132 | 2,177 ch | ✅ | skills |
-| WebDesigning_CAND_0009 | **94 ch** | ✅ | skills, education, certifications ← scanned |
-| SQLDeveloper_CAND_0038 | 2,493 ch | ✅ | education, certifications |
-| SrPythonDeveloper_CAND_0038 | 1,667 ch | ✅ | certifications |
-| SrPythonDeveloper_CAND_0045 | 1,817 ch | ✅ | certifications |
-| SrPythonDeveloper_CAND_0062 | 1,667 ch | ✅ | certifications |
-| WebDesigning_CAND_0003 | 1,418 ch | ✅ | certifications |
-| SalesManager_CAND_0046 | 2,079 ch | ✅ | certifications |
+## User Review Required
 
 > [!IMPORTANT]
-> `CAND_0014` (188 ch) and `CAND_0009` (94 ch) have nearly no raw text — original OCR failed.
-> These **must** use PDF-as-image (base64) so the vision model can see the actual resume.
-> All others should also send the PDF image as primary input, with raw_text as supplementary context.
+> **Judge Models & Key Rotation — Mandatory Constraint**
+>
+> Two judges, 5 keys total, unified rotation pool:
+>
+> | # | Key name in `.env.audit` | Provider | Model | Endpoint |
+> |---|---|---|---|---|
+> | 1 | `GOOGLE_API_KEY_1` | Google AI Studio | `gemini-2.5-flash` | `https://generativelanguage.googleapis.com/v1beta/openai/` |
+> | 2 | `GOOGLE_API_KEY_2` | Google AI Studio | `gemini-2.5-flash` | same |
+> | 3 | `NVIDIA_NIM_API_KEY_1` | NVIDIA NIM | `minimaxai/minimax-m3` | `https://integrate.api.nvidia.com/v1` |
+> | 4 | `NVIDIA_NIM_API_KEY_2` | NVIDIA NIM | `minimaxai/minimax-m3` | same |
+> | 5 | `NVIDIA_NIM_API_KEY_3` | NVIDIA NIM | `minimaxai/minimax-m3` | same |
+>
+> **Key rotation strategy:** Each provider maintains its own circular key queue. On a `429 / rate-limit` response, the script immediately advances to the next key in that provider's queue (round-robin). Exhausted keys are re-enabled after a configurable cooldown (default: 60 s). Between candidates, a short inter-call delay (default: 2 s) reduces sustained rate pressure.
+>
+> **Note:** `.env.audit` currently stores all three NVIDIA keys under the same label `NVIDIA_NIM_API_KEY_1`. Rename them to `NVIDIA_NIM_API_KEY_1`, `NVIDIA_NIM_API_KEY_2`, `NVIDIA_NIM_API_KEY_3` before running.
+>
+> **Reference score = median of both judge scores.** If one judge fails for a candidate, the other is the sole reference. If both fail, candidate is marked `judge_status: failed` and excluded from metrics.
 
----
-
-## Provider Configuration (`.env.audit`)
-
-The script reads exclusively from `.env.audit` (not `.env`) using the same multi-key loader
-pattern already established in `llm_normalizer.py`.
-
-| Priority | Provider | Keys | Model | Modality |
-|---|---|---|---|---|
-| 1 | Google AI Studio | GOOGLE_API_KEY_1, _2 | `gemini-2.5-flash` | ✅ Vision |
-| 2 | NVIDIA NIM | NVIDIA_NIM_API_KEY_1 (×3) | `minimaxai/minimax-m3` | ✅ Vision |
-| 3 | OpenRouter | OPENROUTER_API_KEY_1, _2, _3 | `google/gemma-4-31b-it` | ✅ Vision |
-
-All three providers support the OpenAI-compatible chat completions API with image content.
-
-> [!NOTE]
-> `.env.audit` has a typo: `base_url-"..."` (dash instead of equals) on line 17 for OpenRouter.
-> The script will hardcode the correct base URLs (same pattern as `llm_normalizer.py`) to avoid
-> depending on a broken key. The OpenRouter base URL is `https://openrouter.ai/api/v1`.
+> [!WARNING]
+> **Isolation from Production Scoring**
+>
+> All outputs written to `data/eval/judge_eval/` only. `data/scores/composed/` is never modified.
 
 ---
 
 ## Open Questions
 
-> [!NOTE]
-> **Q1 — Scope:** Should the script run only on the 12 review-queue candidates, or any candidate
-> with empty fields?
-> **Default in plan:** Flagged candidates from `review_queue.md` first; `--all-gaps` flag for full corpus.
-
-> [!NOTE]
-> **Q2 — Overwrite policy after gap-fill:** After patching the JSON, should the script re-trigger
-> chunking + index rebuild automatically?
-> **Default in plan:** Script writes patched JSON and prints instructions to re-run `build_index.py`
-> and `score_batch_composed.py --resume` — does NOT auto-trigger (avoids silent cascading).
+> [!IMPORTANT]
+> **Sampling scope — per-role or cross-role?**
+>
+> Sample size is **10% of candidates per role** (rounded up, minimum 2). At current counts:
+>
+> | Role | Candidates | 10% Sample |
+> |---|---|---|
+> | BusinessAnalyst | 133 | 14 |
+> | DataScience | 42 | 5 |
+> | JavaDeveloper | 72 | 8 |
+> | ReactDeveloper | 18 | 2 |
+> | SQLDeveloper | 82 | 9 |
+> | SalesManager | 164 | 17 |
+> | SrPythonDeveloper | 98 | 10 |
+> | WebDesigning | 112 | 12 |
+> | **Total** | **721** | **~77** |
+>
+> Default run evaluates all 8 roles (~77 total samples, ~154 judge calls). Use `--role` to restrict to one role.
 
 ---
 
@@ -77,198 +59,211 @@ All three providers support the OpenAI-compatible chat completions API with imag
 
 ---
 
-### Component 1 — `scripts/gap_fill_extraction.py` [NEW FILE]
+### Component 1 — Isolated Evaluation Directory Structure
 
-A self-contained script. No changes to existing extraction pipeline files.
-
-#### Architecture
+#### [NEW] `data/eval/judge_eval/`
 
 ```
-gap_fill_extraction.py
-│
-├── load_env_audit()          — parse .env.audit, same duplicate-key logic as llm_normalizer.py
-├── build_audit_providers()   — ordered list (Google → NVIDIA → OpenRouter) from .env.audit keys
-├── pdf_to_base64_images()    — convert each page of PDF to JPEG base64 for vision API
-├── build_gap_fill_prompt()   — construct the targeted re-extraction prompt (schema-identical)
-├── call_multimodal_llm()     — try providers in order with PDF image + raw_text in message
-├── patch_candidate_json()    — merge only missing fields; preserve existing populated fields
-├── load_progress()           — read gap_fill_progress.json ledger
-├── save_progress()           — atomic write (tmp → rename)
-├── main()                    — CLI: --resume, --candidate, --all-gaps, --dry-run
-│
-└── gap_fill_progress.json    → run_reports/gap_fill_progress.json
+data/eval/judge_eval/
+  batch_<YYYYMMDD_HHMMSS>/
+    config.json                    ← seed, roles, sample_ids, judge models, sample_pct
+    progress.json                  ← per-candidate status ledger (supports --resume)
+    samples/
+      <candidate_id>/
+        scorer_output.json         ← frozen copy from data/scores/composed/<role>/<id>.json
+        judge_gemini.json          ← Gemini 2.5 Flash output
+        judge_minimax.json         ← Minimax-M3 output
+    comparison_report.json         ← all 8 metric categories, per-candidate + batch-aggregate
+    comparison_report.md           ← human-readable summary
+    flagged_for_review.json        ← candidates with >10% deviation or errors
 ```
 
-#### Progress Ledger Schema
+---
+
+### Component 2 — Judge LLM Scoring Script
+
+#### [NEW] `scripts/run_judge_eval.py`
+
+CLI:
+
+```bash
+python scripts/run_judge_eval.py                         # all roles, 10% sample each
+python scripts/run_judge_eval.py --role BusinessAnalyst  # single role, 10% sample
+python scripts/run_judge_eval.py --seed 42               # reproducible sampling
+python scripts/run_judge_eval.py --dry-run               # sample plan only, no API calls
+python scripts/run_judge_eval.py --resume                # continue an interrupted batch
+```
+
+**Sampling logic:**
+
+```python
+n_sample = max(2, math.ceil(len(candidates) * 0.10))
+sample = random.sample(candidates, n_sample)
+```
+
+Applied independently per role. Seed is logged to `config.json` for reproducibility.
+
+**Per-candidate execution:**
+
+1. Load `data/scores/composed/<role>/<candidate_id>.json` → scorer output (read-only).
+2. Locate PDF via `data/candidate_registry.json` → `source_path`.
+3. Render PDF to base64 JPEG pages via `pypdfium2` (first 5 pages, scale=2.0) — same pattern as [gap_fill_extraction.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/scripts/gap_fill_extraction.py).
+4. Load `<Role>_SubQuery.md` + `<Role>_WeightConfig_*.json` for the role.
+5. Build multimodal judge prompt (PDF images + full rubric + weight config). Instruction: *score from the PDF images directly, not from pre-extracted text*.
+6. **Call both judges via the unified key rotation pool:**
+
+   ```python
+   class KeyQueue:
+       """Circular key queue per provider with cooldown on exhaustion."""
+       def __init__(self, keys, cooldown_s=60): ...
+       def next_key(self) -> str: ...      # advances index; blocks or raises if all cooling
+       def mark_rate_limited(self, key): ... # starts cooldown timer for that key
+   
+   google_pool  = KeyQueue([GOOGLE_API_KEY_1, GOOGLE_API_KEY_2])
+   minimax_pool = KeyQueue([NVIDIA_NIM_API_KEY_1, NVIDIA_NIM_API_KEY_2, NVIDIA_NIM_API_KEY_3])
+   ```
+
+   For each judge call: attempt with current key → on `429`, call `mark_rate_limited` → retry with `next_key()`. Up to `max_retries=len(pool)` attempts before marking the candidate as failed for that judge.
+
+7. Parse responses with `_extract_json_lenient` (reused from [rubric_scorer.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/src/scoring/rubric_scorer.py)).
+8. Compute reference = median of judge totals (per-SQ and overall).
+9. Recompute totals from subscores for arithmetic consistency check.
+10. Write to `samples/<candidate_id>/`, update `progress.json`.
+
+**Resume from interruption (`--resume` flag):**
+
+`progress.json` tracks status per candidate:
+```json
+{
+  "batch_id": "batch_20260712_221500",
+  "candidates": {
+    "BusinessAnalyst_CAND_0001": {"status": "done"},
+    "BusinessAnalyst_CAND_0007": {"status": "in_progress"},
+    "SalesManager_CAND_0043":   {"status": "pending"}
+  }
+}
+```
+On `--resume`, the script:
+1. Reads the most recent `batch_<timestamp>/` directory (or the path passed via `--batch`).
+2. Skips all candidates with `status: done`.
+3. Re-attempts `in_progress` (treat as interrupted mid-call) and all `pending` candidates.
+4. Key rotation state resets at resume start (all keys re-enabled).
+
+**Error handling:**
+- One judge fails all its key retries → other is sole reference for that candidate.
+- Both judges fail → `judge_status: failed`, excluded from metrics.
+- Missing PDF → `status: skipped`, log warning.
+
+**Required judge output schema:**
 
 ```json
 {
-  "completed": ["WebDesigning_CAND_0016", "SrPythonDeveloper_CAND_0038"],
-  "failed": ["WebDesigning_CAND_0014"],
-  "skipped_no_gaps": []
+  "candidate_id": "...",
+  "role": "...",
+  "total": <float>,
+  "reqs": [
+    {
+      "requirement_id": "REQ-001",
+      "requirement_name": "...",
+      "weight_percentage": 8.5,
+      "rubric_sq_scores": {"SQ001": 1, "SQ002": 0, "SQ003": 0.5},
+      "sub_score": <float>,
+      "contribution": <float>,
+      "justification": "short rationale"
+    }
+  ]
 }
 ```
 
-#### CLI Flags
-
-```
-python scripts/gap_fill_extraction.py                  # all 12 review_queue candidates
-python scripts/gap_fill_extraction.py --resume         # skip already completed
-python scripts/gap_fill_extraction.py --candidate WebDesigning_CAND_0016
-python scripts/gap_fill_extraction.py --all-gaps       # scan all 721 processed JSONs
-python scripts/gap_fill_extraction.py --dry-run        # print what would be patched; no writes
-```
-
-#### Prompt Strategy
-
-The gap-fill prompt differs from the original extraction prompt in one key way:
-**it tells the LLM which fields are already filled and which are missing**, so it
-focuses only on the gaps without touching working fields.
-
-```
-EXISTING DATA (already extracted — do NOT change these):
-  full_name: "..."
-  emails: [...]
-  phones: [...]   ← or "EMPTY — please try to find"
-  skills: [...]   ← or "EMPTY — please try to find"
-
-GAPS TO FILL (these fields are currently empty [] or null — fill them if present in the resume):
-  experience: []  → fill with job history if found
-  education:  []  → fill with degree/institution if found
-  certifications: [] → fill with any certifications found
-
-IMPORTANT: Return ONLY the gap fields in your JSON response.
-Do NOT return fields that are already filled above.
-```
-
-The response is merged via `patch_candidate_json()` which only copies keys from the
-LLM response that are currently empty in the stored JSON.
-
-#### Multimodal Message Format
-
-For vision-capable providers, each message will include:
-
-```python
-messages = [
-    {"role": "system", "content": SYSTEM_PROMPT},
-    {"role": "user", "content": [
-        {"type": "text", "text": prompt_text},
-        # Up to 3 pages as base64 images (most resumes are 1-2 pages)
-        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{page1_b64}"}},
-        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{page2_b64}"}},
-    ]}
-]
-```
-
-PDF → JPEG conversion uses `pdf2image` (already available via the OCR pipeline).
-Fallback: if `pdf2image` fails, send text-only prompt with raw_text.
+**Error handling:**
+- One judge fails → other is sole reference for that candidate.
+- Both judges fail → `judge_status: failed`, excluded from metrics.
+- Missing PDF → skip, log warning.
 
 ---
 
-### Component 2 — Post-Run: Re-score flagged candidates
+### Component 3 — Score Comparison Engine
 
-After gap-fill completes, run targeted re-score:
+#### [NEW] `src/evaluation/score_comparator.py`
 
-```bash
-# Re-score only the patched candidates (cheap — just 12 of 721)
-python scripts/score_batch_composed.py --candidate WebDesigning_CAND_0016 --flush-cache
-# Or re-score each role that had a patch:
-python scripts/score_batch_composed.py --role WebDesigning --resume
+Pure computation module. Metrics (scorer vs judge reference — no inter-judge comparison):
+
+| # | Metric | Formula |
+|---|---|---|
+| 1 | **Schema Agreement** | All expected REQ-IDs and SQ keys present in scorer + judge outputs. Boolean per candidate. |
+| 2 | **Arithmetic Consistency** | `\|declared_total − recomputed_total\| < 0.001` — checked for scorer and each judge. |
+| 3 | **Per-Criterion Absolute Error** | `\|scorer_sq[key] − ref_sq[key]\|` for every SQ across all REQs. |
+| 4 | **Total Score Absolute Error** | `\|scorer_total − ref_total\|`. |
+| 5 | **Relative Percentage Error** | `\|scorer_total − ref_total\| / ref_total × 100`. |
+| 6 | **Deviation Direction** | `scorer_total − ref_total`. Positive = overscoring; negative = underscoring. Per-candidate. |
+| 7 | **Bias Direction** | `mean(scorer_total − ref_total)` across all candidates in the batch. |
+| 8 | **Aggregate Error Stats** | MAE, RMSE, StdDev of error, Max deviation — across the full batch. |
+
+Escalation flag if: `relative_error > 10%`, schema invalid, or parse failure.
+
+---
+
+### Component 4 — Report Generator
+
+#### [NEW] `scripts/generate_judge_eval_report.py`
+
+Reads a completed batch and writes:
+
+1. **`comparison_report.json`** — all 8 metrics, per-candidate and batch-aggregate.
+2. **`comparison_report.md`** — per-candidate table (scorer | Gemini | Minimax | reference | error | flag), aggregate stats, per-REQ divergence table, flagged list.
+3. **`flagged_for_review.json`** — candidates with `relative_error > 10%`, schema errors, or parse failures.
+
+---
+
+### Component 5 — Module Structure
+
+#### [NEW] `src/evaluation/__init__.py`
+#### [NEW] `src/evaluation/score_comparator.py`
+#### [NEW] `src/evaluation/judge_prompt_builder.py`
+
+---
+
+## Pre-requisite: Update `.env.audit`
+
+Before running, rename the three NVIDIA keys in `.env.audit` from:
+```
+NVIDIA_NIM_API_KEY_1=<val1>
+NVIDIA_NIM_API_KEY_1=<val2>
+NVIDIA_NIM_API_KEY_1=<val3>
+```
+to:
+```
+NVIDIA_NIM_API_KEY_1=<val1>
+NVIDIA_NIM_API_KEY_2=<val2>
+NVIDIA_NIM_API_KEY_3=<val3>
 ```
 
-> [!NOTE]
-> This step is manual — the gap-fill script prints the exact commands to run after completion.
-
 ---
 
-### Component 3 — Update `03_CURRENT_PROGRESS.md`
-
-| Change | Detail |
-|---|---|
-| Add row | `scripts/gap_fill_extraction.py` — gap-fill re-extraction for audit-flagged candidates → ✅ |
-| Stage 4A status | Add note: `gap_fill_extraction.py patches 12 flagged candidates` |
-
----
-
-### Component 4 — Add `RESUME-GAPFILL-001` to `15_PROMPT_LIBRARY.md`
-
-New prompt spec entry documenting the gap-fill prompt ID, purpose, inputs, outputs,
-constraints, and version history.
-
----
-
-## Full Execution Order
+## Execution Order
 
 ```
-Step 0  Verify all 12 PDFs are accessible and review_queue.md exists.
-        python scripts/gap_fill_extraction.py --dry-run
-        → Prints: candidate list, gaps, PDF path, provider to be used. No writes.
-
-Step 1  Run gap-fill (first pass):
-        python scripts/gap_fill_extraction.py
-        → Writes patched JSONs to data/processed/<Role>/<cand_id>.json
-        → Writes run_reports/gap_fill_progress.json
-
-Step 2  If interrupted, resume:
-        python scripts/gap_fill_extraction.py --resume
-
-Step 3  Verify patches:
-        python scripts/gap_fill_extraction.py --dry-run
-        → Should show no remaining gaps for completed candidates.
-
-Step 4  Rebuild embedding index (picks up new chunks from patched data):
-        python -m src.rag.build_index
-
-Step 5  Re-score patched candidates:
-        python scripts/score_batch_composed.py --role WebDesigning --resume
-        python scripts/score_batch_composed.py --role SalesManager --resume
-        python scripts/score_batch_composed.py --role BusinessAnalyst --resume
-        python scripts/score_batch_composed.py --role SrPythonDeveloper --resume
-        python scripts/score_batch_composed.py --role SQLDeveloper --resume
-
-Step 6  Regenerate run report:
-        python scripts/generate_run_report.py
+Step 1  Update .env.audit (rename NVIDIA keys to KEY_1/2/3)
+Step 2  Create data/eval/judge_eval/ skeleton
+Step 3  Create src/evaluation/ package
+Step 4  Write scripts/run_judge_eval.py
+Step 5  Write scripts/generate_judge_eval_report.py
+Step 6  Dry-run:  python scripts/run_judge_eval.py --dry-run --seed 42
+Step 7  Live run: python scripts/run_judge_eval.py --seed 42
+Step 8  Report:   python scripts/generate_judge_eval_report.py
+Step 9  Review comparison_report.md + flagged_for_review.json
 ```
 
 ---
 
 ## Verification Plan
 
-### After Step 0 — Dry Run
-- All 12 candidates listed with correct gap fields
-- PDF paths resolve for all 12
-- Provider list shows ≥1 provider from `.env.audit`
+### Automated
+- `--dry-run` emits `config.json` with correct 10% sample counts per role, both judge model names, all NVIDIA keys listed.
+- Judge output JSON validates (all REQ-IDs, all SQ keys, numeric scores in range).
+- Arithmetic consistency: `|recomputed − declared| < 0.001`.
+- `comparison_report.json` has all 8 metric categories populated.
 
-### After Step 1 — Gap Fill
-```bash
-python -c "
-import json
-from pathlib import Path
-cands = ['WebDesigning_CAND_0016','WebDesigning_CAND_0014','SalesManager_CAND_0158',
-         'BusinessAnalyst_CAND_0128','BusinessAnalyst_CAND_0132','WebDesigning_CAND_0009',
-         'SQLDeveloper_CAND_0038','SrPythonDeveloper_CAND_0038','SrPythonDeveloper_CAND_0045',
-         'SrPythonDeveloper_CAND_0062','WebDesigning_CAND_0003','SalesManager_CAND_0046']
-roles = {'WebDesigning':'WebDesigning','SalesManager':'SalesManager',
-         'BusinessAnalyst':'BusinessAnalyst','SQLDeveloper':'SQLDeveloper',
-         'SrPythonDeveloper':'SrPythonDeveloper'}
-for cid in cands:
-    role = cid.rsplit('_CAND_',1)[0]
-    p = Path(f'data/processed/{role}/{cid}.json')
-    d = json.loads(p.read_text(encoding='utf-8'))
-    cp = d['candidate_profile']
-    gaps = [k for k in ['skills','experience','education','certifications'] if not cp.get(k)]
-    status = 'STILL EMPTY' if gaps else 'FILLED'
-    print(f'{cid}: {status} {gaps if gaps else \"\"}')
-"
-```
-
----
-
-## What This Does NOT Include
-
-| Feature | Notes |
-|---|---|
-| Auto-rebuild index after gap-fill | Intentionally manual — avoids silent cascading |
-| Re-scoring all 721 candidates | Only re-score the patched roles |
-| Gap-fill for non-flagged candidates | `--all-gaps` flag available but not default |
-| Writing gap-fill output to a separate JSON | Patches the canonical processed JSON directly |
+### Manual
+- Review `comparison_report.md` after the first batch.
+- Confirm `data/scores/composed/` is unmodified.
