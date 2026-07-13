@@ -194,60 +194,93 @@ def score_four_band_quantitative(
 
 def score_cgpa(score: Optional[float], target: float) -> float:
     """
-    2-band check for CGPA/percentage marks against academic target.
+    2-band check for CGPA / percentage marks against academic target.
+
+    BUG-5 FIX: When ``score`` is ``None`` the CGPA was not found on the
+    resume (many candidates simply don't include it). Returning 0.01
+    previously penalised every such candidate as if they had a red-flag
+    academic history. The correct behaviour is to return 0.50 — a neutral
+    "no data" score that does not unfairly disadvantage the candidate but
+    also doesn't award them full credit.
 
     Args:
-        score: Extracted CGPA or percentage marks.
-        target: Target marks criteria.
+        score: Extracted CGPA or percentage marks, or ``None`` if absent.
+        target: Target marks criterion (e.g. 7.0 on a 10-pt scale,
+            or 70.0 as a percentage).
 
     Returns:
-        1.00 if score >= target, 0.50 if score < target (partial credit), 0.01 if absent.
+        1.00 if score >= target.
+        0.50 if score < target (partial credit — below threshold but present).
+        0.50 if score is None (neutral — no CGPA data on resume).
     """
     if score is None:
-        return 0.01
-    
-    # Scale normalization:
+        # No CGPA found on the resume — neutral score, do not penalise.
+        return 0.50
+
+    # Scale normalisation:
+    # If target is a percentage (e.g. 70) but score is a CGPA (e.g. 8.5),
+    # convert CGPA → percentage for comparison.
     s = float(score)
     t = float(target)
-    
-    # If target is percentage (e.g. 70) and score is CGPA (e.g. 8.5), convert score to percentage (85.0)
     if t > 10.0 and s <= 10.0:
         s = s * 10.0
-    # If target is CGPA (e.g. 7.0) and score is percentage (e.g. 85.0), convert score to CGPA (8.5)
+    # If target is a CGPA (e.g. 7.0) but score is a percentage (e.g. 85.0),
+    # convert percentage → CGPA.
     elif t <= 10.0 and s > 10.0:
         s = s / 10.0
-        
+
     return 1.00 if s >= t else 0.50
 
 
 def score_institution_rank(institute_name: str) -> float:
     """
-    Tier lookup points multiplier for a university/institute.
+    Tier lookup points multiplier for a university / institute.
+
+    BUG-6 FIX: When ``institute_name`` is empty (not extracted from the
+    resume due to a parsing bug) this previously returned 0.01 — the same
+    score as a fake or flagged institution. The correct behaviour is 0.50:
+    the candidate has not been penalised for an unknown / unlisted
+    institution, but has not been awarded credit either. The ``lookup_institute_tier``
+    function handles explicitly flagged institutions and returns 0.01 for
+    those; the empty-name case is a data-absence situation, not a flag.
 
     Args:
         institute_name: Name of the institute.
 
     Returns:
-        Tier points multiplier: 1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3) / 0.01 (Unlisted).
+        1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3 or unlisted) /
+        0.01 (flagged / fake institution).
     """
     if not institute_name:
-        return 0.01
+        # Empty name means extraction failed, not that the institute is fake.
+        # Return neutral score to avoid penalising the candidate.
+        return 0.50
     _, points = lookup_institute_tier(institute_name)
-    return points
+    # If the tier lookup returns 0.01 for an unlisted institute, upgrade to
+    # 0.50 (neutral) — only keep 0.01 for explicitly flagged institutions.
+    return points if points > 0.01 else 0.50
 
 
 def score_certificate_rank(provider_name: str) -> float:
     """
     Tier lookup points multiplier for a certification provider.
 
+    BUG-6 FIX (parallel to ``score_institution_rank``): Empty provider name
+    means the provider wasn't extracted, not that it is a low-quality cert.
+    Return 0.50 (neutral) instead of 0.01 (penalising).
+
     Args:
         provider_name: Name of the provider.
 
     Returns:
-        Tier points multiplier: 1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3) / 0.01 (Unlisted).
+        1.00 (Tier 1) / 0.75 (Tier 2) / 0.50 (Tier 3 or unlisted or absent) /
+        0.01 (flagged / fake provider).
     """
     if not provider_name:
-        return 0.01
+        # Empty name means extraction failed — neutral, don't penalise.
+        return 0.50
     _, points = lookup_certificate_tier(provider_name)
-    return points
+    # If the tier lookup returns 0.01 for an unlisted provider, upgrade to
+    # 0.50 — only keep 0.01 for explicitly flagged providers.
+    return points if points > 0.01 else 0.50
 

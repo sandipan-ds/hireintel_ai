@@ -1,0 +1,633 @@
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0001 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0001 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0001 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0001 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0002 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0003 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0003 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0003 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0003 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0003 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0004 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0005 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0006 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0006 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0006 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0006 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0007 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0008 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0010 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0011 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0012 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0012 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0012 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0012 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0012 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0013 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0014 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0014 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0014 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0014 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0014 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0015 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0016 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0016 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0016 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0016 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0016 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0017 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0018 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0019 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0019 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0019 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0020 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0021 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0022 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0023 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0023 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0023 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0023 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0023 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0024 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0025 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0026 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0029 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0030 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0030 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0030 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0030 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0031 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0032 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0033 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0033 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0033 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0033 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0033 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0034 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0035 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0036 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0037 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0038 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0038 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0038 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0038 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0038 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0039 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0040 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0041 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0042 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0042 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0042 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0042 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0042 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0043 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0044 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0045 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0045 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0045 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0045 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0045 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0046 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0047 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0048 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0049 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0050 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0051 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0051 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0051 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0051 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0052 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0053 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0053 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0053 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0053 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0053 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0054 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0055 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0056 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0056 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0056 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0056 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0056 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0057 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0057 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0057 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0057 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0057 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0058 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0059 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0060 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0060 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0060 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0061 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0061 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0061 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0061 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0061 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0062 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0062 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0062 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0062 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0062 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0063 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0064 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0065 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0066 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0066 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0067 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0068 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0068 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0068 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0068 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0069 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0070 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0071 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0071 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0071 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0071 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0071 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0072 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0073 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0074 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0075 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0076 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0076 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0077 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0077 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0078 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0079 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0079 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0079 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0079 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0079 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0080 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0080 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0080 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0080 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0081 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0082 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0083 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0083 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0083 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0083 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0084 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0084 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0084 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0084 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0084 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0085 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0086 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0087 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0088 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0089 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0089 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0089 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0089 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0089 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Expert Python & Modern Development Practices SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Expert Python & Modern Development Practices SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 SQL & Relational Databases SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Data Engineering & Pipeline Tools SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 5+ Years Building Production Python Applications SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Architecture & Technical Decision Making SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0090 Code Quality & Best Practices Leadership SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0091 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0091 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0091 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0092 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0092 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0093 Automated Testing (Unit, Integration, End-to-End) SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0094 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0094 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0094 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0095 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0095 RESTful APIs & Service Architecture SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0095 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0095 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0096 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0096 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0096 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0096 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0097 Git & Version Control SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0097 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0097 Logging, Monitoring & Observability SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0098 Web Frameworks (Django, Flask, FastAPI) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0098 Docker & Kubernetes SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0098 Asynchronous Programming & Message Queues SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0098 Senior or Lead Development Roles SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       SrPythonDeveloper_CAND_0098 Mentor Junior Developers & Technical Leadership SQ036 — no matching text found

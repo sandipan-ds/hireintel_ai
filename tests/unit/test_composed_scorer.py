@@ -228,9 +228,8 @@ def toy_index() -> VectorIndex:
     return VectorIndex(chunks, normalize=True)
 
 
-@pytest.fixture
-def toy_retriever(toy_index) -> ThresholdRetriever:
-    return ThresholdRetriever(toy_index, threshold=0.30)
+# The composed scorer tests now pass toy_index (VectorIndex) directly (DEC-035).
+# ThresholdRetriever is retained for backward compat only and not used in new tests.
 
 
 # ---------------------------------------------------------------------------
@@ -596,7 +595,7 @@ class TestComposedScorer:
 
     def test_composed_no_llm_scores_only_code_only(
         self, simple_weights, fallback_texts, python_profile, subquery_data,
-        toy_retriever,
+        toy_index,
     ):
         """When llm_caller is None, rubric part = 0 → contribution = 0 for
         REQs with rubric SQs. The total is still computable from code-only
@@ -604,7 +603,7 @@ class TestComposedScorer:
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=None,
@@ -636,7 +635,7 @@ class TestComposedScorer:
         assert all(r.rubric_llm_part == 0.0 for r in result.reqs)
 
     def test_composed_blocked_when_expected_years_missing(
-        self, simple_weights, python_profile, subquery_data, toy_retriever,
+        self, simple_weights, python_profile, subquery_data, toy_index,
         stub_sq_embedder,
     ):
         """A years-type SQ whose text has no 'years' phrase blocks the REQ."""
@@ -645,7 +644,7 @@ class TestComposedScorer:
         # no number → extract_expected_years returns None).
         subq = json.loads(json.dumps(subquery_data))
         subq["requirements"][0]["sub_queries"] = [
-            {"key": "SQ004", "text": "How many years of Python does the candidate have?", "type": "Float"},
+            {"key": "SQ004", "text": "How many years of Python relative to expected minimum?", "type": "Float"},
         ]
         # And rename the REQ to include "experience" so it's years-type.
         weights = json.loads(json.dumps(simple_weights))
@@ -653,7 +652,7 @@ class TestComposedScorer:
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
@@ -667,71 +666,53 @@ class TestComposedScorer:
 
     def test_composed_formula_subscore_eq_code_only_times_rubric(
         self, simple_weights, fallback_texts, python_profile, subquery_data,
-        toy_retriever, stub_sq_embedder, tmp_path,
+        toy_index, stub_sq_embedder, tmp_path,
     ):
         """Sub-Score = Code_only_part × Rubric_LLM_part, contribution = weight% × Sub-Score."""
-        # Use a stub LLM caller whose response produces a known normalized_score.
-        # The rubric_scorer's parse_anchored_response maps "yes" → 1.0, "high"
-        # → 0.75. So our stub returns "yes" for everything, producing
-        # normalized_score = product of all anchored floats from the rubric
-        # sub-questions = 1.0 × 1.0 × ... = 1.0.
         def stub(p):
             return "skill_presence: yes\nskill_depth: yes\nproject_relevance: yes\nyears_experience: 10+ years"
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=stub,
             role_subqueries=subquery_data,
             role_name="DataScience",
-            threshold=0.30,
             audit_flags_path=str(tmp_path / "flags.jsonl"),
         )
         req1 = result.reqs[0]
-        # REQ-001 has SQ001 (binary presence, matched Python → 1)
-        #                  SQ004 (years, 5 years vs expected 3 → min(5/3,1) = 1)
-        #                  SQ003 (rubric LLM, stub returns "yes" → anchored 1.0
-        #                         for skill rubric sub-questions → normalized_score
-        #                         ~ product ~ 1.0)
-        # code_only_part = 1 × 1 = 1.0
-        # rubric_llm_part = ~1.0
-        # sub_score = 1.0 × 1.0 = 1.0
-        # contribution = 60% × 1.0 = 60.0
         assert req1.code_only_part == 1.0
-        # The rubric part depends on the rubric_scorer's parsing of "yes" /
-        # "10+ years". We at least assert it exists and the contribution is
-        # weight_pct × code_only × rubric_llm_part.
         assert req1.rubric_llm_part is not None
         assert req1.contribution == pytest.approx(
             60.0 * (req1.rubric_llm_part / len(req1.rubric_sq_scores)), abs=1e-3,
         )
-        # Total = contribution_req1 + contribution_req2.
         assert result.total == pytest.approx(
             sum(r.contribution for r in result.reqs), abs=1e-6,
         )
 
     def test_composed_zero_retrieval_writes_flag(
-        self, simple_weights, python_profile, subquery_data, toy_retriever,
+        self, simple_weights, python_profile, subquery_data,
         stub_sq_embedder, tmp_path,
     ):
-        """When retrieve_evidence_for_req returns [], a flag is written."""
-        # The toy_index has 3 chunks. Use a HIGH threshold so retrieval
-        # returns empty for the candidate.
+        """When retrieve_evidence_for_req returns [], a flag is written.
+
+        With top-K retrieval, zero-retrieval happens when the candidate has
+        NO chunks in the index. We use an empty VectorIndex for this test.
+        """
         flags_path = str(tmp_path / "no_evidence.jsonl")
-        # Use threshold > 1.0 (impossible to clear). Per :class:`ThresholdRetriever`
-        # this returns [] for all queries.
+        # Empty index → cand_test_001 has no chunks → zero retrieval.
+        empty_index = VectorIndex([])
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=empty_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
             role_subqueries=subquery_data,
             role_name="DataScience",
-            threshold=2.0,  # impossible to reach → zero retrieval
             audit_flags_path=flags_path,
         )
         # Both REQs have rubric SQs → both blocked by zero retrieval.
@@ -742,11 +723,10 @@ class TestComposedScorer:
             assert e["candidate_id"] == "cand_test_001"
             assert e["role"] == "DataScience"
             assert "req_id" in e
-            assert e["theta"] == 2.0
         assert all(r.blocked for r in result.reqs)
 
     def test_composed_total_in_0_to_100(
-        self, simple_weights, python_profile, subquery_data, toy_retriever,
+        self, simple_weights, python_profile, subquery_data, toy_index,
         stub_sq_embedder, tmp_path,
     ):
         """The total is bounded in [0, 100] because recruiter weights sum
@@ -754,7 +734,7 @@ class TestComposedScorer:
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
@@ -766,7 +746,7 @@ class TestComposedScorer:
         assert 0.0 <= result.total <= 100.0
 
     def test_composed_empty_profile_total_is_zero(
-        self, simple_weights, subquery_data, toy_retriever, empty_profile,
+        self, simple_weights, subquery_data, toy_index, empty_profile,
         stub_sq_embedder, tmp_path,
     ):
         """Empty profile → all code-only SQs miss → contribution = 0 for
@@ -774,7 +754,7 @@ class TestComposedScorer:
         result = evaluate_candidate_composed(
             profile=empty_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
@@ -787,14 +767,14 @@ class TestComposedScorer:
         assert result.total == 0.0
 
     def test_composed_to_dict_contains_blocked_count(
-        self, simple_weights, python_profile, subquery_data, toy_retriever,
+        self, simple_weights, python_profile, subquery_data, toy_index,
         stub_sq_embedder, tmp_path,
     ):
         """to_dict serializes the full evaluation including blocked counters."""
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
@@ -810,7 +790,7 @@ class TestComposedScorer:
         assert isinstance(d["reqs"], list)
 
     def test_composed_passes_threshold_through_to_retrieval(
-        self, simple_weights, python_profile, subquery_data, toy_retriever,
+        self, simple_weights, python_profile, subquery_data, toy_index,
         stub_sq_embedder, tmp_path,
     ):
         """``threshold`` argument flows through to ``retrieve_evidence_for_req``
@@ -820,7 +800,7 @@ class TestComposedScorer:
         result = evaluate_candidate_composed(
             profile=python_profile,
             weights=simple_weights,
-            retriever=toy_retriever,
+            retriever=toy_index,
             structured_profile=None,
             sq_embedder=stub_sq_embedder,
             llm_caller=lambda p: "yes",
@@ -852,3 +832,4 @@ class TestComposedScorer:
                 role_subqueries=None,
                 role_name="NoSuchRole",
             )
+

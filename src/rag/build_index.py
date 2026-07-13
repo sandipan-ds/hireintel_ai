@@ -1,49 +1,48 @@
-"""Build the canonical resume embedding index (DEC-019 + DEC-007).
+"""Build the canonical resume embedding index (DEC-035, DocumentAware + BGE-base-en-v1.5).
 
 This is the production build script for the RAG pipeline's vector store. It
 walks every parsed-resume JSON under ``data/processed/<role>/*.json``, chunks
-each profile with the active :class:`src.rag.recursive_chunker.RecursiveChunker`
-(DEC-019), embeds every chunk with ``sentence-transformers/all-MiniLM-L6-v2``
-(DEC-007), and writes two artifacts to ``data/embeddings/recursive_chunking/``:
+each profile with the active :class:`src.rag.document_aware_chunker.DocumentAwareChunker`
+(DEC-035, reverted from RecursiveChunker per BUG-RC-001), embeds every chunk with
+``BAAI/bge-base-en-v1.5`` (768-dim, retrieval-trained), and writes two artifacts
+to ``data/embeddings/document_aware/``:
 
 * ``index.npz``  — the :class:`src.rag.retriever.VectorIndex` binary
   (``vectors`` + ``chunk_ids`` + ``texts`` + ``metadatas``).
 * ``chunks.jsonl`` — one line per chunk, the human-readable companion to the
   ``.npz`` so audits and debugger sessions can read chunk text without numpy.
 
-The previous index built under the Document-Aware chunker is preserved by
-moving it to ``data/embeddings/document_aware_backup/`` before overwriting.
-Per DEC-022 the legacy chunks also persist at
-``data/document_aware_chunking/`` for one release as a migration aid.
+Why DocumentAware chunker (DEC-035):
+    RecursiveChunker produced 1000-char overlapping flat-text blobs with no section
+    metadata, causing 56–89% binary SQ zero rates (BUG-RC-001). DocumentAwareChunker
+    reads the already-normalized structured profile JSON and creates one chunk per
+    experience entry, one for skills, one for education, one for certifications, each
+    carrying ``section_type`` metadata for section-aware retrieval.
 
 Usage::
 
     python -m src.rag.build_index                # defaults
     python -m src.rag.build_index --dry-run       # report counts, do not write
     python -m src.rag.build_index --batch-size 64
-    python -m src.rag.build_index --chunk-size 400 --chunk-overlap 120
 
 Side effects:
-    * Overwrites ``data/embeddings/recursive_chunking/index.npz`` and
-      ``data/embeddings/recursive_chunking/chunks.jsonl`` (subfolder introduced
-      2026-07-06 to separate the active Recursive artifacts from the legacy
-      Document-Aware index backup at ``data/embeddings/document_aware_backup/``).
-    * Creates ``data/embeddings/recursive_chunking/`` and
-      ``data/embeddings/document_aware_backup/`` (both as needed).
-    * Loads the MiniLM-L6-v2 model (first run downloads ~90 MB to the HF cache).
+    * Writes ``data/embeddings/document_aware/index.npz`` and
+      ``data/embeddings/document_aware/chunks.jsonl``.
+    * Creates ``data/embeddings/document_aware/`` as needed.
+    * Downloads ``BAAI/bge-base-en-v1.5`` (~440 MB) to HF cache on first run.
 
 Inputs:
     * Parsed resume JSONs in ``data/processed/<role>/*.json`` produced by
       :func:`src.resume_parsing.parser.parse_resume`.
 
 Outputs:
-    * ``data/embeddings/recursive_chunking/index.npz`` — numpy
+    * ``data/embeddings/document_aware/index.npz`` — numpy
       ``np.savez_compressed`` archive with fields ``vectors`` (float32
-      ``(N, 384)``), ``chunk_ids`` (object array of str), ``texts`` (object
+      ``(N, 768)``), ``chunk_ids`` (object array of str), ``texts`` (object
       array of str), ``metadatas`` (object array of dict).
-    * ``data/embeddings/recursive_chunking/chunks.jsonl`` — one JSON line per
+    * ``data/embeddings/document_aware/chunks.jsonl`` — one JSON line per
       chunk with keys ``chunk_id``, ``candidate_id``, ``role_bucket``,
-      ``source_file``, ``section``, ``text``, ``metadata``.
+      ``source_file``, ``section_type``, ``text``, ``metadata``.
 
 Raises:
     FileNotFoundError:
@@ -75,10 +74,9 @@ from src.rag.retriever import (
     IndexedChunk,
     VectorIndex,
 )
-from src.rag.recursive_chunker import (
-    RECURSIVE_CHUNK_OVERLAP,
-    RECURSIVE_CHUNK_SIZE,
-    RecursiveChunker,
+from src.rag.document_aware_chunker import (
+    DocumentAwareChunker,
+    chunk_profile,
 )
 
 
@@ -164,23 +162,159 @@ def discover_profiles(root: str = PROCESSED_ROOT) -> List[Tuple[str, Path]]:
 # ---------------------------------------------------------------------------
 
 
-def chunk_profile(
+def _adapt_profile_for_chunker(profile: Dict[str, Any]) -> Dict[str, Any]:
+    """Adapt the current production profile schema to the format expected by
+    :func:`chunk_profile` in ``document_aware_chunker``.
+
+    The production profile written by ``src.resume_parsing.parser`` has the
+    shape::
+
+        {
+            "candidate_id": "...",
+            "candidate_profile": {
+                "summary": "<str>",
+                "experience": [{"job_title": ..., "company": ..., "start_date": ...,
+                                "end_date": ..., "responsibilities": [...],
+                                "tools_and_skills": [...], ...}, ...],
+                "education": [...],
+                "skills": [{"name_canonical": ..., ...}, ...],
+                "projects": [...],
+                "certifications": [...],
+            },
+            "source_file": "...",
+        }
+
+    The document_aware_chunker's ``chunk_profile`` function expects the FLAT
+    shape (legacy parser output)::
+
+        {
+            "candidate_id": "...",
+            "summary": {"value": "<str>"},
+            "experience": {"entries": [{"title": ..., "company": ...,
+                                        "dates": "start_date - end_date",
+                                        "details": [...], ...}]},
+            "education": {"entries": [{"description": ...}]},
+            "skills": ["skill_name", ...],
+            "projects": ["project text", ...],
+            "certifications": ["cert text", ...],
+            "source_file": "...",
+        }
+
+    This function performs the translation so the chunker receives the format
+    it was designed for, without modifying the chunker or the parser.
+    """
+    cp = profile.get("candidate_profile") or {}
+
+    # ---- Summary ---
+    summary_raw = cp.get("summary") or ""
+    summary = {"value": summary_raw} if isinstance(summary_raw, str) else summary_raw
+
+    # ---- Experience ---
+    exp_raw = cp.get("experience") or []
+    if isinstance(exp_raw, list):
+        exp_entries = []
+        for e in exp_raw:
+            start = e.get("start_date") or ""
+            end = e.get("end_date") or ("Present" if e.get("is_current") else "")
+            dates = f"{start} - {end}".strip(" -") if (start or end) else ""
+            details = []
+            if isinstance(e.get("responsibilities"), list):
+                details.extend(e["responsibilities"])
+            if isinstance(e.get("tools_and_skills"), list):
+                details.extend(e["tools_and_skills"])
+            exp_entries.append({
+                "title": e.get("job_title") or e.get("title") or "",
+                "company": e.get("company") or "",
+                "dates": dates,
+                "location": e.get("location") or "",
+                "details": details,
+            })
+        experience = {"entries": exp_entries}
+    else:
+        experience = exp_raw  # already in legacy format
+
+    # ---- Education ---
+    edu_raw = cp.get("education") or []
+    if isinstance(edu_raw, list):
+        edu_entries = []
+        for e in edu_raw:
+            if isinstance(e, dict):
+                parts = [
+                    e.get("degree") or "",
+                    e.get("field_of_study") or e.get("major") or "",
+                    e.get("institution") or "",
+                ]
+                description = " | ".join(p for p in parts if p)
+                edu_entries.append({"description": description})
+            elif isinstance(e, str):
+                edu_entries.append({"description": e})
+        education = {"entries": edu_entries}
+    else:
+        education = edu_raw
+
+    # ---- Skills ---
+    skills_raw = cp.get("skills") or []
+    if skills_raw and isinstance(skills_raw[0], dict):
+        # New schema: list of {"name_canonical": ..., ...}
+        skills = [
+            s.get("name_canonical") or s.get("name_raw") or ""
+            for s in skills_raw
+            if s
+        ]
+    else:
+        skills = skills_raw  # already list of strings
+
+    # ---- Projects ---
+    projects_raw = cp.get("projects") or []
+    if projects_raw and isinstance(projects_raw[0], dict):
+        def _project_to_text(p: Dict[str, Any]) -> str:
+            title = p.get("title") or p.get("name") or ""
+            desc = p.get("description") or ""
+            if isinstance(desc, list):
+                desc = " ".join(str(x) for x in desc if x)
+            return f"{title} {desc}".strip()
+        projects = [_project_to_text(p) for p in projects_raw if p]
+    else:
+        projects = projects_raw  # already list of strings
+
+    # ---- Certifications ---
+    certs_raw = cp.get("certifications") or []
+    if certs_raw and isinstance(certs_raw[0], dict):
+        certifications = [
+            c.get("name") or c.get("title") or str(c)
+            for c in certs_raw
+        ]
+    else:
+        certifications = certs_raw
+
+    return {
+        "candidate_id": profile.get("candidate_id") or "cand_unknown",
+        "source_file": profile.get("source_file") or cp.get("source_file") or "",
+        "summary": summary,
+        "experience": experience,
+        "education": education,
+        "skills": skills,
+        "projects": projects,
+        "certifications": certifications,
+        "languages": cp.get("languages") or [],
+    }
+
+
+def _local_chunk_profile(
     profile: Dict[str, Any],
     role_bucket: str,
-    chunker: RecursiveChunker,
 ) -> List[Any]:
-    """Chunk a single parsed profile using the active Recursive chunker.
+    """Chunk a single parsed profile using the active DocumentAware chunker.
 
-    Thin wrapper around :meth:`RecursiveChunker.chunk_profile` so the build
-    script can swap chunkers without touching the loop.
+    Adapts the current production profile schema to the format expected by
+    :func:`chunk_profile` from ``document_aware_chunker``, then delegates.
 
     Args:
         profile:
-            Parsed resume dict (must contain ``candidate_id``).
+            Parsed resume dict (must contain ``candidate_id`` at top level
+            or inside ``candidate_profile``).
         role_bucket:
             Role folder the resume was filed under. Stored on every chunk.
-        chunker:
-            The chunker instance to use.
 
     Returns:
         List of :class:`ChunkRecord` objects.
@@ -189,12 +323,20 @@ def chunk_profile(
         ValueError:
             If ``profile`` is missing ``candidate_id``.
     """
-    if not profile.get("candidate_id"):
+    candidate_id = (
+        profile.get("candidate_id")
+        or (profile.get("candidate_profile") or {}).get("candidate_id")
+    )
+    if not candidate_id:
         raise ValueError(
             f"Parsed profile missing 'candidate_id' (source_file="
             f"{profile.get('source_file', '<unknown>')!r}); cannot index."
         )
-    return chunker.chunk_profile(profile, role_bucket=role_bucket)
+    # Translate from production schema → chunker legacy schema.
+    adapted = _adapt_profile_for_chunker(profile)
+    # chunk_profile is imported from document_aware_chunker at module top.
+    return chunk_profile(adapted, role_bucket=role_bucket)
+
 
 
 # ---------------------------------------------------------------------------
@@ -226,8 +368,8 @@ def embed_texts(
 ) -> np.ndarray:
     """Embed a list of chunk texts into an ``(N, D)`` float32 matrix.
 
-    The embedder already L2-normalizes MiniLM-L6-v2 output by default, so
-    the resulting rows are ready for cosine similarity via dot product.
+    BGE-base-en-v1.5 with ``normalize_embeddings=True`` returns unit vectors
+    ready for cosine similarity via dot product.
 
     Args:
         texts:
@@ -241,10 +383,12 @@ def embed_texts(
             CPU-only laptop; raise to 64-128 on GPU.
 
     Returns:
-        ``np.ndarray`` of shape ``(len(texts), 384)`` with dtype float32.
+        ``np.ndarray`` of shape ``(len(texts), D)`` with dtype float32,
+        where D=768 for ``BAAI/bge-base-en-v1.5``.
     """
+    dim = 768  # BGE-base-en-v1.5
     if not texts:
-        return np.zeros((0, 384), dtype=np.float32)
+        return np.zeros((0, dim), dtype=np.float32)
     vecs = embedder.encode(
         texts,
         batch_size=batch_size,
@@ -387,14 +531,17 @@ def build(
     processed_root: str = PROCESSED_ROOT,
     index_path: str = DEFAULT_INDEX_PATH,
     chunks_path: str = DEFAULT_CHUNKS_PATH,
-    chunk_size: int = RECURSIVE_CHUNK_SIZE,
-    chunk_overlap: int = RECURSIVE_CHUNK_OVERLAP,
     model_name: str = DEFAULT_EMBEDDING_MODEL,
     batch_size: int = 32,
     dry_run: bool = False,
     backup: bool = True,
 ) -> Dict[str, Any]:
-    """Run the full chunk → embed → persist pipeline.
+    """Run the full chunk → embed → persist pipeline (DEC-035).
+
+    Uses DocumentAwareChunker (one chunk per section entry) + BGE-base-en-v1.5
+    (768-dim, retrieval-trained). Chunk-size and overlap parameters have been
+    removed — DocumentAware chunking is not configurable by character count;
+    it is driven by the parsed resume's section structure.
 
     Args:
         processed_root:
@@ -403,13 +550,8 @@ def build(
             Output ``.npz`` path.
         chunks_path:
             Output ``.jsonl`` path.
-        chunk_size:
-            RecursiveChunker chunk_size (chars). Must be in [200, 500].
-        chunk_overlap:
-            RecursiveChunker chunk_overlap (chars). Must be in
-            [100, floor(0.60 * chunk_size)].
         model_name:
-            Sentence-Transformers model id (DEC-007 = MiniLM-L6-v2).
+            Sentence-Transformers model id (DEC-035 = bge-base-en-v1.5).
         batch_size:
             Encode batch size.
         dry_run:
@@ -417,7 +559,7 @@ def build(
             sanity-check counts and bounds without paying the embedding cost.
         backup:
             If True (default), move any pre-existing ``index.npz`` /
-            ``chunks.jsonl`` into ``data/embeddings/document_aware_backup/``.
+            ``chunks.jsonl`` into a backup sub-folder before overwriting.
 
     Returns:
         Dict with build stats: ``profiles``, ``chunks``, ``dim``,
@@ -430,15 +572,7 @@ def build(
         "discovered %d parsed profiles across %d roles: %s",
         len(profiles), len(roles), ", ".join(roles),
     )
-
-    chunker = RecursiveChunker(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-    )
-    logger.info(
-        "chunker=Recursive chunk_size=%d chunk_overlap=%d",
-        chunk_size, chunk_overlap,
-    )
+    logger.info("chunker=DocumentAwareChunker (DEC-035) — one chunk per section entry")
 
     # ------------------------------------------------------------------
     # Phase 1: chunk every profile. Counts per role are printed as we go so
@@ -459,7 +593,7 @@ def build(
             skipped += 1
             continue
         try:
-            chunks = chunk_profile(profile, role_bucket=role, chunker=chunker)
+            chunks = _local_chunk_profile(profile, role_bucket=role)
         except ValueError as e:
             logger.warning("skip profile %s: %s", jpath, e)
             skipped += 1
@@ -546,7 +680,7 @@ def build(
 def _parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
         prog="python -m src.rag.build_index",
-        description="Build the canonical resume embedding index (RecursiveChunker + MiniLM-L6-v2).",
+        description="Build the canonical resume embedding index (DocumentAwareChunker + BGE-base-en-v1.5, DEC-035).",
     )
     p.add_argument(
         "--processed-root", default=PROCESSED_ROOT,
@@ -559,14 +693,6 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument(
         "--chunks-path", default=DEFAULT_CHUNKS_PATH,
         help=f"Output .jsonl path (default: {DEFAULT_CHUNKS_PATH}).",
-    )
-    p.add_argument(
-        "--chunk-size", type=int, default=RECURSIVE_CHUNK_SIZE,
-        help=f"RecursiveChunker chunk_size in [200, 500] (default: {RECURSIVE_CHUNK_SIZE}).",
-    )
-    p.add_argument(
-        "--chunk-overlap", type=int, default=RECURSIVE_CHUNK_OVERLAP,
-        help=f"RecursiveChunker chunk_overlap (default: {RECURSIVE_CHUNK_OVERLAP}).",
     )
     p.add_argument(
         "--model-name", default=DEFAULT_EMBEDDING_MODEL,
@@ -604,8 +730,6 @@ def main() -> None:
         processed_root=args.processed_root,
         index_path=args.index_path,
         chunks_path=args.chunks_path,
-        chunk_size=args.chunk_size,
-        chunk_overlap=args.chunk_overlap,
         model_name=args.model_name,
         batch_size=args.batch_size,
         dry_run=args.dry_run,

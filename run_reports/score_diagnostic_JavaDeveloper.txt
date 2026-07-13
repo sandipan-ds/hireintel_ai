@@ -1,0 +1,679 @@
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Enterprise Software or Product Engineering SQ035 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0001 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0002 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0002 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0002 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0002 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0002 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0003 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0004 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0005 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0006 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0007 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0008 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0009 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0010 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0011 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0012 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0013 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0014 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0015 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0016 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0017 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0018 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0018 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0018 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0018 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0018 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0019 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0020 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0021 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0022 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0023 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0024 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0025 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0025 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0025 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0025 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0026 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0028 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0029 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0030 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0031 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0032 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0033 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0034 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0035 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0036 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0037 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0040 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Enterprise Software or Product Engineering SQ035 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0041 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0042 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0043 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0044 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0045 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0045 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0045 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0045 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0045 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0046 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0047 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0047 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0047 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0048 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0049 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0050 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0050 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0050 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0050 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0050 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0051 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0052 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0053 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0054 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0055 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0056 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0057 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0058 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0059 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0060 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 Code Quality, Maintainability & Clean Code SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0061 3+ Years Java Backend Development SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0062 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Relational Databases & SQL SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0063 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0064 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0065 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0066 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0066 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Unit & Integration Testing Practices SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Code Quality & Testing Leadership SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0067 Troubleshooting & Performance Optimization SQ047 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0068 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0069 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0069 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0069 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0070 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Java & Object-Oriented Design Principles SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 REST APIs & JSON/XML Handling SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 REST APIs & JSON/XML Handling SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Docker & Container Orchestration (Kubernetes) SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 CI/CD Pipelines & DevOps Practices SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Cross-Functional Collaboration & Architecture Decisions SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0071 Design & Implement APIs & Microservices SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Spring Boot, Spring MVC & Web Frameworks SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Git & Version Control SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Cloud Platforms (AWS, Azure, GCP) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Docker & Container Orchestration (Kubernetes) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Messaging Systems (Kafka, RabbitMQ) & Event-Driven Architecture SQ026 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 NoSQL, Caching & Performance Tuning SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       JavaDeveloper_CAND_0072 Cross-Functional Collaboration & Architecture Decisions SQ037 — no matching text found

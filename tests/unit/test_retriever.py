@@ -133,7 +133,7 @@ def test_default_threshold_matches_owner_spec_2026_07_06():
     """
     r = ThresholdRetriever(VectorIndex())
     assert r.threshold == DEFAULT_THRESHOLD
-    assert DEFAULT_THRESHOLD == 0.25
+    assert DEFAULT_THRESHOLD == 0.10  # retired by DEC-035; was 0.25
     assert r.max_chunks_per_query == DEFAULT_MAX_CHUNKS_PER_QUERY
     assert DEFAULT_MAX_CHUNKS_PER_QUERY == 20
 

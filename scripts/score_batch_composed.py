@@ -278,16 +278,18 @@ def iter_candidate_files(role: str, limit: int | None = None) -> list[Path]:
 
 def score_role(
     role: str,
-    retriever: ThresholdRetriever,
+    retriever: VectorIndex,
     cache: SubQueryCache,
     llm_caller: Any | None,
     role_subqueries: dict[str, Any] | None = None,
+    top_k: int = 10,
     threshold: float = DEFAULT_THRESHOLD,
     max_chunks_per_query: int | None = None,
     limit: int | None = None,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     progress: dict | None = None,
     resume: bool = False,
+    n_workers: int = 10,
 ) -> dict[str, Any]:
     """Score every candidate in ``role`` and write the ranking JSON.
 
@@ -314,10 +316,7 @@ def score_role(
     if role_subqueries is None:
         role_subqueries = get_all_role_subqueries()
 
-    chunker_id = (
-        f"Recursive(chunk_size={getattr(retriever, 'chunk_size', 500)}, "
-        f"chunk_overlap={getattr(retriever, 'chunk_overlap', 100)})"
-    )
+    chunker_id = f"DocumentAware(BGE-base-en-v1.5, top_k={top_k})"
 
     candidate_files = iter_candidate_files(role, limit=limit)
     if not candidate_files:
@@ -379,10 +378,12 @@ def score_role(
             llm_caller=llm_caller,
             role_subqueries=role_subqueries,
             role_name=role,
+            top_k=top_k,
             threshold=threshold,
             max_chunks_per_query=max_chunks_per_query,
             chunker_id=chunker_id,
             sq_embedder=cached_embedder,
+            n_workers=n_workers,
         )
         
         evaluations.append(eval_result)
@@ -560,14 +561,18 @@ def main(argv: list[str] = None) -> int:
                     "(Track 7.4 / DEC-031).",
     )
     parser.add_argument(
-        "--role", default=None,
-        help="Specific role to run (default: all 8). Use a role name as it appears "
-             "in data/job_descriptions/, e.g. 'DataScience'.",
+        "--role", nargs="+", default=None, metavar="ROLE",
+        help="One or more specific roles to run (default: all roles). Use role "
+             "names as they appear in data/job_descriptions/, e.g. "
+             "--role DataScience or --role SalesManager SQLDeveloper.",
+    )
+    parser.add_argument(
+        "--top-k", type=int, default=10,
+        help="Number of top-K chunks to return per sub-query (DEC-035 top-K retrieval). Default: 10.",
     )
     parser.add_argument(
         "--theta", type=float, default=DEFAULT_THRESHOLD,
-        help=f"Cosine threshold for retrieval (default: {DEFAULT_THRESHOLD}; "
-             f"Optuna bounds [0.10, 0.50]).",
+        help=f"Cosine threshold (legacy, kept for backward compat). Default: {DEFAULT_THRESHOLD}.",
     )
     parser.add_argument(
         "--max-chunks", type=int, default=None,
@@ -593,8 +598,29 @@ def main(argv: list[str] = None) -> int:
              "batch run is then cache-hot from the start.",
     )
     parser.add_argument(
+        "--clean-output", action="store_true",
+        help="Delete all existing score files in the output directory before "
+             "scoring begins.  Gives a guaranteed clean slate so stale files "
+             "from a previous broken run cannot pollute the results.  "
+             "Ignored when --resume is also passed.",
+    )
+    parser.add_argument(
+        "--clean-role", nargs="+", metavar="ROLE",
+        help="Delete score files for specific role(s) before scoring begins, "
+             "leaving all other roles untouched.  Accepts one or more role "
+             "names (e.g. --clean-role JavaDeveloper ReactDeveloper).  "
+             "Ignored when --resume is also passed.",
+    )
+    parser.add_argument(
         "--resume", action="store_true",
         help="Resume a previously interrupted scoring run using progress ledger.",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=10,
+        help="Number of REQs to evaluate in parallel per candidate "
+             "(uses ThreadPoolExecutor). Each REQ is independent so "
+             "thread-safety is guaranteed. Default 5. Set to 1 to force "
+             "sequential execution (debug / rate-limit mode).",
     )
     parser.add_argument(
         "--verbose", "-v", action="store_true",
@@ -634,7 +660,7 @@ def main(argv: list[str] = None) -> int:
     # 1. Resolve roles.
     # ---------------------------------------------------------------
     if args.role:
-        roles = [args.role]
+        roles = args.role  # already a list from nargs="+"
     else:
         roles = discover_roles()
     if not roles:
@@ -651,26 +677,21 @@ def main(argv: list[str] = None) -> int:
     )
 
     # ---------------------------------------------------------------
-    # 3. Load the retriever from the on-disk Recursive index.
+    # 3. Load the DocumentAware embedding index (DEC-035).
     # ---------------------------------------------------------------
     if not Path(DEFAULT_INDEX_PATH).exists():
         logger.error(
-            "Recursive embedding index not found at %s — run "
+            "DocumentAware embedding index not found at %s — run "
             "`python -m src.rag.build_index` first.",
             DEFAULT_INDEX_PATH,
         )
         return 3
-    logger.info("Loading Recursive embedding index from %s ...", DEFAULT_INDEX_PATH)
+    logger.info("Loading DocumentAware index from %s ...", DEFAULT_INDEX_PATH)
     index_load_start = time.time()
     index = VectorIndex.load_npz(DEFAULT_INDEX_PATH)
-    retriever = ThresholdRetriever(
-        index=index,
-        threshold=float(args.theta),
-        max_chunks_per_query=int(args.max_chunks) if args.max_chunks else DEFAULT_MAX_CHUNKS_PER_QUERY,
-    )
     logger.info(
-        "Index loaded in %.2fs (%d chunks, theta=%.3f).",
-        time.time() - index_load_start, len(index.chunk_ids), retriever.threshold,
+        "Index loaded in %.2fs (%d chunks).",
+        time.time() - index_load_start, len(index.chunk_ids),
     )
 
     # ---------------------------------------------------------------
@@ -726,6 +747,55 @@ def main(argv: list[str] = None) -> int:
                 logger.warning("Failed to delete old progress ledger: %s", exc)
         progress = {"completed_roles": [], "scored_candidates": {}}
 
+        # --clean-output: wipe all existing score files.
+        if getattr(args, "clean_output", False):
+            import shutil
+            clean_dir = Path(args.output_dir)
+            if clean_dir.exists():
+                logger.info(
+                    "--clean-output: removing all existing score files under %s",
+                    clean_dir,
+                )
+                for child in clean_dir.iterdir():
+                    try:
+                        if child.is_dir():
+                            shutil.rmtree(child)
+                        else:
+                            child.unlink()
+                    except Exception as exc:
+                        logger.warning("Failed to remove %s: %s", child, exc)
+                logger.info("--clean-output: output directory cleared.")
+
+        # --clean-role: delete score files for specific roles only.
+        clean_roles = getattr(args, "clean_role", None) or []
+        if clean_roles:
+            import shutil
+            out_base = Path(args.output_dir)
+            for role_name in clean_roles:
+                role_dir = out_base / role_name
+                if role_dir.exists():
+                    try:
+                        shutil.rmtree(role_dir)
+                        logger.info("--clean-role: deleted score dir %s", role_dir)
+                    except Exception as exc:
+                        logger.warning("--clean-role: failed to remove %s: %s", role_dir, exc)
+                else:
+                    logger.info("--clean-role: %s not found, nothing to delete.", role_dir)
+
+                # Always delete the stale ranked file — unconditionally, regardless
+                # of whether the score subdirectory existed. This prevents the
+                # evaluator from reading stale ranked data after a flush.
+                ranked_file = out_base / f"{role_name}_ranked.json"
+                if ranked_file.exists():
+                    try:
+                        ranked_file.unlink()
+                        logger.info("--clean-role: deleted stale ranked file %s", ranked_file)
+                    except Exception as exc:
+                        logger.warning("--clean-role: failed to remove ranked file %s: %s", ranked_file, exc)
+                else:
+                    logger.info("--clean-role: no ranked file found for %s (already clean).", role_name)
+
+
     for role in roles:
         # Check if role is already completed in ledger
         if args.resume and is_role_complete(progress, role):
@@ -756,16 +826,18 @@ def main(argv: list[str] = None) -> int:
         with run or _NullCtx():
             summary = score_role(
                 role=role,
-                retriever=retriever,
+                retriever=index,
                 cache=cache,
                 llm_caller=llm_caller,
                 role_subqueries=role_subqueries,
+                top_k=args.top_k,
                 threshold=float(args.theta),
                 max_chunks_per_query=int(args.max_chunks) if args.max_chunks else None,
                 limit=args.limit,
                 output_dir=output_dir,
                 progress=progress,
                 resume=args.resume,
+                n_workers=args.workers,
             )
             if run is not None:
                 _log_run_to_mlflow(

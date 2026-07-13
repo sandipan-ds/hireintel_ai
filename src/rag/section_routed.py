@@ -271,9 +271,12 @@ def classify_requirement_type(
                                             "chinese", "japanese")):
             return "language"
 
-        # Certification keywords.
+        # Certification keywords. Use specific "certified" variants for cloud
+        # providers so that plain skill REQs like "Cloud Infrastructure (AWS,
+        # Azure, GCP)" are NOT mis-routed to the code-only cert-lookup path.
         if any(kw in name_lower for kw in ("certification", "certificate",
-                                            "certified", "aws ", "azure", "gcp",
+                                            "certified", "aws certified",
+                                            "azure certified", "gcp certified",
                                             "pmp", "cissp", "cfa", "cpa",
                                             "licensed", "license")):
             return "certification"

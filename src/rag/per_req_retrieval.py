@@ -1,9 +1,15 @@
-"""Per-REQ retrieval — embed the REQ's sub-query SET, retrieve chunks per sub-query, union them.
+"""Per-REQ retrieval — embed the REQ's sub-query SET, retrieve top-K chunks per sub-query, union them.
 
-This is the regular-RAG retrieval path per ``docs/WORKING_LOGIC.md`` "Threshold-Based
-Retrieval (Regular RAG)" and DEC-017/018/019. It replaces the legacy
-``src.services.subquery_retrieval`` module, which is retained as a migration
-aid (DEC-017) but should not be called by new code.
+This is the top-K regular-RAG retrieval path per ``docs/14_MODEL_REGISTRY.md`` and DEC-035.
+Replaces the threshold-based retrieval introduced by DEC-017/018 (which caused 50–89% binary
+SQ zero rates due to weak cosine alignment — see BUG-RC-001 in 24_TROUBLESHOOTING.md).
+
+Key change (DEC-035): top-K retrieval ALWAYS returns the best K chunks, regardless of their
+cosine score. This guarantees the LLM always receives evidence to reason over. The LLM then
+determines relevance, not a cosine floor.
+
+Embedding model: ``BAAI/bge-base-en-v1.5`` (768-dim, retrieval-trained on MS-MARCO/BEIR).
+Replaces ``sentence-transformers/all-MiniLM-L6-v2`` (384-dim, STS-trained).
 
 What this module does, end-to-end, for one (candidate, REQ) pair:
 
@@ -12,17 +18,16 @@ What this module does, end-to-end, for one (candidate, REQ) pair:
        :func:`src.services.subquery_parser.parse_subquery_document`.
 
     2. Embed each sub-query with the same embedding model that produced the
-       chunk index (``sentence-transformers/all-MiniLM-L6-v2``, 384-dim).
-       Embeddings are L2-normalized.
+       chunk index (``BAAI/bge-base-en-v1.5``, 768-dim). Embeddings are L2-normalized.
 
     3. For each sub-query vector, compute cosine similarity against the
        candidate's chunk vectors in the :class:`src.rag.retriever.VectorIndex`
-       (filtered by ``candidate_id``). Return every chunk with
-       ``cosine >= threshold``, sorted by similarity descending.
+       (filtered by ``candidate_id``). Return the top-K highest-cosine chunks
+       regardless of cosine floor.
 
     4. Union the per-sub-query hit sets, deduplicating by ``chunk_id`` and
-       keeping the highest similarity seen across the sub-query set. Hard-cap
-       the union at ``max_chunks_per_query`` (safety net; warn on cap-hit).
+       keeping the highest similarity seen across the sub-query set. Cap the
+       union at ``max_chunks_per_req`` (default: ``DEFAULT_TOP_K``).
 
     5. Return the unioned chunks as :class:`src.rag.retriever.ScoredChunk`
        objects, ready to feed the rubric-bound LLM scorer as the evidence set
@@ -30,15 +35,7 @@ What this module does, end-to-end, for one (candidate, REQ) pair:
 
 A single sub-query does NOT evaluate a sub-score on its own — the whole SET is
 the evidence-gathering query for the REQ. The rubric scores the sub-questions
-against the unioned evidence, never per-sub-query (the LLM sees the whole
-evidence set at once and answers all anchored sub-questions in one call).
-
-Important: a zero-retrieval result (no chunks meet ``threshold`` for any
-sub-query in the set) is NOT silently scored as 0 — the caller is expected to
-raise a "no evidence" flag for human review per the
-``reports/audit/no_evidence_flags.jsonl`` contract (Track 2 of M0.5a). This
-module returns an empty list in that case; the caller decides what to do with
-it.
+against the unioned evidence, never per-sub-query.
 """
 
 from __future__ import annotations
@@ -48,19 +45,22 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.rag.retriever import (
     DEFAULT_MAX_CHUNKS_PER_QUERY,
-    DEFAULT_THRESHOLD,
+    DEFAULT_TOP_K,
     ScoredChunk,
-    ThresholdRetriever,
     VectorIndex,
 )
 
 logger = logging.getLogger(__name__)
 
-# Embedding model is the same one used to build the chunk index
-# (``data/embeddings/index.npz``). The retriever itself does not embed;
-# embedding is the caller's responsibility so this module doesn't pull in the
-# (heavy) sentence-transformers dependency at import time.
-DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# Embedding model used to build the chunk index (DEC-035).
+# Must match the model used in ``src/rag/build_index.py``.
+# ``BAAI/bge-base-en-v1.5``: 768-dim, retrieval-trained on MS-MARCO/BEIR.
+# Replaces ``sentence-transformers/all-MiniLM-L6-v2`` (384-dim, STS-trained).
+DEFAULT_EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
+
+#: Default top-K per REQ. Each REQ retrieves its top-K chunks from the
+#: candidate's DocumentAware index. Callers may override per-call.
+DEFAULT_TOP_K: int = DEFAULT_TOP_K
 
 
 # ---------------------------------------------------------------------------
@@ -134,105 +134,74 @@ def embed_sub_queries(
 
 
 def retrieve_evidence_for_req(
-    retriever: ThresholdRetriever,
+    retriever: VectorIndex,
     candidate_id: str,
     sub_queries: Sequence[SubQuery],
-    threshold: Optional[float] = None,
-    max_chunks_per_query: Optional[int] = None,
+    top_k: Optional[int] = None,
+    max_chunks_per_req: Optional[int] = None,
     sub_query_vectors: Optional[Any] = None,
 ) -> List[ScoredChunk]:
-    """Retrieve unioned evidence chunks for one (candidate, REQ) pair.
+    """Retrieve unioned top-K evidence chunks for one (candidate, REQ) pair.
 
     Embeds each sub-query in ``sub_queries`` (or uses pre-supplied
-    ``sub_query_vectors``), retrieves chunks per sub-query via the
-    :class:`ThresholdRetriever` (which already handles ``candidate_id``
-    filtering, the threshold filter, the cap, and the cap-hit warning),
-    then unions the per-sub-query hits — deduped by ``chunk_id``, keeping the
+    ``sub_query_vectors``), retrieves the top-K highest-cosine chunks
+    per sub-query from the candidate's DocumentAware chunk index, then
+    unions the per-sub-query hits — deduped by ``chunk_id``, keeping the
     highest similarity seen across the sub-query set, re-sorted desc.
 
-    The result is the evidence set for the REQ — the chunks the rubric-bound
-    LLM scorer reads to score this REQ's anchored sub-questions.
+    Unlike the retired threshold-based retrieval (DEC-017/018), this function
+    ALWAYS returns chunks — the top-K regardless of cosine score. The LLM
+    then determines relevance from the content. This eliminates retrieval
+    misses caused by cosine scores sitting uniformly below theta (BUG-RC-001).
 
     Args:
         retriever:
-            A :class:`ThresholdRetriever` wrapping a :class:`VectorIndex`
-            built over the candidate corpus. Must have been built with the
-            same embedding model as ``sub_query_vectors`` (or as
-            :func:`embed_sub_queries` will use).
+            A :class:`VectorIndex` built over the candidate corpus with the
+            DocumentAware chunker and ``BAAI/bge-base-en-v1.5`` embeddings.
         candidate_id:
-            Restrict retrieval to this candidate's chunks. Per DEC-018, the
-            ``candidate_id`` filter is what makes this "per-candidate
-            scoring" rather than pool search.
+            Restrict retrieval to this candidate's chunks.
         sub_queries:
             ``[(key, text), ...]`` for this REQ. The whole SET is the query;
-            a single sub-query does NOT eval a sub-score alone. Parsed from
-            ``<Role>_SubQuery.md`` by
-            :func:`src.services.subquery_parser.parse_subquery_document`.
-        threshold:
-            Cosine floor. ``None`` → use the retriever's configured threshold.
-            Must be in ``[THRESHOLD_LOWER, THRESHOLD_UPPER]`` (default
-            ``[0.10, 0.50]``); Optuna tunes this.
-        max_chunks_per_query:
-            Optional hard cap on the UNIONED result size. ``None`` → use the
-            retriever's configured cap. The cap is a SAFETY net, not the
-            primary control — the primary control is ``threshold``.
+            a single sub-query does NOT eval a sub-score alone.
+        top_k:
+            Number of top-K chunks to return per sub-query. ``None`` → uses
+            ``DEFAULT_TOP_K`` (10). Unioned across the sub-query set.
+        max_chunks_per_req:
+            Optional hard cap on the UNIONED result size. ``None`` → uses
+            ``DEFAULT_MAX_CHUNKS_PER_QUERY`` (20).
         sub_query_vectors:
             Optional pre-computed sub-query embeddings as a
-            ``(n_sub_queries, dim)`` float32 array. Pass this when you're
-            re-running the same REQ against many candidates (the embeddings
-            don't change between candidates) — saves recomputation. ``None``
-            → the function embeds the sub-queries itself via
-            :func:`embed_sub_queries`.
+            ``(n_sub_queries, dim)`` float32 array. Pass this when re-running
+            the same REQ across many candidates to avoid recomputation.
 
     Returns:
         A list of :class:`ScoredChunk` objects, deduped by ``chunk_id``,
-        sorted by cosine descending, capped at ``max_chunks_per_query``.
-
-        Empty list means no chunks met ``threshold`` for ANY sub-query in the
-        set — the caller should raise a "no evidence" flag for human review
-        per the ``reports/audit/no_evidence_flags.jsonl`` contract; the score
-        for this REQ is 0 pending that review.
+        sorted by cosine descending, capped at ``max_chunks_per_req``.
+        Never empty — returns the best available chunks for the candidate.
     """
     if not sub_queries:
         return []
 
-    # Resolve threshold / cap. If the caller overrides either, we use a
-    # lightweight copy of the retriever with the override applied — the
-    # retriever's ``retrieve_scored`` reads its own ``threshold`` and
-    # ``max_chunks_per_query`` attributes, so we cannot just thread the
-    # override through as a per-call arg.
-    if threshold is not None:
-        from copy import copy
-        retriever = copy(retriever)
-        retriever.threshold = float(threshold)
-    if max_chunks_per_query is not None:
-        from copy import copy as _copy
-        if threshold is None:
-            retriever = _copy(retriever)
-        retriever.max_chunks_per_query = int(max_chunks_per_query)
-
-    eff_threshold = retriever.threshold
-    eff_cap = retriever.max_chunks_per_query
+    eff_top_k = int(top_k) if top_k is not None else DEFAULT_TOP_K
+    eff_cap = int(max_chunks_per_req) if max_chunks_per_req is not None else DEFAULT_MAX_CHUNKS_PER_QUERY
 
     # Embed the sub-queries (or use caller-supplied vectors).
     if sub_query_vectors is None:
         sq_vectors = embed_sub_queries(sub_queries)
     else:
         import numpy as np
-
         sq_vectors = np.asarray(sub_query_vectors, dtype=np.float32)
 
     if sq_vectors.shape[0] == 0:
         return []
 
     # ------------------------------------------------------------------
-    # Per-sub-query retrieval + union-with-dedup-by-chunk_id.
+    # Per-sub-query top-K retrieval + union-with-dedup-by-chunk_id (DEC-035).
     #
-    # We call the retriever once per sub-query (each call applies the
-    # candidate_id filter + threshold filter + its own cap). We then merge:
-    # for each chunk_id, keep the highest cosine seen across the sub-query
-    # set, and remember WHICH sub-query produced that highest score (for
-    # auditability). Re-sort the union desc and apply the final cap.
+    # For each sub-query, retrieve the top-K highest-cosine chunks for this
+    # candidate regardless of absolute cosine value. Union across the
+    # sub-query set: keep the highest cosine seen per chunk_id. Re-sort desc
+    # and apply the final cap.
     # ------------------------------------------------------------------
 
     # Best-known (cosine, source sub-query key) per chunk_id across the set.
@@ -240,33 +209,33 @@ def retrieve_evidence_for_req(
 
     for sq_idx, (sq_key, _sq_text) in enumerate(sub_queries):
         q_vec = sq_vectors[sq_idx]
-        # The retriever already filters to candidate_id and threshold >= theta
-        # and applies its own cap. We pass it the single vector.
-        hits = retriever.retrieve_scored(q_vec, candidate_id=candidate_id)
+        # retrieve_top_k returns the top-K chunks for this candidate, sorted
+        # by cosine descending. No threshold floor is applied.
+        hits = retriever.retrieve_top_k(q_vec, candidate_id=candidate_id, k=eff_top_k)
         for hit in hits:
             cur = best.get(hit.chunk_id)
             if cur is None or hit.cosine > cur[0]:
                 best[hit.chunk_id] = (hit.cosine, sq_key, hit)
 
     if not best:
-        # Zero-retrieval result. Caller raises the no-evidence flag.
+        # Should not happen with top-K retrieval (always returns chunks if candidate
+        # has any indexed chunks). If it does, return empty for the caller to handle.
+        logger.warning(
+            "per-REQ top-K retrieval returned no chunks "
+            "(candidate=%s, n_sub_queries=%d) — candidate may not be indexed.",
+            candidate_id, len(sub_queries),
+        )
         return []
 
     # Sort unioned hits by cosine desc.
     union_sorted = sorted(best.values(), key=lambda t: t[0], reverse=True)
 
-    # Final cap on the UNION (the per-sub-query caps already applied inside
-    # the retriever, but the union can exceed ``eff_cap`` — that's the
-    # cap we warn on here).
+    # Final cap on the UNION.
     if len(union_sorted) > eff_cap:
-        logger.warning(
-            "per-REQ cap hit: unioned %d chunks (candidate=%s, threshold=%.3f, "
-            "n_sub_queries=%d) capped to %d",
-            len(union_sorted),
-            candidate_id,
-            eff_threshold,
-            len(sub_queries),
-            eff_cap,
+        logger.debug(
+            "per-REQ cap applied: unioned %d chunks capped to %d "
+            "(candidate=%s, n_sub_queries=%d)",
+            len(union_sorted), eff_cap, candidate_id, len(sub_queries),
         )
         union_sorted = union_sorted[:eff_cap]
 
@@ -276,6 +245,7 @@ def retrieve_evidence_for_req(
 __all__ = [
     "SubQuery",
     "DEFAULT_EMBEDDING_MODEL",
+    "DEFAULT_TOP_K",
     "embed_sub_queries",
     "retrieve_evidence_for_req",
 ]

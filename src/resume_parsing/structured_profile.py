@@ -70,6 +70,75 @@ _CERT_KEYWORDS = [
     "certified", "certification", "certificate",
 ]
 
+# ---------------------------------------------------------------------------
+# BUG-3 FIX: Degree synonym / alias map.
+#
+# Requirement strings use natural language like "Bachelor's Degree" or
+# "Advanced Degree". Actual resume degree strings use abbreviations like
+# "BTech", "B.E.", "B.Sc", "PhD", "Ph.D". Without an alias map the
+# token-boundary matcher fails because "bachelor" never appears in "BTech".
+#
+# Each key is a canonical tier label; values are the surface forms that
+# should be treated as equivalent. Matching is case-insensitive and
+# uses simple substring containment after normalising dots and spaces.
+# ---------------------------------------------------------------------------
+
+DEGREE_ALIASES: Dict[str, List[str]] = {
+    "bachelor": [
+        "b.tech", "btech", "b.e.", "be", "b.e",
+        "b.sc", "bsc", "b.sc.",
+        "b.a", "ba", "b.a.",
+        "bs", "b.s", "b.s.",
+        "bca", "bba", "b.com", "bcom", "b.com.",
+        "bachelor", "bachelors", "bachelor's",
+        "undergraduate", "ug", "honours",
+        "associate", "diploma", "mca",   # MCA = 3-yr PG but often listed as bachelor-level
+    ],
+    "master": [
+        "m.tech", "mtech", "m.e.", "me", "m.e",
+        "m.sc", "msc", "m.sc.",
+        "m.a", "ma", "m.a.",
+        "ms", "m.s", "m.s.",
+        "mba", "m.b.a", "m.b.a.",
+        "mca",   # MCA is sometimes 2-yr post-grad
+        "master", "masters", "master's",
+        "postgraduate", "post-graduate", "pg",
+        "m.phil", "mphil",
+        # Requirement-language aliases — "Advanced Degree" in JDs means MS or above.
+        "advanced degree", "advanced", "graduate degree",
+    ],
+    "phd": [
+        "phd", "ph.d", "ph.d.",
+        "doctorate", "doctoral",
+        "d.phil", "d.sc", "dsc",
+        "doctor of philosophy",
+    ],
+}
+
+
+def degree_canonical_tier(degree_text: str) -> str:
+    """Map a raw degree string to one of 'bachelor', 'master', 'phd', or ''.
+
+    Used by the binary degree gate and the alias-aware degree matcher so that
+    a requirement like 'Bachelor's Degree' correctly matches a resume that
+    says 'B.Tech' or 'B.E.'.
+
+    Args:
+        degree_text: Raw degree string from the resume or requirement.
+
+    Returns:
+        Canonical tier string ('bachelor', 'master', 'phd') or empty string
+        when no alias matches.
+    """
+    # Normalise: lowercase, collapse dots/spaces to a single form.
+    normalised = re.sub(r"[.\s]+", "", degree_text.lower())
+    for tier, aliases in DEGREE_ALIASES.items():
+        for alias in aliases:
+            alias_norm = re.sub(r"[.\s]+", "", alias.lower())
+            if alias_norm in normalised or normalised in alias_norm:
+                return tier
+    return ""
+
 
 # ---------------------------------------------------------------------------
 # Data classes for the structured profile.
@@ -210,9 +279,22 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
     produces a ``StructuredCandidateProfile`` record that code-only scoring
     can use without any LLM or retrieval.
 
+    BUG-1 FIX: The scoring pipeline passes the **root** candidate JSON dict
+    (schema version, candidate_id, candidate_profile, raw, evidence_chunks…).
+    Education, certifications and experience live inside ``candidate_profile``,
+    not at the root. Raw text lives inside ``raw``. This function now unpacks
+    those sub-dicts before reading any fields.
+
+    BUG-2 FIX: The normalised ``candidate_profile.education`` field is a
+    **flat list** of dicts with keys ``degree``, ``specialization``,
+    ``institution_normalized`` / ``institution_raw``, ``end_date`` — NOT the
+    legacy parser format ``{"entries": [{"description": ...}]}``. Both
+    formats are handled; the normalised format takes priority when the entry
+    already carries a ``degree`` key.
+
     Args:
-        profile: A parsed resume dict with ``experience``, ``education``,
-            ``certifications``, ``skills``, and ``candidate_id`` fields.
+        profile: Root candidate JSON dict or legacy parser profile dict.
+            Both layouts are accepted.
 
     Returns:
         ``StructuredCandidateProfile`` with extracted degrees, certifications,
@@ -221,13 +303,83 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
     candidate_id = profile.get("candidate_id", "")
     structured = StructuredCandidateProfile(candidate_id=candidate_id)
 
+    # ------------------------------------------------------------------
+    # Unpack nested sub-dicts.
+    #
+    # Production layout (normalised candidate JSON):
+    #   profile["candidate_profile"] — education, experience, certifications
+    #   profile["raw"]               — raw_text, sections_detected, ocr_text
+    #
+    # Legacy layout (raw parser output):
+    #   profile["education"]         — {"raw": ..., "entries": [...], "count": N}
+    #   profile["experience"]        — same
+    #   profile["certifications"]    — list of strings
+    #
+    # We try the production layout first; fall back to the root dict so
+    # that unit tests written against the legacy format still pass.
+    # ------------------------------------------------------------------
+    cand_profile: Dict[str, Any] = profile.get("candidate_profile") or {}
+    if not isinstance(cand_profile, dict):
+        cand_profile = {}
+    # When candidate_profile is empty the caller probably passed the raw
+    # parser dict directly (e.g. unit tests); use the root dict as fallback.
+    profile_data: Dict[str, Any] = cand_profile if cand_profile else profile
+
     # ---- Degrees and institutions from education entries ----
-    education = profile.get("education") or {}
-    for entry in education.get("entries") or []:
-        text = entry.get("description") or ""
-        degree_entry = _parse_degree_entry(text)
-        if degree_entry.degree:
-            structured.degrees.append(degree_entry)
+    #
+    # Normalised format: candidate_profile["education"] is a flat list, e.g.
+    #   [{"degree": "PhD", "specialization": "CS",
+    #     "institution_normalized": "MIT", "end_date": "2020"}]
+    #
+    # Legacy format: education is a dict, e.g.
+    #   {"raw": "...", "entries": [{"description": "PhD in CS..."}], "count": 1}
+    education_raw = profile_data.get("education") or {}
+
+    if isinstance(education_raw, list):
+        # --- Normalised layout (production): iterate the list directly ---
+        education_entries = education_raw
+        for entry in education_entries:
+            if not isinstance(entry, dict):
+                continue
+            if entry.get("degree"):
+                # Entry already has structured fields — use them directly.
+                degree_entry = DegreeEntry(
+                    degree=entry.get("degree") or "",
+                    field=entry.get("specialization") or "",
+                    institution=(
+                        entry.get("institution_normalized")
+                        or entry.get("institution_raw")
+                        or ""
+                    ),
+                    year=entry.get("end_date") or "",
+                )
+            else:
+                # Fallback: try to parse a freeform description string.
+                text = entry.get("description") or ""
+                degree_entry = _parse_degree_entry(text)
+            if degree_entry.degree:
+                structured.degrees.append(degree_entry)
+    else:
+        # --- Legacy layout (parser output): entries list inside the dict ---
+        for entry in (education_raw.get("entries") or []):
+            if not isinstance(entry, dict):
+                continue
+            if entry.get("degree"):
+                degree_entry = DegreeEntry(
+                    degree=entry.get("degree") or "",
+                    field=entry.get("specialization") or "",
+                    institution=(
+                        entry.get("institution_normalized")
+                        or entry.get("institution_raw")
+                        or ""
+                    ),
+                    year=entry.get("end_date") or "",
+                )
+            else:
+                text = entry.get("description") or ""
+                degree_entry = _parse_degree_entry(text)
+            if degree_entry.degree:
+                structured.degrees.append(degree_entry)
 
     # ---- Check for flagged institutes (fake/unknown universities) ----
     from src.scoring.tier_lookup import is_institute_flagged
@@ -237,11 +389,31 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
             structured.has_flagged_institute = True
 
     # ---- Certifications from the certifications list ----
-    for cert_text in profile.get("certifications") or []:
-        cert_entry = _parse_certification_entry(str(cert_text))
-        structured.certifications.append(cert_entry)
+    #
+    # Normalised format: candidate_profile["certifications"] is a flat list
+    # of strings or dicts (e.g. [{"name": "AWS Certified", "issuer": "Amazon"}]).
+    # Legacy format: profile["certifications"] is a list of strings.
+    certs_raw = profile_data.get("certifications") or []
+    if not isinstance(certs_raw, list):
+        certs_raw = []
+    for cert_item in certs_raw:
+        if isinstance(cert_item, dict):
+            # Normalised dict entry — extract name and issuer directly.
+            cert_name = cert_item.get("name") or cert_item.get("title") or ""
+            cert_provider = cert_item.get("issuer") or cert_item.get("provider") or ""
+            if cert_name:
+                structured.certifications.append(
+                    CertificationEntry(name=cert_name, provider=cert_provider)
+                )
+        else:
+            cert_entry = _parse_certification_entry(str(cert_item))
+            structured.certifications.append(cert_entry)
 
     # ---- Employment history from experience entries ----
+    #
+    # Normalised format: candidate_profile["experience"] is a flat list of
+    # dicts with keys like company, title, dates, details.
+    # Legacy format: profile["experience"] is a dict with an "entries" key.
     # Track 7.2 / DEC-031: single-year date strings ("2020" alone) are
     # now inferred to mean "the candidate worked here during 2020" and
     # receive 12 months of credit from ``parse_temporal_context``. Apply
@@ -262,8 +434,14 @@ def extract_structured_profile(profile: Dict[str, Any]) -> StructuredCandidatePr
         "projects", "project", "skills", "skill",
         "languages", "language", "academic", "summary",
     }
-    experience = profile.get("experience") or {}
-    for entry in experience.get("entries") or []:
+    experience_raw = profile_data.get("experience") or {}
+    if isinstance(experience_raw, list):
+        # Normalised layout: flat list of job-entry dicts.
+        experience_entries = experience_raw
+    else:
+        # Legacy layout: dict with an "entries" list inside.
+        experience_entries = experience_raw.get("entries") or []
+    for entry in experience_entries:
         dates_str = entry.get("dates") or ""
         temporal_ctx = parse_temporal_context(dates_str)
         inferred_full_year = bool(temporal_ctx.get("inferred_full_year"))

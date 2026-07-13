@@ -1,0 +1,219 @@
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0001 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0001 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0001 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0002 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0003 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0003 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0004 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0004 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0005 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0005 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0006 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0006 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0006 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0006 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0006 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0007 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0007 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0008 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0009 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0009 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Production Database Support & Troubleshooting SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0011 Performance Analysis & Optimization SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0012 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0013 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0013 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0013 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0013 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0013 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0014 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0014 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0015 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0015 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0015 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0015 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Data Analysis & Reporting SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0016 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0017 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0018 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0018 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0019 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0019 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0019 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0019 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0019 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0020 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0020 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0020 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0020 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0020 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0021 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0021 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0021 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0021 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0022 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0022 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0024 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0025 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0025 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0025 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0026 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0027 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0027 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0027 3+ Years SQL Development or Database Work SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0028 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0028 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0029 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0029 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0030 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0030 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0031 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0031 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0032 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0032 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0033 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0033 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0033 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0034 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0035 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0036 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0036 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0036 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0037 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0037 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0038 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0039 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0039 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0039 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0039 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0040 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0041 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0041 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0042 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0043 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0043 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0044 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0044 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0044 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0045 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0045 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0046 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0047 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0047 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0047 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0047 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0048 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0048 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0049 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0049 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0050 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0050 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0051 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0051 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0052 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0052 Relational Database Platform Proficiency SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0052 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0053 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0053 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0053 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0054 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0055 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0055 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0055 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0055 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0055 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0056 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0056 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0057 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0058 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0058 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0059 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0060 3+ Years SQL Development or Database Work SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0061 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0061 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0061 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0061 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0061 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0062 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0062 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0062 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0063 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0063 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0063 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0063 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0063 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0064 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0065 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0065 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0065 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0065 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0066 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0067 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0067 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0068 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0068 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0068 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0069 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0071 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0071 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0071 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0071 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0071 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0072 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0072 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0073 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0073 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0073 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0074 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0074 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0074 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0074 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Data Analysis & Reporting SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Production Database Support & Troubleshooting SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0075 Performance Analysis & Optimization SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0076 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0076 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0076 3+ Years SQL Development or Database Work SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0077 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0078 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0078 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0078 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0078 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0079 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0079 3+ Years SQL Development or Database Work SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0080 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0080 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Advanced SQL & Query Optimization SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Database Design & Normalization SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Stored Procedures, Views & Indexing SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Stored Procedures, Views & Indexing SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Data Analysis & Reporting SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Data Quality & Documentation SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Scripting Languages (Python, Shell) SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Data Governance, Security & Compliance SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 3+ Years SQL Development or Database Work SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Production Database Support & Troubleshooting SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0081 Performance Analysis & Optimization SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       SQLDeveloper_CAND_0082 Scripting Languages (Python, Shell) SQ021 — no matching text found

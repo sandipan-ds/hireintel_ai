@@ -18,16 +18,20 @@ All model changes must be documented here before implementation, and significant
 | Primary LLM (production upgrade) | GPT-4 | Proposed | Resume parsing support, JD extraction support, summaries, comparisons, explanations |
 | Fallback LLM (production upgrade) | Claude 3 | Proposed | Long-context fallback for large resumes and document-heavy comparison tasks |
 | Private / Local LLM | Llama 3 | Proposed | Privacy-first deployment option where candidate data cannot leave controlled infrastructure |
-| **Embedding Model** | **`sentence-transformers/all-MiniLM-L6-v2`** | **Active** | **Chunk and JD-bullet embeddings; 384-dim, CPU-runnable, ~80 MB, no API key** |
-| Alternative Embedding Model | BGE-M3 | Future | Multilingual upgrade path; CPU-runnable but larger |
+| **Embedding Model** | **`BAAI/bge-base-en-v1.5`** | **Active (2026-07-13, DEC-035)** | **Chunk and sub-query embeddings; 768-dim, retrieval-trained on MS-MARCO/BEIR, CPU-runnable, no API key. Replaces `all-MiniLM-L6-v2` (384-dim, STS-trained) which had weak alignment between formal sub-query phrasing and informal resume text (BUG-RC-001).** |
+| Alternative Embedding Model | `BAAI/bge-large-en-v1.5` | Future | Larger 1024-dim variant of active BGE model for higher precision if needed |
+| Multilingual Embedding | BGE-M3 | Future | Multilingual upgrade path; CPU-runnable but larger |
+| Legacy Embedding Model | `sentence-transformers/all-MiniLM-L6-v2` | **Retired (2026-07-13, DEC-035)** | Retired — STS-trained, 384-dim; poor sub-query→passage alignment (BUG-RC-001) |
 | Cloud Embedding Option | OpenAI `text-embedding-3-small` | Future | Highest quality but per-token API cost; data egress concern |
 | Reranker | None yet | Future | Optional cross-encoder reranker for top-K precision boost (pool-level search only) |
-| **Chunking Strategy** | **Recursive (`chunk_size=1000`, `chunk_overlap=500`)** | **Active (default-config, refined 2026-07-07)** | **Replaces Document-Aware chunking under DEC-019. LangChain-free `recursive_split_text` with separator hierarchy `["\n\n", "\n", ". ", " "]`. Both `chunk_size` and `chunk_overlap` are Optuna hyperparameters (DEC-021). Owner-refined Optuna bounds (2026-07-07): `chunk_size ∈ [500, 1000]`, `chunk_overlap ∈ [floor(0.50 * chunk_size), floor(0.60 * chunk_size)]` (overlap is 50-60% of chunk_size). Widened from prior `chunk_size=500`, `chunk_overlap=100` to reduce date/skill split incidents across chunks and improve rubric-LLM correlation of skill mentions with role durations. Bounds enforced at construction; exported as `CHUNK_SIZE_LOWER`/`CHUNK_SIZE_UPPER`/`CHUNK_OVERLAP_MIN_FRACTION`/`CHUNK_OVERLAP_MAX_FRACTION`/`min_overlap_for`/`max_overlap_for` in `src.rag.recursive_chunker`. Implementation in `src/rag/recursive_chunker.py`.** |
+| **Chunking Strategy** | **DocumentAware (`src/rag/document_aware_chunker.py`)** | **Active (2026-07-13, DEC-035)** | **Reverted from RecursiveChunker (DEC-019) after BUG-RC-001. Reads the already-parsed structured profile JSON (not raw resume text) — one chunk per experience entry, one for skills, one for education, one for certifications. Each chunk carries `section_type` metadata for section-aware retrieval. Header variation ("Work History" vs "Employment History") is irrelevant because parser.py normalises all headers before chunking. Implementation in `src/rag/document_aware_chunker.py`.** |
+| **Retired Chunking Strategy** | **RecursiveChunker (`chunk_size=1000`, `chunk_overlap=500`)** | **Retired (2026-07-13, DEC-035)** | **Was active under DEC-019. Produced overlapping flat-text blobs with no section structure, causing 56–89% binary SQ zero rates (BUG-RC-001). Retained at `src/rag/recursive_chunker.py` for reference.** |
 | **Header Normalization** | **Synonym lookup table + fallback classification (7 canonical sections)** | **Active** | **Maps heterogeneous resume headers to canonical section labels at parse time; still required by the structured profile (degrees/certs/total experience). No longer the retrieval routing mechanism (DEC-019).** |
 | **Vector Storage** | **In-memory numpy (`data/embeddings/index.npz`)** | **Active** | **Trivial to load; switchable to FAISS / Chroma / Qdrant without API changes** |
 | Planned Vector Database | FAISS / Chroma / Qdrant | Future | When scale exceeds single-machine memory or we need hosted multi-user |
-| **Retrieval Mode** | **Threshold-based cosine (default `θ = 0.25`, `max_chunks_per_query = 20`)** | **Active (default-config, refined 2026-07-07)** | **Returns all chunks with cosine ≥ θ, sorted desc, capped at `max_chunks_per_query`; WARN log on cap-hit. Replaces Section-Routed (DEC-012) and Sub-Query Similarity (DEC-015) per DEC-017/018. θ is an Optuna hyperparameter. Owner-specified Optuna bounds (2026-07-06, retained 2026-07-07): `θ ∈ [0.10, 0.50]`. Bounds enforced at construction; exported as `THRESHOLD_LOWER`/`THRESHOLD_UPPER` in `src.rag.retriever`. The shipped default was lowered from `θ = 0.30` to `θ = 0.25` on 2026-07-07 to surface more date-bearing chunks per REQ during smoke testing (mitigates the failure mode where the date line landed in a chunk that did not pass a higher θ). Combined with the larger `chunk_size=1000` and 50% overlap, this drastically reduces incidents where the rubric LLM sees a skill mention without its corresponding date context. The Optuna-promoted "Active" config is still pending M0.5d — the shipped default is data-ready, not the recommended value. Implementation in `src/rag/retriever.py::ThresholdRetriever`.** |
-| **Per-Candidate Evidence Retrieval** | **Threshold-based cosine over Recursive chunks** | **Active (2026-07-05)** | **Replaces Section-Routed as the per-candidate retrieval path; scoring engine still consumes the retrieved chunks for the rubric-bound LLM judge.** |
+| **Retrieval Mode** | **Top-K cosine (default `K=10 per REQ`)** | **Active (2026-07-13, DEC-035)** | **Returns the top-K highest-cosine DocumentAware chunks for each REQ, guaranteeing evidence is always retrieved. Replaces threshold-based retrieval (DEC-017/018) which caused retrieval misses when cosine scores sat uniformly below θ=0.25 (BUG-RC-001). Implementation in `src/rag/per_req_retrieval.py`.** |
+| **Retired Retrieval Mode** | **Threshold-based cosine (`θ = 0.25`, `max_chunks_per_query = 20`)** | **Retired (2026-07-13, DEC-035)** | **Was active under DEC-017/018. Threshold tuned by Optuna (DEC-021) — all HPO scripts deleted along with this mode.** |
+| **Per-Candidate Evidence Retrieval** | **Top-K cosine over DocumentAware chunks** | **Active (2026-07-13, DEC-035)** | **Each REQ retrieves its top-K chunks from the candidate's DocumentAware index; scoring engine consumes retrieved chunks for the rubric-bound LLM judge.** |
 | **Cross-Candidate Pool Retrieval** | **Threshold-based cosine over Recursive chunks** | **Active (2026-07-05)** | **Single retrieval strategy now covers per-candidate + pool + chat (DEC-017).** |
 | **Keyword Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
 | **Semantic Scoring Strategy** | **Deprecated — see `graded_scorer`** | **Legacy** | **Superseded by the single deterministic scorer below** |
@@ -51,25 +55,22 @@ All model changes must be documented here before implementation, and significant
 
 | Parameter | Value | Source |
 | --- | --- | --- |
-| Active chunker | `RecursiveChunker` | `src/rag/chunker.py` (DEC-019) |
-| `chunk_size` | 500 chars (Optuna hyperparameter) | `src/rag/chunker.RECURSIVE_CHUNK_SIZE` |
-| `chunk_overlap` | 50 chars (Optuna hyperparameter) | `src/rag/chunker.RECURSIVE_CHUNK_OVERLAP` |
-| Separator hierarchy | `\n\n` → `\n` → `. ` → ` ` | `RecursiveCharacterTextSplitter` default |
-| Legacy chunker | `DocumentAwareChunker` (renamed; retained for one release) | `src/rag/chunker.py` |
-| Chunk ID format | `{candidate_id}__{chunk_index}` | e.g. `cand_xxx__14` |
-| Required metadata | `chunk_id`, `candidate_id`, `text`, `char_span`, `embedding_index` | `src/rag/chunker.py` |
-| Optional metadata | `section_type` (soft tag for the structured profile) | `src/rag/chunker.py` |
+| Active chunker | `DocumentAwareChunker` | `src/rag/document_aware_chunker.py` (DEC-035, 2026-07-13) |
+| Chunking input | Structured profile JSON (parsed, header-normalised) — NOT raw resume text | `src/resume_parsing/parser.py` normalises headers before chunking |
+| Chunk granularity | One chunk per experience entry; one for all skills; one for education; one for certifications | `document_aware_chunker.chunk_profile()` |
+| Required metadata | `chunk_id`, `candidate_id`, `text`, `section_type`, `embedding_index` | `src/rag/document_aware_chunker.ChunkRecord` |
+| Chunk ID format | `{candidate_id}__{chunk_index}` | e.g. `BusinessAnalyst_CAND_0001__3` |
+| Retired chunker | `RecursiveChunker` (chunk_size=1000, overlap=500) | `src/rag/recursive_chunker.py` — retained for reference only |
 
 ## Retrieval Configuration
 
 | Parameter | Value | Source |
 | --- | --- | --- |
-| Retrieval mode | `threshold` | `src/rag/retriever.py` (DEC-018) |
-| `threshold θ` | 0.25 (Optuna hyperparameter; bounds `[0.10, 0.50]` per owner spec 2026-07-06; default lowered from 0.30 → 0.25 on 2026-07-07) | `src/rag/retriever.DEFAULT_THRESHOLD` |
-| `max_chunks_per_query` | 20 (safety cap) | `src/rag/retriever.MAX_CHUNKS_PER_QUERY` |
-| Similarity metric | cosine | `src/rag/retriever` |
-| Cap-hit warning | logged at WARN when > 20 chunks meet θ | `src/rag/retriever` |
-| Fallback response (no chunks ≥ θ) | `"Information not found in candidate documents."` | prompt construction in `src/rag/retriever` |
+| Retrieval mode | `top_k` | `src/rag/per_req_retrieval.py` (DEC-035, 2026-07-13) |
+| `top_k` per REQ | 10 (default; no threshold floor) | `src/rag/per_req_retrieval.DEFAULT_TOP_K` |
+| Similarity metric | cosine | `src/rag/per_req_retrieval` |
+| Embedding model dim | 768 (BGE-base) — index rebuilt from DocumentAware chunks | `src/rag/build_index.py` |
+| Retired: `threshold θ` | 0.25 — removed (DEC-035) | Was `src/rag/retriever.DEFAULT_THRESHOLD` |
 
 ## Storage Layout (added 2026-07-05, DEC-022, refined by DEC-023)
 

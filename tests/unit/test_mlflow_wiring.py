@@ -29,6 +29,10 @@ from typing import Any
 
 import pytest
 
+# Skip the entire module if mlflow is not installed (not required for DocumentAware
+# chunking pipeline; MLflow HPO tracking is out of scope per DEC-035).
+pytest.importorskip("mlflow", reason="mlflow not installed — skipping tracking tests")
+
 # Import the wiring module fresh each time so ``_available`` reflects the
 # current ``mlflow`` importability state (tests monkeypatch it).
 import src.services.mlflow_wiring as wiring

@@ -146,14 +146,14 @@ The implementation how-to is in `07_SPECIAL_GUIDE_PDF_RESUME_TO_JSON.md`.
 
 | Component | Status |
 |---|---|
-| `RecursiveChunker` — `chunk_size=1000`, `chunk_overlap=500` | ✅ `src/rag/recursive_chunker.py` |
-| `ThresholdRetriever` — cosine >= theta, default theta=0.25 | ✅ `src/rag/retriever.py` |
-| Per-REQ retrieval — embeds SubQueries, unions + dedupes chunks | ✅ `src/rag/per_req_retrieval.py` |
+| `DocumentAwareChunker` — section-based (skills, experience, etc.) chunking | ✅ `src/rag/document_aware_chunker.py` |
+| `VectorIndex` top-K retrieval — default top_k=10, no threshold | ✅ `src/rag/retriever.py` |
+| Per-REQ retrieval — embeds SubQueries, retrieves top-K per SQ, unions | ✅ `src/rag/per_req_retrieval.py` |
 | Subquery embedding cache | ✅ `src/rag/subquery_cache.py` |
-| Embedding model: `all-MiniLM-L6-v2`, 384-dim | ✅ `src/rag/build_index.py` |
+| Embedding model: `BAAI/bge-base-en-v1.5`, 768-dim | ✅ `src/rag/build_index.py` |
 | Zero-evidence audit log | ✅ `src/audit/no_evidence_flags.py` |
 
-> The embedding index was successfully rebuilt on the schema-compliant nested candidate profile outputs on **2026-07-12** (4,870 chunks generated and indexed in `data/embeddings/recursive_chunking/`, resolving the 19 candidates previously missing due to empty education chunking).
+> The embedding index was rebuilt using the `DocumentAwareChunker` and `BAAI/bge-base-en-v1.5` (768-dim) retrieval model on **2026-07-13** (3,844 chunks generated and indexed in `data/embeddings/document_aware/`).
 
 ---
 
@@ -205,20 +205,11 @@ After the JSON Quality Audit (Stage 4B) identified 12 candidates with missing fi
 
 ## Stage 4D — RAG Parameter Sweep & Stability Evaluation
 
-**Status: ✅ Complete**
+**Status: ⬜ Retired (DEC-035)**
 
-Implements uniform grid sweep parameter evaluation for RAG chunking and retrieval parameters to verify rank stability and shortlist robustness per `18_EVALUATION.md`.
+Optuna hyperparameter tuning and threshold-based sweeps are retired due to the pivot from cosine thresholding to top-K retrieval (`top_k=10`). 
 
-| Component | Status |
-|---|---|
-| Locked baseline hyperparameter configuration (`data/eval/baseline_config.json`) | ✅ |
-| Determinism check validation (`scripts/run_determinism_check.py`) | ✅ Passed (100% byte-identical) |
-| Grid sweep runner CLI (`scripts/run_grid_sweep.py`) with 45 configurations across all 8 roles | ✅ |
-| In-memory candidate-level VectorIndex caching for sub-second trial execution | ✅ |
-| Extended rank stability analyzer with `baseline_centric` mode (`src/reporting/rank_stability.py`) | ✅ |
-| Grid search stability report generator (`scripts/generate_grid_stability_report.py`) | ✅ |
-| Role-level summaries and cross-role consolidated stability report | ✅ `reports/grid_sweep/grid_sweep_20260712/` |
-| Pass/Review/Fail bands and role classifications updated in `docs/18_EVALUATION.md` | ✅ |
+Grid sweep, rank stability metrics, and parameter sweeps conducted pre-pivot (with `RecursiveChunker` + `ThresholdRetriever` + `all-MiniLM-L6-v2`) are archived, and related files have been deleted.
 
 ---
 
@@ -243,12 +234,12 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 |---|---|
 | `src/scoring/rubrics.py` — 12 rubric templates | ✅ |
 | `src/scoring/rubric_scorer.py` — RUBRIC-SCORE-001 prompt, LLM judge | ✅ |
-| `src/scoring/unified_scorer.py` — routes code-only vs rubric-LLM | ✅ |
+| `src/scoring/unified_scorer.py` — routes code-only vs rubric-LLM (top-K retrieval) | ✅ |
 | `src/scoring/graded_scorer.py` — code-only synonym + years scoring | ✅ |
 | `src/scoring/tier_lookup.py` — institute + cert tier lookup | ✅ |
 | `src/services/subquery_parser.py` — parse SubQuery tables | ✅ |
 | `src/scoring/unified_scorer.evaluate_candidate_composed` | ✅ |
-| `scripts/score_batch_composed.py` — batch CLI with `--resume` ledger support | ✅ |
+| `scripts/score_batch_composed.py` — batch CLI using top-K retrieval | ✅ |
 | `src/services/llm_caller.py` — Ollama backend (qwen2.5:3b) | ✅ |
 | `data/Institutes/institute_tiers.json` — 115 Tier-1 institutions | ✅ |
 | `data/Certificates/certificate_tiers.json` — 115 certs | ✅ |
@@ -257,6 +248,7 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 - LLM never sees weights, never ranks ✅
 - Final scores are deterministic and auditable ✅
 - Cached scoring trace frozen at scoring time ✅
+- Standardized on top-K retrieval (`VectorIndex.retrieve_top_k`), guaranteeing evidence presence for LLM evaluation ✅
 
 ---
 
