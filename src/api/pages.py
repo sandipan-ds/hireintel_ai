@@ -38,6 +38,18 @@ def home(request: Request, db: Session = Depends(get_db)) -> HTMLResponse:
     return _render("home.html", {"request": request, "roles": roles})
 
 
+@router.get("/dashboard", response_class=HTMLResponse)
+def dashboard_page(request: Request) -> HTMLResponse:
+    """Candidate ranking dashboard page."""
+    return _render("dashboard.html", {"request": request})
+
+
+@router.get("/candidate/{candidate_id}", response_class=HTMLResponse)
+def candidate_page(request: Request, candidate_id: str) -> HTMLResponse:
+    """Candidate detail and chat page."""
+    return _render("candidate.html", {"request": request, "candidate_id": candidate_id})
+
+
 @router.get("/configure", response_class=HTMLResponse)
 def configure_page(request: Request, db: Session = Depends(get_db)) -> HTMLResponse:
     """Weight configuration page."""

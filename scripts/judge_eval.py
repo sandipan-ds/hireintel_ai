@@ -1,4 +1,4 @@
-﻿"""Judge LLM Evaluation Script -- scripts/judge_eval.py
+"""Judge LLM Evaluation Script -- scripts/judge_eval.py
 
 PURPOSE
 -------
@@ -37,6 +37,7 @@ import re
 import sys
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -563,8 +564,269 @@ def generate_report(
 
 
 # ---------------------------------------------------------------------------
+# Plots
+# ---------------------------------------------------------------------------
+
+def generate_plots(
+    role_results: Dict[str, Any],
+    output_dir: pathlib.Path,
+    ts: str,
+) -> None:
+    """
+    Generate and save evaluation plots:
+      - summary_metrics.png : MAE / RMSE / R² bar chart per role
+      - scatter_{role}.png  : scorer vs judge scatter per role
+      - req_mae_{role}.png  : per-requirement MAE bar chart per role
+
+    Args:
+        role_results: Dict mapping role -> result dict from evaluate_role().
+        output_dir:   Directory to save plots.
+        ts:           Timestamp string for filenames.
+    """
+    try:
+        import matplotlib
+        matplotlib.use("Agg")  # headless, no display needed
+        import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
+        import numpy as np
+    except ImportError:
+        logger.warning("matplotlib not installed -- skipping plots")
+        return
+
+    roles = sorted(role_results.keys())
+
+    # ------------------------------------------------------------------
+    # 1. Summary metrics bar chart (MAE, RMSE, R²) across all roles
+    # ------------------------------------------------------------------
+    metrics_data = {
+        r: role_results[r]["metrics"] for r in roles
+        if role_results[r]["metrics"]["n"] > 0
+    }
+    if metrics_data:
+        x = np.arange(len(metrics_data))
+        width = 0.25
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+        fig.suptitle("Judge Evaluation — Score Agreement per Role", fontsize=14, fontweight="bold")
+
+        # Left: MAE and RMSE
+        ax = axes[0]
+        maes  = [metrics_data[r]["mae"]  for r in metrics_data]
+        rmses = [metrics_data[r]["rmse"] for r in metrics_data]
+        biases = [metrics_data[r]["bias"] for r in metrics_data]
+        ax.bar(x - width, maes,   width, label="MAE",  color="steelblue",  alpha=0.85)
+        ax.bar(x,          rmses,  width, label="RMSE", color="darkorange", alpha=0.85)
+        ax.bar(x + width,  biases, width, label="Bias", color="seagreen",   alpha=0.85)
+        ax.set_xticks(x)
+        ax.set_xticklabels(list(metrics_data.keys()), rotation=30, ha="right", fontsize=9)
+        ax.set_ylabel("Points (0-100 scale)")
+        ax.set_title("MAE / RMSE / Bias per Role")
+        ax.legend()
+        ax.axhline(0, color="black", linewidth=0.7, linestyle="--")
+        ax.grid(axis="y", alpha=0.3)
+
+        # Right: R²
+        ax2 = axes[1]
+        r2s = [metrics_data[r]["r2"] for r in metrics_data]
+        bars = ax2.bar(x, r2s, 0.5,
+                       color=["forestgreen" if v >= 0.7 else "goldenrod" if v >= 0.4 else "tomato"
+                              for v in r2s],
+                       alpha=0.85)
+        ax2.set_xticks(x)
+        ax2.set_xticklabels(list(metrics_data.keys()), rotation=30, ha="right", fontsize=9)
+        ax2.set_ylabel("R² (coefficient of determination)")
+        ax2.set_title("R² per Role  (≥0.7 = good, ≥0.4 = moderate)")
+        ax2.set_ylim(-0.1, 1.05)
+        ax2.axhline(0.7, color="forestgreen", linewidth=1, linestyle="--", alpha=0.5, label="0.7 threshold")
+        ax2.axhline(0.4, color="goldenrod",   linewidth=1, linestyle="--", alpha=0.5, label="0.4 threshold")
+        ax2.legend(fontsize=8)
+        ax2.grid(axis="y", alpha=0.3)
+        for bar, v in zip(bars, r2s):
+            ax2.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
+                     f"{v:.3f}", ha="center", va="bottom", fontsize=8)
+
+        plt.tight_layout()
+        out = output_dir / f"summary_metrics_{ts}.png"
+        plt.savefig(out, dpi=130, bbox_inches="tight")
+        plt.close()
+        logger.info("Plot -> %s", out)
+
+    # ------------------------------------------------------------------
+    # 2. Scatter plot: scorer vs judge per role
+    # ------------------------------------------------------------------
+    for role in roles:
+        cs = role_results[role].get("candidate_scores", [])
+        if not cs:
+            continue
+        scorer_vals = [c["scorer_total"] for c in cs]
+        judge_vals  = [c["judge_total"]  for c in cs]
+        deltas      = [c["delta"]        for c in cs]
+        flagged     = [c["flagged"]      for c in cs]
+
+        fig, ax = plt.subplots(figsize=(7, 6))
+        colors = ["tomato" if f else "steelblue" for f in flagged]
+        ax.scatter(judge_vals, scorer_vals, c=colors, alpha=0.75, edgecolors="white", s=70)
+
+        # Perfect agreement line
+        mn = min(min(scorer_vals), min(judge_vals)) - 3
+        mx = max(max(scorer_vals), max(judge_vals)) + 3
+        ax.plot([mn, mx], [mn, mx], "k--", linewidth=1, alpha=0.5, label="Perfect agreement")
+
+        m = role_results[role]["metrics"]
+        ax.set_xlabel("Judge Score", fontsize=11)
+        ax.set_ylabel("Scorer Score", fontsize=11)
+        ax.set_title(
+            f"{role} — Scorer vs Judge\n"
+            f"MAE={m['mae']:.2f}  RMSE={m['rmse']:.2f}  R²={m['r2']:.3f}  Bias={m['bias']:+.2f}",
+            fontsize=11,
+        )
+        red_patch  = mpatches.Patch(color="tomato",    label=f"Flagged |Δ|>10  (n={sum(flagged)})")
+        blue_patch = mpatches.Patch(color="steelblue", label=f"Normal  (n={len(cs)-sum(flagged)})")
+        ax.legend(handles=[red_patch, blue_patch], fontsize=9)
+        ax.grid(alpha=0.3)
+        plt.tight_layout()
+        out = output_dir / f"scatter_{role}_{ts}.png"
+        plt.savefig(out, dpi=130, bbox_inches="tight")
+        plt.close()
+        logger.info("Plot -> %s", out)
+
+    # ------------------------------------------------------------------
+    # 3. Per-REQ MAE bar chart per role
+    # ------------------------------------------------------------------
+    for role in roles:
+        pr = role_results[role].get("per_req_mae", {})
+        if not pr:
+            continue
+        reqs = sorted(pr.keys(), key=lambda r: -pr[r])
+        vals = [pr[r] for r in reqs]
+
+        fig, ax = plt.subplots(figsize=(max(8, len(reqs) * 0.7), 5))
+        bar_colors = ["tomato" if v > 1.0 else "darkorange" if v > 0.5 else "steelblue" for v in vals]
+        ax.bar(reqs, vals, color=bar_colors, alpha=0.85)
+        ax.set_title(f"{role} — Per-Requirement MAE (scorer vs judge)", fontsize=12, fontweight="bold")
+        ax.set_xlabel("Requirement ID")
+        ax.set_ylabel("MAE (sub-score units)")
+        ax.set_xticklabels(reqs, rotation=40, ha="right", fontsize=9)
+        ax.axhline(1.0, color="tomato",    linewidth=1, linestyle="--", alpha=0.6, label="High (>1.0)")
+        ax.axhline(0.5, color="darkorange", linewidth=1, linestyle="--", alpha=0.6, label="Moderate (>0.5)")
+        ax.legend(fontsize=9)
+        ax.grid(axis="y", alpha=0.3)
+        for i, v in enumerate(vals):
+            ax.text(i, v + 0.01, f"{v:.3f}", ha="center", va="bottom", fontsize=8)
+        plt.tight_layout()
+        out = output_dir / f"req_mae_{role}_{ts}.png"
+        plt.savefig(out, dpi=130, bbox_inches="tight")
+        plt.close()
+        logger.info("Plot -> %s", out)
+
+
+# ---------------------------------------------------------------------------
 # Role evaluator
 # ---------------------------------------------------------------------------
+
+def _judge_one_candidate(
+    sf: pathlib.Path,
+    role: str,
+    req_ids: List[str],
+    weight_config: List[Dict[str, Any]],
+    subqueries: Dict[str, List[Dict[str, str]]],
+    model: str,
+    api_key: str,
+    base_url: str,
+    dry_run: bool,
+    seed: int,
+) -> Optional[Dict[str, Any]]:
+    """
+    Judge a single candidate and return their result dict.
+
+    This function is designed to be called from a ThreadPoolExecutor.
+    Each call is fully independent — no shared mutable state.
+
+    Args:
+        sf:           Path to the candidate's score JSON file.
+        role:         Role name (for logging).
+        req_ids:      Ordered list of requirement IDs.
+        weight_config: Requirement weight list.
+        subqueries:   Sub-query dict.
+        model:        Judge model slug.
+        api_key:      OpenRouter API key.
+        base_url:     API base URL.
+        dry_run:      If True, simulate judge response with Gaussian noise.
+        seed:         Random seed (combined with candidate hash for dry-run).
+
+    Returns:
+        Dict with keys: candidate_id, scorer_total, judge_total, delta,
+        flagged, req_pairs (list of (rid, scorer_sub, judge_sub) tuples).
+        Returns None on any unrecoverable error.
+    """
+    try:
+        score_data = json.loads(sf.read_text(encoding="utf-8"))
+    except Exception as exc:
+        logger.warning("[%s] Load error %s: %s", role, sf.name, exc)
+        return None
+
+    cid = score_data.get("candidate_id", sf.stem)
+    scorer_total = float(score_data.get("total", 0))
+    scorer_sub: Dict[str, float] = {
+        r["requirement_id"]: float(r.get("sub_score") or 0)
+        for r in score_data.get("reqs", [])
+        if r.get("requirement_id")
+    }
+
+    if dry_run:
+        rng = random.Random(seed + abs(hash(cid)))
+        judge_total = max(0.0, scorer_total + rng.gauss(0, 5))
+        judge_req_list = [
+            {
+                "requirement_id": rid,
+                "sub_scores": {},
+                "sub_score_sum": scorer_sub.get(rid, 0) + rng.gauss(0, 0.2),
+            }
+            for rid in req_ids
+        ]
+    else:
+        resume_text = load_processed_text(role, cid)
+        if not resume_text:
+            logger.warning("[%s] No resume text for %s -- skip", role, cid)
+            return None
+
+        prompt = _build_judge_prompt(cid, resume_text, weight_config, subqueries)
+        logger.info("[%s] Judging %s ...", role, cid)
+        raw = call_judge_llm(_JUDGE_SYSTEM, prompt, model, api_key, base_url)
+        if not raw:
+            logger.warning("[%s] No judge response for %s", role, cid)
+            return None
+
+        parsed = parse_judge_response(raw, req_ids)
+        if not parsed:
+            logger.warning("[%s] Parse failed for %s", role, cid)
+            return None
+
+        judge_req_list = parsed.get("requirements", [])
+        judge_total = compute_judge_total(judge_req_list, weight_config)
+
+    # Collect per-REQ sub-score pairs for later aggregation
+    judge_map = {r.get("requirement_id"): r for r in judge_req_list}
+    req_pairs_out = [
+        (rid, scorer_sub.get(rid, 0.0), _sub_score_sum(judge_map[rid]))
+        for rid in req_ids
+        if rid in judge_map
+    ]
+
+    delta = scorer_total - judge_total
+    is_flagged = abs(delta) > 10.0
+    logger.info("[%s] %s  scorer=%.1f  judge=%.1f  delta=%+.1f%s",
+                role, cid, scorer_total, judge_total, delta,
+                "  ** FLAGGED **" if is_flagged else "")
+
+    return {
+        "candidate_id": cid,
+        "scorer_total": round(scorer_total, 2),
+        "judge_total":  round(judge_total, 2),
+        "delta":        round(delta, 2),
+        "flagged":      is_flagged,
+        "req_pairs":    req_pairs_out,
+    }
+
 
 def evaluate_role(
     role: str,
@@ -576,9 +838,14 @@ def evaluate_role(
     base_url: str,
     dry_run: bool = False,
     seed: int = 42,
+    workers: int = 10,
 ) -> Dict[str, Any]:
     """
-    Sample candidates for a role, call the judge, and compute metrics.
+    Sample candidates for a role, call the judge in parallel, and compute metrics.
+
+    Candidates are judged concurrently using a ThreadPoolExecutor.
+    Each worker thread makes one independent LLM call; results are aggregated
+    in the main thread after all futures complete.
 
     Args:
         role:          Role name.
@@ -590,6 +857,7 @@ def evaluate_role(
         base_url:      API base URL.
         dry_run:       If True, simulate judge with Gaussian noise.
         seed:          Random seed for reproducibility.
+        workers:       Number of parallel threads (default 10).
 
     Returns:
         Dict: role, metrics, per_req_mae, candidate_scores,
@@ -597,94 +865,55 @@ def evaluate_role(
     """
     req_ids = [r.get("requirement_id") for r in weight_config]
     sample_files = sample_candidates(role, sample_pct, seed)
-    logger.info("[%s] Sampled %d / %d candidates (%.0f%%)",
+    logger.info("[%s] Sampled %d / %d candidates (%.0f%%) -- workers=%d",
                 role, len(sample_files),
                 len(list((SCORES_DIR / role).glob("*.json"))),
-                sample_pct * 100)
+                sample_pct * 100, workers)
 
+    # Run all candidate judgements in parallel
+    results: List[Optional[Dict[str, Any]]] = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {
+            pool.submit(
+                _judge_one_candidate,
+                sf, role, req_ids, weight_config, subqueries,
+                model, api_key, base_url, dry_run, seed,
+            ): sf
+            for sf in sample_files
+        }
+        for future in as_completed(futures):
+            try:
+                results.append(future.result())
+            except Exception as exc:
+                logger.warning("[%s] Unexpected future error: %s", role, exc)
+                results.append(None)
+
+    # Aggregate results from all threads
     pairs: List[Tuple[float, float]] = []
     req_pairs: Dict[str, List[Tuple[float, float]]] = defaultdict(list)
-    cand_scores, flagged, error_count = [], [], 0
+    cand_scores, flagged = [], []
+    error_count = sum(1 for r in results if r is None)
 
-    for sf in sample_files:
-        try:
-            score_data = json.loads(sf.read_text(encoding="utf-8"))
-        except Exception as exc:
-            logger.warning("[%s] Load error %s: %s", role, sf.name, exc)
-            error_count += 1
+    for res in results:
+        if res is None:
             continue
-
-        cid = score_data.get("candidate_id", sf.stem)
-        scorer_total = float(score_data.get("total", 0))
-        scorer_sub: Dict[str, float] = {
-            r["requirement_id"]: float(r.get("sub_score") or 0)
-            for r in score_data.get("reqs", [])
-            if r.get("requirement_id")
-        }
-
-        if dry_run:
-            # Simulate judge with Gaussian noise around scorer values
-            rng = random.Random(seed + abs(hash(cid)))
-            judge_total = max(0.0, scorer_total + rng.gauss(0, 5))
-            judge_req_list = [
-                {
-                    "requirement_id": rid,
-                    "sub_scores": {},
-                    "sub_score_sum": scorer_sub.get(rid, 0) + rng.gauss(0, 0.2),
-                }
-                for rid in req_ids
-            ]
-        else:
-            resume_text = load_processed_text(role, cid)
-            if not resume_text:
-                logger.warning("[%s] No resume text for %s -- skip", role, cid)
-                error_count += 1
-                continue
-
-            prompt = _build_judge_prompt(cid, resume_text, weight_config, subqueries)
-            logger.info("[%s] Judging %s ...", role, cid)
-            raw = call_judge_llm(_JUDGE_SYSTEM, prompt, model, api_key, base_url)
-            if not raw:
-                logger.warning("[%s] No judge response for %s", role, cid)
-                error_count += 1
-                continue
-
-            parsed = parse_judge_response(raw, req_ids)
-            if not parsed:
-                logger.warning("[%s] Parse failed for %s", role, cid)
-                error_count += 1
-                continue
-
-            judge_req_list = parsed.get("requirements", [])
-            judge_total = compute_judge_total(judge_req_list, weight_config)
-
-        # Accumulate per-REQ pairs
-        judge_map = {r.get("requirement_id"): r for r in judge_req_list}
-        for rid in req_ids:
-            jr = judge_map.get(rid)
-            if jr:
-                req_pairs[rid].append((scorer_sub.get(rid, 0.0), _sub_score_sum(jr)))
-
-        delta = scorer_total - judge_total
-        is_flagged = abs(delta) > 10.0
-        pairs.append((scorer_total, judge_total))
+        pairs.append((res["scorer_total"], res["judge_total"]))
+        for rid, s_sub, j_sub in res["req_pairs"]:
+            req_pairs[rid].append((s_sub, j_sub))
         cand_scores.append({
-            "candidate_id": cid,
-            "scorer_total": round(scorer_total, 2),
-            "judge_total": round(judge_total, 2),
-            "delta": round(delta, 2),
-            "flagged": is_flagged,
+            "candidate_id": res["candidate_id"],
+            "scorer_total": res["scorer_total"],
+            "judge_total":  res["judge_total"],
+            "delta":        res["delta"],
+            "flagged":      res["flagged"],
         })
-        if is_flagged:
+        if res["flagged"]:
             flagged.append({
-                "candidate_id": cid,
-                "scorer_total": round(scorer_total, 2),
-                "judge_total": round(judge_total, 2),
-                "delta": round(delta, 2),
+                "candidate_id": res["candidate_id"],
+                "scorer_total": res["scorer_total"],
+                "judge_total":  res["judge_total"],
+                "delta":        res["delta"],
             })
-        logger.info("[%s] %s  scorer=%.1f  judge=%.1f  delta=%+.1f%s",
-                    role, cid, scorer_total, judge_total, delta,
-                    "  ** FLAGGED **" if is_flagged else "")
 
     metrics = compute_metrics(pairs)
     logger.info("[%s] n=%d  MAE=%.2f  RMSE=%.2f  R2=%.3f  bias=%+.2f  errors=%d",
@@ -729,6 +958,8 @@ def main() -> None:
                         help="Override AUDIT_SAMPLE_PCT (e.g. 0.20).")
     parser.add_argument("--judge-model", default=None,
                         help="Override AUDIT_JUDGE_MODEL from .env.audit.")
+    parser.add_argument("--workers", type=int, default=10,
+                        help="Parallel judge threads per role (default: 10).")
     args = parser.parse_args()
 
     env = _load_env_audit(ENV_AUDIT)
@@ -764,6 +995,7 @@ def main() -> None:
             role=role, sample_pct=sample_pct, weight_config=wc,
             subqueries=sqs, model=model, api_key=api_key,
             base_url=base_url, dry_run=args.dry_run, seed=args.seed,
+            workers=args.workers,
         )
 
     if not role_results:
@@ -790,6 +1022,14 @@ def main() -> None:
         sample_pct=sample_pct,
         output_path=REPORT_DIR / f"judge_eval_{ts}.txt",
     )
+
+    generate_plots(
+        role_results=role_results,
+        output_dir=REPORT_DIR,
+        ts=ts,
+    )
+
+    logger.info("All outputs saved to: %s", REPORT_DIR)
 
 
 if __name__ == "__main__":

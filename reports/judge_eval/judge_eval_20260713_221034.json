@@ -1,0 +1,1800 @@
+{
+  "BusinessAnalyst": {
+    "role": "BusinessAnalyst",
+    "metrics": {
+      "mae": 16.8574,
+      "rmse": 18.5128,
+      "r2": -0.7776,
+      "bias": 16.1278,
+      "max_dev": 32.56,
+      "n": 27
+    },
+    "per_req_mae": {
+      "REQ-001": 0.5367,
+      "REQ-002": 0.2904,
+      "REQ-003": 0.9259,
+      "REQ-004": 1.0359,
+      "REQ-005": 0.8711,
+      "REQ-006": 0.1367,
+      "REQ-007": 0.3259,
+      "REQ-008": 0.183,
+      "REQ-009": 0.4852,
+      "REQ-010": 0.5459,
+      "REQ-011": 0.5863,
+      "REQ-012": 0.5652,
+      "REQ-013": 1.1759,
+      "REQ-014": 0.7685,
+      "REQ-015": 1.2037
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0036",
+        "scorer_total": 27.77,
+        "judge_total": 14.54,
+        "delta": 13.23,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0007",
+        "scorer_total": 41.52,
+        "judge_total": 22.02,
+        "delta": 19.5,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0127",
+        "scorer_total": 47.63,
+        "judge_total": 45.19,
+        "delta": 2.44,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0029",
+        "scorer_total": 51.05,
+        "judge_total": 39.17,
+        "delta": 11.89,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0095",
+        "scorer_total": 54.5,
+        "judge_total": 48.84,
+        "delta": 5.66,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0087",
+        "scorer_total": 70.9,
+        "judge_total": 48.81,
+        "delta": 22.09,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0071",
+        "scorer_total": 28.3,
+        "judge_total": 38.15,
+        "delta": -9.85,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0063",
+        "scorer_total": 58.06,
+        "judge_total": 25.5,
+        "delta": 32.56,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0055",
+        "scorer_total": 60.01,
+        "judge_total": 44.88,
+        "delta": 15.14,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0058",
+        "scorer_total": 54.18,
+        "judge_total": 34.38,
+        "delta": 19.8,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0076",
+        "scorer_total": 47.95,
+        "judge_total": 20.98,
+        "delta": 26.97,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0115",
+        "scorer_total": 56.15,
+        "judge_total": 29.81,
+        "delta": 26.34,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0004",
+        "scorer_total": 55.93,
+        "judge_total": 32.42,
+        "delta": 23.51,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0028",
+        "scorer_total": 75.64,
+        "judge_total": 68.38,
+        "delta": 7.27,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0030",
+        "scorer_total": 55.15,
+        "judge_total": 30.06,
+        "delta": 25.09,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0065",
+        "scorer_total": 46.92,
+        "judge_total": 28.25,
+        "delta": 18.67,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0121",
+        "scorer_total": 70.44,
+        "judge_total": 59.01,
+        "delta": 11.43,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0014",
+        "scorer_total": 45.56,
+        "judge_total": 23.58,
+        "delta": 21.97,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0092",
+        "scorer_total": 66.46,
+        "judge_total": 44.48,
+        "delta": 21.98,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0005",
+        "scorer_total": 44.8,
+        "judge_total": 23.92,
+        "delta": 20.89,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0012",
+        "scorer_total": 34.86,
+        "judge_total": 19.69,
+        "delta": 15.17,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0084",
+        "scorer_total": 43.97,
+        "judge_total": 37.25,
+        "delta": 6.72,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0070",
+        "scorer_total": 16.18,
+        "judge_total": 5.27,
+        "delta": 10.91,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0117",
+        "scorer_total": 60.08,
+        "judge_total": 37.58,
+        "delta": 22.5,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0078",
+        "scorer_total": 59.69,
+        "judge_total": 54.58,
+        "delta": 5.1,
+        "flagged": false
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0026",
+        "scorer_total": 49.23,
+        "judge_total": 34.89,
+        "delta": 14.35,
+        "flagged": true
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0072",
+        "scorer_total": 67.72,
+        "judge_total": 43.57,
+        "delta": 24.14,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0036",
+        "scorer_total": 27.77,
+        "judge_total": 14.54,
+        "delta": 13.23
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0007",
+        "scorer_total": 41.52,
+        "judge_total": 22.02,
+        "delta": 19.5
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0029",
+        "scorer_total": 51.05,
+        "judge_total": 39.17,
+        "delta": 11.89
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0087",
+        "scorer_total": 70.9,
+        "judge_total": 48.81,
+        "delta": 22.09
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0063",
+        "scorer_total": 58.06,
+        "judge_total": 25.5,
+        "delta": 32.56
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0055",
+        "scorer_total": 60.01,
+        "judge_total": 44.88,
+        "delta": 15.14
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0058",
+        "scorer_total": 54.18,
+        "judge_total": 34.38,
+        "delta": 19.8
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0076",
+        "scorer_total": 47.95,
+        "judge_total": 20.98,
+        "delta": 26.97
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0115",
+        "scorer_total": 56.15,
+        "judge_total": 29.81,
+        "delta": 26.34
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0004",
+        "scorer_total": 55.93,
+        "judge_total": 32.42,
+        "delta": 23.51
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0030",
+        "scorer_total": 55.15,
+        "judge_total": 30.06,
+        "delta": 25.09
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0065",
+        "scorer_total": 46.92,
+        "judge_total": 28.25,
+        "delta": 18.67
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0121",
+        "scorer_total": 70.44,
+        "judge_total": 59.01,
+        "delta": 11.43
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0014",
+        "scorer_total": 45.56,
+        "judge_total": 23.58,
+        "delta": 21.97
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0092",
+        "scorer_total": 66.46,
+        "judge_total": 44.48,
+        "delta": 21.98
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0005",
+        "scorer_total": 44.8,
+        "judge_total": 23.92,
+        "delta": 20.89
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0012",
+        "scorer_total": 34.86,
+        "judge_total": 19.69,
+        "delta": 15.17
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0070",
+        "scorer_total": 16.18,
+        "judge_total": 5.27,
+        "delta": 10.91
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0117",
+        "scorer_total": 60.08,
+        "judge_total": 37.58,
+        "delta": 22.5
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0026",
+        "scorer_total": 49.23,
+        "judge_total": 34.89,
+        "delta": 14.35
+      },
+      {
+        "candidate_id": "BusinessAnalyst_CAND_0072",
+        "scorer_total": 67.72,
+        "judge_total": 43.57,
+        "delta": 24.14
+      }
+    ],
+    "errors": 0
+  },
+  "DataScience": {
+    "role": "DataScience",
+    "metrics": {
+      "mae": 10.1678,
+      "rmse": 11.4953,
+      "r2": 0.7239,
+      "bias": 10.1678,
+      "max_dev": 17.59,
+      "n": 9
+    },
+    "per_req_mae": {
+      "REQ-001": 0.6389,
+      "REQ-002": 0.3333,
+      "REQ-003": 0.7222,
+      "REQ-004": 0.6089,
+      "REQ-005": 0.7433,
+      "REQ-006": 1.1933,
+      "REQ-007": 0.3889,
+      "REQ-008": 0.2256,
+      "REQ-009": 0.4489,
+      "REQ-010": 0.3889,
+      "REQ-011": 0.2789,
+      "REQ-012": 0.2522,
+      "REQ-013": 0.5833,
+      "REQ-014": 0.3611,
+      "REQ-015": 0.3044,
+      "REQ-016": 1.0556,
+      "REQ-017": 0.8056,
+      "REQ-018": 0.1944,
+      "REQ-019": 0.2222,
+      "REQ-020": 0.1978
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "DataScience_CAND_0041",
+        "scorer_total": 3.5,
+        "judge_total": 0.0,
+        "delta": 3.5,
+        "flagged": false
+      },
+      {
+        "candidate_id": "DataScience_CAND_0018",
+        "scorer_total": 3.5,
+        "judge_total": 0.0,
+        "delta": 3.5,
+        "flagged": false
+      },
+      {
+        "candidate_id": "DataScience_CAND_0015",
+        "scorer_total": 52.86,
+        "judge_total": 39.5,
+        "delta": 13.36,
+        "flagged": true
+      },
+      {
+        "candidate_id": "DataScience_CAND_0007",
+        "scorer_total": 55.12,
+        "judge_total": 42.0,
+        "delta": 13.12,
+        "flagged": true
+      },
+      {
+        "candidate_id": "DataScience_CAND_0008",
+        "scorer_total": 73.55,
+        "judge_total": 55.96,
+        "delta": 17.59,
+        "flagged": true
+      },
+      {
+        "candidate_id": "DataScience_CAND_0006",
+        "scorer_total": 65.82,
+        "judge_total": 50.17,
+        "delta": 15.66,
+        "flagged": true
+      },
+      {
+        "candidate_id": "DataScience_CAND_0009",
+        "scorer_total": 63.4,
+        "judge_total": 58.79,
+        "delta": 4.61,
+        "flagged": false
+      },
+      {
+        "candidate_id": "DataScience_CAND_0016",
+        "scorer_total": 66.2,
+        "judge_total": 60.29,
+        "delta": 5.91,
+        "flagged": false
+      },
+      {
+        "candidate_id": "DataScience_CAND_0002",
+        "scorer_total": 50.81,
+        "judge_total": 36.54,
+        "delta": 14.27,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "DataScience_CAND_0015",
+        "scorer_total": 52.86,
+        "judge_total": 39.5,
+        "delta": 13.36
+      },
+      {
+        "candidate_id": "DataScience_CAND_0007",
+        "scorer_total": 55.12,
+        "judge_total": 42.0,
+        "delta": 13.12
+      },
+      {
+        "candidate_id": "DataScience_CAND_0008",
+        "scorer_total": 73.55,
+        "judge_total": 55.96,
+        "delta": 17.59
+      },
+      {
+        "candidate_id": "DataScience_CAND_0006",
+        "scorer_total": 65.82,
+        "judge_total": 50.17,
+        "delta": 15.66
+      },
+      {
+        "candidate_id": "DataScience_CAND_0002",
+        "scorer_total": 50.81,
+        "judge_total": 36.54,
+        "delta": 14.27
+      }
+    ],
+    "errors": 0
+  },
+  "JavaDeveloper": {
+    "role": "JavaDeveloper",
+    "metrics": {
+      "mae": 12.6293,
+      "rmse": 14.1746,
+      "r2": -0.4204,
+      "bias": 12.6293,
+      "max_dev": 29.27,
+      "n": 15
+    },
+    "per_req_mae": {
+      "REQ-001": 0.7167,
+      "REQ-002": 0.4847,
+      "REQ-003": 0.2227,
+      "REQ-004": 0.5207,
+      "REQ-005": 0.206,
+      "REQ-006": 0.4013,
+      "REQ-007": 0.5173,
+      "REQ-008": 0.1087,
+      "REQ-009": 0.1253,
+      "REQ-010": 0.1753,
+      "REQ-011": 0.3053,
+      "REQ-012": 0.2387,
+      "REQ-013": 0.116,
+      "REQ-014": 0.4667,
+      "REQ-015": 0.5,
+      "REQ-016": 0.55,
+      "REQ-017": 1.1833,
+      "REQ-018": 0.3187,
+      "REQ-019": 0.7,
+      "REQ-020": 0.518
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "JavaDeveloper_CAND_0055",
+        "scorer_total": 20.25,
+        "judge_total": 15.15,
+        "delta": 5.1,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0036",
+        "scorer_total": 62.58,
+        "judge_total": 53.02,
+        "delta": 9.55,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0012",
+        "scorer_total": 51.77,
+        "judge_total": 43.12,
+        "delta": 8.65,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0004",
+        "scorer_total": 50.09,
+        "judge_total": 33.56,
+        "delta": 16.52,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0029",
+        "scorer_total": 53.91,
+        "judge_total": 40.04,
+        "delta": 13.86,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0018",
+        "scorer_total": 80.29,
+        "judge_total": 51.02,
+        "delta": 29.27,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0015",
+        "scorer_total": 42.09,
+        "judge_total": 39.21,
+        "delta": 2.88,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0002",
+        "scorer_total": 73.92,
+        "judge_total": 62.58,
+        "delta": 11.34,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0014",
+        "scorer_total": 57.69,
+        "judge_total": 49.33,
+        "delta": 8.35,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0006",
+        "scorer_total": 44.75,
+        "judge_total": 30.56,
+        "delta": 14.18,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0032",
+        "scorer_total": 67.16,
+        "judge_total": 46.54,
+        "delta": 20.62,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0066",
+        "scorer_total": 71.73,
+        "judge_total": 61.77,
+        "delta": 9.96,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0033",
+        "scorer_total": 41.74,
+        "judge_total": 34.83,
+        "delta": 6.91,
+        "flagged": false
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0072",
+        "scorer_total": 65.05,
+        "judge_total": 48.44,
+        "delta": 16.61,
+        "flagged": true
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0003",
+        "scorer_total": 65.09,
+        "judge_total": 49.5,
+        "delta": 15.59,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "JavaDeveloper_CAND_0004",
+        "scorer_total": 50.09,
+        "judge_total": 33.56,
+        "delta": 16.52
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0029",
+        "scorer_total": 53.91,
+        "judge_total": 40.04,
+        "delta": 13.86
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0018",
+        "scorer_total": 80.29,
+        "judge_total": 51.02,
+        "delta": 29.27
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0002",
+        "scorer_total": 73.92,
+        "judge_total": 62.58,
+        "delta": 11.34
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0006",
+        "scorer_total": 44.75,
+        "judge_total": 30.56,
+        "delta": 14.18
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0032",
+        "scorer_total": 67.16,
+        "judge_total": 46.54,
+        "delta": 20.62
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0072",
+        "scorer_total": 65.05,
+        "judge_total": 48.44,
+        "delta": 16.61
+      },
+      {
+        "candidate_id": "JavaDeveloper_CAND_0003",
+        "scorer_total": 65.09,
+        "judge_total": 49.5,
+        "delta": 15.59
+      }
+    ],
+    "errors": 0
+  },
+  "ReactDeveloper": {
+    "role": "ReactDeveloper",
+    "metrics": {
+      "mae": 16.87,
+      "rmse": 21.1332,
+      "r2": 0.191,
+      "bias": 16.68,
+      "max_dev": 35.81,
+      "n": 4
+    },
+    "per_req_mae": {
+      "REQ-001": 0.75,
+      "REQ-002": 0.4975,
+      "REQ-003": 0.935,
+      "REQ-004": 0.315,
+      "REQ-005": 0.5,
+      "REQ-006": 0.315,
+      "REQ-007": 0.3775,
+      "REQ-008": 0.3775,
+      "REQ-009": 0.63,
+      "REQ-010": 0.9375,
+      "REQ-011": 0.31,
+      "REQ-012": 0.245,
+      "REQ-013": 0.56,
+      "REQ-014": 0.3125,
+      "REQ-015": 0.375,
+      "REQ-016": 0.75,
+      "REQ-017": 0.75,
+      "REQ-018": 0.625,
+      "REQ-019": 0.6875
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "ReactDeveloper_CAND_0004",
+        "scorer_total": 90.0,
+        "judge_total": 90.38,
+        "delta": -0.38,
+        "flagged": false
+      },
+      {
+        "candidate_id": "ReactDeveloper_CAND_0001",
+        "scorer_total": 64.81,
+        "judge_total": 29.0,
+        "delta": 35.81,
+        "flagged": true
+      },
+      {
+        "candidate_id": "ReactDeveloper_CAND_0009",
+        "scorer_total": 57.58,
+        "judge_total": 39.25,
+        "delta": 18.33,
+        "flagged": true
+      },
+      {
+        "candidate_id": "ReactDeveloper_CAND_0018",
+        "scorer_total": 58.0,
+        "judge_total": 45.04,
+        "delta": 12.96,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "ReactDeveloper_CAND_0001",
+        "scorer_total": 64.81,
+        "judge_total": 29.0,
+        "delta": 35.81
+      },
+      {
+        "candidate_id": "ReactDeveloper_CAND_0009",
+        "scorer_total": 57.58,
+        "judge_total": 39.25,
+        "delta": 18.33
+      },
+      {
+        "candidate_id": "ReactDeveloper_CAND_0018",
+        "scorer_total": 58.0,
+        "judge_total": 45.04,
+        "delta": 12.96
+      }
+    ],
+    "errors": 0
+  },
+  "SalesManager": {
+    "role": "SalesManager",
+    "metrics": {
+      "mae": 11.3545,
+      "rmse": 14.0566,
+      "r2": 0.4432,
+      "bias": 7.1388,
+      "max_dev": 32.31,
+      "n": 33
+    },
+    "per_req_mae": {
+      "REQ-001": 0.5303,
+      "REQ-002": 0.6591,
+      "REQ-003": 0.4261,
+      "REQ-004": 0.6985,
+      "REQ-005": 0.3788,
+      "REQ-006": 0.4097,
+      "REQ-007": 0.4542,
+      "REQ-008": 0.5909,
+      "REQ-009": 0.3179,
+      "REQ-010": 0.6818,
+      "REQ-011": 0.5833,
+      "REQ-012": 0.0985,
+      "REQ-013": 0.3788,
+      "REQ-014": 0.4621
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "SalesManager_CAND_0007",
+        "scorer_total": 2.0,
+        "judge_total": 0.0,
+        "delta": 2.0,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0140",
+        "scorer_total": 76.58,
+        "judge_total": 62.33,
+        "delta": 14.25,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0029",
+        "scorer_total": 47.88,
+        "judge_total": 41.54,
+        "delta": 6.34,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0058",
+        "scorer_total": 45.72,
+        "judge_total": 24.83,
+        "delta": 20.88,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0027",
+        "scorer_total": 53.67,
+        "judge_total": 50.5,
+        "delta": 3.17,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0023",
+        "scorer_total": 55.98,
+        "judge_total": 38.79,
+        "delta": 17.18,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0071",
+        "scorer_total": 50.85,
+        "judge_total": 50.62,
+        "delta": 0.23,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0152",
+        "scorer_total": 69.38,
+        "judge_total": 55.54,
+        "delta": 13.83,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0164",
+        "scorer_total": 66.25,
+        "judge_total": 70.12,
+        "delta": -3.88,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0060",
+        "scorer_total": 50.78,
+        "judge_total": 34.58,
+        "delta": 16.2,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0109",
+        "scorer_total": 68.17,
+        "judge_total": 71.0,
+        "delta": -2.83,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0009",
+        "scorer_total": 80.33,
+        "judge_total": 73.96,
+        "delta": 6.38,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0008",
+        "scorer_total": 62.92,
+        "judge_total": 68.21,
+        "delta": -5.29,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0130",
+        "scorer_total": 58.71,
+        "judge_total": 62.54,
+        "delta": -3.83,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0056",
+        "scorer_total": 55.28,
+        "judge_total": 32.79,
+        "delta": 22.49,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0162",
+        "scorer_total": 52.58,
+        "judge_total": 46.12,
+        "delta": 6.46,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0036",
+        "scorer_total": 44.65,
+        "judge_total": 15.0,
+        "delta": 29.65,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0144",
+        "scorer_total": 56.97,
+        "judge_total": 36.88,
+        "delta": 20.1,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0063",
+        "scorer_total": 59.55,
+        "judge_total": 48.79,
+        "delta": 10.76,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0108",
+        "scorer_total": 78.0,
+        "judge_total": 65.67,
+        "delta": 12.33,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0072",
+        "scorer_total": 62.95,
+        "judge_total": 70.92,
+        "delta": -7.97,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0002",
+        "scorer_total": 60.9,
+        "judge_total": 55.88,
+        "delta": 5.02,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0088",
+        "scorer_total": 59.55,
+        "judge_total": 72.38,
+        "delta": -12.83,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0041",
+        "scorer_total": 55.98,
+        "judge_total": 31.25,
+        "delta": 24.73,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0153",
+        "scorer_total": 60.18,
+        "judge_total": 65.42,
+        "delta": -5.23,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0024",
+        "scorer_total": 54.42,
+        "judge_total": 50.83,
+        "delta": 3.59,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0149",
+        "scorer_total": 58.71,
+        "judge_total": 62.0,
+        "delta": -3.29,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0139",
+        "scorer_total": 56.61,
+        "judge_total": 36.88,
+        "delta": 19.73,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0051",
+        "scorer_total": 49.38,
+        "judge_total": 58.67,
+        "delta": -9.28,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0156",
+        "scorer_total": 49.48,
+        "judge_total": 17.17,
+        "delta": 32.32,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0057",
+        "scorer_total": 65.33,
+        "judge_total": 70.0,
+        "delta": -4.67,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0115",
+        "scorer_total": 65.17,
+        "judge_total": 75.62,
+        "delta": -10.46,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0040",
+        "scorer_total": 64.17,
+        "judge_total": 46.67,
+        "delta": 17.5,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "SalesManager_CAND_0140",
+        "scorer_total": 76.58,
+        "judge_total": 62.33,
+        "delta": 14.25
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0058",
+        "scorer_total": 45.72,
+        "judge_total": 24.83,
+        "delta": 20.88
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0023",
+        "scorer_total": 55.98,
+        "judge_total": 38.79,
+        "delta": 17.18
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0152",
+        "scorer_total": 69.38,
+        "judge_total": 55.54,
+        "delta": 13.83
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0060",
+        "scorer_total": 50.78,
+        "judge_total": 34.58,
+        "delta": 16.2
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0056",
+        "scorer_total": 55.28,
+        "judge_total": 32.79,
+        "delta": 22.49
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0036",
+        "scorer_total": 44.65,
+        "judge_total": 15.0,
+        "delta": 29.65
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0144",
+        "scorer_total": 56.97,
+        "judge_total": 36.88,
+        "delta": 20.1
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0063",
+        "scorer_total": 59.55,
+        "judge_total": 48.79,
+        "delta": 10.76
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0108",
+        "scorer_total": 78.0,
+        "judge_total": 65.67,
+        "delta": 12.33
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0088",
+        "scorer_total": 59.55,
+        "judge_total": 72.38,
+        "delta": -12.83
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0041",
+        "scorer_total": 55.98,
+        "judge_total": 31.25,
+        "delta": 24.73
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0139",
+        "scorer_total": 56.61,
+        "judge_total": 36.88,
+        "delta": 19.73
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0156",
+        "scorer_total": 49.48,
+        "judge_total": 17.17,
+        "delta": 32.32
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0115",
+        "scorer_total": 65.17,
+        "judge_total": 75.62,
+        "delta": -10.46
+      },
+      {
+        "candidate_id": "SalesManager_CAND_0040",
+        "scorer_total": 64.17,
+        "judge_total": 46.67,
+        "delta": 17.5
+      }
+    ],
+    "errors": 0
+  },
+  "SQLDeveloper": {
+    "role": "SQLDeveloper",
+    "metrics": {
+      "mae": 6.8988,
+      "rmse": 7.8956,
+      "r2": 0.7753,
+      "bias": 3.8353,
+      "max_dev": 13.04,
+      "n": 17
+    },
+    "per_req_mae": {
+      "REQ-001": 0.7647,
+      "REQ-002": 0.4118,
+      "REQ-003": 0.5588,
+      "REQ-004": 0.5,
+      "REQ-005": 0.5,
+      "REQ-006": 0.7794,
+      "REQ-007": 0.3529,
+      "REQ-008": 0.4147,
+      "REQ-009": 0.3547,
+      "REQ-010": 0.0588,
+      "REQ-011": 0.3088,
+      "REQ-012": 0.3235,
+      "REQ-013": 0.2794,
+      "REQ-014": 0.3676
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "SQLDeveloper_CAND_0004",
+        "scorer_total": 63.12,
+        "judge_total": 55.83,
+        "delta": 7.29,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0032",
+        "scorer_total": 62.66,
+        "judge_total": 66.21,
+        "delta": -3.54,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0036",
+        "scorer_total": 61.08,
+        "judge_total": 48.04,
+        "delta": 13.04,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0012",
+        "scorer_total": 70.39,
+        "judge_total": 58.29,
+        "delta": 12.1,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0018",
+        "scorer_total": 62.62,
+        "judge_total": 55.5,
+        "delta": 7.12,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0055",
+        "scorer_total": 55.66,
+        "judge_total": 48.67,
+        "delta": 7.0,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0080",
+        "scorer_total": 66.06,
+        "judge_total": 63.5,
+        "delta": 2.56,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0073",
+        "scorer_total": 65.33,
+        "judge_total": 57.58,
+        "delta": 7.75,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0030",
+        "scorer_total": 63.16,
+        "judge_total": 53.83,
+        "delta": 9.33,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0005",
+        "scorer_total": 63.29,
+        "judge_total": 63.71,
+        "delta": -0.42,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0070",
+        "scorer_total": 1.75,
+        "judge_total": 0.0,
+        "delta": 1.75,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0065",
+        "scorer_total": 59.31,
+        "judge_total": 51.83,
+        "delta": 7.48,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0015",
+        "scorer_total": 74.98,
+        "judge_total": 72.79,
+        "delta": 2.19,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0014",
+        "scorer_total": 63.62,
+        "judge_total": 53.46,
+        "delta": 10.17,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0029",
+        "scorer_total": 64.98,
+        "judge_total": 61.5,
+        "delta": 3.48,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0082",
+        "scorer_total": 65.64,
+        "judge_total": 77.54,
+        "delta": -11.9,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0028",
+        "scorer_total": 66.83,
+        "judge_total": 77.0,
+        "delta": -10.17,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "SQLDeveloper_CAND_0036",
+        "scorer_total": 61.08,
+        "judge_total": 48.04,
+        "delta": 13.04
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0012",
+        "scorer_total": 70.39,
+        "judge_total": 58.29,
+        "delta": 12.1
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0014",
+        "scorer_total": 63.62,
+        "judge_total": 53.46,
+        "delta": 10.17
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0082",
+        "scorer_total": 65.64,
+        "judge_total": 77.54,
+        "delta": -11.9
+      },
+      {
+        "candidate_id": "SQLDeveloper_CAND_0028",
+        "scorer_total": 66.83,
+        "judge_total": 77.0,
+        "delta": -10.17
+      }
+    ],
+    "errors": 0
+  },
+  "SrPythonDeveloper": {
+    "role": "SrPythonDeveloper",
+    "metrics": {
+      "mae": 14.014,
+      "rmse": 15.7698,
+      "r2": 0.0023,
+      "bias": 14.014,
+      "max_dev": 26.5,
+      "n": 20
+    },
+    "per_req_mae": {
+      "REQ-001": 1.15,
+      "REQ-002": 0.3915,
+      "REQ-003": 0.726,
+      "REQ-004": 0.4935,
+      "REQ-005": 0.3465,
+      "REQ-006": 0.466,
+      "REQ-007": 0.329,
+      "REQ-008": 0.0335,
+      "REQ-009": 0.3185,
+      "REQ-010": 0.677,
+      "REQ-011": 0.269,
+      "REQ-012": 0.138,
+      "REQ-013": 0.263,
+      "REQ-014": 0.5,
+      "REQ-015": 0.4125,
+      "REQ-016": 0.2025,
+      "REQ-017": 0.7875,
+      "REQ-018": 0.2515
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0018",
+        "scorer_total": 24.08,
+        "judge_total": 17.12,
+        "delta": 6.96,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0015",
+        "scorer_total": 48.37,
+        "judge_total": 29.29,
+        "delta": 19.08,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0004",
+        "scorer_total": 34.56,
+        "judge_total": 11.71,
+        "delta": 22.85,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0082",
+        "scorer_total": 51.1,
+        "judge_total": 37.0,
+        "delta": 14.1,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0029",
+        "scorer_total": 54.96,
+        "judge_total": 47.25,
+        "delta": 7.71,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0036",
+        "scorer_total": 41.57,
+        "judge_total": 33.42,
+        "delta": 8.16,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0095",
+        "scorer_total": 65.68,
+        "judge_total": 48.79,
+        "delta": 16.89,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0087",
+        "scorer_total": 57.18,
+        "judge_total": 46.25,
+        "delta": 10.93,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0028",
+        "scorer_total": 1.5,
+        "judge_total": 0.0,
+        "delta": 1.5,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0005",
+        "scorer_total": 53.42,
+        "judge_total": 29.08,
+        "delta": 24.34,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0076",
+        "scorer_total": 72.61,
+        "judge_total": 63.0,
+        "delta": 9.61,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0030",
+        "scorer_total": 68.38,
+        "judge_total": 57.17,
+        "delta": 11.21,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0065",
+        "scorer_total": 57.18,
+        "judge_total": 49.21,
+        "delta": 7.97,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0078",
+        "scorer_total": 33.72,
+        "judge_total": 17.29,
+        "delta": 16.43,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0072",
+        "scorer_total": 53.44,
+        "judge_total": 29.0,
+        "delta": 24.44,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0032",
+        "scorer_total": 52.62,
+        "judge_total": 39.29,
+        "delta": 13.33,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0014",
+        "scorer_total": 51.89,
+        "judge_total": 43.17,
+        "delta": 8.72,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0070",
+        "scorer_total": 47.55,
+        "judge_total": 23.46,
+        "delta": 24.09,
+        "flagged": true
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0012",
+        "scorer_total": 49.93,
+        "judge_total": 44.46,
+        "delta": 5.47,
+        "flagged": false
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0055",
+        "scorer_total": 46.25,
+        "judge_total": 19.75,
+        "delta": 26.5,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0015",
+        "scorer_total": 48.37,
+        "judge_total": 29.29,
+        "delta": 19.08
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0004",
+        "scorer_total": 34.56,
+        "judge_total": 11.71,
+        "delta": 22.85
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0082",
+        "scorer_total": 51.1,
+        "judge_total": 37.0,
+        "delta": 14.1
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0095",
+        "scorer_total": 65.68,
+        "judge_total": 48.79,
+        "delta": 16.89
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0087",
+        "scorer_total": 57.18,
+        "judge_total": 46.25,
+        "delta": 10.93
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0005",
+        "scorer_total": 53.42,
+        "judge_total": 29.08,
+        "delta": 24.34
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0030",
+        "scorer_total": 68.38,
+        "judge_total": 57.17,
+        "delta": 11.21
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0078",
+        "scorer_total": 33.72,
+        "judge_total": 17.29,
+        "delta": 16.43
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0072",
+        "scorer_total": 53.44,
+        "judge_total": 29.0,
+        "delta": 24.44
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0032",
+        "scorer_total": 52.62,
+        "judge_total": 39.29,
+        "delta": 13.33
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0070",
+        "scorer_total": 47.55,
+        "judge_total": 23.46,
+        "delta": 24.09
+      },
+      {
+        "candidate_id": "SrPythonDeveloper_CAND_0055",
+        "scorer_total": 46.25,
+        "judge_total": 19.75,
+        "delta": 26.5
+      }
+    ],
+    "errors": 0
+  },
+  "WebDesigning": {
+    "role": "WebDesigning",
+    "metrics": {
+      "mae": 13.0848,
+      "rmse": 18.2261,
+      "r2": 0.3847,
+      "bias": 4.0674,
+      "max_dev": 65.22,
+      "n": 23
+    },
+    "per_req_mae": {
+      "REQ-001": 1.02,
+      "REQ-002": 0.6657,
+      "REQ-003": 0.8596,
+      "REQ-004": 0.6091,
+      "REQ-005": 0.4891,
+      "REQ-006": 0.4661,
+      "REQ-007": 0.0309,
+      "REQ-008": 0.127,
+      "REQ-009": 0.0626,
+      "REQ-010": 0.7274,
+      "REQ-011": 0.1722,
+      "REQ-012": 0.543,
+      "REQ-013": 0.3683,
+      "REQ-014": 0.4457,
+      "REQ-015": 0.1304,
+      "REQ-016": 0.6196,
+      "REQ-017": 0.3496,
+      "REQ-018": 0.553
+    },
+    "candidate_scores": [
+      {
+        "candidate_id": "WebDesigning_CAND_0004",
+        "scorer_total": 27.28,
+        "judge_total": 6.75,
+        "delta": 20.53,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0082",
+        "scorer_total": 58.05,
+        "judge_total": 62.38,
+        "delta": -4.33,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0029",
+        "scorer_total": 46.49,
+        "judge_total": 36.96,
+        "delta": 9.53,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0015",
+        "scorer_total": 36.32,
+        "judge_total": 21.38,
+        "delta": 14.94,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0018",
+        "scorer_total": 64.83,
+        "judge_total": 55.12,
+        "delta": 9.7,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0014",
+        "scorer_total": 74.22,
+        "judge_total": 9.0,
+        "delta": 65.22,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0109",
+        "scorer_total": 47.41,
+        "judge_total": 66.08,
+        "delta": -18.67,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0095",
+        "scorer_total": 53.64,
+        "judge_total": 66.79,
+        "delta": -13.15,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0032",
+        "scorer_total": 55.8,
+        "judge_total": 60.71,
+        "delta": -4.91,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0012",
+        "scorer_total": 1.75,
+        "judge_total": 0.0,
+        "delta": 1.75,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0104",
+        "scorer_total": 50.62,
+        "judge_total": 47.75,
+        "delta": 2.87,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0076",
+        "scorer_total": 28.75,
+        "judge_total": 19.62,
+        "delta": 9.12,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0005",
+        "scorer_total": 62.37,
+        "judge_total": 41.83,
+        "delta": 20.54,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0070",
+        "scorer_total": 61.18,
+        "judge_total": 65.29,
+        "delta": -4.11,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0099",
+        "scorer_total": 69.11,
+        "judge_total": 60.79,
+        "delta": 8.32,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0055",
+        "scorer_total": 49.66,
+        "judge_total": 69.75,
+        "delta": -20.09,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0030",
+        "scorer_total": 62.68,
+        "judge_total": 55.5,
+        "delta": 7.18,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0087",
+        "scorer_total": 52.14,
+        "judge_total": 67.08,
+        "delta": -14.94,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0110",
+        "scorer_total": 40.23,
+        "judge_total": 22.08,
+        "delta": 18.15,
+        "flagged": true
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0065",
+        "scorer_total": 48.64,
+        "judge_total": 51.71,
+        "delta": -3.07,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0036",
+        "scorer_total": 58.7,
+        "judge_total": 62.75,
+        "delta": -4.05,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0028",
+        "scorer_total": 20.88,
+        "judge_total": 11.5,
+        "delta": 9.38,
+        "flagged": false
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0078",
+        "scorer_total": 58.62,
+        "judge_total": 75.0,
+        "delta": -16.38,
+        "flagged": true
+      }
+    ],
+    "flagged_for_review": [
+      {
+        "candidate_id": "WebDesigning_CAND_0004",
+        "scorer_total": 27.28,
+        "judge_total": 6.75,
+        "delta": 20.53
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0015",
+        "scorer_total": 36.32,
+        "judge_total": 21.38,
+        "delta": 14.94
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0014",
+        "scorer_total": 74.22,
+        "judge_total": 9.0,
+        "delta": 65.22
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0109",
+        "scorer_total": 47.41,
+        "judge_total": 66.08,
+        "delta": -18.67
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0095",
+        "scorer_total": 53.64,
+        "judge_total": 66.79,
+        "delta": -13.15
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0005",
+        "scorer_total": 62.37,
+        "judge_total": 41.83,
+        "delta": 20.54
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0055",
+        "scorer_total": 49.66,
+        "judge_total": 69.75,
+        "delta": -20.09
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0087",
+        "scorer_total": 52.14,
+        "judge_total": 67.08,
+        "delta": -14.94
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0110",
+        "scorer_total": 40.23,
+        "judge_total": 22.08,
+        "delta": 18.15
+      },
+      {
+        "candidate_id": "WebDesigning_CAND_0078",
+        "scorer_total": 58.62,
+        "judge_total": 75.0,
+        "delta": -16.38
+      }
+    ],
+    "errors": 0
+  }
+}

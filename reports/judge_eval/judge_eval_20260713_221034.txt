@@ -1,0 +1,550 @@
+========================================================================
+HIREINTEL JUDGE EVALUATION REPORT
+Generated : 2026-07-13 22:10 UTC
+Judge LLM : minimax/minimax-m3
+Sample    : 20% of each role's scored candidates
+========================================================================
+
+Role                   |    N |    MAE |   RMSE |     R2 |   Bias |  MaxDev | Flags
+---------------------------------------------------------------------------
+BusinessAnalyst        |   27 |  16.86 |  18.51 | -0.778 | +16.13 |   32.56 |    21
+DataScience            |    9 |  10.17 |  11.50 |  0.724 | +10.17 |   17.59 |     5
+JavaDeveloper          |   15 |  12.63 |  14.17 | -0.420 | +12.63 |   29.27 |     8
+ReactDeveloper         |    4 |  16.87 |  21.13 |  0.191 | +16.68 |   35.81 |     3
+SQLDeveloper           |   17 |   6.90 |   7.90 |  0.775 |  +3.84 |   13.04 |     5
+SalesManager           |   33 |  11.35 |  14.06 |  0.443 |  +7.14 |   32.31 |    16
+SrPythonDeveloper      |   20 |  14.01 |  15.77 |  0.002 | +14.01 |   26.50 |    12
+WebDesigning           |   23 |  13.08 |  18.23 |  0.385 |  +4.07 |   65.22 |    10
+---------------------------------------------------------------------------
+OVERALL                |  148 |  12.68 |  15.47 |  0.370 |  +9.85 |   65.22 |
+
+
+========================================================================
+ROLE: BusinessAnalyst
+========================================================================
+  Candidates sampled : 27
+  MAE                : 16.86 pts
+  RMSE               : 18.51 pts
+  R2                 : -0.778
+  Bias               : +16.13 pts (scorer over-scores)
+  Max deviation      : 32.56 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-015      |  1.204 | [############........]
+    REQ-013      |  1.176 | [###########.........]
+    REQ-004      |  1.036 | [##########..........]
+    REQ-003      |  0.926 | [#########...........]
+    REQ-005      |  0.871 | [########............]
+    REQ-014      |  0.768 | [#######.............]
+    REQ-011      |  0.586 | [#####...............]
+    REQ-012      |  0.565 | [#####...............]
+    REQ-010      |  0.546 | [#####...............]
+    REQ-001      |  0.537 | [#####...............]
+    REQ-009      |  0.485 | [####................]
+    REQ-007      |  0.326 | [###.................]
+    REQ-002      |  0.290 | [##..................]
+    REQ-008      |  0.183 | [#...................]
+    REQ-006      |  0.137 | [#...................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    BusinessAnalyst_CAND_0063      |   58.06 |   25.50 |  +32.56 | <-- REVIEW
+    BusinessAnalyst_CAND_0076      |   47.95 |   20.98 |  +26.97 | <-- REVIEW
+    BusinessAnalyst_CAND_0115      |   56.15 |   29.81 |  +26.34 | <-- REVIEW
+    BusinessAnalyst_CAND_0030      |   55.15 |   30.06 |  +25.09 | <-- REVIEW
+    BusinessAnalyst_CAND_0072      |   67.72 |   43.57 |  +24.14 | <-- REVIEW
+    BusinessAnalyst_CAND_0004      |   55.93 |   32.42 |  +23.51 | <-- REVIEW
+    BusinessAnalyst_CAND_0117      |   60.08 |   37.58 |  +22.50 | <-- REVIEW
+    BusinessAnalyst_CAND_0087      |   70.90 |   48.81 |  +22.09 | <-- REVIEW
+    BusinessAnalyst_CAND_0092      |   66.46 |   44.48 |  +21.98 | <-- REVIEW
+    BusinessAnalyst_CAND_0014      |   45.56 |   23.58 |  +21.97 | <-- REVIEW
+    BusinessAnalyst_CAND_0005      |   44.80 |   23.92 |  +20.89 | <-- REVIEW
+    BusinessAnalyst_CAND_0058      |   54.18 |   34.38 |  +19.80 | <-- REVIEW
+    BusinessAnalyst_CAND_0007      |   41.52 |   22.02 |  +19.50 | <-- REVIEW
+    BusinessAnalyst_CAND_0065      |   46.92 |   28.25 |  +18.67 | <-- REVIEW
+    BusinessAnalyst_CAND_0012      |   34.86 |   19.69 |  +15.17 | <-- REVIEW
+    BusinessAnalyst_CAND_0055      |   60.01 |   44.88 |  +15.14 | <-- REVIEW
+    BusinessAnalyst_CAND_0026      |   49.23 |   34.89 |  +14.35 | <-- REVIEW
+    BusinessAnalyst_CAND_0036      |   27.77 |   14.54 |  +13.23 | <-- REVIEW
+    BusinessAnalyst_CAND_0029      |   51.05 |   39.17 |  +11.89 | <-- REVIEW
+    BusinessAnalyst_CAND_0121      |   70.44 |   59.01 |  +11.43 | <-- REVIEW
+    BusinessAnalyst_CAND_0070      |   16.18 |    5.27 |  +10.91 | <-- REVIEW
+    BusinessAnalyst_CAND_0071      |   28.30 |   38.15 |   -9.85 |
+    BusinessAnalyst_CAND_0028      |   75.64 |   68.38 |   +7.27 |
+    BusinessAnalyst_CAND_0084      |   43.97 |   37.25 |   +6.72 |
+    BusinessAnalyst_CAND_0095      |   54.50 |   48.84 |   +5.66 |
+    BusinessAnalyst_CAND_0078      |   59.69 |   54.58 |   +5.10 |
+    BusinessAnalyst_CAND_0127      |   47.63 |   45.19 |   +2.44 |
+
+  ** 21 flagged (|delta| > 10 pts):
+    BusinessAnalyst_CAND_0036  scorer=27.8  judge=14.5  delta=+13.2
+    BusinessAnalyst_CAND_0007  scorer=41.5  judge=22.0  delta=+19.5
+    BusinessAnalyst_CAND_0029  scorer=51.0  judge=39.2  delta=+11.9
+    BusinessAnalyst_CAND_0087  scorer=70.9  judge=48.8  delta=+22.1
+    BusinessAnalyst_CAND_0063  scorer=58.1  judge=25.5  delta=+32.6
+    BusinessAnalyst_CAND_0055  scorer=60.0  judge=44.9  delta=+15.1
+    BusinessAnalyst_CAND_0058  scorer=54.2  judge=34.4  delta=+19.8
+    BusinessAnalyst_CAND_0076  scorer=48.0  judge=21.0  delta=+27.0
+    BusinessAnalyst_CAND_0115  scorer=56.1  judge=29.8  delta=+26.3
+    BusinessAnalyst_CAND_0004  scorer=55.9  judge=32.4  delta=+23.5
+    BusinessAnalyst_CAND_0030  scorer=55.1  judge=30.1  delta=+25.1
+    BusinessAnalyst_CAND_0065  scorer=46.9  judge=28.2  delta=+18.7
+    BusinessAnalyst_CAND_0121  scorer=70.4  judge=59.0  delta=+11.4
+    BusinessAnalyst_CAND_0014  scorer=45.6  judge=23.6  delta=+22.0
+    BusinessAnalyst_CAND_0092  scorer=66.5  judge=44.5  delta=+22.0
+    BusinessAnalyst_CAND_0005  scorer=44.8  judge=23.9  delta=+20.9
+    BusinessAnalyst_CAND_0012  scorer=34.9  judge=19.7  delta=+15.2
+    BusinessAnalyst_CAND_0070  scorer=16.2  judge=5.3  delta=+10.9
+    BusinessAnalyst_CAND_0117  scorer=60.1  judge=37.6  delta=+22.5
+    BusinessAnalyst_CAND_0026  scorer=49.2  judge=34.9  delta=+14.3
+    BusinessAnalyst_CAND_0072  scorer=67.7  judge=43.6  delta=+24.1
+
+========================================================================
+ROLE: DataScience
+========================================================================
+  Candidates sampled : 9
+  MAE                : 10.17 pts
+  RMSE               : 11.50 pts
+  R2                 : 0.724
+  Bias               : +10.17 pts (scorer over-scores)
+  Max deviation      : 17.59 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-006      |  1.193 | [###########.........]
+    REQ-016      |  1.056 | [##########..........]
+    REQ-017      |  0.806 | [########............]
+    REQ-005      |  0.743 | [#######.............]
+    REQ-003      |  0.722 | [#######.............]
+    REQ-001      |  0.639 | [######..............]
+    REQ-004      |  0.609 | [######..............]
+    REQ-013      |  0.583 | [#####...............]
+    REQ-009      |  0.449 | [####................]
+    REQ-007      |  0.389 | [###.................]
+    REQ-010      |  0.389 | [###.................]
+    REQ-014      |  0.361 | [###.................]
+    REQ-002      |  0.333 | [###.................]
+    REQ-015      |  0.304 | [###.................]
+    REQ-011      |  0.279 | [##..................]
+    REQ-012      |  0.252 | [##..................]
+    REQ-008      |  0.226 | [##..................]
+    REQ-019      |  0.222 | [##..................]
+    REQ-020      |  0.198 | [#...................]
+    REQ-018      |  0.194 | [#...................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    DataScience_CAND_0008          |   73.55 |   55.96 |  +17.59 | <-- REVIEW
+    DataScience_CAND_0006          |   65.82 |   50.17 |  +15.66 | <-- REVIEW
+    DataScience_CAND_0002          |   50.81 |   36.54 |  +14.27 | <-- REVIEW
+    DataScience_CAND_0015          |   52.86 |   39.50 |  +13.36 | <-- REVIEW
+    DataScience_CAND_0007          |   55.12 |   42.00 |  +13.12 | <-- REVIEW
+    DataScience_CAND_0016          |   66.20 |   60.29 |   +5.91 |
+    DataScience_CAND_0009          |   63.40 |   58.79 |   +4.61 |
+    DataScience_CAND_0041          |    3.50 |    0.00 |   +3.50 |
+    DataScience_CAND_0018          |    3.50 |    0.00 |   +3.50 |
+
+  ** 5 flagged (|delta| > 10 pts):
+    DataScience_CAND_0015  scorer=52.9  judge=39.5  delta=+13.4
+    DataScience_CAND_0007  scorer=55.1  judge=42.0  delta=+13.1
+    DataScience_CAND_0008  scorer=73.5  judge=56.0  delta=+17.6
+    DataScience_CAND_0006  scorer=65.8  judge=50.2  delta=+15.7
+    DataScience_CAND_0002  scorer=50.8  judge=36.5  delta=+14.3
+
+========================================================================
+ROLE: JavaDeveloper
+========================================================================
+  Candidates sampled : 15
+  MAE                : 12.63 pts
+  RMSE               : 14.17 pts
+  R2                 : -0.420
+  Bias               : +12.63 pts (scorer over-scores)
+  Max deviation      : 29.27 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-017      |  1.183 | [###########.........]
+    REQ-001      |  0.717 | [#######.............]
+    REQ-019      |  0.700 | [#######.............]
+    REQ-016      |  0.550 | [#####...............]
+    REQ-004      |  0.521 | [#####...............]
+    REQ-020      |  0.518 | [#####...............]
+    REQ-007      |  0.517 | [#####...............]
+    REQ-015      |  0.500 | [#####...............]
+    REQ-002      |  0.485 | [####................]
+    REQ-014      |  0.467 | [####................]
+    REQ-006      |  0.401 | [####................]
+    REQ-018      |  0.319 | [###.................]
+    REQ-011      |  0.305 | [###.................]
+    REQ-012      |  0.239 | [##..................]
+    REQ-003      |  0.223 | [##..................]
+    REQ-005      |  0.206 | [##..................]
+    REQ-010      |  0.175 | [#...................]
+    REQ-009      |  0.125 | [#...................]
+    REQ-013      |  0.116 | [#...................]
+    REQ-008      |  0.109 | [#...................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    JavaDeveloper_CAND_0018        |   80.29 |   51.02 |  +29.27 | <-- REVIEW
+    JavaDeveloper_CAND_0032        |   67.16 |   46.54 |  +20.62 | <-- REVIEW
+    JavaDeveloper_CAND_0072        |   65.05 |   48.44 |  +16.61 | <-- REVIEW
+    JavaDeveloper_CAND_0004        |   50.09 |   33.56 |  +16.52 | <-- REVIEW
+    JavaDeveloper_CAND_0003        |   65.09 |   49.50 |  +15.59 | <-- REVIEW
+    JavaDeveloper_CAND_0006        |   44.75 |   30.56 |  +14.18 | <-- REVIEW
+    JavaDeveloper_CAND_0029        |   53.91 |   40.04 |  +13.86 | <-- REVIEW
+    JavaDeveloper_CAND_0002        |   73.92 |   62.58 |  +11.34 | <-- REVIEW
+    JavaDeveloper_CAND_0066        |   71.73 |   61.77 |   +9.96 |
+    JavaDeveloper_CAND_0036        |   62.58 |   53.02 |   +9.55 |
+    JavaDeveloper_CAND_0012        |   51.77 |   43.12 |   +8.65 |
+    JavaDeveloper_CAND_0014        |   57.69 |   49.33 |   +8.35 |
+    JavaDeveloper_CAND_0033        |   41.74 |   34.83 |   +6.91 |
+    JavaDeveloper_CAND_0055        |   20.25 |   15.15 |   +5.10 |
+    JavaDeveloper_CAND_0015        |   42.09 |   39.21 |   +2.88 |
+
+  ** 8 flagged (|delta| > 10 pts):
+    JavaDeveloper_CAND_0004  scorer=50.1  judge=33.6  delta=+16.5
+    JavaDeveloper_CAND_0029  scorer=53.9  judge=40.0  delta=+13.9
+    JavaDeveloper_CAND_0018  scorer=80.3  judge=51.0  delta=+29.3
+    JavaDeveloper_CAND_0002  scorer=73.9  judge=62.6  delta=+11.3
+    JavaDeveloper_CAND_0006  scorer=44.8  judge=30.6  delta=+14.2
+    JavaDeveloper_CAND_0032  scorer=67.2  judge=46.5  delta=+20.6
+    JavaDeveloper_CAND_0072  scorer=65.0  judge=48.4  delta=+16.6
+    JavaDeveloper_CAND_0003  scorer=65.1  judge=49.5  delta=+15.6
+
+========================================================================
+ROLE: ReactDeveloper
+========================================================================
+  Candidates sampled : 4
+  MAE                : 16.87 pts
+  RMSE               : 21.13 pts
+  R2                 : 0.191
+  Bias               : +16.68 pts (scorer over-scores)
+  Max deviation      : 35.81 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-010      |  0.938 | [#########...........]
+    REQ-003      |  0.935 | [#########...........]
+    REQ-001      |  0.750 | [#######.............]
+    REQ-016      |  0.750 | [#######.............]
+    REQ-017      |  0.750 | [#######.............]
+    REQ-019      |  0.688 | [######..............]
+    REQ-009      |  0.630 | [######..............]
+    REQ-018      |  0.625 | [######..............]
+    REQ-013      |  0.560 | [#####...............]
+    REQ-005      |  0.500 | [#####...............]
+    REQ-002      |  0.497 | [####................]
+    REQ-007      |  0.378 | [###.................]
+    REQ-008      |  0.378 | [###.................]
+    REQ-015      |  0.375 | [###.................]
+    REQ-004      |  0.315 | [###.................]
+    REQ-006      |  0.315 | [###.................]
+    REQ-014      |  0.312 | [###.................]
+    REQ-011      |  0.310 | [###.................]
+    REQ-012      |  0.245 | [##..................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    ReactDeveloper_CAND_0001       |   64.81 |   29.00 |  +35.81 | <-- REVIEW
+    ReactDeveloper_CAND_0009       |   57.58 |   39.25 |  +18.33 | <-- REVIEW
+    ReactDeveloper_CAND_0018       |   58.00 |   45.04 |  +12.96 | <-- REVIEW
+    ReactDeveloper_CAND_0004       |   90.00 |   90.38 |   -0.38 |
+
+  ** 3 flagged (|delta| > 10 pts):
+    ReactDeveloper_CAND_0001  scorer=64.8  judge=29.0  delta=+35.8
+    ReactDeveloper_CAND_0009  scorer=57.6  judge=39.2  delta=+18.3
+    ReactDeveloper_CAND_0018  scorer=58.0  judge=45.0  delta=+13.0
+
+========================================================================
+ROLE: SQLDeveloper
+========================================================================
+  Candidates sampled : 17
+  MAE                : 6.90 pts
+  RMSE               : 7.90 pts
+  R2                 : 0.775
+  Bias               : +3.84 pts (scorer over-scores)
+  Max deviation      : 13.04 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-006      |  0.779 | [#######.............]
+    REQ-001      |  0.765 | [#######.............]
+    REQ-003      |  0.559 | [#####...............]
+    REQ-004      |  0.500 | [#####...............]
+    REQ-005      |  0.500 | [#####...............]
+    REQ-008      |  0.415 | [####................]
+    REQ-002      |  0.412 | [####................]
+    REQ-014      |  0.368 | [###.................]
+    REQ-009      |  0.355 | [###.................]
+    REQ-007      |  0.353 | [###.................]
+    REQ-012      |  0.324 | [###.................]
+    REQ-011      |  0.309 | [###.................]
+    REQ-013      |  0.279 | [##..................]
+    REQ-010      |  0.059 | [....................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    SQLDeveloper_CAND_0036         |   61.08 |   48.04 |  +13.04 | <-- REVIEW
+    SQLDeveloper_CAND_0012         |   70.39 |   58.29 |  +12.10 | <-- REVIEW
+    SQLDeveloper_CAND_0082         |   65.64 |   77.54 |  -11.90 | <-- REVIEW
+    SQLDeveloper_CAND_0014         |   63.62 |   53.46 |  +10.17 | <-- REVIEW
+    SQLDeveloper_CAND_0028         |   66.83 |   77.00 |  -10.17 | <-- REVIEW
+    SQLDeveloper_CAND_0030         |   63.16 |   53.83 |   +9.33 |
+    SQLDeveloper_CAND_0073         |   65.33 |   57.58 |   +7.75 |
+    SQLDeveloper_CAND_0065         |   59.31 |   51.83 |   +7.48 |
+    SQLDeveloper_CAND_0004         |   63.12 |   55.83 |   +7.29 |
+    SQLDeveloper_CAND_0018         |   62.62 |   55.50 |   +7.12 |
+    SQLDeveloper_CAND_0055         |   55.66 |   48.67 |   +7.00 |
+    SQLDeveloper_CAND_0032         |   62.66 |   66.21 |   -3.54 |
+    SQLDeveloper_CAND_0029         |   64.98 |   61.50 |   +3.48 |
+    SQLDeveloper_CAND_0080         |   66.06 |   63.50 |   +2.56 |
+    SQLDeveloper_CAND_0015         |   74.98 |   72.79 |   +2.19 |
+    SQLDeveloper_CAND_0070         |    1.75 |    0.00 |   +1.75 |
+    SQLDeveloper_CAND_0005         |   63.29 |   63.71 |   -0.42 |
+
+  ** 5 flagged (|delta| > 10 pts):
+    SQLDeveloper_CAND_0036  scorer=61.1  judge=48.0  delta=+13.0
+    SQLDeveloper_CAND_0012  scorer=70.4  judge=58.3  delta=+12.1
+    SQLDeveloper_CAND_0014  scorer=63.6  judge=53.5  delta=+10.2
+    SQLDeveloper_CAND_0082  scorer=65.6  judge=77.5  delta=-11.9
+    SQLDeveloper_CAND_0028  scorer=66.8  judge=77.0  delta=-10.2
+
+========================================================================
+ROLE: SalesManager
+========================================================================
+  Candidates sampled : 33
+  MAE                : 11.35 pts
+  RMSE               : 14.06 pts
+  R2                 : 0.443
+  Bias               : +7.14 pts (scorer over-scores)
+  Max deviation      : 32.31 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-004      |  0.699 | [######..............]
+    REQ-010      |  0.682 | [######..............]
+    REQ-002      |  0.659 | [######..............]
+    REQ-008      |  0.591 | [#####...............]
+    REQ-011      |  0.583 | [#####...............]
+    REQ-001      |  0.530 | [#####...............]
+    REQ-014      |  0.462 | [####................]
+    REQ-007      |  0.454 | [####................]
+    REQ-003      |  0.426 | [####................]
+    REQ-006      |  0.410 | [####................]
+    REQ-005      |  0.379 | [###.................]
+    REQ-013      |  0.379 | [###.................]
+    REQ-009      |  0.318 | [###.................]
+    REQ-012      |  0.099 | [....................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    SalesManager_CAND_0156         |   49.48 |   17.17 |  +32.32 | <-- REVIEW
+    SalesManager_CAND_0036         |   44.65 |   15.00 |  +29.65 | <-- REVIEW
+    SalesManager_CAND_0041         |   55.98 |   31.25 |  +24.73 | <-- REVIEW
+    SalesManager_CAND_0056         |   55.28 |   32.79 |  +22.49 | <-- REVIEW
+    SalesManager_CAND_0058         |   45.72 |   24.83 |  +20.88 | <-- REVIEW
+    SalesManager_CAND_0144         |   56.97 |   36.88 |  +20.10 | <-- REVIEW
+    SalesManager_CAND_0139         |   56.61 |   36.88 |  +19.73 | <-- REVIEW
+    SalesManager_CAND_0040         |   64.17 |   46.67 |  +17.50 | <-- REVIEW
+    SalesManager_CAND_0023         |   55.98 |   38.79 |  +17.18 | <-- REVIEW
+    SalesManager_CAND_0060         |   50.78 |   34.58 |  +16.20 | <-- REVIEW
+    SalesManager_CAND_0140         |   76.58 |   62.33 |  +14.25 | <-- REVIEW
+    SalesManager_CAND_0152         |   69.38 |   55.54 |  +13.83 | <-- REVIEW
+    SalesManager_CAND_0088         |   59.55 |   72.38 |  -12.83 | <-- REVIEW
+    SalesManager_CAND_0108         |   78.00 |   65.67 |  +12.33 | <-- REVIEW
+    SalesManager_CAND_0063         |   59.55 |   48.79 |  +10.76 | <-- REVIEW
+    SalesManager_CAND_0115         |   65.17 |   75.62 |  -10.46 | <-- REVIEW
+    SalesManager_CAND_0051         |   49.38 |   58.67 |   -9.28 |
+    SalesManager_CAND_0072         |   62.95 |   70.92 |   -7.97 |
+    SalesManager_CAND_0162         |   52.58 |   46.12 |   +6.46 |
+    SalesManager_CAND_0009         |   80.33 |   73.96 |   +6.38 |
+    SalesManager_CAND_0029         |   47.88 |   41.54 |   +6.34 |
+    SalesManager_CAND_0008         |   62.92 |   68.21 |   -5.29 |
+    SalesManager_CAND_0153         |   60.18 |   65.42 |   -5.23 |
+    SalesManager_CAND_0002         |   60.90 |   55.88 |   +5.02 |
+    SalesManager_CAND_0057         |   65.33 |   70.00 |   -4.67 |
+    SalesManager_CAND_0164         |   66.25 |   70.12 |   -3.88 |
+    SalesManager_CAND_0130         |   58.71 |   62.54 |   -3.83 |
+    SalesManager_CAND_0024         |   54.42 |   50.83 |   +3.59 |
+    SalesManager_CAND_0149         |   58.71 |   62.00 |   -3.29 |
+    SalesManager_CAND_0027         |   53.67 |   50.50 |   +3.17 |
+    SalesManager_CAND_0109         |   68.17 |   71.00 |   -2.83 |
+    SalesManager_CAND_0007         |    2.00 |    0.00 |   +2.00 |
+    SalesManager_CAND_0071         |   50.85 |   50.62 |   +0.23 |
+
+  ** 16 flagged (|delta| > 10 pts):
+    SalesManager_CAND_0140  scorer=76.6  judge=62.3  delta=+14.2
+    SalesManager_CAND_0058  scorer=45.7  judge=24.8  delta=+20.9
+    SalesManager_CAND_0023  scorer=56.0  judge=38.8  delta=+17.2
+    SalesManager_CAND_0152  scorer=69.4  judge=55.5  delta=+13.8
+    SalesManager_CAND_0060  scorer=50.8  judge=34.6  delta=+16.2
+    SalesManager_CAND_0056  scorer=55.3  judge=32.8  delta=+22.5
+    SalesManager_CAND_0036  scorer=44.6  judge=15.0  delta=+29.6
+    SalesManager_CAND_0144  scorer=57.0  judge=36.9  delta=+20.1
+    SalesManager_CAND_0063  scorer=59.5  judge=48.8  delta=+10.8
+    SalesManager_CAND_0108  scorer=78.0  judge=65.7  delta=+12.3
+    SalesManager_CAND_0088  scorer=59.5  judge=72.4  delta=-12.8
+    SalesManager_CAND_0041  scorer=56.0  judge=31.2  delta=+24.7
+    SalesManager_CAND_0139  scorer=56.6  judge=36.9  delta=+19.7
+    SalesManager_CAND_0156  scorer=49.5  judge=17.2  delta=+32.3
+    SalesManager_CAND_0115  scorer=65.2  judge=75.6  delta=-10.5
+    SalesManager_CAND_0040  scorer=64.2  judge=46.7  delta=+17.5
+
+========================================================================
+ROLE: SrPythonDeveloper
+========================================================================
+  Candidates sampled : 20
+  MAE                : 14.01 pts
+  RMSE               : 15.77 pts
+  R2                 : 0.002
+  Bias               : +14.01 pts (scorer over-scores)
+  Max deviation      : 26.50 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-001      |  1.150 | [###########.........]
+    REQ-017      |  0.787 | [#######.............]
+    REQ-003      |  0.726 | [#######.............]
+    REQ-010      |  0.677 | [######..............]
+    REQ-014      |  0.500 | [#####...............]
+    REQ-004      |  0.493 | [####................]
+    REQ-006      |  0.466 | [####................]
+    REQ-015      |  0.412 | [####................]
+    REQ-002      |  0.392 | [###.................]
+    REQ-005      |  0.346 | [###.................]
+    REQ-007      |  0.329 | [###.................]
+    REQ-009      |  0.319 | [###.................]
+    REQ-011      |  0.269 | [##..................]
+    REQ-013      |  0.263 | [##..................]
+    REQ-018      |  0.252 | [##..................]
+    REQ-016      |  0.203 | [##..................]
+    REQ-012      |  0.138 | [#...................]
+    REQ-008      |  0.034 | [....................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    SrPythonDeveloper_CAND_0055    |   46.25 |   19.75 |  +26.50 | <-- REVIEW
+    SrPythonDeveloper_CAND_0072    |   53.44 |   29.00 |  +24.44 | <-- REVIEW
+    SrPythonDeveloper_CAND_0005    |   53.42 |   29.08 |  +24.34 | <-- REVIEW
+    SrPythonDeveloper_CAND_0070    |   47.55 |   23.46 |  +24.09 | <-- REVIEW
+    SrPythonDeveloper_CAND_0004    |   34.56 |   11.71 |  +22.85 | <-- REVIEW
+    SrPythonDeveloper_CAND_0015    |   48.37 |   29.29 |  +19.08 | <-- REVIEW
+    SrPythonDeveloper_CAND_0095    |   65.68 |   48.79 |  +16.89 | <-- REVIEW
+    SrPythonDeveloper_CAND_0078    |   33.72 |   17.29 |  +16.43 | <-- REVIEW
+    SrPythonDeveloper_CAND_0082    |   51.10 |   37.00 |  +14.10 | <-- REVIEW
+    SrPythonDeveloper_CAND_0032    |   52.62 |   39.29 |  +13.33 | <-- REVIEW
+    SrPythonDeveloper_CAND_0030    |   68.38 |   57.17 |  +11.21 | <-- REVIEW
+    SrPythonDeveloper_CAND_0087    |   57.18 |   46.25 |  +10.93 | <-- REVIEW
+    SrPythonDeveloper_CAND_0076    |   72.61 |   63.00 |   +9.61 |
+    SrPythonDeveloper_CAND_0014    |   51.89 |   43.17 |   +8.72 |
+    SrPythonDeveloper_CAND_0036    |   41.57 |   33.42 |   +8.16 |
+    SrPythonDeveloper_CAND_0065    |   57.18 |   49.21 |   +7.97 |
+    SrPythonDeveloper_CAND_0029    |   54.96 |   47.25 |   +7.71 |
+    SrPythonDeveloper_CAND_0018    |   24.08 |   17.12 |   +6.96 |
+    SrPythonDeveloper_CAND_0012    |   49.93 |   44.46 |   +5.47 |
+    SrPythonDeveloper_CAND_0028    |    1.50 |    0.00 |   +1.50 |
+
+  ** 12 flagged (|delta| > 10 pts):
+    SrPythonDeveloper_CAND_0015  scorer=48.4  judge=29.3  delta=+19.1
+    SrPythonDeveloper_CAND_0004  scorer=34.6  judge=11.7  delta=+22.9
+    SrPythonDeveloper_CAND_0082  scorer=51.1  judge=37.0  delta=+14.1
+    SrPythonDeveloper_CAND_0095  scorer=65.7  judge=48.8  delta=+16.9
+    SrPythonDeveloper_CAND_0087  scorer=57.2  judge=46.2  delta=+10.9
+    SrPythonDeveloper_CAND_0005  scorer=53.4  judge=29.1  delta=+24.3
+    SrPythonDeveloper_CAND_0030  scorer=68.4  judge=57.2  delta=+11.2
+    SrPythonDeveloper_CAND_0078  scorer=33.7  judge=17.3  delta=+16.4
+    SrPythonDeveloper_CAND_0072  scorer=53.4  judge=29.0  delta=+24.4
+    SrPythonDeveloper_CAND_0032  scorer=52.6  judge=39.3  delta=+13.3
+    SrPythonDeveloper_CAND_0070  scorer=47.5  judge=23.5  delta=+24.1
+    SrPythonDeveloper_CAND_0055  scorer=46.2  judge=19.8  delta=+26.5
+
+========================================================================
+ROLE: WebDesigning
+========================================================================
+  Candidates sampled : 23
+  MAE                : 13.08 pts
+  RMSE               : 18.23 pts
+  R2                 : 0.385
+  Bias               : +4.07 pts (scorer over-scores)
+  Max deviation      : 65.22 pts
+
+  Per-REQ MAE (highest disagreement first):
+    REQ          |    MAE | Bar
+    ------------------------------------------
+    REQ-001      |  1.020 | [##########..........]
+    REQ-003      |  0.860 | [########............]
+    REQ-010      |  0.727 | [#######.............]
+    REQ-002      |  0.666 | [######..............]
+    REQ-016      |  0.620 | [######..............]
+    REQ-004      |  0.609 | [######..............]
+    REQ-018      |  0.553 | [#####...............]
+    REQ-012      |  0.543 | [#####...............]
+    REQ-005      |  0.489 | [####................]
+    REQ-006      |  0.466 | [####................]
+    REQ-014      |  0.446 | [####................]
+    REQ-013      |  0.368 | [###.................]
+    REQ-017      |  0.350 | [###.................]
+    REQ-011      |  0.172 | [#...................]
+    REQ-015      |  0.130 | [#...................]
+    REQ-008      |  0.127 | [#...................]
+    REQ-009      |  0.063 | [....................]
+    REQ-007      |  0.031 | [....................]
+
+  Candidate Scores (scorer vs judge):
+    Candidate                      |  Scorer |   Judge |   Delta | Note
+    ------------------------------------------------------------------------
+    WebDesigning_CAND_0014         |   74.22 |    9.00 |  +65.22 | <-- REVIEW
+    WebDesigning_CAND_0005         |   62.37 |   41.83 |  +20.54 | <-- REVIEW
+    WebDesigning_CAND_0004         |   27.28 |    6.75 |  +20.53 | <-- REVIEW
+    WebDesigning_CAND_0055         |   49.66 |   69.75 |  -20.09 | <-- REVIEW
+    WebDesigning_CAND_0109         |   47.41 |   66.08 |  -18.67 | <-- REVIEW
+    WebDesigning_CAND_0110         |   40.23 |   22.08 |  +18.15 | <-- REVIEW
+    WebDesigning_CAND_0078         |   58.62 |   75.00 |  -16.38 | <-- REVIEW
+    WebDesigning_CAND_0015         |   36.32 |   21.38 |  +14.94 | <-- REVIEW
+    WebDesigning_CAND_0087         |   52.14 |   67.08 |  -14.94 | <-- REVIEW
+    WebDesigning_CAND_0095         |   53.64 |   66.79 |  -13.15 | <-- REVIEW
+    WebDesigning_CAND_0018         |   64.83 |   55.12 |   +9.70 |
+    WebDesigning_CAND_0029         |   46.49 |   36.96 |   +9.53 |
+    WebDesigning_CAND_0028         |   20.88 |   11.50 |   +9.38 |
+    WebDesigning_CAND_0076         |   28.75 |   19.62 |   +9.12 |
+    WebDesigning_CAND_0099         |   69.11 |   60.79 |   +8.32 |
+    WebDesigning_CAND_0030         |   62.68 |   55.50 |   +7.18 |
+    WebDesigning_CAND_0032         |   55.80 |   60.71 |   -4.91 |
+    WebDesigning_CAND_0082         |   58.05 |   62.38 |   -4.33 |
+    WebDesigning_CAND_0070         |   61.18 |   65.29 |   -4.11 |
+    WebDesigning_CAND_0036         |   58.70 |   62.75 |   -4.05 |
+    WebDesigning_CAND_0065         |   48.64 |   51.71 |   -3.07 |
+    WebDesigning_CAND_0104         |   50.62 |   47.75 |   +2.87 |
+    WebDesigning_CAND_0012         |    1.75 |    0.00 |   +1.75 |
+
+  ** 10 flagged (|delta| > 10 pts):
+    WebDesigning_CAND_0004  scorer=27.3  judge=6.8  delta=+20.5
+    WebDesigning_CAND_0015  scorer=36.3  judge=21.4  delta=+14.9
+    WebDesigning_CAND_0014  scorer=74.2  judge=9.0  delta=+65.2
+    WebDesigning_CAND_0109  scorer=47.4  judge=66.1  delta=-18.7
+    WebDesigning_CAND_0095  scorer=53.6  judge=66.8  delta=-13.2
+    WebDesigning_CAND_0005  scorer=62.4  judge=41.8  delta=+20.5
+    WebDesigning_CAND_0055  scorer=49.7  judge=69.8  delta=-20.1
+    WebDesigning_CAND_0087  scorer=52.1  judge=67.1  delta=-14.9
+    WebDesigning_CAND_0110  scorer=40.2  judge=22.1  delta=+18.1
+    WebDesigning_CAND_0078  scorer=58.6  judge=75.0  delta=-16.4
+
+========================================================================
+END OF REPORT
+========================================================================

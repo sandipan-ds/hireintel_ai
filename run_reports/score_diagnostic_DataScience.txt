@@ -50,6 +50,7 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0003 Big Data Ecosystems (Spark, Databricks, Hadoop) SQ036 — no matching text found
 [ZERO_WRONG_INFERENCE]   DataScience_CAND_0003 Build Data Pipelines & Validation Workflows SQ054 — text found but LLM did not infer
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0004 Statistics, Probability & Experimental Design SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0004 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0004 SQL & Relational Databases SQ011 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0004 Cloud Platforms (AWS, Azure, GCP) SQ024 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0004 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
@@ -84,7 +85,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 MLOps, Model Serving & CI/CD SQ028 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 NLP or Time-Series Forecasting SQ030 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ033 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0006 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ034 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 Big Data Ecosystems (Spark, Databricks, Hadoop) SQ036 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 Build Data Pipelines & Validation Workflows SQ054 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0006 Model Deployment & Production Monitoring SQ055 — no matching text found
@@ -131,6 +131,7 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0010 Build Data Pipelines & Validation Workflows SQ053 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0010 Build Data Pipelines & Validation Workflows SQ054 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Statistics, Probability & Experimental Design SQ005 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Model Evaluation, Validation & Debugging SQ014 — no matching text found
@@ -143,6 +144,7 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0011 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ034 — no matching text found
 [ZERO_WRONG_INFERENCE]   DataScience_CAND_0011 Build Data Pipelines & Validation Workflows SQ054 — text found but LLM did not infer
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0012 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0012 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0012 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0012 Model Evaluation, Validation & Debugging SQ015 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0012 Exploratory Data Analysis (EDA) & Feature Engineering SQ018 — no matching text found
@@ -218,7 +220,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ002 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Model Evaluation, Validation & Debugging SQ015 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Cloud Platforms (AWS, Azure, GCP) SQ024 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 MLOps, Model Serving & CI/CD SQ028 — no matching text found
@@ -226,7 +227,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 NLP or Time-Series Forecasting SQ031 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ033 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Big Data Ecosystems (Spark, Databricks, Hadoop) SQ036 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Build Data Pipelines & Validation Workflows SQ053 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0019 Build Data Pipelines & Validation Workflows SQ054 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0020 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ001 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0020 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ002 — no matching text found
@@ -282,6 +282,8 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Python & Data Science Libraries (pandas, NumPy, scikit-learn, TensorFlow, PyTorch) SQ002 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Model Evaluation, Validation & Debugging SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Exploratory Data Analysis (EDA) & Feature Engineering SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Exploratory Data Analysis (EDA) & Feature Engineering SQ019 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Communicate Findings & Data-Driven Insights SQ021 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Cloud Platforms (AWS, Azure, GCP) SQ024 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0023 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
@@ -312,7 +314,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0025 Build Data Pipelines & Validation Workflows SQ054 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0025 Model Deployment & Production Monitoring SQ055 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Statistics, Probability & Experimental Design SQ006 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Data Wrangling, Cleaning & Transformation SQ008 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Exploratory Data Analysis (EDA) & Feature Engineering SQ018 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Exploratory Data Analysis (EDA) & Feature Engineering SQ019 — no matching text found
@@ -320,6 +321,7 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 MLOps, Model Serving & CI/CD SQ027 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 MLOps, Model Serving & CI/CD SQ028 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 NLP or Time-Series Forecasting SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ033 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Data Visualization Tools (Tableau, Power BI, matplotlib/seaborn) SQ034 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Build Data Pipelines & Validation Workflows SQ054 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0026 Model Deployment & Production Monitoring SQ055 — no matching text found
@@ -356,7 +358,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 Exploratory Data Analysis (EDA) & Feature Engineering SQ018 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0029 Exploratory Data Analysis (EDA) & Feature Engineering SQ019 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 MLOps, Model Serving & CI/CD SQ027 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0029 MLOps, Model Serving & CI/CD SQ028 — no matching text found
@@ -382,6 +383,7 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 Data Wrangling, Cleaning & Transformation SQ009 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 Model Evaluation, Validation & Debugging SQ015 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 Exploratory Data Analysis (EDA) & Feature Engineering SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       DataScience_CAND_0031 Exploratory Data Analysis (EDA) & Feature Engineering SQ019 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 MLOps, Model Serving & CI/CD SQ027 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0031 MLOps, Model Serving & CI/CD SQ028 — no matching text found
@@ -489,7 +491,6 @@
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 Statistics, Probability & Experimental Design SQ006 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 Model Evaluation, Validation & Debugging SQ014 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 Model Evaluation, Validation & Debugging SQ015 — no matching text found
-[ZERO_NO_EVIDENCE]       DataScience_CAND_0040 Exploratory Data Analysis (EDA) & Feature Engineering SQ019 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 Cloud Platforms (AWS, Azure, GCP) SQ025 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 MLOps, Model Serving & CI/CD SQ028 — no matching text found
 [ZERO_NO_EVIDENCE]       DataScience_CAND_0040 NLP or Time-Series Forecasting SQ030 — no matching text found
