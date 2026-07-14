@@ -1,0 +1,1160 @@
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0001 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0002 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0003 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0003 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0003 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0003 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0004 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0005 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0006 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0007 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0008 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0009 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0010 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0011 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0012 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0013 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0014 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0015 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0015 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0015 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0015 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0015 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0016 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 6+ Years Business Analysis or Related Domain SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0017 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0018 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0018 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0018 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0018 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0018 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0019 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0020 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0021 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0022 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0023 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0024 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0025 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0025 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0025 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0025 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0025 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0026 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0028 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0028 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0028 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0028 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0029 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0030 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0031 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0032 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0032 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0032 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0032 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0032 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0033 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0033 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0033 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0033 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0033 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0034 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0035 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0036 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0037 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0038 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0039 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0040 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0040 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0040 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0040 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0040 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0041 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0042 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0043 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0044 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0045 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0046 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0047 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0047 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0047 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0048 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0049 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0050 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0051 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0052 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0053 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0054 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0055 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0056 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0057 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0058 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0059 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0059 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0059 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0059 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0060 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0061 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0062 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0063 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0064 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0065 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0066 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0067 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0068 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0069 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 6+ Years Business Analysis or Related Domain SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0070 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0071 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0072 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0072 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0072 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0072 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0072 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0073 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0074 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0075 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0075 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0075 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0075 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0075 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0076 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0077 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0078 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0079 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0079 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0079 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0079 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0079 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0080 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0081 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0082 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0083 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0084 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0085 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0086 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0087 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0088 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0088 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0088 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0088 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0089 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0090 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0091 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0092 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0092 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0092 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0092 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0092 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0093 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0094 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0095 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0096 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0097 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0098 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0098 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0098 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0098 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0098 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0099 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0100 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0101 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0102 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0103 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0103 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0103 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0103 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0103 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0104 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0104 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0104 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0104 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0104 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0105 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0106 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Stakeholder Management & Communication SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0107 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0108 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0108 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0108 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0108 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0108 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0109 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0110 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0111 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0112 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0113 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0114 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0115 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0116 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0117 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0118 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0119 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0120 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0121 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0121 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0121 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0121 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0121 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0122 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0123 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0124 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0124 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0124 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0124 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0124 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0125 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Stakeholder Management & Communication SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Cross-Functional Team Collaboration in Fast-Paced Environment SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ043 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0126 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0127 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0128 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Process Mapping & Business Process Improvement SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Documentation, User Stories & Acceptance Criteria SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Documentation, User Stories & Acceptance Criteria SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0129 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 Leadership or Senior Analyst Role SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ044 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0130 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0131 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0131 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0131 Demonstrated Responsibility Execution (Workshop Leadership, UAT, Mentoring) SQ045 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 Agile & Scrum Methodologies SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0132 Product-Led or Digital Transformation Environment SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 SQL for Data Validation & Analysis SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 SQL for Data Validation & Analysis SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 Business Intelligence Tools (Power BI, Tableau, Looker) SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 Business Intelligence Tools (Power BI, Tableau, Looker) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 Business Intelligence Tools (Power BI, Tableau, Looker) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       BusinessAnalyst_CAND_0133 CRM, ERP, or Data Warehouse Systems SQ024 — no matching text found

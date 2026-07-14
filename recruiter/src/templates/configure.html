@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Weight Configuration</h1>
+    <p class="text-gray-600">Assign weights to each requirement. Total must equal 100%.</p>
+</div>
+
+<!-- Step 1: Role Selection -->
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">1. Select Role</h2>
+        <button
+            onclick="syncRoles()"
+            class="text-sm text-gray-500 hover:text-gray-700"
+        >
+            Re-sync from SubQuery docs
+        </button>
+    </div>
+    <select
+        id="role-select"
+        class="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        onchange="onRoleChange(this.value)"
+    >
+        <option value="">-- Select a role to configure --</option>
+        {% for role in roles %}
+        <option value="{{ role.id }}">{{ role.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- Step 2: Sliders (hidden until role selected) -->
+<div id="requirements-container" style="display: none;">
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">2. Set Weights</h2>
+            <button
+                id="auto-balance-btn"
+                onclick="autoBalance()"
+                class="text-sm bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-1 rounded font-medium"
+            >
+                Auto-balance to 100%
+            </button>
+        </div>
+
+        <!-- Sticky validation bar -->
+        <div class="sticky top-2 z-10 bg-white border border-gray-200 rounded-lg p-3 mb-4 shadow-sm">
+            <div class="flex items-center justify-between text-sm">
+                <div class="flex items-center space-x-3">
+                    <span class="font-semibold">Total:</span>
+                    <span id="total-pct" class="text-2xl font-bold text-gray-900">0%</span>
+                    <span id="total-status" class="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+                        Not started
+                    </span>
+                </div>
+                <div class="text-sm font-medium text-gray-700">
+                    <span id="rated-count" class="font-bold text-blue-600">0</span> of
+                    <span id="total-count" class="font-bold">0</span> features rated
+                    | <span id="remaining-pct" class="font-bold text-blue-600">100%</span> left
+                </div>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                <div id="total-bar" class="bg-blue-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div id="requirements-form-content">
+            <!-- Sliders loaded here by HTMX -->
+        </div>
+    </div>
+</div>
+
+<!-- Step 2.5: Live Current Weights Display (hidden until role selected) -->
+<div id="current-weights-container" class="bg-white rounded-lg shadow p-6 mb-6" style="display: none;">
+    <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Current Weights</h2>
+        <div class="text-sm text-gray-500">
+            <span id="unrated-count-display" class="font-bold text-yellow-600">0</span> features unrated
+        </div>
+    </div>
+    <div id="current-weights-list" class="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm">
+        <!-- Populated by JS -->
+    </div>
+</div>
+
+<!-- Step 3: Save (hidden until 100%) -->
+<div id="save-container" class="bg-white rounded-lg shadow p-6 mb-6" style="display: none;">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">3. Save Configuration</h2>
+    <div class="flex items-center space-x-4">
+        <input
+            type="text"
+            id="config-name"
+            placeholder="e.g. Senior Level, Junior, Strict"
+            class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+        <button
+            id="save-btn"
+            onclick="saveConfiguration()"
+            class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+        >
+            Save (DB + JSON)
+        </button>
+    </div>
+    <div id="save-result" class="mt-4"></div>
+</div>
+
+<!-- Existing Configurations -->
+<div id="configurations-container" class="bg-white rounded-lg shadow p-6" style="display: none;">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Saved Configurations for this Role</h2>
+    <div id="configurations-list"></div>
+</div>
+
+<script>
+    let currentRoleId = null;
+    let weightMap = {};
+    let totalRequirements = 0;
+    let allRequirementIds = [];
+    let requirementMeta = {}; // id -> {req_id, name, category}
+
+    function syncRoles() {
+        fetch('/api/roles/sync-from-subquery', { method: 'POST' })
+            .then(r => r.json())
+            .then(d => { alert('Synced ' + d.synced_roles + ' roles, ' + d.synced_requirements + ' requirements'); location.reload(); });
+    }
+
+    function onRoleChange(roleId) {
+        currentRoleId = roleId;
+        weightMap = {};
+        allRequirementIds = [];
+        requirementMeta = {};
+
+        if (!roleId) {
+            document.getElementById('requirements-container').style.display = 'none';
+            document.getElementById('current-weights-container').style.display = 'none';
+            document.getElementById('save-container').style.display = 'none';
+            document.getElementById('configurations-container').style.display = 'none';
+            return;
+        }
+
+        // Load requirements form via HTMX
+        htmx.ajax('GET', '/api/htmx/requirements/' + roleId, {
+            target: '#requirements-form-content',
+            swap: 'innerHTML'
+        }).then(() => {
+            // Collect all req IDs and their meta from the rendered form
+            document.querySelectorAll('#requirements-form-content [id^="slider-"]').forEach(el => {
+                const id = parseInt(el.id.replace('slider-', ''));
+                allRequirementIds.push(id);
+                weightMap[id] = 0;
+                // Find the requirement name and REQ id from the form
+                const card = el.closest('.border');
+                const nameEl = card ? card.querySelector('h4') : null;
+                const reqIdEl = card ? card.querySelector('.font-mono') : null;
+                const catEl = card ? card.querySelector('h3') : null;
+                requirementMeta[id] = {
+                    req_id: reqIdEl ? reqIdEl.textContent.trim() : 'REQ-' + id,
+                    name: nameEl ? nameEl.textContent.trim() : 'Unknown',
+                };
+            });
+            totalRequirements = allRequirementIds.length;
+            document.getElementById('total-count').textContent = totalRequirements;
+            updateTotals();
+            renderCurrentWeights();
+        });
+
+        // Show all sections
+        document.getElementById('requirements-container').style.display = 'block';
+        document.getElementById('current-weights-container').style.display = 'block';
+        document.getElementById('save-container').style.display = 'block';
+        document.getElementById('configurations-container').style.display = 'block';
+
+        // Load existing configs
+        htmx.ajax('GET', '/api/htmx/configurations/' + roleId, {
+            target: '#configurations-list',
+            swap: 'innerHTML'
+        });
+    }
+
+    function updateWeight(reqId, value) {
+        weightMap[reqId] = parseFloat(value);
+        const label = document.getElementById('value-' + reqId);
+        if (label) label.textContent = parseFloat(value).toFixed(1) + '%';
+        updateTotals();
+        renderCurrentWeights();
+    }
+
+    function adjustWeight(reqId, delta) {
+        const current = weightMap[reqId] || 0;
+        let newVal = Math.max(0, Math.min(100, current + delta));
+        newVal = Math.round(newVal * 10) / 10;
+        setSlider(reqId, newVal);
+    }
+
+    function setSlider(reqId, value) {
+        const slider = document.getElementById('slider-' + reqId);
+        if (slider) {
+            slider.value = value;
+            weightMap[reqId] = value;
+            const label = document.getElementById('value-' + reqId);
+            if (label) label.textContent = value.toFixed(1) + '%';
+        }
+        updateTotals();
+        renderCurrentWeights();
+    }
+
+    function updateTotals() {
+        const total = Object.values(weightMap).reduce((a, b) => a + b, 0);
+        const rated = Object.values(weightMap).filter(v => v > 0).length;
+        const remaining = 100 - total;
+
+        document.getElementById('total-pct').textContent = total.toFixed(1) + '%';
+        document.getElementById('rated-count').textContent = rated;
+        document.getElementById('remaining-pct').textContent = remaining.toFixed(1) + '%';
+        document.getElementById('total-bar').style.width = Math.min(total, 100) + '%';
+
+        const status = document.getElementById('total-status');
+        if (Math.abs(total - 100) < 0.01) {
+            status.textContent = 'Valid - 100%';
+            status.className = 'px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800';
+            document.getElementById('total-bar').className = 'bg-green-600 h-2 rounded-full transition-all';
+        } else if (total > 100) {
+            status.textContent = 'Over by ' + (total - 100).toFixed(1) + '%';
+            status.className = 'px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800';
+            document.getElementById('total-bar').className = 'bg-red-600 h-2 rounded-full transition-all';
+        } else {
+            status.textContent = 'Need ' + remaining.toFixed(1) + '% more';
+            status.className = 'px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800';
+            document.getElementById('total-bar').className = 'bg-blue-600 h-2 rounded-full transition-all';
+        }
+    }
+
+    function renderCurrentWeights() {
+        const container = document.getElementById('current-weights-list');
+        const unratedDisplay = document.getElementById('unrated-count-display');
+        if (!container) return;
+
+        // Build sorted list: unrated (0%) at top, then by weight desc
+        const items = allRequirementIds.map(id => ({
+            id: id,
+            req_id: requirementMeta[id]?.req_id || ('REQ-' + id),
+            name: requirementMeta[id]?.name || 'Unknown',
+            weight: weightMap[id] || 0,
+        }));
+
+        // Sort: rated (weight > 0) by weight desc, then unrated alphabetically
+        items.sort((a, b) => {
+            if (a.weight > 0 && b.weight === 0) return -1;
+            if (a.weight === 0 && b.weight > 0) return 1;
+            if (a.weight === 0 && b.weight === 0) return a.req_id.localeCompare(b.req_id);
+            return b.weight - a.weight;
+        });
+
+        const unrated = items.filter(i => i.weight === 0).length;
+        unratedDisplay.textContent = unrated;
+
+        container.innerHTML = items.map(item => {
+            const isZero = item.weight === 0;
+            const weightClass = isZero ? 'text-gray-400' : 'text-gray-900 font-semibold';
+            const bgClass = isZero ? 'bg-gray-50' : 'bg-white border border-gray-200';
+            return `
+                <div class="flex items-center justify-between ${bgClass} rounded px-2 py-1">
+                    <span class="text-gray-700 truncate">
+                        <span class="font-mono text-gray-500 text-xs">${item.req_id}</span>
+                        ${item.name}
+                    </span>
+                    <span class="${weightClass} ml-2">${item.weight.toFixed(1)}%</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function autoBalance() {
+        const ratedIds = Object.keys(weightMap).filter(id => weightMap[id] > 0);
+        if (ratedIds.length === 0) {
+            // Distribute 100% equally
+            const each = 100 / allRequirementIds.length;
+            allRequirementIds.forEach(id => setSlider(id, Math.round(each * 10) / 10));
+        } else {
+            // Add remaining equally to all rated items
+            const total = Object.values(weightMap).reduce((a, b) => a + b, 0);
+            const remaining = 100 - total;
+            const perItem = remaining / ratedIds.length;
+            ratedIds.forEach(id => {
+                const newVal = Math.round((weightMap[id] + perItem) * 10) / 10;
+                setSlider(parseInt(id), Math.max(0, Math.min(100, newVal)));
+            });
+        }
+    }
+
+    function saveConfiguration() {
+        const name = document.getElementById('config-name').value.trim();
+        if (!name) { alert('Enter a configuration name'); return; }
+
+        const total = Object.values(weightMap).reduce((a, b) => a + b, 0);
+        if (Math.abs(total - 100) > 0.01) {
+            alert('Total must be 100% (currently ' + total.toFixed(1) + '%)');
+            return;
+        }
+
+        const weights = Object.entries(weightMap)
+            .map(([id, w]) => id + '=' + w)
+            .join(',');
+
+        htmx.ajax('POST', '/api/htmx/save/' + currentRoleId, {
+            target: '#save-result',
+            swap: 'innerHTML',
+            values: { config_name: name, weights: weights }
+        }).then(() => {
+            htmx.ajax('GET', '/api/htmx/configurations/' + currentRoleId, {
+                target: '#configurations-list',
+                swap: 'innerHTML'
+            });
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireIntel.AI — Candidate Detail</title>
+  <meta name="description" content="Candidate profile, score breakdown, and AI chat powered by HireIntel." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0c14; --surface: #111827;
+      --glass: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+      --accent: #7c3aed; --accent2: #4f46e5;
+      --green: #10b981; --yellow: #f59e0b; --red: #ef4444;
+      --text: #f1f5f9; --muted: #64748b; --card-r: 12px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(124,58,237,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(79,70,229,0.08) 0%, transparent 60%);
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      background: rgba(10,12,20,0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, #a78bfa, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      background: var(--glass); border: 1px solid var(--border);
+      padding: 0.4rem 0.9rem; border-radius: 7px; transition: all 0.2s;
+    }
+    .back-btn:hover { color: #a78bfa; border-color: rgba(124,58,237,0.4); }
+
+    main {
+      max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem;
+      display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start;
+    }
+    @media (max-width: 960px) { main { grid-template-columns: 1fr; } }
+
+    /* ── LEFT PANEL ── */
+    .left-panel { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow-y: auto; }
+
+    .profile-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 1.5rem; position: relative; overflow: hidden;
+    }
+    .profile-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), #60a5fa);
+    }
+    .candidate-id { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .candidate-name { font-size: 1.3rem; font-weight: 800; margin-top: 0.25rem; letter-spacing: -0.5px; }
+    .candidate-role { color: #a78bfa; font-size: 0.82rem; font-weight: 600; margin-top: 0.2rem; }
+
+    .score-big {
+      margin: 1.25rem 0;
+      display: flex; align-items: baseline; gap: 0.5rem;
+    }
+    .score-big .num { font-size: 3rem; font-weight: 900; letter-spacing: -2px; }
+    .score-big .denom { font-size: 1rem; color: var(--muted); }
+    .score-big .rank-badge {
+      margin-left: auto;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; font-size: 0.78rem; font-weight: 700;
+      padding: 0.3rem 0.75rem; border-radius: 99px;
+    }
+
+    .score-arc-wrap { text-align: center; margin: 0.5rem 0 1rem; }
+    .score-arc { position: relative; display: inline-block; }
+    .arc-svg { transform: rotate(-90deg); }
+    .arc-label {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .arc-label .arc-num { font-size: 1.6rem; font-weight: 800; }
+    .arc-label .arc-sub { font-size: 0.65rem; color: var(--muted); letter-spacing: 1px; }
+
+    .meta-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .meta-chip {
+      font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 5px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+    }
+    .meta-chip.warn { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); color: #f87171; }
+    .meta-chip.ok   { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #34d399; }
+
+    /* req breakdown */
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.75rem; font-weight: 700; }
+    .req-row { margin-bottom: 0.6rem; }
+    .req-row-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+    .req-name { font-size: 0.78rem; font-weight: 500; }
+    .req-contrib { font-size: 0.75rem; color: var(--muted); }
+    .req-bar-bg { height: 5px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+    .req-bar-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(.4,0,.2,1); }
+
+    .card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 1.25rem;
+    }
+
+    /* PDF viewer */
+    .pdf-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.75rem; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
+      background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(79,70,229,0.2));
+      border: 1px solid rgba(124,58,237,0.3); color: #a78bfa; cursor: pointer;
+      transition: all 0.2s; text-decoration: none; font-family: 'Inter', sans-serif;
+    }
+    .pdf-btn:hover { background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(79,70,229,0.3)); transform: translateY(-1px); }
+
+    iframe.pdf-frame {
+      width: 100%; height: 480px; border: none; border-radius: 8px;
+      background: #1e1e2e; margin-top: 0.75rem; display: none;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+    /* Evidence accordion */
+    .req-detail-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); overflow: hidden;
+    }
+    .req-detail-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid transparent;
+    }
+    .req-detail-header:hover { background: rgba(124,58,237,0.06); }
+    .req-detail-header.open { border-bottom-color: var(--border); }
+    .req-hdr-left { display: flex; align-items: center; gap: 0.75rem; }
+    .req-id-tag { font-size: 0.72rem; font-weight: 700; background: rgba(124,58,237,0.15); color: #a78bfa; padding: 2px 8px; border-radius: 5px; }
+    .req-hdr-name { font-size: 0.88rem; font-weight: 600; }
+    .req-hdr-right { display: flex; align-items: center; gap: 0.75rem; }
+    .req-score-pill {
+      font-size: 0.8rem; font-weight: 700; padding: 3px 10px; border-radius: 6px;
+    }
+    .req-score-pill.high { background: rgba(16,185,129,0.15); color: #34d399; }
+    .req-score-pill.mid  { background: rgba(124,58,237,0.15); color: #a78bfa; }
+    .req-score-pill.low  { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .req-chevron { color: var(--muted); font-size: 0.8rem; transition: transform 0.2s; }
+    .req-chevron.open { transform: rotate(180deg); }
+
+    .req-detail-body {
+      display: none; padding: 1rem 1.25rem; animation: fadeIn 0.2s ease;
+    }
+    .req-detail-body.open { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .sq-row { margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+    .sq-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .sq-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.4rem; }
+    .sq-key { font-size: 0.7rem; font-weight: 700; color: var(--accent); }
+    .sq-q { font-size: 0.8rem; color: var(--text); flex: 1; }
+    .sq-score { font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .sq-score.full { color: var(--green); }
+    .sq-score.partial { color: #a78bfa; }
+    .sq-score.zero { color: var(--red); }
+    .evidence-box {
+      background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.6rem 0.75rem; font-size: 0.78rem;
+      color: var(--muted); margin-top: 0.35rem; line-height: 1.5;
+    }
+    .evidence-box strong { color: #a78bfa; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+
+    /* ── Chat ── */
+    .chat-card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); display: flex; flex-direction: column; overflow: hidden;
+    }
+    .chat-header {
+      padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .chat-title { font-weight: 700; font-size: 0.95rem; }
+    .chat-sub { font-size: 0.75rem; color: var(--muted); }
+
+    .chat-messages {
+      flex: 1; padding: 1.25rem; display: flex; flex-direction: column;
+      gap: 1rem; overflow-y: auto; max-height: 420px; min-height: 200px;
+    }
+    .msg { display: flex; flex-direction: column; gap: 0.25rem; max-width: 85%; }
+    .msg.user { align-self: flex-end; align-items: flex-end; }
+    .msg.ai   { align-self: flex-start; align-items: flex-start; }
+    .msg-bubble {
+      padding: 0.7rem 1rem; border-radius: 12px; font-size: 0.875rem; line-height: 1.55;
+    }
+    .msg.user .msg-bubble { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-bottom-right-radius: 3px; }
+    .msg.ai   .msg-bubble { background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+    .msg-time { font-size: 0.68rem; color: var(--muted); }
+
+    .chat-input-row {
+      display: flex; gap: 0.5rem; padding: 1rem;
+      border-top: 1px solid var(--border); background: rgba(0,0,0,0.15);
+    }
+    .chat-input {
+      flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.875rem;
+      padding: 0.65rem 1rem; border-radius: 8px; resize: none;
+      transition: border-color 0.2s; line-height: 1.4;
+    }
+    .chat-input:focus { outline: none; border-color: var(--accent); }
+    .chat-input::placeholder { color: var(--muted); }
+    .chat-send {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; border-radius: 8px;
+      padding: 0.65rem 1.1rem; cursor: pointer; font-size: 1rem;
+      transition: all 0.2s; font-family: 'Inter', sans-serif;
+    }
+    .chat-send:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .typing { display: flex; gap: 4px; align-items: center; padding: 0.6rem 0.9rem; }
+    .typing span {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+      animation: bounce 1.2s infinite; display: inline-block;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } }
+
+    /* suggestions */
+    .suggestions { display: flex; gap: 0.5rem; flex-wrap: wrap; padding: 0 1rem 1rem; }
+    .suggestion {
+      font-size: 0.75rem; padding: 0.35rem 0.85rem; border-radius: 99px;
+      background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25);
+      color: #a78bfa; cursor: pointer; transition: all 0.15s;
+    }
+    .suggestion:hover { background: rgba(124,58,237,0.2); }
+
+    .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-overlay { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 3rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">HireIntel<span style="color:#a78bfa">.AI</span></span>
+  <div class="nav-links">
+    <a href="/recruiter" style="color:#a78bfa;font-weight:700;">✦ New Job</a>
+    <a href="/dashboard" style="display:flex;align-items:center;gap:0.4rem;">← Rankings</a>
+    <a href="/configure">Configure</a>
+  </div>
+</nav>
+
+<main id="mainGrid">
+  <!-- Loading state -->
+  <div class="loading-overlay" id="loadingOverlay" style="grid-column:1/-1">
+    <div class="spinner"></div>
+    <span>Loading candidate…</span>
+  </div>
+</main>
+
+<script>
+  // Read candidate_id from path
+  const CANDIDATE_ID = "{{ candidate_id }}";
+
+  async function init() {
+    try {
+      const res = await fetch(`/api/v1/candidate/${CANDIDATE_ID}`);
+      if (!res.ok) throw new Error('Not found');
+      const d = await res.json();
+      renderAll(d);
+    } catch(e) {
+      document.getElementById('loadingOverlay').innerHTML = `<div style="text-align:center;color:var(--muted)"><div style="font-size:2rem;margin-bottom:0.5rem">⚠</div><p>Failed to load candidate data.</p><a href="/dashboard" style="color:#a78bfa;margin-top:1rem;display:inline-block">← Back to rankings</a></div>`;
+    }
+  }
+
+  function scoreColor(pct) {
+    if (pct >= 70) return '#10b981';
+    if (pct >= 45) return '#7c3aed';
+    return '#f59e0b';
+  }
+  function scoreClass(pct) {
+    if (pct >= 70) return 'high';
+    if (pct >= 40) return 'mid';
+    return 'low';
+  }
+
+  function renderAll(d) {
+    document.title = `${d.candidate_id} — HireIntel.AI`;
+    const main = document.getElementById('mainGrid');
+    main.innerHTML = '';
+
+    // ── LEFT PANEL ──
+    const left = document.createElement('div');
+    left.className = 'left-panel';
+
+    const total = parseFloat(d.total || 0);
+    const arcR = 54; const arcCirc = 2 * Math.PI * arcR;
+    const arcOff = arcCirc * (1 - total / 100);
+    const role = d.candidate_id.split('_').slice(0,-2).join(' ');
+
+    left.innerHTML = `
+      <div class="profile-card">
+        <div class="candidate-id">${d.candidate_id}</div>
+        <div class="candidate-name">Candidate #${d.rank}</div>
+        <div class="candidate-role">${role}</div>
+
+        <div class="score-arc-wrap">
+          <div class="score-arc">
+            <svg class="arc-svg" width="130" height="130" viewBox="0 0 130 130">
+              <circle cx="65" cy="65" r="${arcR}" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+              <circle cx="65" cy="65" r="${arcR}" fill="none"
+                stroke="${scoreColor(total)}" stroke-width="10"
+                stroke-dasharray="${arcCirc}" stroke-dashoffset="${arcOff}"
+                stroke-linecap="round" style="transition:stroke-dashoffset 1s ease"/>
+            </svg>
+            <div class="arc-label">
+              <span class="arc-num" style="color:${scoreColor(total)}">${total.toFixed(1)}</span>
+              <span class="arc-sub">/ 100</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <span class="meta-chip" style="background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(79,70,229,0.15));border-color:rgba(124,58,237,0.3);color:#a78bfa">Rank #${d.rank}</span>
+          ${d.blocked_count > 0 ? `<span class="meta-chip warn">⛔ ${d.blocked_count} blocked</span>` : '<span class="meta-chip ok">✓ No blocks</span>'}
+          ${d.zero_evidence_count > 0 ? `<span class="meta-chip warn">⚠ ${d.zero_evidence_count} zero-evidence</span>` : ''}
+        </div>
+
+        <div class="section-label">Requirement Breakdown</div>
+        ${(d.reqs || []).map(r => {
+          const pct = r.weight_percentage > 0 ? Math.min(((r.contribution||0) / r.weight_percentage) * 100, 100) : 0;
+          const col = scoreColor(pct);
+          return `<div class="req-row" title="${r.requirement_name}">
+            <div class="req-row-header">
+              <span class="req-name">${r.requirement_id} · ${(r.requirement_name||'').substring(0,28)}${(r.requirement_name||'').length>28?'…':''}</span>
+              <span class="req-contrib" style="color:${col}">${(r.contribution||0).toFixed(1)}/${r.weight_percentage}%</span>
+            </div>
+            <div class="req-bar-bg"><div class="req-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="card">
+        <div class="section-label">Resume PDF</div>
+        ${d.pdf_available
+          ? `<button class="pdf-btn" onclick="togglePDF(this, '${d.candidate_id}')">📄 View Resume PDF</button>
+             <iframe class="pdf-frame" id="pdfFrame"></iframe>`
+          : `<div style="color:var(--muted);font-size:0.82rem;text-align:center;padding:1rem">PDF not available for this candidate</div>`
+        }
+      </div>
+    `;
+
+    // ── RIGHT PANEL ──
+    const right = document.createElement('div');
+    right.className = 'right-panel';
+
+    // Chat card
+    right.innerHTML = `
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="chat-dot"></div>
+          <div>
+            <div class="chat-title">Chat with ${d.candidate_id}</div>
+            <div class="chat-sub">Ask anything about this candidate's resume</div>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg ai">
+            <div class="msg-bubble">👋 Hi! I have access to <strong>${d.candidate_id}</strong>'s resume. Ask me anything — their experience, skills, specific qualifications, or how they match your requirements.</div>
+          </div>
+        </div>
+        <div class="suggestions" id="suggestions">
+          <span class="suggestion" onclick="sendSuggestion(this)">What is their total experience?</span>
+          <span class="suggestion" onclick="sendSuggestion(this)">What tools/technologies do they know?</span>
+          <span class="suggestion" onclick="sendSuggestion(this)">Do they have leadership experience?</span>
+          <span class="suggestion" onclick="sendSuggestion(this)">What is their highest qualification?</span>
+        </div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chatInput" rows="2" placeholder="Ask about ${d.candidate_id}…" onkeydown="handleKey(event)"></textarea>
+          <button class="chat-send" id="sendBtn" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+    `;
+
+    // Score evidence accordion
+    const accordion = document.createElement('div');
+    accordion.innerHTML = `<div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:0.5rem">Score Evidence — Per Requirement</div>`;
+    (d.reqs || []).forEach(r => {
+      const trace = r.rubric_trace || {};
+      const subScores = trace.sub_scores || [];
+      const pct = r.weight_percentage > 0 ? Math.min(((r.contribution||0)/r.weight_percentage)*100,100) : 0;
+
+      const card = document.createElement('div');
+      card.className = 'req-detail-card';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'req-detail-header';
+      hdr.innerHTML = `
+        <div class="req-hdr-left">
+          <span class="req-id-tag">${r.requirement_id}</span>
+          <span class="req-hdr-name">${r.requirement_name || ''}</span>
+        </div>
+        <div class="req-hdr-right">
+          <span class="req-score-pill ${scoreClass(pct)}">${(r.contribution||0).toFixed(2)} / ${r.weight_percentage}%</span>
+          <span class="req-chevron">▾</span>
+        </div>`;
+      hdr.onclick = () => {
+        const body = card.querySelector('.req-detail-body');
+        const ch = hdr.querySelector('.req-chevron');
+        const open = body.classList.toggle('open');
+        hdr.classList.toggle('open', open);
+        ch.classList.toggle('open', open);
+      };
+
+      const body = document.createElement('div');
+      body.className = 'req-detail-body';
+
+      if (subScores.length === 0) {
+        body.innerHTML = `<div style="color:var(--muted);font-size:0.82rem">No sub-query evidence available.</div>`;
+      } else {
+        body.innerHTML = subScores.map(sq => {
+          const sc = parseFloat(sq.sub_score || 0);
+          const cls = sc >= 1.0 ? 'full' : sc > 0 ? 'partial' : 'zero';
+          const label = sc >= 1.0 ? '✓ Full' : sc > 0 ? `◑ ${sc}` : '✗ None';
+          return `<div class="sq-row">
+            <div class="sq-header">
+              <span class="sq-key">${sq.key}</span>
+              <span class="sq-q">${sq.question}</span>
+              <span class="sq-score ${cls}">${label}</span>
+            </div>
+            ${sq.closest_evidence ? `<div class="evidence-box"><strong>Evidence</strong>${sq.closest_evidence}</div>` : ''}
+            ${sq.cited_text && sq.cited_text !== sq.closest_evidence ? `<div class="evidence-box" style="margin-top:4px"><strong>Cited text</strong><em>${sq.cited_text}</em></div>` : ''}
+          </div>`;
+        }).join('');
+      }
+
+      card.appendChild(hdr);
+      card.appendChild(body);
+      accordion.appendChild(card);
+    });
+    right.appendChild(accordion);
+
+    main.appendChild(left);
+    main.appendChild(right);
+  }
+
+  // Chat functions
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+  }
+  function sendSuggestion(el) {
+    document.getElementById('chatInput').value = el.textContent;
+    document.getElementById('suggestions').style.display = 'none';
+    sendChat();
+  }
+
+  async function sendChat() {
+    const input = document.getElementById('chatInput');
+    const btn = document.getElementById('sendBtn');
+    const q = input.value.trim();
+    if (!q) return;
+
+    appendMsg('user', q);
+    input.value = '';
+    btn.disabled = true;
+    document.getElementById('suggestions').style.display = 'none';
+
+    const typingId = appendTyping();
+    try {
+      const res = await fetch('/api/v1/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidate_id: CANDIDATE_ID, question: q })
+      });
+      const data = await res.json();
+      removeTyping(typingId);
+      appendMsg('ai', data.answer);
+    } catch(e) {
+      removeTyping(typingId);
+      appendMsg('ai', 'Sorry, an error occurred. Please try again.');
+    }
+    btn.disabled = false;
+  }
+
+  function appendMsg(role, text) {
+    const wrap = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = `msg ${role}`;
+    const t = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    div.innerHTML = `<div class="msg-bubble">${text.replace(/\n/g,'<br>')}</div><span class="msg-time">${t}</span>`;
+    wrap.appendChild(div);
+    wrap.scrollTop = wrap.scrollHeight;
+  }
+
+  let typingCounter = 0;
+  function appendTyping() {
+    const id = ++typingCounter;
+    const wrap = document.getElementById('chatMessages');
+    const div = document.createElement('div');
+    div.className = 'msg ai';
+    div.id = `typing-${id}`;
+    div.innerHTML = `<div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+    wrap.appendChild(div);
+    wrap.scrollTop = wrap.scrollHeight;
+    return id;
+  }
+  function removeTyping(id) {
+    const el = document.getElementById(`typing-${id}`);
+    if (el) el.remove();
+  }
+
+  function togglePDF(btn, candidateId) {
+    const frame = document.getElementById('pdfFrame');
+    if (frame.style.display === 'block') {
+      frame.style.display = 'none';
+      btn.textContent = '📄 View Resume PDF';
+    } else {
+      frame.src = `/api/v1/pdf/${candidateId}`;
+      frame.style.display = 'block';
+      btn.textContent = '✕ Close PDF';
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>

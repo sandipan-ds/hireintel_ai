@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from fastapi import APIRouter, Depends, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
 
@@ -31,11 +31,28 @@ def _render(template_name: str, context: Dict[str, Any]) -> HTMLResponse:
     return HTMLResponse(content=html)
 
 
-@router.get("/", response_class=HTMLResponse)
-def home(request: Request, db: Session = Depends(get_db)) -> HTMLResponse:
-    """Home page."""
-    roles = db.query(Role).all()
-    return _render("home.html", {"request": request, "roles": roles})
+@router.get("/", response_class=RedirectResponse)
+def home(request: Request) -> RedirectResponse:
+    """Redirect root to the rankings dashboard."""
+    return RedirectResponse(url="/dashboard", status_code=302)
+
+
+@router.get("/dashboard", response_class=HTMLResponse)
+def dashboard_page(request: Request) -> HTMLResponse:
+    """Candidate ranking dashboard page."""
+    return _render("dashboard.html", {"request": request})
+
+
+@router.get("/candidate/{candidate_id}", response_class=HTMLResponse)
+def candidate_page(request: Request, candidate_id: str) -> HTMLResponse:
+    """Candidate detail and chat page."""
+    return _render("candidate.html", {"request": request, "candidate_id": candidate_id})
+
+
+@router.get("/recruiter", response_class=HTMLResponse)
+def recruiter_page(request: Request) -> HTMLResponse:
+    """Recruiter onboarding wizard — 6-step JD → REQ → Sub-query → Weights → Resumes → Run."""
+    return _render("recruiter.html", {"request": request})
 
 
 @router.get("/configure", response_class=HTMLResponse)

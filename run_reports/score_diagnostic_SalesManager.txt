@@ -1,0 +1,618 @@
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0001 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0001 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0001 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0001 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0001 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0002 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0002 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0003 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0004 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0004 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0005 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0005 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0006 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0008 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0008 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0009 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0010 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0012 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0012 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0012 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0013 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0013 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0013 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0014 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0015 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0016 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0016 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0016 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0017 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0017 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0017 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0017 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0017 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0018 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0018 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0018 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0018 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0019 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0019 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0019 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0019 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0020 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0020 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0020 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0021 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0021 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0022 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0022 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0022 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0022 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0023 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0023 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0023 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0023 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0023 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0024 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0024 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0024 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0025 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0025 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0025 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0027 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0027 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0027 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0027 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0029 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0029 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0029 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0029 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0029 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0030 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0030 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0031 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0032 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0033 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0033 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0033 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0033 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0033 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0034 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0034 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0034 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0035 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0035 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0035 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0035 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0036 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0037 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0037 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0037 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0037 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0037 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0038 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0038 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0039 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0040 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0040 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0041 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0041 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0041 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0041 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0042 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0042 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0042 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0042 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0042 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0043 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0044 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0045 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0045 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0045 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0045 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0046 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0046 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0046 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0046 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0046 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0047 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0048 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0048 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0048 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0049 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0049 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Business Acumen & Customer Focus SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0050 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0051 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0052 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0052 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0052 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0054 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0054 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0054 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0054 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0055 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0056 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0056 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0056 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0056 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0057 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0058 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0059 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0059 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0060 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0060 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0060 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0060 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0061 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0062 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0062 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0063 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0063 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0063 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0064 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0064 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0064 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0064 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0064 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0065 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0065 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0065 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0065 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0066 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0066 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0066 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0067 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0068 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0068 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0068 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0068 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0069 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0069 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0069 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0069 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0069 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0070 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0071 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0071 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0071 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0071 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0071 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0072 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0072 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0072 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0073 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0073 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0073 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0073 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0073 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0074 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0076 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0076 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0076 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0076 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0077 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0078 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0078 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0079 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0079 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0079 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0079 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0080 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0080 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0081 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0082 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0083 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0084 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0084 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0085 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0086 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0086 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0086 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0086 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0086 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0087 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0088 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0088 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0088 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0089 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0090 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0090 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0092 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0092 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0093 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0093 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0093 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0093 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0093 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0094 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0095 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0095 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0095 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0095 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0095 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0096 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0096 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0096 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0096 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0097 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0097 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0097 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0098 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0098 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0098 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0098 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0098 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0099 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0099 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0100 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0100 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0101 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0102 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0102 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0102 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0102 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0103 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0103 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0103 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0104 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0105 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0105 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0105 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0106 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0106 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0107 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0107 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0107 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0109 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0109 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0109 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0110 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0110 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0110 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0110 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0110 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0111 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0111 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0111 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0112 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0113 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0113 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0114 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0114 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0115 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0115 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0116 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0116 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0117 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0118 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0118 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0118 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0118 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0119 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0119 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0119 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0119 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0120 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0122 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0122 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0122 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0122 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0122 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0123 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0124 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Business Acumen & Customer Focus SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0125 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0126 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0126 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0126 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0127 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0128 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0128 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0128 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0129 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0129 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0129 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0129 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0130 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0131 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0131 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0131 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0131 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0132 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0132 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0133 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0133 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0133 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0134 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0134 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0134 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0134 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0135 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0135 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0136 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0137 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0137 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0138 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0139 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0139 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0139 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0141 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0141 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0141 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0142 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0142 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0143 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0143 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0143 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0144 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0144 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0144 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0144 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0145 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0146 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0148 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0148 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0148 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0148 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0149 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0149 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0149 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0150 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0150 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0151 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0152 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0153 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0153 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0153 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0154 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0154 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0155 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0156 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0157 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Sales Planning & Strategy Execution SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Excellent Communication & Negotiation SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 B2B Sales or Enterprise Account Experience SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Consultative or Solution Selling SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Sales Leadership or Business Development SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Customer Retention & Account Management SQ028 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0158 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0159 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0160 Excellent Communication & Negotiation SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0160 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0161 Team Management & Coaching SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0161 5+ Years in Sales Roles with Track Record SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0162 Sales Planning & Strategy Execution SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0162 CRM Tools & Sales Reporting SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0162 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0162 Sales Analytics & Forecasting Expertise SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0162 Cross-Functional Alignment (Marketing, Product, Ops) SQ030 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0163 CRM Tools & Sales Reporting SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       SalesManager_CAND_0163 Sales Analytics & Forecasting Expertise SQ017 — no matching text found

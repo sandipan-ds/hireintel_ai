@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to HireIntel AI</h1>
+    <p class="text-xl text-gray-600 mb-8">Candidate Intelligence Platform</p>
+    <div class="flex justify-center space-x-4">
+        <a href="/configure" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+            Configure Weights
+        </a>
+        <a href="/api/docs" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-medium hover:bg-gray-300 transition">
+            API Documentation
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center mb-4">
+            <div class="p-3 bg-blue-100 rounded-full">
+                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Deterministic Scoring</h3>
+        </div>
+        <p class="text-gray-600">Configure weights per requirement and let the scoring engine calculate candidate scores consistently.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center mb-4">
+            <div class="p-3 bg-green-100 rounded-full">
+                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                </svg>
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Recruiter Control</h3>
+        </div>
+        <p class="text-gray-600">Define which skills and requirements matter most for each role with percentage-based weights.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center mb-4">
+            <div class="p-3 bg-purple-100 rounded-full">
+                <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="ml-3 text-lg font-medium text-gray-900">Real-time Validation</h3>
+        </div>
+        <p class="text-gray-600">Ensure weights always sum to 100% with instant feedback and validation.</p>
+    </div>
+</div>
+{% endblock %}

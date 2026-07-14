@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireIntel.AI — New Job</title>
+  <meta name="description" content="Create a new job posting, extract requirements, configure weights, and rank candidates with HireIntel.AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0c14; --surface: #111827;
+      --glass: rgba(255,255,255,0.04); --border: rgba(255,255,255,0.08);
+      --accent: #7c3aed; --accent2: #4f46e5;
+      --green: #10b981; --yellow: #f59e0b; --red: #ef4444;
+      --text: #f1f5f9; --muted: #64748b; --card-r: 12px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(10,12,20,0.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+    }
+    .logo { font-weight: 800; font-size: 1.1rem; color: var(--text); letter-spacing: -0.02em; }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-links a {
+      padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500;
+      color: var(--muted); text-decoration: none; transition: all .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--glass); }
+    .nav-links a.active,
+    .nav-links a.new-job.active {
+      color: var(--accent); font-weight: 700;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+    }
+
+    /* ── Two-column page layout ─────────────────────────────── */
+    .page-wrapper {
+      max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 6rem;
+      display: grid; grid-template-columns: 1fr 296px; gap: 2rem; align-items: start;
+    }
+    @media (max-width: 840px) {
+      .page-wrapper { grid-template-columns: 1fr; }
+      .byok-sidebar { position: static !important; }
+    }
+    .wizard-main { min-width: 0; }
+
+    /* ── BYOK Sidebar ───────────────────────────────────────── */
+    .byok-sidebar {
+      position: sticky; top: 68px;
+      background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2);
+      border-radius: var(--card-r); padding: 1.2rem 1.1rem;
+    }
+    .sidebar-title {
+      font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .sidebar-section { margin-bottom: 1.1rem; }
+    .sidebar-label {
+      display: block; font-size: 0.72rem; font-weight: 600;
+      color: var(--muted); margin-bottom: 0.35rem;
+    }
+    .sidebar-input {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.55rem 0.75rem; color: var(--text);
+      font-family: inherit; font-size: 0.82rem; outline: none; transition: border .15s;
+    }
+    .sidebar-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+    .sidebar-input::placeholder { color: var(--muted); }
+    .sidebar-select { appearance: none; cursor: pointer; }
+    .key-hint {
+      font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem;
+    }
+    .key-hint a { color: #a78bfa; text-decoration: none; }
+    .key-hint a:hover { text-decoration: underline; }
+
+    /* Recommendation pills */
+    .rec-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;
+    }
+    .rec-box-title { font-size: 0.68rem; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: .04em; }
+    .rec-row { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .rec-row:last-child { margin-bottom: 0; }
+    .rec-pill {
+      font-size: 0.62rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px;
+      min-width: 36px; text-align: center; flex-shrink: 0; margin-top: 1px;
+    }
+    .rec-pill.paid { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+    .rec-pill.free { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+    .rec-detail { flex: 1; }
+    .rec-model { font-size: .72rem; font-weight: 600; color: var(--text); font-family: 'Courier New', monospace; cursor: pointer; text-decoration: underline dotted; }
+    .rec-model:hover { color: #a78bfa; }
+    .rec-why { font-size: 0.66rem; color: var(--muted); margin-top: 0.1rem; line-height: 1.4; }
+    .url-hint { font-size: .68rem; color: #a78bfa; cursor: pointer; text-decoration: underline dotted; }
+    .url-hint:hover { color: #c4b5fd; }
+
+    /* Parallelization note */
+    .parallel-box {
+      background: rgba(79,70,229,0.06); border: 1px solid rgba(79,70,229,0.2);
+      border-radius: 8px; padding: 0.75rem;
+    }
+    .parallel-title {
+      font-size: 0.68rem; font-weight: 700; color: #818cf8;
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: 0.4rem;
+    }
+    .parallel-body { font-size: 0.7rem; color: var(--muted); line-height: 1.55; }
+    .parallel-body strong { color: var(--text); }
+    .parallel-body .rpm-row { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.35rem; }
+    .rpm-badge { font-size: 0.63rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; white-space: nowrap; }
+    .rpm-badge.hi  { background: rgba(16,185,129,0.15); color: var(--green); }
+    .rpm-badge.lo  { background: rgba(239,68,68,0.12); color: var(--red); }
+
+    /* Key status */
+    #key-status {
+      margin-top: 0.5rem; font-size: 0.7rem; min-height: 1rem;
+      transition: color .2s;
+    }
+    .ks-ok  { color: var(--green); }
+    .ks-err { color: var(--red); }
+
+    /* ── Layout inner ──────────────────────────────────────── */
+    h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em; }
+    h1 span { color: var(--accent); }
+    .subtitle { color: var(--muted); font-size: 0.88rem; margin-top: 0.25rem; }
+
+    /* ── Progress bar ─────────────────────────────────────── */
+    .wizard-progress {
+      display: flex; align-items: center; margin: 1.75rem 0 2rem;
+      background: var(--glass); border: 1px solid var(--border); border-radius: var(--card-r);
+      overflow: hidden;
+    }
+    .wp-step {
+      flex: 1; padding: 0.6rem 0.4rem; text-align: center;
+      font-size: 0.68rem; font-weight: 600; color: var(--muted);
+      transition: all .3s; border-right: 1px solid var(--border);
+    }
+    .wp-step:last-child { border-right: none; }
+    .wp-step .sn { display: block; font-size: 0.95rem; font-weight: 800; color: var(--border); margin-bottom: 0.05rem; }
+    .wp-step.active { color: var(--text); background: rgba(124,58,237,0.12); }
+    .wp-step.active .sn { color: var(--accent); }
+    .wp-step.done { color: var(--green); }
+    .wp-step.done .sn { color: var(--green); }
+
+    /* ── Cards ────────────────────────────────────────────── */
+    .card {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--card-r); padding: 1.6rem; margin-bottom: 1.25rem;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .card-sub { color: var(--muted); font-size: 0.8rem; margin-bottom: 1.2rem; line-height: 1.5; }
+
+    /* ── Form ─────────────────────────────────────────────── */
+    label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.35rem; }
+    input[type=text], textarea, select {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.6rem 0.85rem; color: var(--text);
+      font-family: inherit; font-size: 0.86rem; outline: none; transition: border .15s;
+    }
+    input[type=text]:focus, textarea:focus, select:focus {
+      border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+    }
+    textarea { resize: vertical; min-height: 200px; line-height: 1.6; }
+    select option, select optgroup { background: #1a1030; color: var(--text); }
+    .field { margin-bottom: 1rem; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.58rem 1.15rem; border-radius: 8px; font-size: 0.84rem;
+      font-weight: 600; cursor: pointer; transition: all .2s; border: none;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #6d28d9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(124,58,237,0.4); }
+    .btn-secondary { background: var(--glass); border: 1px solid var(--border); color: var(--muted); }
+    .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .btn-sm { padding: 0.32rem 0.65rem; font-size: 0.73rem; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+    .btn-row { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.4rem; flex-wrap: wrap; }
+
+    /* ── Badges ───────────────────────────────────────────── */
+    .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+    .badge-green  { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+    .badge-yellow { background: rgba(245,158,11,0.15); color: var(--yellow); border: 1px solid rgba(245,158,11,0.3); }
+    .badge-red    { background: rgba(239,68,68,0.15);  color: var(--red);    border: 1px solid rgba(239,68,68,0.3); }
+
+    /* ── REQ cards ────────────────────────────────────────── */
+    .req-list { display: flex; flex-direction: column; gap: 0.65rem; }
+    .req-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
+    .req-card-header { display: flex; align-items: flex-start; gap: 0.65rem; }
+    .req-id { font-size: 0.68rem; font-weight: 700; color: var(--muted); min-width: 52px; padding-top: 2px; }
+    .req-card-body { flex: 1; }
+    .req-name { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.15rem; }
+    .req-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .req-meta { display: flex; align-items: center; gap: 0.45rem; margin-top: 0.45rem; flex-wrap: wrap; }
+    .chip { background: var(--glass); border: 1px solid var(--border); border-radius: 999px; padding: 0.12rem 0.5rem; font-size: 0.63rem; color: var(--muted); }
+    .req-reason { font-size: 0.7rem; color: var(--muted); margin-top: 0.35rem; font-style: italic; }
+    .req-edit-area { display: none; margin-top: 0.7rem; }
+    .req-edit-area.open { display: block; }
+
+    /* ── Sub-query accordion ──────────────────────────────── */
+    .sq-group { margin-bottom: 1.1rem; }
+    .sq-group-header {
+      display: flex; align-items: center; gap: 0.65rem; padding: 0.7rem 0.9rem;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; user-select: none; font-weight: 600; font-size: 0.86rem;
+    }
+    .sq-group-header:hover { background: rgba(255,255,255,0.07); }
+    .sq-items { display: none; flex-direction: column; gap: 0.45rem; margin-top: 0.45rem; padding-left: 0.4rem; }
+    .sq-items.open { display: flex; }
+    .sq-item { display: flex; gap: 0.65rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem; }
+    .sq-num { font-size: 0.63rem; font-weight: 700; color: var(--muted); min-width: 36px; padding-top: 2px; }
+    .sq-body { flex: 1; }
+    .sq-text { font-size: 0.81rem; margin-bottom: 0.25rem; line-height: 1.5; }
+    .sq-hint { font-size: 0.68rem; color: var(--muted); font-style: italic; }
+    .sq-meta { display: flex; gap: 0.4rem; align-items: center; margin-top: 0.35rem; flex-wrap: wrap; }
+    .sq-type { background: rgba(79,70,229,0.15); color: #818cf8; border: 1px solid rgba(79,70,229,0.3); border-radius: 999px; padding: 0.12rem 0.45rem; font-size: 0.63rem; font-weight: 700; }
+
+    /* ── Resume link rows ─────────────────────────────────── */
+    .link-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .link-row input { flex: 1; }
+    .link-status { font-size: 0.72rem; margin-top: 0.2rem; }
+    .link-ok  { color: var(--green); }
+    .link-err { color: var(--red); }
+
+    /* ── Step 6 ───────────────────────────────────────────── */
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1.1rem; }
+    .summary-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 0.9rem; }
+    .summary-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); margin-bottom: 0.2rem; }
+    .summary-val { font-size: 0.9rem; font-weight: 600; }
+    .run-cmd { background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1.1rem; font-family: 'Courier New', monospace; font-size: 0.79rem; color: #4ade80; white-space: pre-wrap; word-break: break-all; margin-bottom: 0.85rem; }
+    .info-box { background: rgba(79,70,229,0.08); border: 1px solid rgba(79,70,229,0.25); border-radius: 8px; padding: 0.8rem 0.9rem; font-size: 0.78rem; color: #a5b4fc; margin-bottom: 0.9rem; }
+    .warn-box { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 0.8rem 0.9rem; font-size: 0.78rem; color: var(--yellow); margin-bottom: 0.9rem; }
+
+    /* ── Spinner ──────────────────────────────────────────── */
+    .spinner { display: inline-block; width: 16px; height: 16px; }
+    .spinner::after { content: ''; display: block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Step visibility ──────────────────────────────────── */
+    .step-section { display: none; }
+    .step-section.active { display: block; animation: fadeIn .3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* ── File upload zone ─────────────────────────────────── */
+    .upload-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 1.25rem; text-align: center; cursor: pointer; transition: border-color .2s; }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--accent); }
+    .upload-zone input { display: none; }
+    .upload-zone p { color: var(--muted); font-size: 0.78rem; margin-top: 0.35rem; }
+
+    /* ── Session notice ───────────────────────────────────── */
+    .session-notice { background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.2); border-radius: 6px; padding: 0.45rem 0.8rem; font-size: 0.7rem; color: var(--muted); margin-bottom: 1.4rem; }
+
+    /* ── Inline weight editor ─────────────────────────────────── */
+    .weight-total-bar { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; padding: .85rem 1rem; margin-bottom: 1.1rem; }
+    .weight-total-label { font-size: .82rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; }
+    .weight-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin-bottom: .1rem; }
+    .weight-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width .25s, background .25s; }
+    .weight-fill.over  { background: var(--red); }
+    .weight-fill.exact { background: var(--green); }
+    .weight-list { display: flex; flex-direction: column; gap: .5rem; }
+    .weight-row { display: flex; align-items: center; gap: .75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: .6rem .85rem; }
+    .weight-row-id { font-size: .65rem; font-weight: 700; color: var(--muted); min-width: 52px; }
+    .weight-row-name { flex: 1; font-size: .82rem; font-weight: 500; color: var(--text); min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .weight-row-type { font-size: .63rem; color: var(--muted); white-space: nowrap; }
+    .weight-input-wrap { display: flex; align-items: center; gap: .25rem; flex-shrink: 0; }
+    .weight-input { width: 54px; text-align: right; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; padding: .3rem .4rem; color: var(--text); font-size: .82rem; font-weight: 600; outline: none; transition: border .15s; }
+    .weight-input:focus { border-color: var(--accent); }
+    .weight-pct { font-size: .78rem; color: var(--muted); font-weight: 600; }
+    .candidate-link {
+      color: #a78bfa; text-decoration: none; font-weight: 600;
+      border-bottom: 1px dashed rgba(167,139,250,0.3); transition: all .15s;
+    }
+    .candidate-link:hover { color: #c4b5fd; border-bottom-color: rgba(196,181,253,0.8); }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ─────────────────────────────────────────────────── -->
+<nav>
+  <span class="logo">HireIntel<span>.AI</span></span>
+  <div class="nav-links">
+    <a href="/recruiter" class="new-job active">✦ New Job</a>
+    <a href="/dashboard">Rankings</a>
+    <a href="/api/docs">API</a>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       LEFT — Wizard Steps
+  ═══════════════════════════════════════════════════════════════ -->
+  <div class="wizard-main">
+    <h1>Create a <span>New Job</span></h1>
+    <p class="subtitle">Upload a JD, extract requirements, set weights, and rank candidates — step by step.</p>
+
+    <div class="session-notice">
+      🔒 <strong>No session data is stored.</strong> Each visit starts a fresh session — complete all steps in one flow.
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="wizard-progress">
+      <div class="wp-step active" id="wp-1"><span class="sn">1</span>JD Input</div>
+      <div class="wp-step" id="wp-2"><span class="sn">2</span>Requirements</div>
+      <div class="wp-step" id="wp-3"><span class="sn">3</span>Sub-Queries</div>
+      <div class="wp-step" id="wp-4"><span class="sn">4</span>Weights</div>
+      <div class="wp-step" id="wp-5"><span class="sn">5</span>Resumes</div>
+      <div class="wp-step" id="wp-6"><span class="sn">6</span>Run</div>
+    </div>
+
+    <!-- ── STEP 1 — Job Description ───────────────────────── -->
+    <div class="step-section active" id="step-1">
+      <div class="card">
+        <div class="card-title">Step 1 — Job Description</div>
+        <div class="card-sub">Paste your JD or upload a file. The more detail you include, the more precisely candidates will be ranked.</div>
+
+        <div class="field">
+          <label for="role-name">Job Role / Position Title *</label>
+          <input type="text" id="role-name" placeholder="e.g. Senior Python Developer" />
+        </div>
+        <div class="field">
+          <label for="jd-text">Job Description *</label>
+          <textarea id="jd-text" placeholder="Paste the full job description here…"></textarea>
+        </div>
+        <div class="field">
+          <label>Or upload a file (.txt, .md, .pdf, .docx)</label>
+          <div class="upload-zone" id="upload-zone" onclick="document.getElementById('jd-file').click()">
+            <input type="file" id="jd-file" accept=".txt,.md,.pdf,.docx" />
+            <div style="font-size:1.6rem;margin-bottom:.4rem;">📄</div>
+            <p>Click or drag &amp; drop a JD file — text fills the box above</p>
+            <p id="upload-status" style="margin-top:.3rem;font-size:.7rem;"></p>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-extract" onclick="extractReqs()">Extract Requirements →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STEP 2 — Requirements Review ───────────────────── -->
+    <div class="step-section" id="step-2">
+      <div class="card">
+        <div class="card-title">Step 2 — Requirement Review</div>
+        <div class="card-sub">
+          AI-extracted requirements with quality classification.
+          🟢 Clear &amp; scorable · 🟡 Workable but vague · 🔴 Needs more detail.
+          Click <strong>Edit</strong> to adjust name, description, or category.
+        </div>
+        <div class="req-list" id="req-list"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+        <button class="btn btn-primary" id="btn-subqueries" onclick="genSubqueries()">Generate Sub-Queries →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3 — Sub-Query Review ──────────────────────── -->
+    <div class="step-section" id="step-3">
+      <div class="card">
+        <div class="card-title">Step 3 — Sub-Query Review</div>
+        <div class="card-sub">AI-generated sub-queries for scoring each requirement from resume evidence. Click a requirement to expand.</div>
+        <div id="sq-list"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+        <button class="btn btn-primary" id="btn-save-role" onclick="saveRole()">Set Weights →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4 — Weights (inline) ──────────────────────────── -->
+    <div class="step-section" id="step-4">
+      <div class="card">
+        <div class="card-title">Step 4 — Set Requirement Weights</div>
+        <div class="card-sub">
+          Assign an importance weight to each requirement. Weights must total exactly <strong>100%</strong>.
+          Higher weight = more influence on the final ranking score.
+        </div>
+
+        <!-- Live total bar -->
+        <div class="weight-total-bar">
+          <div class="weight-total-label">
+            Total: <span id="weight-total-val">0</span>%
+            <span id="weight-total-status" style="margin-left:.4rem;"></span>
+          </div>
+          <div class="weight-track">
+            <div class="weight-fill" id="weight-fill"></div>
+          </div>
+          <div style="display:flex;gap:.5rem;margin-top:.5rem;align-items:center;">
+            <button class="btn btn-secondary btn-sm" onclick="autoBalance()">⚖ Auto-balance equally</button>
+            <span style="font-size:.68rem;color:var(--muted);">Distributes remaining % evenly across all requirements</span>
+          </div>
+        </div>
+
+        <!-- Per-req weight rows -->
+        <div class="weight-list" id="weight-list"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(3)">← Back</button>
+        <button class="btn btn-primary" id="btn-weights-next" onclick="saveWeightsAndContinue()">Continue →</button>
+      </div>
+    </div>
+
+
+    <!-- ── STEP 5 — Resume Sources ─────────────────────────── -->
+    <div class="step-section" id="step-5">
+      <div class="card">
+        <div class="card-title">Step 5 — Resume Sources</div>
+        <div class="card-sub">Add links to your resume storage. Only HTTPS links from trusted cloud providers are accepted. Resumes must be <strong>PDF or DOCX</strong> only.</div>
+
+        <div class="warn-box">
+          ⚠ <strong>Security:</strong> HireIntel validates link domains. Only trusted providers are accepted (Google Drive, Dropbox, OneDrive, SharePoint, Box). Use <em>view-only</em> shared links — never share write-access links.
+        </div>
+
+        <div class="field">
+          <label>Resume Folder / File Links</label>
+          <div id="link-rows">
+            <div class="link-row">
+              <input type="text" class="link-input" placeholder="https://drive.google.com/…  or  https://www.dropbox.com/…" />
+              <button class="btn btn-secondary btn-sm" onclick="validateThisLink(this)">Verify</button>
+            </div>
+          </div>
+          <div style="margin-top:.4rem;">
+            <button class="btn btn-secondary btn-sm" onclick="addLinkRow()">+ Add another link</button>
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(4)">← Back</button>
+        <button class="btn btn-primary" onclick="goToStep(6); buildRunSummary()">Continue to Run →</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 6 — Run & View Rankings ────────────────────── -->
+    <div class="step-section" id="step-6">
+      <div class="card">
+        <div class="card-title">Step 6 — Run &amp; View Rankings</div>
+        <div class="card-sub">Review your settings and trigger the candidate ranking with a single click.</div>
+
+        <div class="summary-grid" id="summary-grid"></div>
+
+        <!-- Start scoring via API -->
+        <div class="card-title" style="font-size:.88rem;margin-bottom:.35rem;">🏆 Score &amp; Rank Candidates</div>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:.75rem;">Click Start Scoring below. The server will fetch the resumes from your shared link, extract their content, and score them against the rubric.</p>
+
+        <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem;">
+          <button class="btn btn-primary" id="btn-start-scoring" onclick="startScoring()">▶ Start Scoring</button>
+          <span id="scoring-eta" style="font-size:.78rem;color:var(--muted);"></span>
+        </div>
+
+        <!-- Progress panel (hidden until scoring starts) -->
+        <div id="scoring-progress" style="display:none;margin-bottom:1.2rem;">
+          <div class="weight-total-bar" style="margin-bottom:.7rem;">
+            <div class="weight-total-label" id="scoring-phase-label">Fetching resumes…</div>
+            <div class="weight-track" style="height:8px;">
+              <div class="weight-fill" id="scoring-bar" style="width:0%;"></div>
+            </div>
+          </div>
+          <div id="scoring-log" style="background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-family:monospace;font-size:.7rem;color:#94a3b8;max-height:120px;overflow-y:auto;line-height:1.6;"></div>
+        </div>
+
+        <!-- Inline rankings panel -->
+        <div style="margin-top:1rem;">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.7rem;">
+            <div class="card-title" style="font-size:.88rem;margin:0;">📊 Rankings</div>
+            <button class="btn btn-secondary btn-sm" id="btn-check-rankings" onclick="checkRankings()">↻ Refresh</button>
+            <span id="rankings-status" style="font-size:.72rem;color:var(--muted);"></span>
+          </div>
+          <div id="inline-rankings-panel">
+            <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;">
+              Click <strong>Start Scoring</strong> above. Rankings will appear here automatically.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goToStep(5)">← Back</button>
+        <button class="btn btn-primary" onclick="checkRankings()">↻ Refresh Rankings</button>
+      </div>
+    </div>
+  </div><!-- /wizard-main -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       RIGHT — BYOK Sidebar (sticky, always visible)
+  ═══════════════════════════════════════════════════════════════ -->
+  <aside class="byok-sidebar">
+    <div class="sidebar-title">⚡ API Key (BYOK)</div>
+
+    <!-- Key input -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">OpenRouter API Key</span>
+      <input type="password" class="sidebar-input" id="byok-key"
+             placeholder="sk-or-v1-…"
+             oninput="onKeyInput()" />
+      <div class="key-hint">
+        Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
+      </div>
+      <div id="key-status"></div>
+    </div>
+
+    <!-- Model input — user types exact model slug -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Model <span style="color:var(--muted);font-weight:400">(exact slug)</span></span>
+      <input type="text" class="sidebar-input" id="byok-model"
+             placeholder="e.g. google/gemini-3.1-flash-lite" />
+      <div class="key-hint" style="margin-top:.35rem;">
+        Type the exact model slug from your provider.
+        <strong style="color:#f59e0b;">Must be multimodal</strong> — resumes may be scanned images.
+      </div>
+    </div>
+
+    <!-- Base URL input -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Provider Base URL</span>
+      <input type="text" class="sidebar-input" id="byok-base-url"
+             placeholder="https://openrouter.ai/api/v1" />
+      <div class="key-hint" style="margin-top:.35rem;line-height:1.55;">
+        Common base URLs:<br/>
+        <span class="url-hint" onclick="fillBaseUrl('https://openrouter.ai/api/v1')">OpenRouter ↗</span>
+        &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://opencode.ai/zen/go/v1')">OpenCode ↗</span>
+        &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://integrate.api.nvidia.com/v1')">NVIDIA NIM ↗</span><br/>
+        <span class="url-hint" onclick="fillBaseUrl('https://generativelanguage.googleapis.com/v1beta/openai/')">Google AI ↗</span>
+      </div>
+    </div>
+
+    <!-- Recommendations — multimodal models only -->
+    <div class="sidebar-section">
+      <div class="rec-box">
+        <div class="rec-box-title">Recommendations · multimodal only</div>
+        <div class="rec-row">
+          <span class="rec-pill paid">PAID</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('google/gemini-3.1-flash-lite')" title="Click to fill">google/gemini-3.1-flash-lite ↗</div>
+            <div class="rec-why">Fast, multimodal, high RPM — handles scanned PDFs &amp; image resumes</div>
+          </div>
+        </div>
+        <div class="rec-row">
+          <span class="rec-pill free">FREE</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('google/gemma-4-31b-it:free')" title="Click to fill">google/gemma-4-31b-it:free ↗</div>
+            <div class="rec-why">Multimodal, no cost — rate limited, good for small batches</div>
+          </div>
+        </div>
+        <div class="rec-row">
+          <span class="rec-pill free">FREE</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
+            <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
+          </div>
+        </div>
+        <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;">↑ Click a model to fill the field above</div>
+      </div>
+    </div>
+
+    <!-- Parallelization explanation -->
+    <div class="parallel-box">
+      <div class="parallel-title">⚡ Multi-call parallelization</div>
+      <div class="parallel-body">
+        HireIntel scores resumes using <strong>multi-call parallelization</strong> — one LLM call per requirement per candidate, all fired in parallel.
+        <div class="rpm-row">
+          <span class="rpm-badge hi">Paid · 60–1000 RPM</span>
+          <span style="font-size:.65rem;">Full parallel throughput</span>
+        </div>
+        <div class="rpm-row">
+          <span class="rpm-badge lo">Free · 3–15 RPM</span>
+          <span style="font-size:.65rem;">Calls serialized — slow for &gt;20 resumes</span>
+        </div>
+      </div>
+    </div>
+  </aside><!-- /byok-sidebar -->
+
+</div><!-- /page-wrapper -->
+
+<!-- ──────────────────────────────────────────────────────────────
+     JavaScript — Wizard state machine + API calls
+──────────────────────────────────────────────────────────────── -->
+<script>
+// ── State ─────────────────────────────────────────────────────
+const state = {
+  currentStep: 1,
+  roleName: '', jdText: '',
+  reqs: [], subqueries: {},
+  weights: {},
+  resumeLinks: [],
+  savedRoleSlug: '', savedRoleId: null,
+};
+
+// ── Read sidebar key / model / base_url ───────────────────────
+function getByok() {
+  return {
+    api_key:  document.getElementById('byok-key').value.trim() || null,
+    model:    document.getElementById('byok-model').value.trim() || null,
+    base_url: document.getElementById('byok-base-url').value.trim() || null,
+  };
+}
+
+// Fill model field from recommendation click
+function fillModel(slug) {
+  const el = document.getElementById('byok-model');
+  el.value = slug; el.focus();
+  el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
+}
+
+// Fill base URL field from hint click
+function fillBaseUrl(url) {
+  const el = document.getElementById('byok-base-url');
+  el.value = url; el.focus();
+  el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
+}
+
+function onKeyInput() {
+  const key = document.getElementById('byok-key').value.trim();
+  const el  = document.getElementById('key-status');
+  if (!key) { el.textContent = ''; el.className = ''; return; }
+  if (key.startsWith('sk-or-')) {
+    el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
+  } else {
+    el.textContent = 'ℹ Key format unrecognized — will try anyway'; el.className = '';
+    el.style.color = 'var(--muted)';
+  }
+}
+
+// ── Step navigation ───────────────────────────────────────────
+function goToStep(n) {
+  document.getElementById(`step-${state.currentStep}`).classList.remove('active');
+  for (let i = 1; i <= 6; i++) {
+    const el = document.getElementById(`wp-${i}`);
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  }
+  state.currentStep = n;
+  document.getElementById(`step-${n}`).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Helper: validate key+model before LLM calls ───────────────
+function requireByok() {
+  const { api_key, model } = getByok();
+  if (!api_key) {
+    alert('Please enter your OpenRouter API key in the sidebar before continuing.');
+    return false;
+  }
+  if (!model) {
+    alert('Please select a model in the sidebar before continuing.');
+    return false;
+  }
+  return true;
+}
+
+// ── File upload (Step 1) ──────────────────────────────────────
+document.getElementById('jd-file').addEventListener('change', async function () {
+  const file = this.files[0];
+  if (!file) return;
+  const status = document.getElementById('upload-status');
+
+  if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+    document.getElementById('jd-text').value = await file.text();
+    status.textContent = `✓ Loaded ${file.name}`; status.style.color = 'var(--green)'; return;
+  }
+
+  status.textContent = 'Extracting text…'; status.style.color = 'var(--muted)';
+  const form = new FormData(); form.append('file', file);
+  try {
+    const r = await fetch('/api/recruiter/parse-jd-file', { method: 'POST', body: form });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Extraction failed');
+    document.getElementById('jd-text').value = d.text;
+    status.textContent = `✓ Extracted from ${file.name}`; status.style.color = 'var(--green)';
+  } catch (e) {
+    status.textContent = `✗ ${e.message}`; status.style.color = 'var(--red)';
+  }
+});
+
+// Drag & drop
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) { const dt = new DataTransfer(); dt.items.add(f); document.getElementById('jd-file').files = dt.files; document.getElementById('jd-file').dispatchEvent(new Event('change')); }
+});
+
+// ── Step 1 → 2: Extract REQs ─────────────────────────────────
+async function extractReqs() {
+  const roleName = document.getElementById('role-name').value.trim();
+  const jdText   = document.getElementById('jd-text').value.trim();
+  if (!roleName) { alert('Please enter a role / position title.'); return; }
+  if (jdText.length < 80) { alert('Job description is too short. Please paste the full JD.'); return; }
+  if (!requireByok()) return;
+
+  state.roleName = roleName; state.jdText = jdText;
+  const btn = document.getElementById('btn-extract');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Extracting…';
+
+  try {
+    const { api_key, model, base_url } = getByok();
+    const r = await fetch('/api/recruiter/extract-reqs', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jd_text: jdText, role_name: roleName, api_key, model, base_url }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Extraction failed');
+    state.reqs = d.reqs;
+    renderReqs(); goToStep(2);
+  } catch (e) {
+    alert(`REQ extraction failed: ${e.message}`);
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Extract Requirements →';
+  }
+}
+
+// ── Render REQ cards ──────────────────────────────────────────
+function badgeHtml(status) {
+  const map   = { GREEN: 'badge-green', YELLOW: 'badge-yellow', RED: 'badge-red' };
+  const icons = { GREEN: '🟢', YELLOW: '🟡', RED: '🔴' };
+  return `<span class="badge ${map[status]||'badge-yellow'}">${icons[status]||'⚪'} ${status||'?'}</span>`;
+}
+
+function renderReqs() {
+  document.getElementById('req-list').innerHTML = state.reqs.map((r, i) => `
+    <div class="req-card">
+      <div class="req-card-header">
+        <div class="req-id">${r.req_id}</div>
+        <div class="req-card-body">
+          <div class="req-name" id="rn-${i}">${esc(r.name)}</div>
+          <div class="req-desc" id="rd-${i}">${esc(r.description||'')}</div>
+          <div class="req-meta">
+            ${badgeHtml(r.status)}
+            <span class="chip">${esc(r.category)}</span>
+            <span class="chip">${esc(r.requirement_type)}</span>
+            <button class="btn btn-secondary btn-sm" style="margin-left:auto" onclick="toggleEdit(${i})">✏ Edit</button>
+          </div>
+          <div class="req-reason">AI reason: ${esc(r.reason||'')}</div>
+          <div class="req-edit-area" id="re-${i}">
+            <div class="field" style="margin-top:.5rem">
+              <label>Name</label>
+              <input type="text" value="${escAttr(r.name)}" onchange="updateReq(${i},'name',this.value)" />
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea onchange="updateReq(${i},'description',this.value)">${esc(r.description||'')}</textarea>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label>Category</label>
+                <select onchange="updateReq(${i},'category',this.value)">
+                  ${['Core Skill','Preferred Skill','Experience','Education','Certification']
+                    .map(c=>`<option value="${c}"${c===r.category?' selected':''}>${c}</option>`).join('')}
+                </select>
+              </div>
+              <div class="field">
+                <label>Type</label>
+                <select onchange="updateReq(${i},'requirement_type',this.value)">
+                  <option value="required"${r.requirement_type==='required'?' selected':''}>Required</option>
+                  <option value="preferred"${r.requirement_type==='preferred'?' selected':''}>Preferred</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleEdit(i) { document.getElementById(`re-${i}`).classList.toggle('open'); }
+function updateReq(i, f, v) {
+  state.reqs[i][f] = v;
+  if (f==='name') document.getElementById(`rn-${i}`).textContent = v;
+  if (f==='description') document.getElementById(`rd-${i}`).textContent = v;
+}
+
+// Flush any open edit fields into state.reqs before sending to backend.
+// Prevents edits that haven't triggered onchange (e.g. mid-typing) from being missed.
+function flushReqEdits() {
+  state.reqs.forEach((r, i) => {
+    const nameInput = document.querySelector(`#re-${i} input[type="text"]`);
+    const descTA    = document.querySelector(`#re-${i} textarea`);
+    const catSel    = document.querySelector(`#re-${i} select:nth-of-type(1)`);
+    const typeSel   = document.querySelector(`#re-${i} select:nth-of-type(2)`);
+    if (nameInput) r.name        = nameInput.value.trim() || r.name;
+    if (descTA)    r.description = descTA.value.trim()    || r.description;
+    if (catSel)    r.category    = catSel.value           || r.category;
+    if (typeSel)   r.requirement_type = typeSel.value    || r.requirement_type;
+  });
+}
+
+// ── Step 2 → 3: Generate sub-queries ─────────────────────────
+async function genSubqueries() {
+  if (!requireByok()) return;
+  // Flush any unsaved edits from open REQ edit panels before sending
+  flushReqEdits();
+  const btn = document.getElementById('btn-subqueries');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Generating…';
+
+  try {
+    const { api_key, model, base_url } = getByok();
+    const r = await fetch('/api/recruiter/gen-subqueries', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reqs: state.reqs, api_key, model, base_url }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Generation failed');
+    state.subqueries = d.subqueries;
+    renderSubqueries(); goToStep(3);
+  } catch (e) {
+    alert(`Sub-query generation failed: ${e.message}`);
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Generate Sub-Queries →';
+  }
+}
+
+// ── Render sub-query accordion ────────────────────────────────
+function renderSubqueries() {
+  document.getElementById('sq-list').innerHTML = state.reqs.map((r, ri) => {
+    const sqs = state.subqueries[r.req_id] || [];
+    const items = sqs.map((sq, si) => `
+      <div class="sq-item">
+        <div class="sq-num">${sq.sq_id||`SQ${si+1}`}</div>
+        <div class="sq-body">
+          <div class="sq-text">${esc(sq.text||'')}</div>
+          <div class="sq-hint">${esc(sq.scoring_hint||'')}</div>
+          <div class="sq-meta">${badgeHtml(sq.status||'YELLOW')}<span class="sq-type">${sq.type||'binary'}</span></div>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="sq-group">
+        <div class="sq-group-header" onclick="toggleSq(${ri})">
+          <span style="flex:1">${esc(r.req_id)} — ${esc(r.name)}</span>
+          ${badgeHtml(r.status)}
+          <span style="font-size:.68rem;color:var(--muted);margin-left:.4rem">${sqs.length} sub-queries</span>
+          <span id="sqc-${ri}" style="margin-left:.4rem">▶</span>
+        </div>
+        <div class="sq-items" id="sqi-${ri}">${items}</div>
+      </div>`;
+  }).join('');
+}
+
+function toggleSq(i) {
+  const el = document.getElementById(`sqi-${i}`);
+  el.classList.toggle('open');
+  document.getElementById(`sqc-${i}`).textContent = el.classList.contains('open') ? '▼' : '▶';
+}
+
+// ── Step 3 → 4: Save role then show inline weight editor ──────
+async function saveRole() {
+  const btn = document.getElementById('btn-save-role');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Saving…';
+
+  try {
+    const r = await fetch('/api/recruiter/save-role', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ role_name: state.roleName, jd_text: state.jdText, reqs: state.reqs, subqueries: state.subqueries }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Save failed');
+    state.savedRoleSlug = d.role_slug; state.savedRoleId = d.role_id;
+    renderWeights();
+    goToStep(4);
+  } catch (e) {
+    alert(`Save failed: ${e.message}`);
+  } finally {
+    btn.disabled = false; btn.innerHTML = 'Set Weights →';
+  }
+}
+
+// ── Step 4: Inline weight editor ──────────────────────────────
+
+// Initialise equal weights and render per-req rows
+function renderWeights() {
+  const n = state.reqs.length;
+  if (!n) return;
+  // Default: equal split (rounded to 1 decimal)
+  const base  = Math.floor(100 / n);
+  const rem   = 100 - base * n;
+  state.reqs.forEach((r, i) => {
+    state.weights[r.req_id] = base + (i === 0 ? rem : 0);
+  });
+
+  document.getElementById('weight-list').innerHTML = state.reqs.map((r) => `
+    <div class="weight-row">
+      <span class="weight-row-id">${esc(r.req_id)}</span>
+      <span class="weight-row-name" title="${escAttr(r.name)}">${esc(r.name)}</span>
+      <span class="weight-row-type">${esc(r.requirement_type)}</span>
+      <div class="weight-input-wrap">
+        <input type="number" class="weight-input" min="0" max="100" step="1"
+               id="w-${r.req_id}"
+               value="${state.weights[r.req_id]}"
+               oninput="onWeightChange('${r.req_id}', this.value)" />
+        <span class="weight-pct">%</span>
+      </div>
+    </div>
+  `).join('');
+
+  updateWeightTotal();
+}
+
+// Recalculate total and update bar + status on every keystroke
+function onWeightChange(reqId, val) {
+  state.weights[reqId] = parseFloat(val) || 0;
+  updateWeightTotal();
+}
+
+function updateWeightTotal() {
+  const total = Object.values(state.weights).reduce((s, v) => s + v, 0);
+  const rounded = Math.round(total * 10) / 10;
+
+  document.getElementById('weight-total-val').textContent = rounded;
+
+  const fill   = document.getElementById('weight-fill');
+  const status = document.getElementById('weight-total-status');
+  const pct    = Math.min(rounded, 100);
+
+  fill.style.width = pct + '%';
+  fill.classList.remove('over', 'exact');
+
+  if (rounded === 100) {
+    fill.classList.add('exact');
+    status.innerHTML = '<span style="color:var(--green);font-weight:700;">✓ Perfect</span>';
+    document.getElementById('btn-weights-next').disabled = false;
+  } else if (rounded > 100) {
+    fill.classList.add('over');
+    status.innerHTML = `<span style="color:var(--red);">▲ ${(rounded-100).toFixed(1)}% over</span>`;
+    document.getElementById('btn-weights-next').disabled = true;
+  } else {
+    status.innerHTML = `<span style="color:var(--yellow);">▼ ${(100-rounded).toFixed(1)}% remaining</span>`;
+    document.getElementById('btn-weights-next').disabled = true;
+  }
+}
+
+// Distribute remaining % evenly — snap to whole numbers
+function autoBalance() {
+  const n = state.reqs.length;
+  if (!n) return;
+  const base = Math.floor(100 / n);
+  const rem  = 100 - base * n;
+  state.reqs.forEach((r, i) => {
+    const w = base + (i === 0 ? rem : 0);
+    state.weights[r.req_id] = w;
+    const el = document.getElementById(`w-${r.req_id}`);
+    if (el) el.value = w;
+  });
+  updateWeightTotal();
+}
+
+// Validate, store, and proceed to Step 5
+function saveWeightsAndContinue() {
+  const total = Math.round(Object.values(state.weights).reduce((s, v) => s + v, 0) * 10) / 10;
+  if (total !== 100) {
+    alert(`Weights must total 100%. Current total: ${total}%.`);
+    return;
+  }
+  goToStep(5);
+}
+
+
+// ── Step 5 — Link validation ──────────────────────────────────
+function addLinkRow() {
+  const c = document.getElementById('link-rows');
+  const d = document.createElement('div'); d.className = 'link-row';
+  d.innerHTML = `<input type="text" class="link-input" placeholder="https://…" /><button class="btn btn-secondary btn-sm" onclick="validateThisLink(this)">Verify</button>`;
+  c.appendChild(d);
+}
+
+async function validateThisLink(btn) {
+  const row = btn.closest('.link-row');
+  const url = row.querySelector('input').value.trim();
+  if (!url) { alert('Please enter a URL first.'); return; }
+  let st = row.nextElementSibling;
+  if (!st || !st.classList.contains('link-status')) { st = document.createElement('div'); st.className = 'link-status'; row.after(st); }
+  btn.disabled = true; btn.textContent = '…';
+  try {
+    const r = await fetch('/api/recruiter/validate-link', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url }) });
+    const d = await r.json();
+    st.className = `link-status ${d.valid ? 'link-ok' : 'link-err'}`;
+    st.textContent = d.valid ? `✓ ${d.provider} — ${d.reason}` : `✗ ${d.reason}`;
+  } catch (e) { st.className = 'link-status link-err'; st.textContent = `✗ Error: ${e.message}`; }
+  finally { btn.disabled = false; btn.textContent = 'Verify'; }
+}
+
+// ── Step 6 — Build run summary ────────────────────────────────
+function buildRunSummary() {
+  const { model } = getByok();
+  const slug  = state.savedRoleSlug || 'your_role';
+  const links = [...document.querySelectorAll('.link-input')].map(i => i.value.trim()).filter(Boolean);
+  state.resumeLinks = links;
+
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="summary-item"><div class="summary-label">Role</div><div class="summary-val">${esc(state.roleName)}</div></div>
+    <div class="summary-item"><div class="summary-label">Requirements</div><div class="summary-val">${state.reqs.length}</div></div>
+    <div class="summary-item"><div class="summary-label">Sub-Queries</div><div class="summary-val">${Object.values(state.subqueries).flat().length}</div></div>
+    <div class="summary-item"><div class="summary-label">Model</div><div class="summary-val" style="font-size:.78rem;word-break:break-all">${esc(model||'(none selected)')}</div></div>
+  `;
+  checkRankings(); // pre-check in case it was already scored
+}
+
+// ── Step 6 — Start scoring via API ───────────────────────────
+let _scoringJobId = null;
+let _etaInterval  = null;
+
+async function startScoring() {
+  const slug = state.savedRoleSlug || 'your_role';
+  const btn  = document.getElementById('btn-start-scoring');
+  const etaEl = document.getElementById('scoring-eta');
+  const prog = document.getElementById('scoring-progress');
+
+  const link = (state.resumeLinks && state.resumeLinks.length) ? state.resumeLinks[0] : null;
+  btn.disabled = true; btn.textContent = '… Starting';
+
+  try {
+    const { api_key, model, base_url } = getByok();
+    const res = await fetch('/api/recruiter/start-scoring', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        role_slug: slug,
+        n_reqs: state.reqs.length,
+        parallel: true,
+        resume_link: link,
+        weights: state.weights,
+        api_key,
+        model,
+        base_url
+      }),
+    });
+    const d = await res.json();
+    if (!res.ok) {
+      alert(d.detail || 'Could not start scoring. Make sure the resumes link has public access.');
+      btn.disabled = false; btn.textContent = '► Start Scoring'; return;
+    }
+    _scoringJobId = d.job_id;
+    prog.style.display = '';
+    etaEl.textContent = `~${fmtEta(d.eta_seconds)} estimated • ${d.resume_count} resumes`;
+    btn.textContent = '⏳ Running…';
+    pollScoringStatus(d.eta_seconds);
+  } catch (e) {
+    alert(`Failed to start: ${e.message}`);
+    btn.disabled = false; btn.textContent = '► Start Scoring';
+  }
+}
+
+function fmtEta(s) {
+  if (s < 60)  return `${s}s`;
+  const m = Math.floor(s / 60), r = s % 60;
+  return r ? `${m}m ${r}s` : `${m}m`;
+}
+
+function pollScoringStatus(initialEta) {
+  if (_etaInterval) clearInterval(_etaInterval);
+  let elapsed = 0;
+  const label = document.getElementById('scoring-phase-label');
+  const bar   = document.getElementById('scoring-bar');
+  const logEl = document.getElementById('scoring-log');
+  const etaEl = document.getElementById('scoring-eta');
+
+  _etaInterval = setInterval(async () => {
+    elapsed += 4;
+    try {
+      const res = await fetch(`/api/recruiter/scoring-status/${_scoringJobId}`);
+      if (!res.ok) return; // server restart — keep polling
+      const d = await res.json();
+
+      const phases = {
+        downloading: '⬇ Downloading resumes from shared folder…',
+        extracting: '⚙ Extracting resumes…',
+        indexing: '⚡ Indexing resumes…',
+        scoring: '🏆 Scoring candidates…',
+        done: '✓ Done!'
+      };
+      if (label) label.textContent = phases[d.phase] || d.phase;
+
+      const pct = d.phase === 'done' ? 100 : Math.min(94, (elapsed / Math.max(initialEta, 1)) * 100);
+      if (bar)   bar.style.width = pct + '%';
+      if (etaEl && d.phase !== 'done') etaEl.textContent = `~${fmtEta(d.eta_seconds)} remaining`;
+
+      if (logEl && d.log && d.log.length) {
+        logEl.innerHTML = d.log.map(l => `<div>${esc(l)}</div>`).join('');
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      if (d.status === 'done') {
+        clearInterval(_etaInterval);
+        if (etaEl) etaEl.textContent = '✓ Scoring complete!';
+        document.getElementById('btn-start-scoring').textContent = '✓ Scored';
+        checkRankings(); // auto-load
+      } else if (d.status === 'error') {
+        clearInterval(_etaInterval);
+        if (etaEl) etaEl.textContent = '✗ Error — check log';
+        const b = document.getElementById('btn-start-scoring');
+        b.disabled = false; b.textContent = '↻ Retry';
+      }
+    } catch (_) {} // ignore transient failures
+  }, 4000);
+}
+
+
+// ── Step 6 — Inline rankings (no redirect to /dashboard) ─────────
+async function checkRankings() {
+  const slug   = state.savedRoleSlug || 'your_role';
+  const btn    = document.getElementById('btn-check-rankings');
+  const status = document.getElementById('rankings-status');
+  const panel  = document.getElementById('inline-rankings-panel');
+
+  if (btn) { btn.disabled = true; btn.textContent = '… Checking'; }
+  if (status) status.textContent = '';
+
+  try {
+    const res = await fetch(`/api/v1/rankings/${encodeURIComponent(slug)}`);
+
+    // 404 means the role hasn't been scored yet — show a friendly processing message
+    if (res.status === 404) {
+      panel.innerHTML = `
+        <div style="text-align:center;padding:2rem;font-size:.85rem;">
+          <div style="font-size:1.6rem;margin-bottom:.6rem;">⏳</div>
+          <div style="color:var(--text);font-weight:600;margin-bottom:.3rem;">Processing… ranking the candidates</div>
+          <div style="color:var(--muted);font-size:.78rem;">Run Steps A → B → C above, then click <strong>↻ Check for Rankings</strong> to load results.</div>
+        </div>`;
+      if (status) status.textContent = 'Awaiting pipeline';
+      return;
+    }
+
+    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    const data = await res.json();
+    const candidates = data.rankings || [];
+
+    if (!candidates.length) {
+      panel.innerHTML = `
+        <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:.82rem;">
+          No ranked candidates yet for <strong>${esc(state.roleName)}</strong>.<br>
+          Run the three steps above, then click <strong>↻ Check for Rankings</strong>.
+        </div>`;
+      if (status) status.textContent = 'Not scored yet';
+      return;
+    }
+
+    // Render inline ranking table
+    if (status) status.textContent = `${candidates.length} candidates`;
+    const rows = candidates.map((c, idx) => {
+      const score = (c.total || 0).toFixed(1);
+      const blocked = c.blocked_count > 0 ? '<span style="color:var(--red)">Blocked</span>' : '<span style="color:var(--green)">✓ Clean</span>';
+      return `<tr style="border-bottom: 1px solid var(--border); transition: background .15s;">
+        <td style="padding:.75rem .6rem;width:32px;font-weight:700;color:var(--accent)">${idx+1}</td>
+        <td style="padding:.75rem .6rem;"><a href="/candidate/${encodeURIComponent(c.candidate_id)}" target="_blank" class="candidate-link">${esc(c.candidate_id || c.name || 'Candidate')}</a></td>
+        <td style="padding:.75rem .6rem;font-weight:700;color:var(--green)">${score}</td>
+        <td style="padding:.75rem .6rem;">${blocked}</td>
+      </tr>`;
+    }).join('');
+
+    panel.innerHTML = `
+      <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
+        <thead>
+          <tr style="color:var(--muted);text-align:left;border-bottom:1px solid var(--border);">
+            <th style="padding:.75rem .6rem">#</th>
+            <th style="padding:.75rem .6rem">Candidate</th>
+            <th style="padding:.75rem .6rem">Score</th>
+            <th style="padding:.75rem .6rem">Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  } catch (e) {
+    if (panel) panel.innerHTML = `<div style="color:var(--red);font-size:.8rem;padding:.5rem">Error fetching rankings: ${esc(e.message)}</div>`;
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '↻ Check for Rankings'; }
+  }
+}
+
+// ── Utilities ─────────────────────────────────────────────────
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escAttr(s) { return String(s||'').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>

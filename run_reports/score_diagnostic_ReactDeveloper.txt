@@ -1,0 +1,143 @@
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0001 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0002 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 Responsive & Accessible Applications SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0003 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0004 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 React Hooks, State Management & Component Lifecycle SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 State Management Libraries (Redux, Zustand, Context API) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0005 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0006 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0007 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 React Hooks, State Management & Component Lifecycle SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 State Management Libraries (Redux, Zustand, Context API) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 Responsive & Accessible Applications SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0008 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 React & Modern JavaScript (ES6+) SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0009 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0010 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Responsive & Accessible Applications SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0011 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 Develop Reusable Components & Features SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0012 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0013 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0014 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0015 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 React Hooks, State Management & Component Lifecycle SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 RESTful APIs & Backend Integration SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 State Management Libraries (Redux, Zustand, Context API) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Performance Optimization & Accessibility SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0016 Responsive & Accessible Applications SQ040 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 React & Modern JavaScript (ES6+) SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 UI Frameworks (Material UI, Chakra UI, Tailwind CSS) SQ022 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 Testing Frameworks (Jest, React Testing Library, Cypress) SQ024 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 3+ Years Front-End Development SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 Building Production React Applications SQ031 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0017 Code Review & Quality Standards SQ042 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 React Hooks, State Management & Component Lifecycle SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 React Hooks, State Management & Component Lifecycle SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 CSS, HTML & Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 CSS, HTML & Responsive Web Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 Frontend Tooling (Webpack, Vite, etc.) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 Git & Version Control SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 TypeScript SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 State Management Libraries (Redux, Zustand, Context API) SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 Collaboration with Designers & Developers SQ033 — no matching text found
+[ZERO_NO_EVIDENCE]       ReactDeveloper_CAND_0018 Code Review & Quality Standards SQ042 — no matching text found

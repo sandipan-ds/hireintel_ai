@@ -53,7 +53,7 @@ Schema (manifest JSONL line):
 
     {
         "cache_key": "sha256:abc...",
-        "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+        "model_name": "BAAI/bge-base-en-v1.5",
         "role": "BusinessAnalyst",
         "req_id": "REQ-001",
         "sq_key": "SQ001",

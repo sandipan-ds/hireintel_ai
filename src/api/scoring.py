@@ -17,13 +17,22 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from src.models.database import Role, get_db
-from src.services.scoring_pipeline import (
-    list_candidate_ids,
-    list_configs_for_role,
-    load_weight_config,
-    score_candidate,
-    score_candidate_batched_end_to_end,
-)
+try:
+    from src.services.scoring_pipeline import (
+        list_candidate_ids,
+        list_configs_for_role,
+        load_weight_config,
+        score_candidate,
+        score_candidate_batched_end_to_end,
+    )
+    _SCORING_AVAILABLE = True
+except ImportError as _scoring_import_err:
+    import logging as _li
+    _li.getLogger(__name__).warning(
+        "Scoring pipeline unavailable: %s — scoring API routes will return 503.", _scoring_import_err
+    )
+    _SCORING_AVAILABLE = False
+
 
 logger = logging.getLogger(__name__)
 

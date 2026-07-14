@@ -52,6 +52,7 @@ import json
 import logging
 import sys
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -102,6 +103,119 @@ DEFAULT_OUTPUT_DIR = Path("data/scores/composed")
 # originally produced these as downstream artifacts; they are not parses
 # themselves and must not appear in the candidate count.
 DOWNSTREAM_SUFFIXES = ("_intelligence_report.json", "_structured_profile.json")
+
+# ---------------------------------------------------------------------------
+# Progress ledger helpers & loading wrapper for --resume
+# ---------------------------------------------------------------------------
+
+PROGRESS_FILE = Path("run_reports/scoring_progress.json")
+
+class LoadedComposedEvaluation:
+    """Wrapper that duck-types ComposedCandidateEvaluation for resume-on-disk loads."""
+    def __init__(self, data: dict) -> None:
+        self._data = data
+        self.candidate_id = data["candidate_id"]
+        self.role = data.get("role", "")
+        self.total = data["total"]
+        
+    @property
+    def zero_evidence_reqs(self) -> list[dict]:
+        return [
+            r for r in self._data.get("reqs", [])
+            if r.get("rubric_sq_scores")
+            and r.get("rubric_llm_part") == 0.0
+            and not r.get("blocked")
+            and not r.get("rubric_skipped")
+        ]
+        
+    @property
+    def reqs(self) -> list[Any]:
+        class DictWrapper:
+            def __init__(self, d: dict) -> None:
+                self.requirement_name = d.get("requirement_name")
+                self.requirement_id = d.get("requirement_id", "")
+                self.category = d.get("category", "")
+                self.weight_percentage = d.get("weight_percentage", 0.0)
+                self.code_only_sq_scores = d.get("code_only_sq_scores", {})
+                self.rubric_sq_scores = d.get("rubric_sq_scores", {})
+                self.code_only_part = d.get("code_only_part", 1.0)
+                self.rubric_llm_part = d.get("rubric_llm_part", 1.0)
+                self.sub_score = d.get("sub_score", 0.0)
+                self.contribution = d.get("contribution", 0.0)
+                self.rubric_skipped = d.get("rubric_skipped", False)
+                self.blocked = d.get("blocked", False)
+                self.blocked_reason = d.get("blocked_reason", "")
+                self.retrieved_chunks = d.get("retrieved_chunks", [])
+                
+                trace = d.get("rubric_trace")
+                if trace:
+                    class TraceWrapper:
+                        def __init__(self, t: dict) -> None:
+                            self.sub_scores = [
+                                type("SubScore", (), {
+                                    "sub_score": ss.get("sub_score", 0.0),
+                                    "evidence_found": ss.get("evidence_found", False),
+                                    "key": ss.get("key", ""),
+                                    "closest_evidence": ss.get("closest_evidence", "")
+                                })()
+                                for ss in t.get("sub_scores", [])
+                            ]
+                    self.rubric_trace = TraceWrapper(trace)
+                else:
+                    self.rubric_trace = None
+        return [DictWrapper(r) for r in self._data.get("reqs", [])]
+        
+    def to_dict(self) -> dict:
+        return self._data
+
+def load_progress() -> dict:
+    """Load the progress ledger, or return a fresh empty ledger."""
+    if PROGRESS_FILE.exists():
+        try:
+            with PROGRESS_FILE.open("r", encoding="utf-8") as fh:
+                return json.load(fh)
+        except Exception as exc:
+            logger.warning("Failed to load progress ledger from %s: %s. Starting fresh.", PROGRESS_FILE, exc)
+    return {"completed_roles": [], "scored_candidates": {}}
+
+def save_progress(progress: dict) -> None:
+    """Atomically write the progress ledger to disk."""
+    PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = PROGRESS_FILE.with_suffix(".tmp")
+    try:
+        with tmp_path.open("w", encoding="utf-8") as fh:
+            json.dump(progress, fh, indent=2)
+        tmp_path.replace(PROGRESS_FILE)
+    except Exception as exc:
+        logger.error("Failed to save progress ledger: %s", exc)
+
+def is_role_complete(progress: dict, role: str) -> bool:
+    """Return True if the role is marked complete in progress."""
+    return role in progress.get("completed_roles", [])
+
+def is_candidate_scored(progress: dict, role: str, candidate_id: str) -> bool:
+    """Return True if candidate_id has been scored for role."""
+    return candidate_id in progress.get("scored_candidates", {}).get(role, [])
+
+def mark_candidate_done(progress: dict, role: str, candidate_id: str) -> None:
+    """Record candidate_id as completed in ledger and flush to disk."""
+    if "scored_candidates" not in progress:
+        progress["scored_candidates"] = {}
+    if role not in progress["scored_candidates"]:
+        progress["scored_candidates"][role] = []
+    if candidate_id not in progress["scored_candidates"][role]:
+        progress["scored_candidates"][role].append(candidate_id)
+        progress["last_updated"] = datetime.now().isoformat()
+        save_progress(progress)
+
+def mark_role_done(progress: dict, role: str) -> None:
+    """Record role as completed in ledger and flush to disk."""
+    if "completed_roles" not in progress:
+        progress["completed_roles"] = []
+    if role not in progress["completed_roles"]:
+        progress["completed_roles"].append(role)
+        progress["last_updated"] = datetime.now().isoformat()
+        save_progress(progress)
 
 
 # ---------------------------------------------------------------------------
@@ -164,14 +278,18 @@ def iter_candidate_files(role: str, limit: int | None = None) -> list[Path]:
 
 def score_role(
     role: str,
-    retriever: ThresholdRetriever,
+    retriever: VectorIndex,
     cache: SubQueryCache,
     llm_caller: Any | None,
     role_subqueries: dict[str, Any] | None = None,
+    top_k: int = 10,
     threshold: float = DEFAULT_THRESHOLD,
     max_chunks_per_query: int | None = None,
     limit: int | None = None,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
+    progress: dict | None = None,
+    resume: bool = False,
+    n_workers: int = 10,
 ) -> dict[str, Any]:
     """Score every candidate in ``role`` and write the ranking JSON.
 
@@ -198,34 +316,56 @@ def score_role(
     if role_subqueries is None:
         role_subqueries = get_all_role_subqueries()
 
-    chunker_id = (
-        f"Recursive(chunk_size={getattr(retriever, 'chunk_size', 500)}, "
-        f"chunk_overlap={getattr(retriever, 'chunk_overlap', 100)})"
-    )
+    chunker_id = f"DocumentAware(BGE-base-en-v1.5, top_k={top_k})"
 
     candidate_files = iter_candidate_files(role, limit=limit)
     if not candidate_files:
         logger.warning("[%s] no candidate files found under %s", role, PROCESSED_DIR / role)
         return {
             "role": role,
+            "weight_config_path": str(weight_config_path),
+            "theta": float(threshold),
+            "max_chunks_per_query": int(max_chunks_per_query) if max_chunks_per_query else DEFAULT_MAX_CHUNKS_PER_QUERY,
             "n_candidates": 0,
             "mean_score": 0.0,
             "top_5": [],
+            "n_zero_evidence_reqs": 0,
             "time_seconds": time.time() - t_start,
             "output_path": None,
-            "n_zero_evidence": 0,
-            "weight_config_path": str(weight_config_path),
         }
 
-    evaluations: list[ComposedCandidateEvaluation] = []
+    evaluations: list[Any] = []
     n_zero_evidence = 0
+    diagnostic_lines: list[str] = []
+    
+    per_cand_dir = output_dir / role
+    per_cand_dir.mkdir(parents=True, exist_ok=True)
+    
     for f in candidate_files:
+        candidate_id = f.stem
+        
+        # --- RESUME: skip already-scored candidates ---
+        if resume and progress and is_candidate_scored(progress, role, candidate_id):
+            scored_file = per_cand_dir / f"{candidate_id}.json"
+            if scored_file.exists():
+                try:
+                    with scored_file.open("r", encoding="utf-8") as fh:
+                        eval_data = json.load(fh)
+                    eval_result = LoadedComposedEvaluation(eval_data)
+                    evaluations.append(eval_result)
+                    n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    logger.info("[%s] Loaded scored candidate %s from disk (resume)", role, candidate_id)
+                    continue
+                except Exception as exc:
+                    logger.warning("[%s] Failed to load saved candidate %s: %s. Re-scoring.", role, candidate_id, exc)
+
         try:
             with f.open(encoding="utf-8") as fh:
                 profile = json.load(fh)
         except (OSError, json.JSONDecodeError) as exc:
             logger.warning("[%s] skipping malformed candidate file %s: %s", role, f.name, exc)
             continue
+            
         # Re-extract the structured profile (Track 7.2 inferred-full-year
         # logic is in ``extract_structured_profile`` so we use the freshest
         # record, not the on-disk snapshot which may predate the fix).
@@ -238,17 +378,63 @@ def score_role(
             llm_caller=llm_caller,
             role_subqueries=role_subqueries,
             role_name=role,
+            top_k=top_k,
             threshold=threshold,
             max_chunks_per_query=max_chunks_per_query,
             chunker_id=chunker_id,
             sq_embedder=cached_embedder,
+            n_workers=n_workers,
         )
+        
         evaluations.append(eval_result)
-        # Use the dataclass's own ``zero_evidence_reqs`` property which
-        # canonicalizes the count (REQs where the rubric LLM was called
-        # but got zero chunks, excluding blocked REQs which are counted
-        # separately via ``blocked_reqs``).
         n_zero_evidence += len(eval_result.zero_evidence_reqs)
+
+        # Write per-candidate JSON immediately
+        try:
+            with (per_cand_dir / f"{candidate_id}.json").open("w", encoding="utf-8") as fh:
+                json.dump(eval_result.to_dict(), fh, ensure_ascii=False, indent=2)
+        except Exception as exc:
+            logger.error("[%s] Failed to write candidate JSON for %s: %s", role, candidate_id, exc)
+
+        # Mark candidate done in progress ledger
+        if progress is not None:
+            mark_candidate_done(progress, role, candidate_id)
+            
+    # Re-build diagnostic lines for ALL evaluations (including loaded ones)
+    for eval_result in evaluations:
+        for req in eval_result.reqs:
+            if req.rubric_skipped or req.blocked or req.rubric_trace is None:
+                # Skip: LLM never ran for this REQ — not a scoring quality issue.
+                continue
+            for ss in req.rubric_trace.sub_scores:
+                if ss.sub_score > 0.0:
+                    # Non-zero sub-score: no diagnostic needed.
+                    continue
+                tag = "ZERO_NO_EVIDENCE" if not ss.evidence_found else "ZERO_WRONG_INFERENCE"
+                logger.debug(
+                    "[%s] cand=%s | req=%s | sq=%s | evidence_found=%s | closest=%s",
+                    tag,
+                    eval_result.candidate_id,
+                    req.requirement_name,
+                    ss.key,
+                    ss.evidence_found,
+                    (ss.closest_evidence or "")[:120],
+                )
+                tag_padded = f"[{tag}]"
+                tag_padded = f"{tag_padded:<24}"
+                msg = "no matching text found" if tag == "ZERO_NO_EVIDENCE" else "text found but LLM did not infer"
+                diagnostic_lines.append(
+                    f"{tag_padded} {eval_result.candidate_id} {req.requirement_name} {ss.key} — {msg}"
+                )
+
+    # Write zero-score diagnostics to run_reports/
+    if diagnostic_lines:
+        run_reports_dir = Path("run_reports")
+        run_reports_dir.mkdir(parents=True, exist_ok=True)
+        diag_file = run_reports_dir / f"score_diagnostic_{role}.txt"
+        with diag_file.open("w", encoding="utf-8") as df:
+            df.write("\n".join(diagnostic_lines) + "\n")
+        logger.info("[%s] Wrote %d zero-score diagnostics to %s", role, len(diagnostic_lines), diag_file)
 
     # Sort by total score desc.
     evaluations.sort(key=lambda e: e.total, reverse=True)
@@ -375,14 +561,18 @@ def main(argv: list[str] = None) -> int:
                     "(Track 7.4 / DEC-031).",
     )
     parser.add_argument(
-        "--role", default=None,
-        help="Specific role to run (default: all 8). Use a role name as it appears "
-             "in data/job_descriptions/, e.g. 'DataScience'.",
+        "--role", nargs="+", default=None, metavar="ROLE",
+        help="One or more specific roles to run (default: all roles). Use role "
+             "names as they appear in data/job_descriptions/, e.g. "
+             "--role DataScience or --role SalesManager SQLDeveloper.",
+    )
+    parser.add_argument(
+        "--top-k", type=int, default=10,
+        help="Number of top-K chunks to return per sub-query (DEC-035 top-K retrieval). Default: 10.",
     )
     parser.add_argument(
         "--theta", type=float, default=DEFAULT_THRESHOLD,
-        help=f"Cosine threshold for retrieval (default: {DEFAULT_THRESHOLD}; "
-             f"Optuna bounds [0.10, 0.50]).",
+        help=f"Cosine threshold (legacy, kept for backward compat). Default: {DEFAULT_THRESHOLD}.",
     )
     parser.add_argument(
         "--max-chunks", type=int, default=None,
@@ -406,6 +596,31 @@ def main(argv: list[str] = None) -> int:
         "--flush-cache", action="store_true",
         help="Flush the sub-query embedding cache to disk on exit. The next "
              "batch run is then cache-hot from the start.",
+    )
+    parser.add_argument(
+        "--clean-output", action="store_true",
+        help="Delete all existing score files in the output directory before "
+             "scoring begins.  Gives a guaranteed clean slate so stale files "
+             "from a previous broken run cannot pollute the results.  "
+             "Ignored when --resume is also passed.",
+    )
+    parser.add_argument(
+        "--clean-role", nargs="+", metavar="ROLE",
+        help="Delete score files for specific role(s) before scoring begins, "
+             "leaving all other roles untouched.  Accepts one or more role "
+             "names (e.g. --clean-role JavaDeveloper ReactDeveloper).  "
+             "Ignored when --resume is also passed.",
+    )
+    parser.add_argument(
+        "--resume", action="store_true",
+        help="Resume a previously interrupted scoring run using progress ledger.",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=10,
+        help="Number of REQs to evaluate in parallel per candidate "
+             "(uses ThreadPoolExecutor). Each REQ is independent so "
+             "thread-safety is guaranteed. Default 5. Set to 1 to force "
+             "sequential execution (debug / rate-limit mode).",
     )
     parser.add_argument(
         "--verbose", "-v", action="store_true",
@@ -445,7 +660,7 @@ def main(argv: list[str] = None) -> int:
     # 1. Resolve roles.
     # ---------------------------------------------------------------
     if args.role:
-        roles = [args.role]
+        roles = args.role  # already a list from nargs="+"
     else:
         roles = discover_roles()
     if not roles:
@@ -462,26 +677,21 @@ def main(argv: list[str] = None) -> int:
     )
 
     # ---------------------------------------------------------------
-    # 3. Load the retriever from the on-disk Recursive index.
+    # 3. Load the DocumentAware embedding index (DEC-035).
     # ---------------------------------------------------------------
     if not Path(DEFAULT_INDEX_PATH).exists():
         logger.error(
-            "Recursive embedding index not found at %s — run "
+            "DocumentAware embedding index not found at %s — run "
             "`python -m src.rag.build_index` first.",
             DEFAULT_INDEX_PATH,
         )
         return 3
-    logger.info("Loading Recursive embedding index from %s ...", DEFAULT_INDEX_PATH)
+    logger.info("Loading DocumentAware index from %s ...", DEFAULT_INDEX_PATH)
     index_load_start = time.time()
     index = VectorIndex.load_npz(DEFAULT_INDEX_PATH)
-    retriever = ThresholdRetriever(
-        index=index,
-        threshold=float(args.theta),
-        max_chunks_per_query=int(args.max_chunks) if args.max_chunks else DEFAULT_MAX_CHUNKS_PER_QUERY,
-    )
     logger.info(
-        "Index loaded in %.2fs (%d chunks, theta=%.3f).",
-        time.time() - index_load_start, len(index.chunk_ids), retriever.threshold,
+        "Index loaded in %.2fs (%d chunks).",
+        time.time() - index_load_start, len(index.chunk_ids),
     )
 
     # ---------------------------------------------------------------
@@ -522,7 +732,85 @@ def main(argv: list[str] = None) -> int:
             "mlflow library not installed; this run will not be tracked. "
             "Install with `pip install mlflow` or pass --no-mlflow to silence."
         )
+
+    # Initialize progress ledger
+    progress = None
+    if args.resume:
+        progress = load_progress()
+        logger.info("Resuming scoring batch run. Loaded progress ledger with %d completed roles.", len(progress.get("completed_roles", [])))
+    else:
+        if PROGRESS_FILE.exists():
+            try:
+                PROGRESS_FILE.unlink()
+                logger.info("Fresh run: Deleted old progress ledger at %s.", PROGRESS_FILE)
+            except Exception as exc:
+                logger.warning("Failed to delete old progress ledger: %s", exc)
+        progress = {"completed_roles": [], "scored_candidates": {}}
+
+        # --clean-output: wipe all existing score files.
+        if getattr(args, "clean_output", False):
+            import shutil
+            clean_dir = Path(args.output_dir)
+            if clean_dir.exists():
+                logger.info(
+                    "--clean-output: removing all existing score files under %s",
+                    clean_dir,
+                )
+                for child in clean_dir.iterdir():
+                    try:
+                        if child.is_dir():
+                            shutil.rmtree(child)
+                        else:
+                            child.unlink()
+                    except Exception as exc:
+                        logger.warning("Failed to remove %s: %s", child, exc)
+                logger.info("--clean-output: output directory cleared.")
+
+        # --clean-role: delete score files for specific roles only.
+        clean_roles = getattr(args, "clean_role", None) or []
+        if clean_roles:
+            import shutil
+            out_base = Path(args.output_dir)
+            for role_name in clean_roles:
+                role_dir = out_base / role_name
+                if role_dir.exists():
+                    try:
+                        shutil.rmtree(role_dir)
+                        logger.info("--clean-role: deleted score dir %s", role_dir)
+                    except Exception as exc:
+                        logger.warning("--clean-role: failed to remove %s: %s", role_dir, exc)
+                else:
+                    logger.info("--clean-role: %s not found, nothing to delete.", role_dir)
+
+                # Always delete the stale ranked file — unconditionally, regardless
+                # of whether the score subdirectory existed. This prevents the
+                # evaluator from reading stale ranked data after a flush.
+                ranked_file = out_base / f"{role_name}_ranked.json"
+                if ranked_file.exists():
+                    try:
+                        ranked_file.unlink()
+                        logger.info("--clean-role: deleted stale ranked file %s", ranked_file)
+                    except Exception as exc:
+                        logger.warning("--clean-role: failed to remove ranked file %s: %s", ranked_file, exc)
+                else:
+                    logger.info("--clean-role: no ranked file found for %s (already clean).", role_name)
+
+
     for role in roles:
+        # Check if role is already completed in ledger
+        if args.resume and is_role_complete(progress, role):
+            logger.info("Role '%s' already fully completed. Skipping.", role)
+            ranked_file = output_dir / f"{role}_ranked.json"
+            if ranked_file.exists():
+                try:
+                    with ranked_file.open("r", encoding="utf-8") as fh:
+                        summaries.append(json.load(fh))
+                    continue
+                except Exception as exc:
+                    logger.warning("Failed to load completed roleranked JSON for '%s': %s. Re-scoring.", role, exc)
+            else:
+                logger.warning("Role ranked JSON not found for completed role '%s'. Re-scoring.", role)
+
         logger.info("=" * 70)
         logger.info("Scoring role: %s", role)
         if track_mlflow:
@@ -538,14 +826,18 @@ def main(argv: list[str] = None) -> int:
         with run or _NullCtx():
             summary = score_role(
                 role=role,
-                retriever=retriever,
+                retriever=index,
                 cache=cache,
                 llm_caller=llm_caller,
                 role_subqueries=role_subqueries,
+                top_k=args.top_k,
                 threshold=float(args.theta),
                 max_chunks_per_query=int(args.max_chunks) if args.max_chunks else None,
                 limit=args.limit,
                 output_dir=output_dir,
+                progress=progress,
+                resume=args.resume,
+                n_workers=args.workers,
             )
             if run is not None:
                 _log_run_to_mlflow(
@@ -555,6 +847,13 @@ def main(argv: list[str] = None) -> int:
                     args=args,
                 )
         summaries.append(summary)
+        
+        # Mark role as fully done in ledger if all candidates for the role were scored
+        if progress is not None and summary.get("n_candidates", 0) > 0:
+            unlimited_files = len(iter_candidate_files(role, limit=None))
+            if summary.get("n_candidates", 0) == unlimited_files:
+                mark_role_done(progress, role)
+            
         logger.info(
             "[%s] scored %d candidates in %.2fs (mean=%.2f; top-1 score=%.2f); "
             "ranked → %s",

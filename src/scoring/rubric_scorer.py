@@ -602,7 +602,33 @@ def classify_subquery_type(sq: Dict[str, Any]) -> str:
     if "tier of the certificate" in text or "provider_tier" in key or "certification tier" in text:
         return "certificate_rank"
 
+    # BUG-7 FIX: Broader patterns to catch real SubQuery.md text like
+    # "institute tier (Tier 1, Tier 2, Tier 3)" or "certification prestige level".
+    _TIER_WORDS = ("tier", "prestige", "ranking", "ranked")
+    _INST_WORDS = ("institute", "institution", "university", "college", "school")
+    _CERT_WORDS = ("certif", "provider", "certification", "credential")
+
+    has_tier_word = any(w in text or w in key for w in _TIER_WORDS)
+    has_inst_word = any(w in text or w in key for w in _INST_WORDS)
+    has_cert_word = any(w in text or w in key for w in _CERT_WORDS)
+
+    if "institute_tier" in key or "institution_rank" in key:
+        return "institution_rank"
+    if "provider_tier" in key or "certificate_rank" in key or "cert_tier" in key:
+        return "certificate_rank"
+
+    if has_tier_word and has_cert_word and has_inst_word:
+        return "certificate_rank"
+
+    if has_tier_word and has_inst_word:
+        return "institution_rank"
+
+    if has_tier_word and has_cert_word:
+        return "certificate_rank"
+
     return "four_band"
+
+
 
 
 def _parse_llm_response(
@@ -869,8 +895,90 @@ def score_requirement_with_rubric(
             logger.warning("LLM call failed for '%s': %s", requirement_name, exc)
             sub_scores = _default_sub_scores(rubric, target_years)
 
+    # BUG-8 FIX: Override years-type SQ sub-scores with deterministic code.
+    #
+    # The LLM cannot reliably count years from chunk text — it reads project
+    # descriptions and experience bullets, not structured date ranges. As a
+    # result all candidates score identically (0.25 floor) on SQs like "How
+    # many years of relevant experience?". We replace those LLM scores with a
+    # BUG-8 FIX v2: Compute total experience months from start_date/end_date strings.
+    #
+    # The previous version tried to read `duration_months` from each job entry, but
+    # that field is never populated — processed profiles only have `start_date` and
+    # `end_date` as strings like "2019-06" or "2017". We parse those directly here.
+    if employment_history is not None and target_years and target_years > 0:
+        _YEARS_KEYWORDS = ("how many years", "years of", "years in", "years relevant",
+                           "years experience", "number of years", "total years")
+
+        def _compute_months_from_dates(jobs) -> int:
+            """Sum experience months from start_date/end_date strings across all jobs."""
+            from datetime import date
+            import re as _re
+
+            today = date.today()
+            total = 0
+
+            def _parse_date(s):
+                if not s:
+                    return None
+                s = str(s).strip()
+                m = _re.match(r'^(\d{4})-(\d{2})$', s)
+                if m:
+                    return date(int(m.group(1)), int(m.group(2)), 1)
+                m = _re.match(r'^(\d{4})$', s)
+                if m:
+                    return date(int(m.group(1)), 1, 1)
+                return None
+
+            for job in jobs:
+                # Support both dataclass attrs and dict keys
+                if isinstance(job, dict):
+                    start_str = job.get('start_date') or job.get('start') or ''
+                    end_str   = job.get('end_date')   or job.get('end')   or ''
+                    is_curr   = job.get('is_current', False)
+                else:
+                    start_str = getattr(job, 'start_date', '') or getattr(job, 'start', '') or ''
+                    end_str   = getattr(job, 'end_date', '')   or getattr(job, 'end',   '') or ''
+                    is_curr   = getattr(job, 'is_current', False)
+
+                start = _parse_date(start_str)
+                end   = _parse_date(end_str) if (end_str and not is_curr) else today
+                if start and end and end >= start:
+                    months = (end.year - start.year) * 12 + (end.month - start.month)
+                    total += months
+
+            return total
+
+        # Try structured-profile attribute first, then raw-list computation
+        total_months = getattr(employment_history, 'total_months', None)
+        if not total_months and isinstance(employment_history, list):
+            total_months = _compute_months_from_dates(employment_history)
+        elif not total_months:
+            # EmploymentHistory object without total_months — iterate its entries
+            entries = getattr(employment_history, 'entries', None) or []
+            if entries:
+                total_months = _compute_months_from_dates(entries)
+
+        if total_months and total_months > 0:
+            detected_years = round(total_months / 12.0, 2)
+            from src.scoring.rubrics import score_four_band_quantitative
+            for ss in sub_scores:
+                sq_txt = ss.question.lower()
+                if any(kw in sq_txt for kw in _YEARS_KEYWORDS):
+                    code_score = score_four_band_quantitative(detected_years, target_years)
+                    logger.debug(
+                        "rubric_scorer[BUG-8v2]: overriding '%s' LLM score %.2f -> %.2f "
+                        "(%.1f yrs detected / %.0f months vs %.1f target)",
+                        ss.key, ss.sub_score, code_score, detected_years, total_months, target_years,
+                    )
+                    ss.sub_score = code_score
+                    ss.extracted_years = detected_years
+                    ss.target_years = target_years
+
+
     # Partial-credit rescue
     _apply_partial_credit_for_unknown_years(sub_scores, rubric)
+
 
     # Evaluate sum sub-score
     normalized = _evaluate_formula(rubric.formula, sub_scores)

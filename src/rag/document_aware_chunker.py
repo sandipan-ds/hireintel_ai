@@ -462,6 +462,8 @@ def chunk_profile(profile: Dict[str, Any], role_bucket: str = "") -> List[ChunkR
     for i, entry in enumerate(education_records):
         text = (entry.get("description") or "").strip()
         if not text:
+            text = _entry_to_text(entry)
+        if not text:
             continue
         chunks.append(
             ChunkRecord(
@@ -601,19 +603,40 @@ def chunks_to_jsonl(chunks: Iterable[ChunkRecord]) -> str:
 def _entry_to_text(entry: Dict[str, Any]) -> str:
     """Render an experience/education entry as a single human-readable block."""
     parts: List[str] = []
+    
+    # 1. Experience-specific fields
     title = (entry.get("title") or "").strip()
     company = (entry.get("company") or "").strip()
+    description = (entry.get("description") or "").strip()
     if title and company:
         parts.append(f"{title} @ {company}")
     elif title:
         parts.append(title)
     elif company:
         parts.append(company)
+        
+    # 2. Education-specific fields
+    degree = (entry.get("degree") or "").strip()
+    specialization = (entry.get("specialization") or "").strip()
+    institution = (entry.get("institution_normalized") or entry.get("institution_raw") or "").strip()
+    if degree and institution:
+        deg_spec = f"{degree} in {specialization}" if specialization else degree
+        parts.append(f"{deg_spec} at {institution}")
+    elif degree:
+        deg_spec = f"{degree} in {specialization}" if specialization else degree
+        parts.append(deg_spec)
+    elif institution:
+        parts.append(institution)
+
+    if description:
+        parts.append(description)
+
     dates = (entry.get("dates") or "").strip()
     location = (entry.get("location") or "").strip()
     if dates or location:
         meta = " | ".join(x for x in (dates, location) if x)
         parts.append(meta)
+
     details = [d.strip() for d in (entry.get("details") or []) if d and d.strip()]
     for bullet in details:
         parts.append(f"- {bullet}")

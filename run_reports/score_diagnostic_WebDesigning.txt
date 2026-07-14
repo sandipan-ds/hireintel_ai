@@ -1,0 +1,715 @@
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0002 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0003 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0003 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0003 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0004 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0005 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0005 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0005 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0005 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0005 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0006 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0006 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0006 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0006 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0006 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0007 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0008 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Shipped Websites or Digital Products SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0009 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0010 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0011 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0013 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0014 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0014 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0014 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0014 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0015 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0016 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0017 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0018 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0018 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0018 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0018 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0018 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0019 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0019 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0019 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0020 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0020 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0020 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0020 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0021 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0022 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0023 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0024 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0025 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Shipped Websites or Digital Products SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0026 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0027 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0027 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0027 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0027 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Shipped Websites or Digital Products SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0028 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0029 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0030 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0030 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0030 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0031 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0032 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0032 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0032 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0033 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0033 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0033 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Shipped Websites or Digital Products SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0035 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0036 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0036 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0036 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0036 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0037 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0038 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0039 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0039 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0039 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0040 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0040 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0040 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0041 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0041 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0041 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0041 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0042 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0043 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0044 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0045 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0045 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0045 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0045 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0045 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0046 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0046 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0046 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0046 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0047 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0047 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0047 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0047 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0047 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0048 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0048 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0048 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0049 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0049 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0049 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0049 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0050 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0051 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0051 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0051 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0052 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0053 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0054 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0054 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0054 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0055 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0056 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0056 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0056 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0056 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0056 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0057 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0058 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0058 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0058 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0058 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0059 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0059 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0059 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0060 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0062 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0062 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0062 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0062 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0062 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0063 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0064 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0065 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0066 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0066 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0066 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0067 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0067 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0068 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0068 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0068 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0068 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0069 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0069 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0069 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0069 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0070 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0070 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0070 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0071 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0071 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0071 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0072 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0073 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0074 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0074 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0074 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0074 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0074 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0075 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0075 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0075 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0076 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0077 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0078 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0078 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0078 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0078 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0078 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0079 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0080 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0081 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0082 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0082 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0082 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0083 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0083 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0083 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0083 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0083 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0084 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0084 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0084 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0085 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0086 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0086 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0086 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0086 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0087 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0088 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0089 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0090 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0091 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0092 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0092 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0092 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Attention to Detail & Aesthetic Sense SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0093 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0095 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0096 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0096 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0096 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0097 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0098 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0098 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0098 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0099 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0099 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0099 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0099 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0099 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0100 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0101 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0102 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0103 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0104 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 UX/UI Principles & User-Centered Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 UX/UI Principles & User-Centered Design SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 2+ Years Web Design or Related Creative Roles SQ025 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Shipped Websites or Digital Products SQ027 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Create Layouts & UI Designs SQ034 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0105 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0106 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0106 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0106 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0106 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0106 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0107 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0107 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0107 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0107 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0108 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0109 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 HTML, CSS & Responsive Web Design SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 HTML, CSS & Responsive Web Design SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Basic JavaScript for Interactive Elements SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Web Analytics & User Behavior Insights SQ023 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Develop Responsive & Mobile-First Designs SQ036 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0110 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 Communication & Collaboration Skills SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 CSS Frameworks (Bootstrap, Tailwind CSS) SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 Component Libraries & Design Systems SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 Cross-Functional Collaboration with Developers & Product SQ029 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0111 Design Consistency & System Maintenance SQ038 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0112 Visual Design Tools (Figma, Adobe XD, Sketch) SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0112 Accessibility & Inclusive Design SQ021 — no matching text found
+[ZERO_NO_EVIDENCE]       WebDesigning_CAND_0112 Web Analytics & User Behavior Insights SQ023 — no matching text found

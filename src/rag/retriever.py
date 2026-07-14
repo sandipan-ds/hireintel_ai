@@ -63,39 +63,31 @@ import numpy as np
 # via M0.5d replaces these defaults with the Optuna-recommended values.
 # ---------------------------------------------------------------------------
 
-#: Default cosine-similarity threshold. Slightly below midpoint of [0.10, 0.50]
-#: to surface more date-bearing chunks per REQ during smoke testing.
-DEFAULT_THRESHOLD: float = 0.25
+#: Default number of top-K chunks to return per REQ (DEC-035).
+#: Replaces threshold-based retrieval — always returns K results, no floor.
+#: Guarantees the LLM always receives evidence, regardless of cosine scores.
+DEFAULT_TOP_K: int = 10
 
-#: Optuna lower/upper bounds for threshold (per owner spec, 2026-07-06).
-THRESHOLD_LOWER: float = 0.10
-THRESHOLD_UPPER: float = 0.50
-
-#: Hard cap on returned chunks per query. A safety net, not a primary control.
-#: Only kicks in when more chunks pass `threshold` than `max_chunks_per_query`.
+#: Hard cap on returned chunks per query (safety limit).
 DEFAULT_MAX_CHUNKS_PER_QUERY: int = 20
 
-#: Optuna lower/upper bounds for chunk_size (chars). Mirror the chunker's
-#: bounds (see src/rag/recursive_chunker.py).
-CHUNK_SIZE_LOWER: int = 500
-CHUNK_SIZE_UPPER: int = 1000
-
-#: Minimum overlap as a fraction of chunk_size (not less than 50%).
-CHUNK_OVERLAP_MIN_FRACTION: float = 0.50
-
-#: Maximum overlap as a fraction of chunk_size. Per owner spec: not more than 60%.
-CHUNK_OVERLAP_MAX_FRACTION: float = 0.60
-
 #: Path to the canonical embedding index produced by ``src.rag.build_index``.
-DEFAULT_INDEX_PATH: str = "data/embeddings/recursive_chunking/index.npz"
+#: DocumentAware chunker index (DEC-035, rebuilt with BGE-base-en-v1.5, 768-dim).
+DEFAULT_INDEX_PATH: str = "data/embeddings/document_aware/index.npz"
 
 #: Path to the line-delimited JSONL metadata file produced alongside the index.
-DEFAULT_CHUNKS_PATH: str = "data/embeddings/recursive_chunking/chunks.jsonl"
+DEFAULT_CHUNKS_PATH: str = "data/embeddings/document_aware/chunks.jsonl"
 
-#: Embedding model identifier (DEC-007). The retriever does not embed
-#: queries itself; the embedding is the caller's responsibility. This
-#: constant is exported for callers that want to keep their config in sync.
-DEFAULT_EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
+#: Embedding model identifier (DEC-035). Updated from all-MiniLM-L6-v2 (384-dim,
+#: STS-trained) to BAAI/bge-base-en-v1.5 (768-dim, retrieval-trained on MS-MARCO/BEIR).
+#: This constant is exported for callers that want to keep their config in sync.
+DEFAULT_EMBEDDING_MODEL: str = "BAAI/bge-base-en-v1.5"
+
+#: Retired by DEC-035. Retained for backward-compat with tests and callers not yet
+#: updated to top-K retrieval. Do not use in new code.
+DEFAULT_THRESHOLD: float = 0.10
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -250,6 +242,76 @@ class VectorIndex:
             index._matrix = vectors.astype(np.float32, copy=False)
         return index
 
+    def retrieve_top_k(
+        self,
+        query_vector: np.ndarray,
+        candidate_id: Optional[str] = None,
+        k: int = DEFAULT_TOP_K,
+    ) -> List["ScoredChunk"]:
+        """Return the top-K highest-cosine chunks, regardless of cosine floor.
+
+        This is the DEC-035 retrieval method. Unlike the retired
+        :meth:`ThresholdRetriever.retrieve_scored`, this ALWAYS returns
+        up to K chunks — there is no threshold floor. The LLM then
+        determines relevance from the chunk content.
+
+        Args:
+            query_vector:
+                1-D float array. Will be L2-normalized internally.
+            candidate_id:
+                If provided, restrict the candidate set to chunks whose
+                ``metadata["candidate_id"]`` matches. Used for per-candidate
+                scoring (DEC-035). When ``None``, the entire index is searched.
+            k:
+                Number of top chunks to return. Default :data:`DEFAULT_TOP_K`.
+
+        Returns:
+            A list of up to K :class:`ScoredChunk`, sorted by cosine
+            descending. Empty list only if the index is empty or no chunks
+            match the candidate filter.
+        """
+        sims = self.cosine(query_vector)
+        if sims.size == 0:
+            return []
+
+        # Build the candidate mask.
+        if candidate_id is not None:
+            mask = np.fromiter(
+                (
+                    m.get("candidate_id") == candidate_id
+                    for m in self._metadatas
+                ),
+                dtype=bool,
+                count=len(self._metadatas),
+            )
+        else:
+            mask = np.ones(len(self._metadatas), dtype=bool)
+
+        # Apply the mask by setting masked-out scores to -inf.
+        masked_score = np.float32(-np.inf)
+        sims_filtered = np.where(mask, sims, masked_score)
+
+        # Get eligible indices (those not -inf) sorted by similarity desc.
+        eligible = sims_filtered > np.float32(-np.inf)
+        if not np.any(eligible):
+            return []
+
+        eligible_indices = np.flatnonzero(eligible)
+        eligible_indices = eligible_indices[np.argsort(-sims_filtered[eligible_indices])]
+        eligible_indices = eligible_indices[:k]
+
+        out: List[ScoredChunk] = []
+        for idx in eligible_indices.tolist():
+            out.append(
+                ScoredChunk(
+                    chunk_id=self._ids[idx],
+                    text=self._texts[idx],
+                    metadata=dict(self._metadatas[idx]),
+                    cosine=float(sims_filtered[idx]),
+                )
+            )
+        return out
+
 
 # ---------------------------------------------------------------------------
 # Retriever
@@ -297,7 +359,7 @@ class ThresholdRetriever:
     def __init__(
         self,
         index: VectorIndex,
-        threshold: float = DEFAULT_THRESHOLD,
+        threshold: float = DEFAULT_THRESHOLD,  # 0.10 — retired by DEC-035
         max_chunks_per_query: int = DEFAULT_MAX_CHUNKS_PER_QUERY,
     ) -> None:
         if not -1.0 <= threshold <= 1.0:
@@ -409,31 +471,44 @@ class ThresholdRetriever:
 # ---------------------------------------------------------------------------
 
 
-def load_default_retriever(
+def load_default_index(
     index_path: str = DEFAULT_INDEX_PATH,
-    threshold: float = DEFAULT_THRESHOLD,
-    max_chunks_per_query: int = DEFAULT_MAX_CHUNKS_PER_QUERY,
-) -> ThresholdRetriever:
-    """Load the canonical embedding index and return a configured retriever.
+) -> VectorIndex:
+    """Load the canonical embedding index and return a VectorIndex (DEC-035).
 
-    This is the entry point most callers want. The on-disk index is
-    produced by ``src.rag.build_index`` (or its successor). The default
-    path resolves relative to the project root.
+    This is the entry point for top-K retrieval (DEC-035). The VectorIndex's
+    :meth:`retrieve_top_k` method replaces the retired ThresholdRetriever.
 
     Args:
         index_path:
             Path to a ``.npz`` file produced by :meth:`VectorIndex.save_npz`.
-        threshold:
-            Minimum cosine similarity. See :class:`ThresholdRetriever`.
-        max_chunks_per_query:
-            Hard cap on returned chunks. See :class:`ThresholdRetriever`.
 
     Returns:
-        A ready-to-use :class:`ThresholdRetriever`.
+        A ready-to-use :class:`VectorIndex`.
 
     Raises:
         FileNotFoundError:
-            If ``index_path`` does not exist. Build the index first.
+            If ``index_path`` does not exist. Build the index first with
+            ``python -m src.rag.build_index``.
+    """
+    if not os.path.exists(index_path):
+        raise FileNotFoundError(
+            f"Embedding index not found at {index_path!r}. "
+            "Build it first with `python -m src.rag.build_index`."
+        )
+    return VectorIndex.load_npz(index_path)
+
+
+def load_default_retriever(
+    index_path: str = DEFAULT_INDEX_PATH,
+    threshold: float = 0.25,
+    max_chunks_per_query: int = DEFAULT_MAX_CHUNKS_PER_QUERY,
+) -> "ThresholdRetriever":
+    """Load the canonical embedding index and return a ThresholdRetriever.
+
+    .. deprecated::
+        Retired by DEC-035. Use :func:`load_default_index` + ``retrieve_top_k``
+        instead. Retained for backward compatibility with existing tests.
     """
     if not os.path.exists(index_path):
         raise FileNotFoundError(
@@ -449,20 +524,18 @@ def load_default_retriever(
 
 
 __all__ = [
-    "DEFAULT_THRESHOLD",
-    "THRESHOLD_LOWER",
-    "THRESHOLD_UPPER",
+    # DEC-035 (active)
+    "DEFAULT_TOP_K",
     "DEFAULT_MAX_CHUNKS_PER_QUERY",
-    "CHUNK_SIZE_LOWER",
-    "CHUNK_SIZE_UPPER",
-    "CHUNK_OVERLAP_MIN_FRACTION",
-    "CHUNK_OVERLAP_MAX_FRACTION",
     "DEFAULT_INDEX_PATH",
     "DEFAULT_CHUNKS_PATH",
     "DEFAULT_EMBEDDING_MODEL",
     "IndexedChunk",
     "VectorIndex",
     "ScoredChunk",
+    "load_default_index",
+    # Retired by DEC-035 (retained for backward compat)
+    "DEFAULT_THRESHOLD",
     "ThresholdRetriever",
     "load_default_retriever",
 ]
