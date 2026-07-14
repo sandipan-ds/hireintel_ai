@@ -43,10 +43,12 @@ For the full decision history, see `18_DECISIONS.md`.
 | 4D| **RAG Hyperparameter Optimization** — Optuna multi-objective sweep + rank stability | ✅ |
 | 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ |
 | 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ |
+| 7 | **Rankings Dashboard & Candidate Chat** — dropdown, leaderboard, inline PDF, waterfall RAG chat | ✅ |
 
 ---
 
 ## Stage 1 — JD Formation
+
 
 **Status: ✅ Complete for all 8 roles**
 
@@ -267,15 +269,31 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 
 ---
 
+## Stage 7 — Rankings Dashboard & Candidate Chat
+
+**Status: ✅ Complete**
+
+FastAPI + Jinja2 + Tailwind-alternative dark-mode layout providing a recruiter-facing dashboard for ranked candidates and live context-aware chat.
+
+| Component | Status | Description |
+|---|---|---|
+| Role Rankings View | ✅ Complete | Dynamic dropdown for all 8 roles, live stats panel, search, column sorting, pagination |
+| Leaderboard & Visual Indicators | ✅ Complete | Score bar visualizations, zero-evidence & blocked status flags, per-REQ mini score-pips |
+| Candidate Profile Detail | ✅ Complete | Circular score-arc, metadata chips, scrollable list of requirements |
+| Collapsible Trace Accordions | ✅ Complete | Visual trace details for each requirement showing sub-queries, scores, extracted evidence, and original cited text |
+| Inline PDF Viewer | ✅ Complete | Interactive iframe rendering candidate's source PDF inline |
+| Multi-Key Waterfall Chat | ✅ Complete | Live interactive candidate RAG chat falling back across OpenCode (DeepSeek/MiniMax) -> NVIDIA NIM (3 keys) -> OpenRouter |
+
+---
+
 ## Not Yet Built
 
 | Feature | Notes |
 |---|---|
 | JD clarification loop (Green / Yellow / Red) | Block ambiguous requirements |
 | Per-item `expected_years` in the recruiter UI | DB field exists; UI not exposed |
-| Resume Chat (RAG-grounded Q&A) | Prompt spec exists; not wired |
-| Candidate Comparison UI | Score deltas computed; no UI |
 | Hiring Recommendations | Planned for later |
+
 
 ---
 

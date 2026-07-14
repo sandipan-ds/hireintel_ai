@@ -7,7 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from src.api import dashboard, pages, roles, scoring, weights
+from src.api import dashboard, pages, recruiter, roles, scoring, weights
 from src.models.database import init_db
 
 # Create FastAPI app
@@ -25,6 +25,7 @@ app.include_router(roles.router)
 app.include_router(weights.router)
 app.include_router(scoring.router)
 app.include_router(dashboard.router)
+app.include_router(recruiter.router)
 app.include_router(pages.router)  # pages last (catches / route)
 
 

@@ -319,42 +319,76 @@ def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
         "Answer based only on the evidence above."
     )
 
-    # Call LLM via OpenRouter — use gemma-4-31b-it:free for candidate chat
-    api_key = _env_value("OPENROUTER_API_KEY_1") or _env_value("OPENROUTER_API_KEY")
-    base_url = _env_value("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    model = "google/gemma-4-31b-it:free"
+    # Waterfall order (exact):
+    #  1. OpenCode  — deepseek/deepseek-v4-flash:free
+    #  2. OpenCode  — minimax-m3
+    #  3. NVIDIA NIM key-1 — google/gemma-4-31b-it
+    #  4. NVIDIA NIM key-2 — google/gemma-4-31b-it
+    #  5. NVIDIA NIM key-3 — google/gemma-4-31b-it
+    #  6. OpenRouter       — google/gemma-4-31b-it:free
+    oc_key    = _env_value("OPENCODE_KEY_1")
+    oc_url    = _env_value("OPENCODE_BASE_URL", "https://opencode.ai/zen/go/v1")
+    nv_url    = _env_value("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1")
+    or_url    = _env_value("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    or_key    = _env_value("OPENROUTER_API_KEY_1") or _env_value("OPENROUTER_API_KEY")
 
-    if not api_key:
+    providers = []
+    if oc_key:
+        providers.append({"name": "OpenCode/deepseek-v4-flash", "api_key": oc_key,
+                          "base_url": oc_url, "model": "deepseek/deepseek-v4-flash:free"})
+        providers.append({"name": "OpenCode/minimax-m3",        "api_key": oc_key,
+                          "base_url": oc_url, "model": "minimax-m3"})
+    for idx, nv_env in enumerate(["NVIDIA_NIM_API_KEY_1", "NVIDIA_NIM_API_KEY_2", "NVIDIA_NIM_API_KEY_3"], 1):
+        nv_key = _env_value(nv_env)
+        if nv_key:
+            providers.append({"name": f"NVIDIA-key{idx}/gemma-4-31b", "api_key": nv_key,
+                              "base_url": nv_url, "model": "google/gemma-4-31b-it"})
+    if or_key:
+        providers.append({"name": "OpenRouter/gemma-4-31b:free", "api_key": or_key,
+                          "base_url": or_url, "model": "google/gemma-4-31b-it:free"})
+
+
+    if not providers:
         return {
             "candidate_id": req.candidate_id,
-            "answer": "Chat is unavailable: OPENROUTER_API_KEY not configured.",
+            "answer": "Chat is unavailable: no API keys configured.",
             "source_chunks": [],
         }
 
-    try:
-        resp = httpx.post(
-            f"{base_url}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json",
-                "HTTP-Referer": "https://hireintel.ai",
-                "X-Title": "HireIntel Candidate Chat",
-            },
-            json={
-                "model": model,
-                "temperature": 0.2,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt},
-                ],
-            },
-            timeout=60.0,
-        )
-        resp.raise_for_status()
-        answer = resp.json()["choices"][0]["message"]["content"]
-    except Exception as exc:
-        logger.warning("Chat LLM error for %s: %s", req.candidate_id, exc)
-        answer = f"Chat error: {exc}"
+    answer = None
+    last_error = None
+    for provider in providers:
+        try:
+            resp = httpx.post(
+                f"{provider['base_url']}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {provider['api_key']}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://hireintel.ai",
+                    "X-Title": "HireIntel Candidate Chat",
+                },
+                json={
+                    "model": provider["model"],
+                    "temperature": 0.2,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                },
+                timeout=60.0,
+            )
+            resp.raise_for_status()
+            answer = resp.json()["choices"][0]["message"]["content"]
+            logger.info("Chat answered via %s (model=%s)", provider["name"], provider["model"])
+            break  # success — stop waterfall
+        except Exception as exc:
+            last_error = exc
+            logger.warning("Chat provider %s failed: %s — trying next.", provider["name"], exc)
+            continue
+
+    if answer is None:
+        logger.error("All chat providers failed. Last error: %s", last_error)
+        answer = f"Chat unavailable — all providers failed. Last error: {last_error}"
 
     return {
         "candidate_id": req.candidate_id,
