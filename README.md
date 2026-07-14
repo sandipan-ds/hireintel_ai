@@ -4,6 +4,23 @@ Explainable candidate intelligence platform for recruiter-controlled screening a
 
 ---
 
+## 🚀 Running the Server
+
+To launch the local web application server, run the following command in PowerShell/Command Prompt:
+
+```powershell
+.venv\Scripts\python -m uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+* **Recruiter Wizard URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
+* **Automatic Reloading:** The server is configured with WatchFiles to automatically reload when you save changes in python scripts, HTML templates, or DB schemas.
+
+---
+
+## Run Server 
+
+.venv\Scripts\python -m uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload 2>&1
+
 ## RAG Parameter Sensitivity & Rank Stability Findings (July 2026)
 
 A structured grid search sweep (45 configurations × 8 roles = 360 runs) was executed against all candidate pools to analyze rank sensitivity across variations in similarity threshold (`theta`), chunk size, and top-k retrieval cap.

@@ -85,23 +85,25 @@ Each role under `data/job_descriptions/<role>/` has 7 files:
 
 ---
 
-## Stage 2 — Recruiter Weight Configuration
+## Stage 2 — Recruiter Weight Configuration & Onboarding Wizard
 
 **Status: ✅ Complete**
 
-Recruiters assign weights to each REQ via a FastAPI + HTMX web UI.
+Recruiters assign weights to each REQ and run candidate intake via a FastAPI + HTMX interactive web UI wizard at `/recruiter`.
 
-| Capability | Status |
-|---|---|
-| Role dropdown (8 roles synced from SubQuery docs) | ✅ |
-| Per-requirement slider (0–100, 0.5 step) | ✅ |
-| Live category breakdown (rated/total/remaining %) | ✅ |
-| Auto-balance to 100% | ✅ |
-| Strict 100% validation (server-side + client-side) | ✅ |
-| Persist to SQLite and JSON | ✅ |
-| Per-item `expected_years` UI input | ⬜ (DB field exists; not in UI yet) |
-| Multiple recruiters per role | ⬜ (single-recruiter only) |
-| Edit existing config | ⬜ (configs are listed and deletable, not re-editable) |
+| Capability | Status | Description |
+|---|---|---|
+| Role dropdown (8 roles synced from SubQuery docs) | ✅ | Syncs dynamically from system configuration |
+| Per-requirement slider (0–100, 0.5 step) | ✅ | Interactive sliders for custom weight tuning |
+| Live category breakdown (rated/total/remaining %) | ✅ | Live weight balance validation |
+| Auto-balance to 100% | ✅ | Visual and mathematical weight balance |
+| Strict 100% validation (server-side + client-side) | ✅ | Prevents submission unless weight sum equals exactly 100% |
+| Persist to SQLite and JSON | ✅ | Saves configuration dynamically in DB and jobs folder |
+| **Stateless Onboarding Wizard** | ✅ | 6-step stateless wizard (JD Upload -> REQ Extract -> Sub-Query Gen -> Weights -> Resumes -> Scoring/Rankings) |
+| **Dynamic SubQuery Generation** | ✅ | Self-healing markdown generation of `_SubQuery.md` on run to prevent FileNotFoundError |
+| **Reasoning Model Thought-Stripping** | ✅ | Regex-based thought tag removal (`<think>...</think>`) to support JSON extraction from reasoning LLMs like `minimax-m3` |
+| **Clean Slate Cache Clearing** | ✅ | Deletes old rankings and index files upon saving new config to prevent cached display in Step 6 |
+| **Hyphenated Sub-Query Key Parsing** | ✅ | Updates sub-query row regex pattern to match hyphenated IDs (e.g. `SQ013-5`), resolving the false-positive blocked status bug |
 
 **Launch:** `python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000`
 

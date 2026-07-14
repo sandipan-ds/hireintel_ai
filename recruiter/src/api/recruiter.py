@@ -625,42 +625,29 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
     date_suffix = datetime.utcnow().strftime("%Y%m%d")
     slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}"
 
-    # Delete old rankings, scores, and index files immediately when saving the role configuration
-    old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
-    old_cand_dir = Path("recruiter/data/scores/composed") / slug
-    idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
-    chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
-    try:
-        import shutil
-        if old_ranked_file.exists():
-            old_ranked_file.unlink()
-        if old_cand_dir.exists():
-            shutil.rmtree(old_cand_dir)
-        if idx_path_old.exists():
-            idx_path_old.unlink()
-        if chk_path_old.exists():
-            chk_path_old.unlink()
-        logger.info("Cleared old rankings and index files for %s on save_role", slug)
-    except Exception as exc:
-        logger.warning("Failed to clear old score files for %s: %s", slug, exc)
-
-    # Guard: support updating existing roles or create new ones
+    # Guard: do not create a duplicate role
     existing = db.query(Role).filter(Role.name == slug).first()
     if existing:
-        role = existing
-        # Delete old Requirement rows so we can re-insert updated ones
-        db.query(Requirement).filter(Requirement.role_id == role.id).delete()
-        already_exists = True
-    else:
-        # Create Role
-        role = Role(
-            name=slug,
-            display_name=req.role_name,
-            description=f"Recruiter wizard upload — {len(req.reqs)} requirements",
+        return JSONResponse(
+            {
+                "role_id": existing.id,
+                "role_slug": slug,
+                "already_exists": True,
+                "message": (
+                    f"Role '{req.role_name}' already exists (id={existing.id}). "
+                    "Use Configure Weights to update its weights."
+                ),
+            }
         )
-        db.add(role)
-        db.flush()  # obtain role.id before creating child rows
-        already_exists = False
+
+    # Create Role
+    role = Role(
+        name=slug,
+        display_name=req.role_name,
+        description=f"Recruiter wizard upload — {len(req.reqs)} requirements",
+    )
+    db.add(role)
+    db.flush()  # obtain role.id before creating child rows
 
     # Create Requirement rows
     for r in req.reqs:
@@ -695,61 +682,11 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
         encoding="utf-8",
     )
 
-    # Automatically generate the SubQuery markdown file for scoring pipeline lookup
-    # under recruiter/data/job_descriptions/{slug}/{slug}_SubQuery.md
-    jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
-    jd_desc_dir.mkdir(parents=True, exist_ok=True)
-    
-    md_lines = [
-        f"# {req.role_name}: Sub-Query Decomposition",
-        "",
-        "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
-        "",
-        "---",
-        "",
-        "## SECTION 1: REQUIREMENTS",
-        ""
-    ]
-    for r in req.reqs:
-        r_id = r.get("req_id", "REQ-???")
-        r_name = r.get("name", "Unknown")
-        r_cat = r.get("category", "Core Skill")
-        sq_list = req.subqueries.get(r_id, [])
-        
-        md_lines.append(f"### {r_id}: {r_name}")
-        md_lines.append("")
-        md_lines.append(f"**Category:** {r_cat}  ")
-        md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
-        
-        # Build scoring formula, e.g. SQ001 * SQ002
-        formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
-        formula = " * ".join(formula_parts)
-        md_lines.append(f"**Scoring Formula:** {formula}  ")
-        md_lines.append("")
-        
-        md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
-        md_lines.append("|---|-----------|------|-------|-------------------|")
-        for sq in sq_list:
-            sq_id = sq.get("sq_id") or "SQ???"
-            text = sq.get("text") or ""
-            sq_type = sq.get("type") or "Binary"
-            scale = sq.get("scale") or "0 or 1"
-            method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
-            md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
-        
-        md_lines.append("")
-        md_lines.append("---")
-        md_lines.append("")
-
-    sq_md_content = "\n".join(md_lines)
-    (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-    (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-
-    logger.info("Saved new role '%s' (id=%d) with %d REQs to %s and %s", slug, role.id, len(req.reqs), job_dir, jd_desc_dir)
+    logger.info("Saved new role '%s' (id=%d) with %d REQs to %s", slug, role.id, len(req.reqs), job_dir)
     return JSONResponse({
         "role_id": role.id,
         "role_slug": slug,
-        "already_exists": already_exists,
+        "already_exists": False,
         "message": f"Role '{req.role_name}' saved — {len(req.reqs)} requirements registered.",
     })
 
@@ -828,9 +765,6 @@ class StartScoringRequest(BaseModel):
     parallel: bool = True
     resume_link: Optional[str] = None
     weights: Optional[Dict[str, float]] = None
-    api_key: Optional[str] = None
-    model: Optional[str] = None
-    base_url: Optional[str] = None
 
 
 def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
@@ -1073,7 +1007,7 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     import threading
     t = threading.Thread(
         target=_run_pipeline_bg,
-        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights, req.api_key, req.model, req.base_url),
+        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights),
         daemon=True,
     )
     t.start()
@@ -1090,31 +1024,12 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     })
 
 
-def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]], api_key: Optional[str], model: Optional[str], base_url: Optional[str]) -> None:
+def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]]) -> None:
     """Run download → extract → score pipeline in a background thread, updating _SCORING_JOBS."""
     job = _SCORING_JOBS.get(job_id)
     if not job:
         return
         return
-
-    # 0. Delete old rankings, embeddings, and score data to avoid stale UI state
-    old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
-    old_cand_dir = Path("recruiter/data/scores/composed") / slug
-    idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
-    chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
-    try:
-        import shutil
-        if old_ranked_file.exists():
-            old_ranked_file.unlink()
-        if old_cand_dir.exists():
-            shutil.rmtree(old_cand_dir)
-        if idx_path_old.exists():
-            idx_path_old.unlink()
-        if chk_path_old.exists():
-            chk_path_old.unlink()
-        job["log"].append("✓ Cleared old scores and index files.")
-    except Exception as exc:
-        logger.warning("Failed to clear old score files for %s: %s", slug, exc)
 
     resume_dir = Path(f"recruiter/data/original/{slug}")
     resume_dir.mkdir(parents=True, exist_ok=True)
@@ -1148,15 +1063,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
     eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
     job["eta_seconds"] = eta_seconds
 
-    # Helper function to run scripts with custom recruiter environment variables
-    sub_env = os.environ.copy()
-    if api_key:
-        sub_env["RECRUITER_API_KEY"] = api_key
-    if base_url:
-        sub_env["RECRUITER_BASE_URL"] = base_url
-    if model:
-        sub_env["RECRUITER_MODEL"] = model
-
+    # Helper function to run scripts
     def _run(cmd: list[str], phase: str) -> bool:
         job["phase"] = phase
         job["log"].append(f"▶ {' '.join(cmd)}")
@@ -1166,7 +1073,6 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
-                env=sub_env,
             )
             for line in proc.stdout:
                 line = line.rstrip()
@@ -1222,67 +1128,6 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
     except Exception as we:
         logger.error("Failed to generate recruiter WeightConfig: %s", we)
         job["log"].append(f"⚠ Warning: WeightConfig generation failed: {we}")
-
-    # 1.6 Generate recruiter SubQuery Markdown file dynamically if missing or needs update (self-healing)
-    try:
-        job_dir = JOBS_DIR / slug
-        reqs_file = job_dir / "requirements.json"
-        subqueries_file = job_dir / "subqueries.json"
-        
-        if reqs_file.exists() and subqueries_file.exists():
-            reqs_data = json.loads(reqs_file.read_text(encoding="utf-8"))
-            subqueries_data = json.loads(subqueries_file.read_text(encoding="utf-8"))
-            
-            jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
-            jd_desc_dir.mkdir(parents=True, exist_ok=True)
-            
-            md_lines = [
-                f"# {slug}: Sub-Query Decomposition",
-                "",
-                "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
-                "",
-                "---",
-                "",
-                "## SECTION 1: REQUIREMENTS",
-                ""
-            ]
-            for r in reqs_data:
-                r_id = r.get("req_id", "REQ-???")
-                r_name = r.get("name", "Unknown")
-                r_cat = r.get("category", "Core Skill")
-                sq_list = subqueries_data.get(r_id, [])
-                
-                md_lines.append(f"### {r_id}: {r_name}")
-                md_lines.append("")
-                md_lines.append(f"**Category:** {r_cat}  ")
-                md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
-                
-                formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
-                formula = " * ".join(formula_parts)
-                md_lines.append(f"**Scoring Formula:** {formula}  ")
-                md_lines.append("")
-                
-                md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
-                md_lines.append("|---|-----------|------|-------|-------------------|")
-                for sq in sq_list:
-                    sq_id = sq.get("sq_id") or "SQ???"
-                    text = sq.get("text") or ""
-                    sq_type = sq.get("type") or "Binary"
-                    scale = sq.get("scale") or "0 or 1"
-                    method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
-                    md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
-                
-                md_lines.append("")
-                md_lines.append("---")
-                md_lines.append("")
-
-            sq_md_content = "\n".join(md_lines)
-            (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-            (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-            job["log"].append("✓ SubQuery markdown generated successfully (self-healing).")
-    except Exception as sqe:
-        logger.error("Failed to generate recruiter SubQuery markdown in pipeline: %s", sqe)
-        job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
 
     # 2. Extract resumes using the recruiter extraction script
     ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")

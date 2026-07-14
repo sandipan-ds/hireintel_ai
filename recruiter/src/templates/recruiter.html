@@ -496,7 +496,6 @@
       <span class="sidebar-label">OpenRouter API Key</span>
       <input type="password" class="sidebar-input" id="byok-key"
              placeholder="sk-or-v1-…"
-             autocomplete="new-password"
              oninput="onKeyInput()" />
       <div class="key-hint">
         Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -550,7 +549,7 @@
         <div class="rec-row">
           <span class="rec-pill free">FREE</span>
           <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('minimax-m3')" title="Click to fill">minimax-m3 ↗</div>
+            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
             <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
           </div>
         </div>
@@ -581,11 +580,6 @@
      JavaScript — Wizard state machine + API calls
 ──────────────────────────────────────────────────────────────── -->
 <script>
-window.onerror = function(message, source, lineno, colno, error) {
-  alert("Unhandled JS Error: " + message + "\nat line " + lineno + "\nStack: " + (error ? error.stack : ''));
-  return false;
-};
-
 // ── State ─────────────────────────────────────────────────────
 const state = {
   currentStep: 1,
@@ -1019,11 +1013,6 @@ async function startScoring() {
   const etaEl = document.getElementById('scoring-eta');
   const prog = document.getElementById('scoring-progress');
 
-  const byok = getByok();
-  const apiKey = byok.api_key;
-  const modelName = byok.model;
-  const baseUrl = byok.base_url;
-
   const link = (state.resumeLinks && state.resumeLinks.length) ? state.resumeLinks[0] : null;
   btn.disabled = true; btn.textContent = '… Starting';
 
@@ -1035,10 +1024,7 @@ async function startScoring() {
         n_reqs: state.reqs.length,
         parallel: true,
         resume_link: link,
-        weights: state.weights,
-        api_key: apiKey,
-        model: modelName,
-        base_url: baseUrl
+        weights: state.weights
       }),
     });
     const d = await res.json();
@@ -1123,7 +1109,7 @@ async function checkRankings() {
   if (status) status.textContent = '';
 
   try {
-    const res = await fetch(`/api/v1/rankings/${encodeURIComponent(slug)}?t=${Date.now()}`);
+    const res = await fetch(`/api/v1/rankings/${encodeURIComponent(slug)}`);
 
     // 404 means the role hasn't been scored yet — show a friendly processing message
     if (res.status === 404) {
