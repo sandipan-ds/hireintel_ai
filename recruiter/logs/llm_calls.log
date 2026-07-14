@@ -10954,3 +10954,3504 @@ Extracted Content: {
       "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
       "cited_text": ...
 
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7807 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2587 bytes
+Extracted Content Length: 1954 chars
+Extracted Content: <think>
+The resume content does not mention any UI frameworks like Material UI, Chakra UI, Tailwind CSS, or other UI component libraries/CSS frameworks. Let me score each sub-question accordingly.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "Administration, Microsoft PowerPoint, Business Objectives, Strategy, Microsoft Office, St...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8426 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1653 bytes
+Extracted Content Length: 1020 chars
+Extracted Content: <think>
+The resume content doesn't mention Git, GitHub, GitLab, Bitbucket, or any version control related tools or workflows. There's no evidence of Git usage anywhere in the resume.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8074 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2378 bytes
+Extracted Content Length: 1733 chars
+Extracted Content: <think>
+The resume is for an Entry Level Business Analyst. Let me check for any mention of frontend build tools like Webpack, Vite, Rollup, Parcel, esbuild, Gulp, Grunt, or Browserify.
+
+Looking through the resume content:
+- Skills mentioned: Administration, Microsoft PowerPoint, Business Objectives, Strategy, Microsoft Office, Statistics, Veracity, Consistency, Excel
+- Work experience is all busin...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7827 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1746 bytes
+Extracted Content Length: 1113 chars
+Extracted Content: <think>
+The resume content is for a Business Analyst with experience in sales, customer support, and business analysis. There is no mention of any state management libraries like Redux, Zustand, Context API, MobX, Recoil, Vuex, Pinia, or Jotai. All sub-questions should score 0/none.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "no...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7845 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2710 bytes
+Extracted Content Length: 2077 chars
+Extracted Content: <think>
+The resume content shows a Business Analyst with experience in customer service, sales, and administration. There is no mention of Jest, React Testing Library, Cypress, or any testing frameworks. The resume focuses on business analysis, sales, and customer support roles.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ010-01",
+      "evidence_found": "no",
+      "closest_evidence": "Adm...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7876 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2528 bytes
+Extracted Content Length: 1885 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of React and Modern JavaScript (ES6+).
+
+Looking through the resume:
+- Skills listed: Administration, Microsoft PowerPoint, Business Objectives, Strategy, Microsoft Office, Statistics, Veracity, Consistency, Excel
+- No mention of React, JavaScript, or ES6+ features
+- No evidence of any web development technologies
+
+SQ001: React - No evidence fo...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7532 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2545 bytes
+Extracted Content Length: 1937 chars
+Extracted Content: <think>
+The candidate's resume does not mention TypeScript anywhere. There are no references to TypeScript in skills, work experience, or projects. Let me verify by scanning the content:
+
+- Skills section: "Administration, Microsoft PowerPoint, Business Objectives, Strategy, Microsoft Office, Statistics, Veracity, Consistency" - no TypeScript
+- Work experience: Business analyst role, sales team le...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7934 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2803 bytes
+Extracted Content Length: 2166 chars
+Extracted Content: <think>
+The resume is for an Entry Level Business Analyst. There is no mention of React, React Hooks, state management libraries, component lifecycle, or any frontend development. The resume focuses on business analysis, customer support, and sales.
+
+All sub-questions should score 0 with "no" evidence found.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ005",
+      "evidence_found": "no",
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:18
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8403 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2492 bytes
+Extracted Content Length: 1838 chars
+Extracted Content: <think>
+The resume content is for an Entry Level Business Analyst with experience in customer support, sales, and business analysis. There is no mention of RESTful APIs, backend integration, API tools, or server-side API development anywhere in the resume.
+
+Let me score each sub-question:
+
+SQ001: No mention of REST or RESTful APIs → 0
+SQ002: No mention of consuming/integrating with backend service...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:23
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8205 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2029 bytes
+Extracted Content Length: 1396 chars
+Extracted Content: <think>
+The resume does not mention React anywhere. The candidate is an entry-level business analyst with skills in Excel, PowerPoint, Microsoft Office, etc. No React experience.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "Excel, Administration, Microsoft PowerPoint, Business Objectives, Strategy, Microsoft Office, Statistics, V...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:23
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7429 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2235 bytes
+Extracted Content Length: 1635 chars
+Extracted Content: <think>
+The candidate is an Entry Level Business Analyst with experience in sales and customer support. There is no mention of front-end development, HTML, CSS, JavaScript, React, or any front-end technologies.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ012-01",
+      "evidence_found": "no",
+      "closest_evidence": "Entry Level Business Analyst @ Nader; Sales Team Leader @ Lessard; Custo...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:22
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7384 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3213 bytes
+Extracted Content Length: 2579 chars
+Extracted Content: <think>
+Let me analyze the resume against the requirement of "Performance Optimization and Accessibility."
+
+**Sub-question 1 (SQ011-01):** Does the candidate mention performance optimization, performance tuning, or performance-related work?
+
+Looking at the resume:
+- "enhanced the team's performance by 25%" - this mentions "performance" but in the context of sales team performance, not technical pe...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9562 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1676 bytes
+Extracted Content Length: 1042 chars
+Extracted Content: <think>
+The candidate is a sales executive in the medical device industry. There is no mention of HTML, CSS, or responsive web design anywhere in the resume. All sub-questions should be scored 0 with no evidence.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ009",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9613 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1723 bytes
+Extracted Content Length: 1088 chars
+Extracted Content: <think>
+The resume content is about a sales executive in medical devices, not a software developer. There is no mention of React, hooks, state management, or component lifecycle anywhere in the resume. All sub-questions should be scored 0 with "no" evidence.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ005",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9524 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1668 bytes
+Extracted Content Length: 1034 chars
+Extracted Content: <think>
+The resume is for a sales executive with no mention of testing frameworks like Jest, React Testing Library, or Cypress. There's no software development or testing experience mentioned.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ010-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+  ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9211 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1796 bytes
+Extracted Content Length: 1190 chars
+Extracted Content: <think>
+The resume content is for a sales executive in the medical device industry. There is no mention of TypeScript anywhere in the resume - not in skills, not in work experience, not in projects. This is clearly a sales/business professional with no software development background evident.
+
+Let me score each sub-question:
+
+SQ001: Is TypeScript listed in skills section? No.
+SQ002: Does the candi...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 10082 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1910 bytes
+Extracted Content Length: 1277 chars
+Extracted Content: <think>
+The resume is for a sales executive in the medical device industry. There is no mention of REST APIs, RESTful APIs, backend services, API integration, API tools, or server-side API development anywhere in the resume. The content is entirely about sales leadership, business development, and team management.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9555 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2438 bytes
+Extracted Content Length: 1795 chars
+Extracted Content: <think>
+The resume content is about a sales executive with experience in medical device sales, mergers & acquisitions, and team leadership. There is no mention of React, JavaScript, or any ES6+ features anywhere in the resume.
+
+Let me score each sub-question:
+
+SQ001: React - No mention found
+SQ002: JavaScript - No mention found
+SQ003: ES6+ features - No mention found
+SQ004: No React/JS experience ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9753 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1711 bytes
+Extracted Content Length: 1078 chars
+Extracted Content: <think>
+The resume is for a sales executive in the medical device industry. There is no mention of Webpack, Vite, or any other frontend build tools. The resume focuses on sales, team leadership, mergers & acquisitions, and business development.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9506 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4342 bytes
+Extracted Content Length: 3709 chars
+Extracted Content: <think>
+The resume is for a sales executive with experience in medical devices, not a software developer. There is no mention of Redux, Zustand, Context API, or any state management libraries. No JavaScript/React experience at all.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "Mergers & Acquisitions, Sales Management, Market Share...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9486 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1711 bytes
+Extracted Content Length: 1078 chars
+Extracted Content: <think>
+The resume content is about a sales executive in medical devices. There is no mention of UI frameworks like Material UI, Chakra UI, Tailwind CSS, Bootstrap, Ant Design, styled-components, Emotion, Bulma, or Sass/SCSS anywhere in the resume.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+  ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:31
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 10105 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4620 bytes
+Extracted Content Length: 3977 chars
+Extracted Content: <think>
+The user wants me to score the resume for "Version Control with Git" requirement. Let me analyze the resume content carefully.
+
+Looking through the entire resume:
+- It's a sales executive resume focused on medical device sales
+- No mention of Git, GitHub, GitLab, Bitbucket, or any version control tools
+- No mention of branching, merging, pull requests, rebasing, or CI/CD
+- No technical too...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:36
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9884 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2272 bytes
+Extracted Content Length: 1639 chars
+Extracted Content: <think>
+The resume is for a sales executive in the medical device industry. There is no mention of React, React.js, ReactJS, or React Native anywhere in the resume. The candidate's experience is in sales management, business development, and team leadership - not in software development.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence"...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:36
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9108 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3278 bytes
+Extracted Content Length: 2665 chars
+Extracted Content: <think>
+The candidate is a sales executive with experience in medical device sales, mergers & acquisitions, and business development. There is no front-end development experience mentioned anywhere in the resume. Let me score each sub-question accordingly.
+
+SQ012-01: No front-end specific role titles are listed. The roles are Area Sales Director, Co-Founder, Board Member, US General Manager, US Di...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:36
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9063 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3479 bytes
+Extracted Content Length: 2850 chars
+Extracted Content: <think>
+The requirement is "Performance Optimization and Accessibility". Let me analyze the resume for this.
+
+Sub-question 1: Performance optimization, performance tuning, or performance-related work?
+Looking at the resume, the candidate is a sales executive in medical devices. I see "Process Optimization" in the skills list at the top. The semantic inference rules don't cover "Process Optimizatio...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7297 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1630 bytes
+Extracted Content Length: 997 chars
+Extracted Content: <think>
+The resume doesn't mention Jest, React Testing Library, Cypress, or any testing frameworks. There's no testing-related experience described either.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ010-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "k...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7335 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1730 bytes
+Extracted Content Length: 1097 chars
+Extracted Content: <think>
+The resume content is about a Data Scientist with experience in machine learning, statistical modeling, social media analytics, etc. There is no mention of HTML, CSS, or responsive web design anywhere in the resume. Let me score each sub-question accordingly.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ009",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cite...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7279 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1944 bytes
+Extracted Content Length: 1305 chars
+Extracted Content: <think>
+The resume is for a Data Scientist with experience in machine learning, statistical modeling, data analysis, etc. There is no mention of Redux, Zustand, Context API, or any other state management libraries. The candidate's background is focused on data science, not frontend development with React or similar frameworks.
+
+SQ001: Redux - not mentioned
+SQ002: Zustand - not mentioned
+SQ003: Con...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7259 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1942 bytes
+Extracted Content Length: 1301 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question about UI Frameworks.
+
+SQ001: Material UI - No mention in the resume
+SQ002: Chakra UI - No mention in the resume
+SQ003: Tailwind CSS - No mention in the resume
+SQ004: Other UI component libraries or CSS frameworks (Bootstrap, Ant Design, styled-components, Emotion, Bulma, Sass/SCSS) - No mention of any of these
+
+None of the resume cont...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7526 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1802 bytes
+Extracted Content Length: 1168 chars
+Extracted Content: <think>
+The candidate's resume is for a Data Scientist role. There's no mention of Webpack, Vite, or any frontend build tools (Rollup, Parcel, esbuild, Gulp, Grunt, Browserify). The resume focuses on data science, machine learning, statistical modeling, and data analysis work. None of the sub-questions can be answered affirmatively.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "e...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7386 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1989 bytes
+Extracted Content Length: 1346 chars
+Extracted Content: <think>
+The resume content is about a Data Scientist with experience in machine learning, statistical modeling, data analysis, etc. There is no mention of React, React Hooks, state management libraries, or component lifecycle concepts anywhere in the resume.
+
+Let me score each sub-question:
+
+SQ005: React Hooks - No mention at all. Score: 0
+SQ006: State management libraries - No mention at all. Sco...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7328 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2188 bytes
+Extracted Content Length: 1554 chars
+Extracted Content: <think>
+The resume content shows a Data Scientist with experience in machine learning, statistical modeling, data analysis, and related fields. There is no mention of React, JavaScript, or ES6+ features anywhere in the resume. Let me score each sub-question accordingly.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "Data Scientist ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7878 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2457 bytes
+Extracted Content Length: 1807 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence of Version Control with Git.
+
+Looking through the resume content:
+- No mention of "Git" anywhere
+- No mention of "GitHub", "GitLab", "Bitbucket"
+- No mention of branching, merging, pull requests, rebasing, conflict resolution, CI/CD
+- No mention of Git usage in project work
+
+There is no evidence of Git or version control in this resume.
+</think>
+{
+  "...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6984 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2532 bytes
+Extracted Content Length: 1921 chars
+Extracted Content: <think>
+The user wants me to score the candidate for TypeScript Experience. Let me analyze the resume content carefully.
+
+Looking through the resume, I see:
+- Skills: Data Entry, Planning, Analyzing
+- Job at Best Buy: mentions Machine Learning, Statistical Modeling, Social Media Analytics, Data Analysis
+- Job at ABC Corporation: mentions Machine Learning, Statistical Modeling, Unsupervised Learnin...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:43
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7855 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3351 bytes
+Extracted Content Length: 2684 chars
+Extracted Content: <think>
+The user wants me to score a resume against the requirement "RESTful APIs and Backend Integration" using the provided sub-questions.
+
+Let me analyze the resume content for each sub-question:
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- Searching the resume for "REST", "RESTful", "API", "endpoint"... I don't see any mention of REST or RESTful APIs in the resume.
+
+SQ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:47
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6881 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1892 bytes
+Extracted Content Length: 1290 chars
+Extracted Content: <think>
+The candidate is a Data Scientist with experience in machine learning, statistical modeling, data analysis, etc. There is no mention of front-end development role titles, no front-end technologies (HTML, CSS, JavaScript, React, Vue, Angular), and no evidence of front-end development experience.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ012-01",
+      "evidence_found": "no",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:47
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6836 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2237 bytes
+Extracted Content Length: 1615 chars
+Extracted Content: <think>
+Let me analyze the resume content against the requirement of "Performance Optimization and Accessibility."
+
+Sub-question 1: Does the candidate mention performance optimization, performance tuning, or performance-related work?
+- Looking through the resume, I see mentions of "model monitoring criteria," "analytics model quality assurance," "deployed some flagship projects," but no explicit m...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:47
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7657 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2783 bytes
+Extracted Content Length: 2131 chars
+Extracted Content: <think>
+The resume doesn't mention React anywhere. Let me check carefully.
+
+The resume mentions:
+- Data Scientist roles at Best Buy and ABC Corporation
+- Machine Learning, Statistical Modeling, Social Media Analytics, Data Analysis
+- No mention of React, React.js, ReactJS, or React Native
+- No mention of building web applications with React
+- No production-level React work indicated
+
+All sub-quest...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8126 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1663 bytes
+Extracted Content Length: 1029 chars
+Extracted Content: <think>
+The candidate's resume doesn't mention Git anywhere - no mention of Git, GitHub, GitLab, Bitbucket, branching, merging, pull requests, etc. Let me score each sub-question accordingly.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7527 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2553 bytes
+Extracted Content Length: 1909 chars
+Extracted Content: <think>
+Let me analyze the resume content for any mention of state management libraries (Redux, Zustand, Context API).
+
+Looking through the resume:
+- Skills: Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript
+- Work experience mentions Python, Django, APIs, data processing
+- No mention of Redux, Zustand, Context API, MobX, Recoil, Vuex, Pinia, or Jotai
+
+SQ001: Redux - No men...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7545 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2519 bytes
+Extracted Content Length: 1863 chars
+Extracted Content: <think>
+The user wants me to score a resume against the requirement of "Testing Frameworks (Jest, RTL, Cypress)". Let me analyze the resume content carefully.
+
+Looking through the resume:
+- Skills listed: Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript
+- No mention of Jest, React Testing Library (RTL), or Cypress anywhere
+- No mention of testing frameworks or testing expe...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7507 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2855 bytes
+Extracted Content Length: 2210 chars
+Extracted Content: <think>
+Let me analyze the resume for UI Framework evidence.
+
+SQ001: Material UI - No mention found.
+SQ002: Chakra UI - No mention found.
+SQ003: Tailwind CSS - No mention found.
+SQ004: Other UI libraries/CSS frameworks - The resume mentions HTML, CSS, JavaScript but no specific UI component libraries like Bootstrap, Ant Design, styled-components, etc. The resume only mentions "HTML, CSS, JavaScrip...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7232 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2490 bytes
+Extracted Content Length: 1880 chars
+Extracted Content: <think>
+The candidate's resume mentions JavaScript but not TypeScript. Let me check each sub-question.
+
+SQ001: Does the candidate explicitly list TypeScript as a skill in the skills section?
+Skills listed: Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript. No TypeScript.
+
+SQ002: Does the candidate describe professional work experience that involved TypeScript?
+No mention of...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7774 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2859 bytes
+Extracted Content Length: 2210 chars
+Extracted Content: <think>
+The user wants me to score a resume for Frontend Build Tooling (Webpack, Vite, or similar). Let me go through each sub-question.
+
+Looking at the resume content:
+- Skills: Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript
+- No mention of Webpack, Vite, Rollup, Parcel, esbuild, Gulp, Grunt, or Browserify
+- No mention of frontend build tooling in project descriptions
+-...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7583 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3672 bytes
+Extracted Content Length: 2997 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: CSS, HTML, and Responsive Web Design.
+
+Sub-question 1 (SQ009): Does the candidate explicitly mention HTML?
+- The resume mentions "HTML" in multiple places:
+  - "with a solid understanding of front-end technologies like HTML, CSS, and JavaScript"
+  - Skills list: "Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7576 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3637 bytes
+Extracted Content Length: 2980 chars
+Extracted Content: <think>
+Let me analyze the resume for the React and Modern JavaScript (ES6+) requirement.
+
+SQ001: Does the candidate explicitly list React (or React.js) in their skills, technologies, or experience sections?
+- Looking through the resume, I see Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript listed as skills. No mention of React.
+- Answer: 0
+
+SQ002: Does the candidate ment...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8103 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4777 bytes
+Extracted Content Length: 4085 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence related to "RESTful APIs and Backend Integration".
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- Looking through the resume, I see mention of "third-party APIs" and "Django framework" but no explicit mention of "REST" or "RESTful" APIs.
+- Score: 0 (No)
+
+SQ002: Does the candidate mention consuming or integrating with backend ser...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:59
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7905 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3003 bytes
+Extracted Content Length: 2355 chars
+Extracted Content: <think>
+The candidate's resume does not mention React at all. Let me check each sub-question carefully.
+
+SQ001: Does the candidate explicitly list React as a skill? Looking at the skills section: "Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript" - No React mentioned.
+
+SQ002: Does the candidate describe building applications using React? No mentions of React in work experi...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7634 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3190 bytes
+Extracted Content Length: 2547 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of React Hooks, State Management, and Component Lifecycle.
+
+Looking through the resume:
+- Skills: Python, Django, NumPy, Pandas, TensorFlow, PyTorch, HTML, CSS, JavaScript
+- No mention of React at all
+- No mention of Hooks (useState, useEffect, useContext, useReducer, custom hooks)
+- No mention of state management libraries (Redux, MobX, Zusta...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:59
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7129 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2799 bytes
+Extracted Content Length: 2175 chars
+Extracted Content: <think>
+Let me analyze the resume for the requirement: 3+ Years Front-End Development Experience.
+
+**Sub-question 1 (SQ012-01):** Does the candidate list front-end specific role titles?
+- The roles listed are "Senior Python Developer" and "Junior Python Developer" - no front-end specific role titles.
+- Answer: 0
+
+**Sub-question 2 (SQ012-02):** How many years of front-end development experience?
+- ...
+
+======================================================================
+Timestamp: 2026-07-15 01:30:58
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7084 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3829 bytes
+Extracted Content Length: 3180 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence related to "Performance Optimization and Accessibility".
+
+Sub-question 1: Performance optimization/tuning
+- "improving data efficiency by 50%" - this is performance-related
+- "reducing system errors by 20%" - this is more about debugging
+- "a 40% reduction in time spent on data processing tasks" - performance related
+- "productivity increase of 30%" -...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7344 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2165 bytes
+Extracted Content Length: 1560 chars
+Extracted Content: <think>
+The candidate's resume lists skills: HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, etc. There is no mention of TypeScript anywhere in the resume - not in skills, not in work experience, not in projects.
+
+SQ001: Does the candidate explicitly list TypeScript as a skill? No.
+SQ002: Does the candidate describe professional work experience that involved TypeScript? No.
+SQ003: Does the candidate ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7619 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2936 bytes
+Extracted Content Length: 2292 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question about UI Frameworks.
+
+SQ001: Material UI (MUI) - Looking through the resume, I see HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, Adobe Creative Suite, UX Design, UI Design, Mobile Design. No mention of Material UI.
+
+SQ002: Chakra UI - No mention in the resume.
+
+SQ003: Tailwind CSS - No mention in the resume.
+
+SQ004: Other UI component ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7639 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2470 bytes
+Extracted Content Length: 1827 chars
+Extracted Content: <think>
+The resume content is for a Web Designer with skills in HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, UX/UI Design, etc. There is no mention of Redux, Zustand, Context API, or any other state management libraries like MobX, Recoil, Vuex, Pinia, or Jotai.
+
+Let me score each sub-question:
+
+SQ001: Redux - No mention found. Score: 0
+SQ002: Zustand - No mention found. Score: 0
+SQ003: Context API...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7746 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2480 bytes
+Extracted Content Length: 1837 chars
+Extracted Content: <think>
+The resume content is for a Web Designer with experience in HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, and Adobe Creative Suite. There is no mention of React, React Hooks, useState, useEffect, useContext, useReducer, Redux, MobX, Zustand, Recoil, Context API, component lifecycle methods, or any related modern JavaScript framework concepts.
+
+Let me score each sub-question:
+
+SQ005: No ment...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7657 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3464 bytes
+Extracted Content Length: 2823 chars
+Extracted Content: <think>
+Let me analyze the resume content for testing frameworks (Jest, RTL, Cypress).
+
+Looking through the resume:
+- Skills: Creativity, Problem Solving, Communication, Detail-Oriented, Adobe Creative Suite, HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, UX Design, UI Design, Mobile Design, Design Project Management
+- No mention of Jest, React Testing Library, or Cypress anywhere
+- No mention of te...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7886 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3277 bytes
+Extracted Content Length: 2637 chars
+Extracted Content: <think>
+Let me analyze the resume for any mention of frontend build tools like Webpack, Vite, Rollup, Parcel, esbuild, Gulp, Grunt, Browserify.
+
+Looking through the resume content:
+- Skills listed: Creativity, Problem Solving, Communication, Detail-Oriented, Adobe Creative Suite, HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, UX Design, UI Design, Mobile Design, Design Project Management
+- No mentio...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7688 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3273 bytes
+Extracted Content Length: 2613 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement "React and Modern JavaScript (ES6+)".
+
+SQ001: Does the candidate explicitly list React (or React.js)?
+- Looking through the resume, I see HTML5, CSS3, JavaScript, jQuery, PHP, MySQL - no React mentioned.
+- Answer: 0
+
+SQ002: Does the candidate mention JavaScript?
+- Yes, JavaScript is listed in skills and in each role's tech stack.
+- Answ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7695 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3885 bytes
+Extracted Content Length: 3223 chars
+Extracted Content: <think>
+Let me analyze the resume for each sub-question:
+
+SQ009: HTML mentioned - Yes, "HTML5" appears multiple times in the skills section and job descriptions.
+
+SQ010: CSS mentioned - Yes, "CSS3" appears multiple times in the skills section and job descriptions.
+
+SQ011: Responsive web design - The resume mentions "Mobile Design" and "Created a mobile website for a free online video game" which s...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8238 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3358 bytes
+Extracted Content Length: 2714 chars
+Extracted Content: <think>
+The resume content is for a Web Designer. Let me check for any mention of Git, Git hosting platforms, or Git workflows.
+
+Looking through the resume:
+- Skills: Creativity, Problem Solving, Communication, Detail-Oriented, Adobe Creative Suite, HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, UX Design, UI Design, Mobile Design, Design Project Management
+- No mention of Git, GitHub, GitLab, Bitbu...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:05
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8215 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3667 bytes
+Extracted Content Length: 2995 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of RESTful APIs and Backend Integration.
+
+Looking through the resume:
+- The candidate is a Web Designer with experience in HTML5, CSS3, JavaScript, jQuery, PHP, MySQL
+- No mention of REST, RESTful APIs, API endpoints, API consumption, third-party APIs, Axios, Fetch, Postman, Swagger, OpenAPI, GraphQL
+- No mention of backend services integratio...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:11
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7196 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2520 bytes
+Extracted Content Length: 1905 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence related to Performance Optimization and Accessibility.
+
+SQ011-01: Performance optimization - The resume mentions "Turned in projects an average of 5% faster than targets" and "Lowered lead times for new jobs by 25%". These are about project delivery speed, not performance optimization of systems/websites. The semantic inference rules don't map "faster...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:12
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8017 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2638 bytes
+Extracted Content Length: 1995 chars
+Extracted Content: <think>
+The requirement is "Production React Application Experience." I need to check if the resume mentions React anywhere.
+
+Looking at the resume content:
+- Skills listed: Creativity, Problem Solving, Communication, Detail-Oriented, Adobe Creative Suite, HTML5, CSS3, JavaScript, jQuery, PHP, MySQL, UX Design, UI Design, Mobile Design, Design Project Management
+- No mention of React anywhere
+- Wo...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:11
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7241 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 7778 bytes
+Extracted Content Length: 7015 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: 3+ Years Front-End Development Experience.
+
+**Sub-question 1 (SQ012-01):** Does the candidate list front-end specific role titles?
+- "Web Designer @ Taveo Group"
+- "Web Designer @ Amphimia Global, Inc."
+- "Freelance Web Designer"
+- These are web designer roles, not specifically "Front-End Developer" or "UI Developer" or "React Develope...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7209 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2175 bytes
+Extracted Content Length: 1518 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question.
+
+SQ001: Does the candidate explicitly mention Redux (or Redux Toolkit)?
+- In the skills list: "Redux" is mentioned
+- Under Bravoev role: "Redux" is listed
+So yes, Redux is mentioned. sub_score = 1
+
+SQ002: Does the candidate explicitly mention Zustand?
+- No mention of Zustand anywhere
+sub_score = 0
+
+SQ003: Does the candidate explicitl...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6914 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2686 bytes
+Extracted Content Length: 2070 chars
+Extracted Content: <think>
+The user wants me to score the candidate for TypeScript Experience. Let me carefully review the resume content for any mention of TypeScript.
+
+Looking through the resume:
+- The candidate is described as a "JavaScript Developer" with React experience
+- Skills listed: React, JavaScript, macOS, Virtual DOM, React Native, Node.js, DevOps, CSS, Git, Six Sigma, Microsoft Excel, Redux, Spring MVC...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7189 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2882 bytes
+Extracted Content Length: 2231 chars
+Extracted Content: <think>
+Let me analyze the resume content for the UI Frameworks requirement (Material UI, Chakra UI, Tailwind CSS).
+
+Looking through the resume:
+- Skills list includes: React, JavaScript, macOS, Virtual DOM, React Native, Node.js, DevOps, CSS, Git, Six Sigma, Microsoft Excel, Redux, Spring MVC, JSP, MySQL, Oracle, Power BI
+- No mention of Material UI, Chakra UI, or Tailwind CSS
+- The only CSS ment...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7456 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3196 bytes
+Extracted Content Length: 2546 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of Frontend Build Tooling (Webpack, Vite, or similar).
+
+Looking through the resume:
+- Skills listed: React, JavaScript, macOS, Virtual DOM, React Native, Node.js, DevOps, CSS, Git, Six Sigma, Microsoft Excel, Redux, Spring MVC, JSP, MySQL, Oracle, Power BI
+- No mention of Webpack, Vite, Rollup, Parcel, esbuild, Gulp, Grunt, or Browserify
+- The...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7227 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3415 bytes
+Extracted Content Length: 2759 chars
+Extracted Content: <think>
+Let me analyze the resume for the requirement of Testing Frameworks (Jest, RTL, Cypress).
+
+Looking at the resume content:
+- Skills mentioned: React, JavaScript, Node.js, CSS, Redux, React Native, DevOps, Git, Six Sigma, MySQL, Oracle, Power BI, Spring MVC, JSP, SQL
+- No mention of Jest, React Testing Library (RTL), or Cypress anywhere
+- There's a mention of "Performed testing, installation...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7808 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3287 bytes
+Extracted Content Length: 2634 chars
+Extracted Content: <think>
+The user wants me to score the candidate for "Version Control with Git" based on the resume content.
+
+Let me analyze the resume for evidence of Git:
+
+1. In the skills section, I can see "Git" listed: "React, JavaScript, macOS, Virtual DOM, React Native, Node.js, DevOps, CSS, Git, Six Sigma, Microsoft Excel, Redux, Spring MVC, JSP, MySQL, Oracle, Power BI"
+
+So Git is explicitly mentioned in...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7258 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3862 bytes
+Extracted Content Length: 3176 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement "React and Modern JavaScript (ES6+)".
+
+SQ001: Does the candidate explicitly list React?
+- Yes, "React" is listed in skills and experience.
+- Evidence: "React, JavaScript, macOS, Virtual DOM, React Native..."
+- Also: "Experienced JavaScript Developer with 5 years in the industry. Proficient with React."
+- Also: "React Developer @ Bravoev...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7265 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4107 bytes
+Extracted Content Length: 3439 chars
+Extracted Content: <think>
+Let me analyze the resume for the requirement of CSS, HTML, and Responsive Web Design.
+
+Sub-question 1 (SQ009): Does the candidate explicitly mention HTML (or HTML5) in their skills or experience?
+- Looking through the resume, I don't see any explicit mention of HTML or HTML5.
+- There's "JSP" mentioned but JSP is JavaServer Pages, not HTML.
+- The skills listed include: React, JavaScript, m...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7316 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 5501 bytes
+Extracted Content Length: 4770 chars
+Extracted Content: <think>
+Let me analyze the resume content carefully for each sub-question.
+
+**SQ005**: Does the candidate explicitly mention React Hooks or specific hooks such as useState, useEffect, useContext, useReducer, or custom hooks?
+
+Looking at the resume:
+- "Used understanding of React fundamentals to promote better component level practices"
+- "React" listed as a skill
+- No mention of specific hooks lik...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:37
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6766 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3081 bytes
+Extracted Content Length: 2452 chars
+Extracted Content: <think>
+Let me analyze the resume for Performance Optimization and Accessibility evidence.
+
+**SQ011-01: Performance optimization/tuning mentioned?**
+- "Used problem-solving aptitude to enhance application performance by 16%"
+- "Increased turnaround speed by 28% with 100% deadline adherence"
+- "Introduced wider use of isomorphic React and Node.js to power applications, decreasing load times by roug...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:37
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6811 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3188 bytes
+Extracted Content Length: 2547 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question for the requirement "3+ Years Front-End Development Experience".
+
+**Sub-question 1 (SQ012-01):** Does the candidate list front-end specific role titles?
+- "React Developer @ Bravoev" - Yes, this is a front-end specific role title.
+- "Experienced JavaScript Developer" - also relevant
+- Score: 1
+
+**Sub-question 2 (SQ012-02):** How m...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:32
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7785 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 5194 bytes
+Extracted Content Length: 4501 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question for RESTful APIs and Backend Integration.
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- Scanning the resume: No mention of "REST" or "RESTful" anywhere. Technologies mentioned include Spring MVC, JSP, SQL, Oracle, MySQL, React, Node.js, JavaScript, CSS, Redux. No REST/RESTful mention.
+- Score: 0
+
+SQ002: Doe...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:38
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7587 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4144 bytes
+Extracted Content Length: 3451 chars
+Extracted Content: <think>
+Let me analyze the resume for Production React Application Experience.
+
+SQ001: Does the candidate explicitly list React as a skill?
+- "Proficient with React" in the summary
+- "React" listed in skills section
+- "React, JavaScript, macOS..." in skills list
+- Yes, React is explicitly listed
+
+SQ002: Does the candidate describe building applications or features using React?
+- "Used understandin...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9186 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3037 bytes
+Extracted Content Length: 2386 chars
+Extracted Content: <think>
+Let me analyze the resume for the requirement: State Management Libraries (Redux, Zustand, Context API)
+
+Sub-question 1: Redux - Looking through the resume, I see "Redux" mentioned in the Sr. React JS Developer role at 7-Eleven: "Maintained high-level expertise in React state management strategies, including Redux, Redux Persist and Redux-Saga" and also "Used Middleware, Redux-Saga with Im...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9762 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3899 bytes
+Extracted Content Length: 3235 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement of "RESTful APIs and Backend Integration".
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- "Used Middleware, Redux-Saga with ImmutableJS in application to retrieve and store data from Back-End and to perform RESTFUL services" - Yes, RESTFUL is mentioned.
+
+SQ002: Does the candidate mention consuming or integrating w...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8891 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2773 bytes
+Extracted Content Length: 2164 chars
+Extracted Content: <think>
+Let me analyze the resume for TypeScript experience.
+
+**SQ001**: Does the candidate explicitly list TypeScript as a skill in the skills section?
+Yes - TypeScript appears multiple times in the skills sections. Once in the Verizon skills list and once in the general skills list.
+
+**SQ002**: Does the candidate describe professional work experience that involved TypeScript?
+TypeScript is liste...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9204 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2992 bytes
+Extracted Content Length: 2323 chars
+Extracted Content: <think>
+Let me analyze the resume content for Testing Frameworks (Jest, RTL, Cypress).
+
+Sub-question 1: Does the candidate mention Jest?
+- "Implemented TDD using Jest framework for React along with Enzyme test utilities" - Yes, explicitly mentions Jest
+- Also in skills list: "Jest"
+- Score: 1
+
+Sub-question 2: Does the candidate mention React Testing Library (RTL)?
+- No mention of React Testing Lib...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9785 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4191 bytes
+Extracted Content Length: 3509 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of "Version Control with Git".
+
+SQ001: Does the candidate explicitly mention Git as a skill or tool?
+- Yes, "Git" is listed multiple times. In the skills list: "GitHub, GitLab, Bitbucket, Sourcetree". In Verizon role: "Applied strong knowledge of version control tools like GIT, SVN, Bitbucket" and listed in skills "Git". 
+- Score: 1
+
+SQ002: Do...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9166 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3589 bytes
+Extracted Content Length: 2920 chars
+Extracted Content: <think>
+The user wants me to score the candidate for UI Frameworks requirement, specifically looking for Material UI, Chakra UI, Tailwind CSS, and other UI component libraries or CSS frameworks.
+
+Let me check the resume content:
+
+SQ001 - Material UI: I don't see any mention of "Material UI" or "MUI" in the resume. No evidence found.
+
+SQ002 - Chakra UI: I don't see any mention of "Chakra UI" in the...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9433 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4634 bytes
+Extracted Content Length: 3937 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of Frontend Build Tooling (Webpack, Vite, or similar).
+
+Looking through the resume:
+
+1. **Webpack**: 
+   - Listed in skills: "Webpack"
+   - Listed in Verizon project tags: "Webpack"
+   - Used in a project bullet: "Used Gradle and Webpack to build Microservices and UI components and pipelined smoothly for CI/CD using Jenkins"
+
+2. **Vite**: 
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9242 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4949 bytes
+Extracted Content Length: 4261 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: CSS, HTML, and Responsive Web Design.
+
+Sub-question 1 (SQ009): Does the candidate explicitly mention HTML (or HTML5)?
+- "Designed dynamic and multi-browser compatible pages using HTML5, CSS3, SASS, Angular 5"
+- "Defined new validations through AngularJS for form field validation implemented through HTML5"
+- "Developed high performance ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9235 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4487 bytes
+Extracted Content Length: 3803 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement of "React and Modern JavaScript (ES6+)".
+
+SQ001: Does the candidate explicitly list React (or React.js) in their skills, technologies, or experience sections?
+- Yes, React is listed in the skills section and mentioned in the Sr. React JS Developer role.
+- Evidence: "React, AngularJS" in skills, "Sr. React JS Developer @ 7-Eleven", "Deve...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:52
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8743 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3131 bytes
+Extracted Content Length: 2514 chars
+Extracted Content: <think>
+Let me analyze the resume for Performance Optimization and Accessibility.
+
+SQ011-01: Does the candidate mention performance optimization, performance tuning, or performance-related work?
+- "Developed high performance customer facing e-commerce application using React, Redux-saga, React Hooks, React-Router, JavaScript, HTML5" - mentions "high performance" which relates to performance.
+
+SQ01...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:46
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9293 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4937 bytes
+Extracted Content Length: 4237 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+SQ005: Does the candidate explicitly mention React Hooks or specific hooks such as useState, useEffect, useContext, useReducer, or custom hooks?
+- "React Hooks" is mentioned multiple times in the skills and in the 7-Eleven role
+- "Exclusively used React-Hooks to perform the application life-cycle processes"
+- Evidence: yes, scor...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 9564 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 6619 bytes
+Extracted Content Length: 5912 chars
+Extracted Content: <think>
+Let me analyze the resume content for Production React Application Experience.
+
+SQ001: Does the candidate explicitly list React as a skill?
+Yes - React is listed multiple times in skills sections and in the 7-Eleven role.
+
+SQ002: Does the candidate describe building applications or features using React in work experience or projects?
+Yes - The 7-Eleven role describes developing e-commerce ...
+
+======================================================================
+Timestamp: 2026-07-15 01:31:53
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8788 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 7619 bytes
+Extracted Content Length: 6833 chars
+Extracted Content: <think>
+Let me analyze the resume content carefully for each sub-question.
+
+**SQ012-01: Does the candidate list front-end specific role titles?**
+Looking at the work experience:
+- "Senior Systems Engineer @ Verizon" - This is more of a general systems role, not specifically front-end
+- "Sr. React JS Developer @ 7-Eleven" - This is clearly a front-end specific role title (React Developer)
+
+So yes, ...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7884 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3146 bytes
+Extracted Content Length: 2502 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question related to UI Frameworks (Material UI, Chakra UI, Tailwind CSS).
+
+SQ001: Material UI - Looking through the resume, I see mentions of React, AngularJS, various CSS-related technologies like HAML, Haml, Handlebars.js, JSX, Sass... wait, I don't see Sass mentioned. Let me look again. The skills list includes: React, AngularJS, Aurelia, E...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8503 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3248 bytes
+Extracted Content Length: 2586 chars
+Extracted Content: <think>
+The user wants me to score the resume against the "Version Control with Git" requirement. Let me analyze the resume content carefully.
+
+Looking through the resume content:
+
+1. SQ001: Does the candidate explicitly mention Git as a skill or tool?
+   - I don't see "Git" mentioned anywhere in the resume content.
+   - There's no explicit mention of Git.
+
+2. SQ002: Does the candidate mention Git...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7922 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3467 bytes
+Extracted Content Length: 2818 chars
+Extracted Content: <think>
+Let me analyze the resume content for Testing Frameworks (Jest, RTL, Cypress).
+
+Looking at the skills section, I can see "Jest" is explicitly mentioned. Let me check for RTL and Cypress.
+
+Skills listed: "React, AngularJS, Aurelia, Electron, Gatsby, HAML, Haml, Handlebars.js, JSON, JSX, Web Components, XML, .NET Framework 4.x, BIML, Cost-based Optimization, CouchDB, Entity Framework, ETL, M...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8480 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3507 bytes
+Extracted Content Length: 2842 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question related to RESTful APIs and Backend Integration.
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- "REST API" appears in the skills section
+- "Designed and implemented the 99.99% uptime REST API for the business-critical online service." - Hills and Sons
+- "REST API" listed in Streich, Kohler and Lindgren skills
+Ye...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7960 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3274 bytes
+Extracted Content Length: 2620 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: CSS, HTML, and Responsive Web Design.
+
+Looking through the resume:
+
+1. **HTML (SQ009)**: I don't see explicit mention of HTML or HTML5. There are mentions of HAML, Haml, Handlebars.js, JSX, XML, JSON - but not HTML directly.
+
+2. **CSS (SQ010)**: I don't see explicit mention of CSS, CSS3, SASS, SCSS, LESS, or PostCSS anywhere in the res...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7904 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4359 bytes
+Extracted Content Length: 3708 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of State Management Libraries (Redux, Zustand, Context API).
+
+Looking through the resume:
+
+1. **Redux/Redux Toolkit**: I don't see any mention of Redux or Redux Toolkit in the skills list or work experience.
+
+2. **Zustand**: I don't see any mention of Zustand in the resume.
+
+3. **Context API/React Context API**: I don't see any explicit mentio...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8151 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3812 bytes
+Extracted Content Length: 3165 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence of Frontend Build Tooling (Webpack, Vite, or similar).
+
+Looking at the resume content:
+
+1. Skills listed include: React, AngularJS, Aurelia, Electron, Gatsby, HAML, Haml, Handlebars.js, JSON, JSX, Web Components, XML, .NET Framework 4.x, BIML, Cost-based Optimization, CouchDB, Entity Framework, ETL, MS SQL Server, MariaDB, MySQL, PL/SQL, PostGIS, ROLA...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7609 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3764 bytes
+Extracted Content Length: 3141 chars
+Extracted Content: <think>
+The user wants me to score the candidate for TypeScript Experience based on the resume content provided.
+
+Let me analyze the resume content for any mention of TypeScript:
+
+1. Skills section: Lists React, AngularJS, Aurelia, Electron, Gatsby, HAML, Haml, Handlebars.js, JSON, JSX, Web Components, XML, .NET Framework 4.x, BIML, Cost-based Optimization, CouchDB, Entity Framework, ETL, MS SQL S...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8011 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4795 bytes
+Extracted Content Length: 4108 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: React Hooks, State Management, Component Lifecycle.
+
+Looking at the resume:
+
+1. **Skills section**: Lists "React, AngularJS, Aurelia, Electron, Gatsby, HAML, Haml, Handlebars.js, JSON, JSX, Web Components, XML..." - React is mentioned but no specific hooks.
+
+2. **Summary**: "Creative React Developer with 3+ years of knowledge in Machin...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:09
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7953 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 6058 bytes
+Extracted Content Length: 5338 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement "React and Modern JavaScript (ES6+)".
+
+Looking at the resume:
+
+1. SQ001 - Does the candidate explicitly list React (or React.js)?
+   - Yes, "React" appears in the skills list and in the job bullets at Streich, Kohler and Lindgren ("React" is listed as a technology used).
+
+2. SQ002 - Does the candidate mention JavaScript (JS)?
+   - Looki...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:16
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7506 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3409 bytes
+Extracted Content Length: 2766 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement of "3+ Years Front-End Development Experience."
+
+Sub-question 1: Does the candidate list front-end specific role titles?
+- "Creative React Developer" - in the summary
+- "Senior Full-Stack Developer" @ Streich, Kohler and Lindgren
+- "Front End Developer" @ Hills and Sons
+- Yes, there is a "Front End Developer" title and "Creative React D...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:15
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7461 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3323 bytes
+Extracted Content Length: 2693 chars
+Extracted Content: <think>
+Let me analyze the resume for Performance Optimization and Accessibility.
+
+Sub-question 1: Does the candidate mention performance optimization, performance tuning, or performance-related work?
+- "improving data integrity and execution efficiency using EF, POSTGIS and ROLAP" - mentions efficiency
+- "Performed probing, troubleshooting, and provided suggestions for the business-critical progr...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:16
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 8282 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 6092 bytes
+Extracted Content Length: 5400 chars
+Extracted Content: <think>
+Let me analyze the resume for evidence of Production React Application Experience.
+
+**SQ001**: Does the candidate explicitly list React as a skill?
+- Yes, "React" is listed in the skills section: "React, AngularJS, Aurelia, Electron, Gatsby..."
+- Also listed under the Senior Full-Stack Developer role's tools: "React"
+
+**SQ002**: Does the candidate describe building applications or features...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5309 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2227 bytes
+Extracted Content Length: 1618 chars
+Extracted Content: <think>
+The resume content shows a skills list and "Master's" but no mention of TypeScript anywhere. I need to score each sub-question.
+
+SQ001: Does the candidate explicitly list TypeScript as a skill? No, TypeScript is not in the skills list.
+
+SQ002: Does the candidate describe professional work experience that involved TypeScript? No work experience content is provided, and TypeScript is not men...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5851 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2807 bytes
+Extracted Content Length: 2160 chars
+Extracted Content: <think>
+Let me analyze the resume content for frontend build tooling evidence.
+
+The resume mentions: "Grunt, Gulp" in the skills list. These are frontend build tools.
+
+SQ001: Webpack - not mentioned. Score: 0
+SQ002: Vite - not mentioned. Score: 0
+SQ003: Other frontend build tools - Yes, Grunt and Gulp are mentioned. No years of experience given. Level: "few" (just listed in skills, no duration)
+SQ...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5604 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2657 bytes
+Extracted Content Length: 2005 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question:
+
+SQ001: Redux - The resume mentions "Redux", "redux-promise", "redux-saga", "redux-thunk" - so YES.
+
+SQ002: Zustand - No mention of Zustand in the resume.
+
+SQ003: Context API - No mention of Context API in the resume.
+
+SQ004: Breadth of state management - Redux ecosystem is mentioned (Redux, redux-promise, redux-saga, redux-thunk), b...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5653 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2823 bytes
+Extracted Content Length: 2168 chars
+Extracted Content: <think>
+The resume content lists skills including: "JavaScript", "React", "ES6", "Redux", "AngularJS", "Node.js", etc.
+
+SQ001: React is listed - yes
+SQ002: JavaScript is listed - yes
+SQ003: ES6 is listed - yes
+SQ004: No specific years mentioned for React/JS experience. The resume just lists skills. There's no project or role duration mentioned. Level: "some" since they list multiple related techno...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5622 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3030 bytes
+Extracted Content Length: 2378 chars
+Extracted Content: <think>
+The resume content is very limited. Let me check for any mention of Jest, React Testing Library (RTL), or Cypress in the provided text.
+
+Looking at the resume content:
+"HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-promise, redux-saga, redux-thunk"
+
+And: "Mas...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6203 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3434 bytes
+Extracted Content Length: 2798 chars
+Extracted Content: <think>
+The resume content provided is minimal - it shows only a list of technical skills (HTML, CSS, JavaScript, React, etc.) and a mention of "Master's" degree. There is no mention of Git, GitHub, GitLab, Bitbucket, or any version control tools or workflows. No project work experience is shown either.
+</think>
+{
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "no",
+      "c...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5660 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3663 bytes
+Extracted Content Length: 3001 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+SECTION CONTENT:
+1. Skills list: "HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-promise, redux-saga, redux-thunk"
+2. Education: "Master's"
+
+SQ009: Does the candidate explicitly mention HTML (or HTM...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5584 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3304 bytes
+Extracted Content Length: 2654 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+The resume content shows:
+"HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-promise, redux-saga, redux-thunk"
+
+And: "Master's"
+
+SQ001: Material UI (MUI) - No mention of Material UI in the resume.
+SQ00...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5711 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3738 bytes
+Extracted Content Length: 3062 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+Resume content:
+"HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-promise, redux-saga, redux-thunk"
+
+And "Master's"
+
+SQ005: Does the candidate mention React Hooks (useState, useEffect, useContext, use...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:30
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6180 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3858 bytes
+Extracted Content Length: 3186 chars
+Extracted Content: <think>
+The resume content shows technical skills including HTML, CSS, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, MySQL, MongoDB, PostgreSQL, Oracle, etc. It also mentions a Master's degree.
+
+Let me evaluate each sub-question:
+
+SQ001: Does the candidate explicitly mention REST or RESTful APIs?
+- I see "AJAX" and "JSON" in the skills list, but no explicit mention of "REST" or...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:36
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5206 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2830 bytes
+Extracted Content Length: 2208 chars
+Extracted Content: <think>
+Let me analyze the resume content against the requirement of 3+ Years Front-End Development Experience.
+
+The resume content provided is very limited:
+1. A list of technical skills including HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-promise, redux-saga, re...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:35
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5161 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3146 bytes
+Extracted Content Length: 2527 chars
+Extracted Content: <think>
+The user wants me to score a resume for "Performance Optimization and Accessibility". Let me analyze the resume content:
+
+The resume content is very minimal:
+- "Master's" (education)
+- A list of technologies: HTML, HTML5, CSS, CSS2, CSS3, Sass, Less, Bootstrap, JavaScript, AJAX, jQuery, JSON, React, Redux, AngularJS, Node.js, Grunt, Gulp, MySQL, MongoDB, PostgreSQL, Oracle, ES6, redux-prom...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:36
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5982 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3706 bytes
+Extracted Content Length: 3056 chars
+Extracted Content: <think>
+The resume content shows React is listed as a skill, but there's no evidence of production-level React experience or work/projects using React. Let me score each sub-question.
+
+SQ001: React is explicitly listed in the skills section - "React" appears in the list. So yes, score 1.
+
+SQ002: There's no work experience or project description in the resume content provided. The content only show...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6589 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State Management Libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3142 bytes
+Extracted Content Length: 2486 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question.
+
+SQ001: Does the candidate explicitly mention Redux (or Redux Toolkit)?
+Looking at the second section: "Redux" is listed in the skills. So yes.
+
+SQ002: Does the candidate explicitly mention Zustand?
+No mention of Zustand in the resume.
+
+SQ003: Does the candidate explicitly mention React Context API (or 'Context API')?
+No mention of C...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6638 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2583 bytes
+Extracted Content Length: 1919 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question.
+
+SQ001: Does the candidate explicitly list React?
+- "React JS", "React" - Yes, explicitly listed.
+
+SQ002: Does the candidate mention JavaScript?
+- "JavaScript", "JavaScript ES6", "JavaScript environment" - Yes.
+
+SQ003: Does the candidate reference modern JavaScript (ES6+) or specific ES6+ features?
+- "JavaScript ES6" is explicitly me...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6294 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2935 bytes
+Extracted Content Length: 2316 chars
+Extracted Content: <think>
+Let me analyze the resume content for TypeScript experience.
+
+From the skills section: "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI Design, RESTful API"
+
+TypeScript is explicitly listed in the skills section.
+
+For SQ001: Yes, TypeScript is listed in the skills se...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6645 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2961 bytes
+Extracted Content Length: 2296 chars
+Extracted Content: <think>
+Let me analyze the resume content for CSS, HTML, and Responsive Web Design requirements.
+
+From the resume:
+- "Developed responsive UI/UX interfaces with 2 years of experience" - mentions responsive design
+- "HTML" is listed in skills
+- "CSS" is listed in skills
+- "HTML" and "CSS" also appear in the second skills section
+
+SQ009: HTML mentioned? Yes - "HTML" is listed in skills sections
+SQ01...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7165 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and Backend Integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3173 bytes
+Extracted Content Length: 2490 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement "RESTful APIs and Backend Integration".
+
+Looking at the resume:
+- Skills include "RESTful API" - this is an explicit mention of RESTful APIs
+- The candidate mentions "Node.js", "MongoDB", "PostgreSQL" which are backend-related but no specific mention of consuming/integrating third-party APIs
+- No mention of Axios, Fetch, Postman, Swagge...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6696 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, Component Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4566 bytes
+Extracted Content Length: 3884 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of React Hooks, State Management, and Component Lifecycle.
+
+Looking at the resume:
+- Skills listed: "Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux"
+- Experience: "Built web applications in React JS environment with 2 years of experience"
+
+Sub-question 1 (SQ005): Does the candidate explicitly mention React Hooks or ...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6607 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing Frameworks (Jest, RTL, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3105 bytes
+Extracted Content Length: 2436 chars
+Extracted Content: <think>
+Let me analyze the resume content for the Testing Frameworks (Jest, RTL, Cypress) requirement.
+
+Looking at the skills section, I can see:
+"Jest" is explicitly mentioned in the skills list.
+
+"React Testing Library" or "RTL" is NOT mentioned.
+
+"Cypress" is NOT mentioned.
+
+For testing-related experience:
+- The skills list includes "Jest", "Mocha", "Enzyme" which are testing tools
+- There's no...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7188 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version Control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4654 bytes
+Extracted Content Length: 3971 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of Version Control with Git.
+
+Looking through the resume:
+- The skills list mentions "GitHub" twice (in the top skills section and in the lower skills section)
+- GitHub is a Git hosting platform, but Git itself is not explicitly mentioned as a skill
+- No mention of advanced Git workflows like branching, merging, pull requests, rebasing, confli...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6569 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: UI Frameworks (Material UI, Chakra UI, Tailwind CSS)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "m...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3547 bytes
+Extracted Content Length: 2897 chars
+Extracted Content: <think>
+Let me analyze the resume content for each sub-question about UI Frameworks.
+
+SQ001: Material UI (MUI) - Looking through the resume, I see "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI Design, RESTful API" - No mention of Material UI.
+
+SQ002: Chakra UI - No mentio...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:50
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6146 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance Optimization and Accessibility
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2369 bytes
+Extracted Content Length: 1756 chars
+Extracted Content: <think>
+Let me analyze the resume content for evidence of Performance Optimization and Accessibility.
+
+SQ011-01: Performance optimization/tuning - Looking through the resume, I see "provided troubleshooting expertise" and "Coded and deployed front-end" but no explicit mention of performance optimization, performance tuning, or performance-related work.
+
+SQ011-02: Accessibility - No mention of WCAG...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:51
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6191 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4459 bytes
+Extracted Content Length: 3806 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement of "3+ Years Front-End Development Experience."
+
+**Sub-question 1 (SQ012-01):** Does the candidate list front-end specific role titles?
+Looking at the resume, I don't see specific role titles like "Front-End Developer" or "UI Developer" or "Web Developer." The employment history shows no company, role, or dates. The bullets describe wor...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:44
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6836 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend Build Tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "mat...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 8986 bytes
+Extracted Content Length: 8162 chars
+Extracted Content: <think>
+The user wants me to score a resume against a requirement for "Frontend Build Tooling (Webpack, Vite, or similar)". Let me analyze the resume content carefully.
+
+Looking at the resume:
+- Skills section includes: "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, **Webpack**, Flux, UX/UI De...
+
+======================================================================
+Timestamp: 2026-07-15 01:32:51
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6967 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Production React Application Experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 7974 bytes
+Extracted Content Length: 7180 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question for "Production React Application Experience."
+
+SQ001: Does the candidate explicitly list React as a skill?
+- "React" is listed in the skills section
+- "React" also appears in the skills line
+- Answer: 1 (Yes)
+
+SQ002: Does the candidate describe building applications or features using React in work experience or projects?
+- "Built...
+
