@@ -8,14 +8,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from src.models.database import (
+from recruiter.src.models.database import (
     Requirement,
     Role,
     WeightConfiguration,
     WeightItem,
     get_db,
 )
-from src.schemas.weight_config import (
+from recruiter.src.schemas.weight_config import (
     CategoryValidation,
     CategorySummary,
     RequirementResponse,
@@ -28,7 +28,7 @@ from src.schemas.weight_config import (
     WeightItemResponse,
     WeightSummary,
 )
-from src.services.json_export import export_config_to_json, delete_json_config
+from recruiter.src.services.json_export import export_config_to_json, delete_json_config
 
 router = APIRouter(prefix="/api/weights", tags=["weights"])
 

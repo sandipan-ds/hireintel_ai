@@ -39,7 +39,66 @@ from src.scoring.unified_scorer import (
     _score_location_code_only,
     evaluate_candidate_unified,
 )
-from src.services.scoring_subquery import score_candidate_all_reqs
+
+# Defined locally since the original module was deprecated/deleted
+CATEGORY_TO_RUBRIC_TYPE = {
+    "core skills": "skill",
+    "core skills & technologies": "skill",
+    "technology & tools": "skill",
+    "technology and tools": "skill",
+    "technical skills": "skill",
+    "skills": "skill",
+    "tools": "skill",
+    "programming": "skill",
+    "programming languages": "skill",
+    "experience": "experience",
+    "relevant experience": "experience",
+    "overall relevant experience": "experience",
+    "same role experience": "same_role",
+    "same-role experience": "same_role",
+    "leadership experience": "leadership",
+    "leadership": "leadership",
+    "industry experience": "domain",
+    "management experience": "leadership",
+    "product company experience": "domain",
+    "technology stack experience": "skill",
+    "education": "education",
+    "education fit": "education",
+    "academic": "education",
+    "certifications": "certification",
+    "certification": "certification",
+    "certification alignment": "certification",
+    "projects": "project",
+    "project relevance": "project",
+    "project experience": "project",
+    "languages": "language",
+    "language": "language",
+    "language capabilities": "language",
+    "location": "location",
+    "communication quality": "communication",
+    "communication": "communication",
+    "resume organization": "resume_organization",
+    "responsibilities": "responsibilities",
+}
+
+def score_candidate_all_reqs(
+    candidate_id: str,
+    requirements: List[Dict[str, Any]],
+    llm_caller: Optional[Any] = None,
+) -> Dict[str, Dict[str, Any]]:
+    # Fallback dummy implementation since this endpoint is deprecated/unused by the recruiter wizard
+    return {
+        req["req_id"]: {
+            "req_id": req["req_id"],
+            "req_name": req["req_name"],
+            "hits": [],
+            "sub_scores": {},
+            "normalized_score": 0.0,
+            "from_cache": False,
+        }
+        for req in requirements
+    }
+
 
 logger = logging.getLogger(__name__)
 
@@ -495,8 +554,6 @@ def score_candidate_batched_end_to_end(
     # 3. Split REQs: code-only vs LLM-bound
     code_only_requirements = []
     llm_requirements = []
-
-    from src.services.scoring_subquery import CATEGORY_TO_RUBRIC_TYPE
     for item in config.items:
         rubric_type = CATEGORY_TO_RUBRIC_TYPE.get(item.category.lower(), "skill")
         if rubric_type in ("education",):

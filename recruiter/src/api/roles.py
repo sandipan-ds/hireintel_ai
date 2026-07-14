@@ -7,14 +7,14 @@ from typing import Any, Dict, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from src.models.database import Requirement, Role, get_db
-from src.schemas.weight_config import (
+from recruiter.src.models.database import Requirement, Role, get_db
+from recruiter.src.schemas.weight_config import (
     RequirementListResponse,
     RequirementResponse,
     RoleListResponse,
     RoleResponse,
 )
-from src.services.subquery_parser import get_all_role_subqueries, get_role_subquery
+from recruiter.src.services.subquery_parser import get_all_role_subqueries, get_role_subquery
 
 router = APIRouter(prefix="/api/roles", tags=["roles"])
 

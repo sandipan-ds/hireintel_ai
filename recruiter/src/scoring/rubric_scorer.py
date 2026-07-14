@@ -276,10 +276,10 @@ def _build_rubric_prompt(
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
-                f'      "evidence_found": FILL_yes_OR_no,\n'
-                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
-                f'      "cited_text": "FILL: short exact quote",\n'
-                f'      "sub_score": FILL_0_OR_1,\n'
+                f'      "evidence_found": "no",\n'
+                f'      "closest_evidence": "none",\n'
+                f'      "cited_text": "none",\n'
+                f'      "sub_score": 0,\n'
                 f'      "extracted_years": null,\n'
                 f'      "level": ""\n'
                 f'    }}'
@@ -288,12 +288,12 @@ def _build_rubric_prompt(
             entry = (
                 f'    {{\n'
                 f'      "key": "{sq.key}",\n'
-                f'      "evidence_found": FILL_yes_OR_no,\n'
-                f'      "closest_evidence": "FILL: paste the most relevant resume text, even if indirect",\n'
-                f'      "cited_text": "FILL: short exact quote",\n'
+                f'      "evidence_found": "no",\n'
+                f'      "closest_evidence": "none",\n'
+                f'      "cited_text": "none",\n'
                 f'      "sub_score": 0,\n'
-                f'      "extracted_years": FILL_NUMBER_OR_NULL,\n'
-                f'      "level": "FILL_substantial_OR_some_OR_few_OR_none_OR_empty"\n'
+                f'      "extracted_years": null,\n'
+                f'      "level": "none"\n'
                 f'    }}'
             )
         skeleton_entries.append(entry)
@@ -344,13 +344,13 @@ RESUME CONTENT:
 {evidence.full_text}
 ---
 {employment_section}
-TASK: Fill in the JSON below. Replace every FILL_... placeholder with the real value.
-- For binary keys: sub_score must be 0 or 1 (integer, no quotes).
+TASK: Output a JSON response following the template below. Replace the default values with your assessment.
+- For binary keys: sub_score must be 0 or 1.
 - For four_band keys: extracted_years must be a plain number like 3 or 2.5, NOT a string. Use JSON null if no evidence.
 - For level: use the qualitative level "substantial" | "some" | "few" | "none" if no explicit years are present.
 - For evidence_found: use the string "yes" if the resume directly proves the requirement (use SEMANTIC INFERENCE RULES above), else use "no".
 - For closest_evidence: always paste the most relevant text you found, even if it is indirect.
-- Do NOT add extra keys. Do NOT change the "key" values. Output ONLY the JSON, nothing else.
+- Do NOT add extra keys. Do NOT change the "key" values. Output ONLY the JSON, starting with {{ and ending with }}.
 
 {{
   "sub_scores": [
@@ -633,6 +633,101 @@ def classify_subquery_type(sq: Dict[str, Any]) -> str:
 
 
 
+def _parse_fallback_regex(text: str, rubric_keys: List[str]) -> List[Dict[str, Any]]:
+    """Regex-based fallback parser to extract sub-scores from unstructured LLM output."""
+    results = []
+    if not text:
+        return results
+    for key in rubric_keys:
+        key_pattern = re.escape(key)
+        # Search for a block of text starting with the key up to the next key or end of text
+        match_block = re.search(rf"{key_pattern}\b(.*?(?=(?:SQ\d+|[A-Za-z0-9_]+_presence|[A-Za-z0-9_]+_depth)\b|$))", text, re.DOTALL | re.IGNORECASE)
+        if not match_block:
+            continue
+            
+        block_content = match_block.group(1).strip()
+        block_content_lower = block_content.lower()
+        
+        # 1. Parse sub_score
+        sub_score = 0.0
+        score_match = re.search(r"(?:score|sub_score|value|rating)\s*[:=-]?\s*(\d+(?:\.\d+)?)", block_content_lower)
+        if score_match:
+            try:
+                sub_score = float(score_match.group(1))
+            except ValueError:
+                pass
+        else:
+            # Fallback: look for "1" or "0" or "yes"/"no" close to key name
+            simple_val_match = re.match(r"^\s*[:=-]?\s*(yes|no|1|0|true|false)\b", block_content_lower)
+            if simple_val_match:
+                val_str = simple_val_match.group(1)
+                if val_str in ("yes", "1", "true"):
+                    sub_score = 1.0
+                else:
+                    sub_score = 0.0
+        
+        # 2. Parse evidence_found
+        evidence_found = "no"
+        if "evidence_found" in block_content_lower:
+            ev_match = re.search(r"evidence_found\s*[:=-]?\s*\"?(yes|no|true|false)\"?", block_content_lower)
+            if ev_match:
+                val = ev_match.group(1)
+                evidence_found = "yes" if val in ("yes", "true") else "no"
+        else:
+            if sub_score >= 0.5 or any(w in block_content_lower for w in ("yes", "found", "exhibit", "present", "proven")):
+                evidence_found = "yes"
+                
+        # 3. Parse level
+        level = "none"
+        level_match = re.search(r"level\s*[:=-]?\s*\"?(substantial|some|few|none)\"?", block_content_lower)
+        if level_match:
+            level = level_match.group(1)
+        else:
+            for l_word in ("substantial", "some", "few", "none"):
+                if l_word in block_content_lower:
+                    level = l_word
+                    break
+        
+        # 4. Parse extracted_years
+        extracted_years = None
+        years_match = re.search(r"(?:extracted_years|years|duration)\s*[:=-]?\s*(\d+(?:\.\d+)?|null)", block_content_lower)
+        if years_match:
+            val_str = years_match.group(1)
+            if val_str != "null":
+                extracted_years = _coerce_years(val_str)
+        else:
+            m_ey = re.search(r"(\d+(?:\.\d+)?)\s*(?:years?|yrs?|y)\b", block_content_lower)
+            if m_ey:
+                extracted_years = _coerce_years(m_ey.group(1))
+
+        # 5. Closest evidence / cited text
+        closest_evidence = "none"
+        cited_text = "none"
+        ce_match = re.search(r"closest_evidence\s*[:=-]?\s*\"([^\"]+)\"", block_content)
+        if ce_match:
+            closest_evidence = ce_match.group(1)
+        ct_match = re.search(r"cited_text\s*[:=-]?\s*\"([^\"]+)\"", block_content)
+        if ct_match:
+            cited_text = ct_match.group(1)
+            
+        if closest_evidence == "none" and block_content:
+            clean_block = re.sub(r"\s+", " ", block_content).strip()
+            clean_block = re.sub(r"^[:\-=\s]+", "", clean_block).strip()
+            closest_evidence = clean_block[:150]
+            cited_text = clean_block[:80]
+            
+        results.append({
+            "key": key,
+            "evidence_found": evidence_found,
+            "closest_evidence": closest_evidence,
+            "cited_text": cited_text,
+            "sub_score": sub_score,
+            "extracted_years": extracted_years,
+            "level": level
+        })
+    return results
+
+
 def _parse_llm_response(
     response: str,
     rubric: RubricTemplate,
@@ -648,20 +743,20 @@ def _parse_llm_response(
     )
 
     data = _extract_json_lenient(response)
-    if data is None:
-        logger.warning(
-            "[rubric_scorer] No JSON found in LLM response. "
-            "Raw response (first 400 chars): %.400s",
-            response or "(empty)",
-        )
-        return _default_sub_scores(rubric, target_years)
+    raw_sub_scores = []
+    if data is not None:
+        raw_sub_scores = data.get("sub_scores", [])
 
-    raw_sub_scores = data.get("sub_scores", [])
     if not raw_sub_scores:
         logger.warning(
-            "[rubric_scorer] LLM JSON had no 'sub_scores' list. "
-            "Parsed data keys: %s",
-            list(data.keys()),
+            "[rubric_scorer] JSON parsing failed or had no 'sub_scores' list. "
+            "Attempting regex fallback parsing on raw text."
+        )
+        raw_sub_scores = _parse_fallback_regex(response, [sq.key for sq in rubric.sub_questions])
+
+    if not raw_sub_scores:
+        logger.warning(
+            "[rubric_scorer] Regex fallback parsing also failed to extract sub-scores."
         )
         return _default_sub_scores(rubric, target_years)
 

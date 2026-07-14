@@ -10,8 +10,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy.orm import Session
 
-from src.models.database import Requirement, Role, WeightConfiguration, WeightItem, get_db
-from src.services.json_export import export_config_to_json, delete_json_config
+from recruiter.src.models.database import Requirement, Role, WeightConfiguration, WeightItem, get_db
+from recruiter.src.services.json_export import export_config_to_json, delete_json_config
 
 router = APIRouter(tags=["pages"])
 

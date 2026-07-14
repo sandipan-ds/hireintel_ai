@@ -15,6 +15,7 @@ This is a stateless, demo-grade implementation by design.
 from __future__ import annotations
 
 import json
+import threading
 import logging
 import os
 import re
@@ -34,7 +35,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from src.models.database import Requirement, Role, get_db
+from recruiter.src.models.database import Requirement, Role, get_db
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ router = APIRouter(prefix="/api/recruiter", tags=["recruiter"])
 # Storage root for recruiter-uploaded job artifacts
 # (kept separate from data/job_descriptions/ which holds pre-built reference JDs)
 # ---------------------------------------------------------------------------
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 JOBS_DIR = ROOT / "recruiter" / "data" / "jobs"
 JOBS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -625,29 +626,42 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
     date_suffix = datetime.utcnow().strftime("%Y%m%d")
     slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}"
 
-    # Guard: do not create a duplicate role
+    # Delete old rankings, scores, and index files immediately when saving the role configuration
+    old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
+    old_cand_dir = Path("recruiter/data/scores/composed") / slug
+    idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
+    chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
+    try:
+        import shutil
+        if old_ranked_file.exists():
+            old_ranked_file.unlink()
+        if old_cand_dir.exists():
+            shutil.rmtree(old_cand_dir)
+        if idx_path_old.exists():
+            idx_path_old.unlink()
+        if chk_path_old.exists():
+            chk_path_old.unlink()
+        logger.info("Cleared old rankings and index files for %s on save_role", slug)
+    except Exception as exc:
+        logger.warning("Failed to clear old score files for %s: %s", slug, exc)
+
+    # Guard: support updating existing roles or create new ones
     existing = db.query(Role).filter(Role.name == slug).first()
     if existing:
-        return JSONResponse(
-            {
-                "role_id": existing.id,
-                "role_slug": slug,
-                "already_exists": True,
-                "message": (
-                    f"Role '{req.role_name}' already exists (id={existing.id}). "
-                    "Use Configure Weights to update its weights."
-                ),
-            }
+        role = existing
+        # Delete old Requirement rows so we can re-insert updated ones
+        db.query(Requirement).filter(Requirement.role_id == role.id).delete()
+        already_exists = True
+    else:
+        # Create Role
+        role = Role(
+            name=slug,
+            display_name=req.role_name,
+            description=f"Recruiter wizard upload — {len(req.reqs)} requirements",
         )
-
-    # Create Role
-    role = Role(
-        name=slug,
-        display_name=req.role_name,
-        description=f"Recruiter wizard upload — {len(req.reqs)} requirements",
-    )
-    db.add(role)
-    db.flush()  # obtain role.id before creating child rows
+        db.add(role)
+        db.flush()  # obtain role.id before creating child rows
+        already_exists = False
 
     # Create Requirement rows
     for r in req.reqs:
@@ -682,11 +696,61 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
         encoding="utf-8",
     )
 
-    logger.info("Saved new role '%s' (id=%d) with %d REQs to %s", slug, role.id, len(req.reqs), job_dir)
+    # Automatically generate the SubQuery markdown file for scoring pipeline lookup
+    # under recruiter/data/job_descriptions/{slug}/{slug}_SubQuery.md
+    jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
+    jd_desc_dir.mkdir(parents=True, exist_ok=True)
+    
+    md_lines = [
+        f"# {req.role_name}: Sub-Query Decomposition",
+        "",
+        "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
+        "",
+        "---",
+        "",
+        "## SECTION 1: REQUIREMENTS",
+        ""
+    ]
+    for r in req.reqs:
+        r_id = r.get("req_id", "REQ-???")
+        r_name = r.get("name", "Unknown")
+        r_cat = r.get("category", "Core Skill")
+        sq_list = req.subqueries.get(r_id, [])
+        
+        md_lines.append(f"### {r_id}: {r_name}")
+        md_lines.append("")
+        md_lines.append(f"**Category:** {r_cat}  ")
+        md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
+        
+        # Build scoring formula, e.g. SQ001 * SQ002
+        formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
+        formula = " * ".join(formula_parts)
+        md_lines.append(f"**Scoring Formula:** {formula}  ")
+        md_lines.append("")
+        
+        md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
+        md_lines.append("|---|-----------|------|-------|-------------------|")
+        for sq in sq_list:
+            sq_id = sq.get("sq_id") or "SQ???"
+            text = sq.get("text") or ""
+            sq_type = sq.get("type") or "Binary"
+            scale = sq.get("scale") or "0 or 1"
+            method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
+            md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
+        
+        md_lines.append("")
+        md_lines.append("---")
+        md_lines.append("")
+
+    sq_md_content = "\n".join(md_lines)
+    (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+    (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+
+    logger.info("Saved new role '%s' (id=%d) with %d REQs to %s and %s", slug, role.id, len(req.reqs), job_dir, jd_desc_dir)
     return JSONResponse({
         "role_id": role.id,
         "role_slug": slug,
-        "already_exists": False,
+        "already_exists": already_exists,
         "message": f"Role '{req.role_name}' saved — {len(req.reqs)} requirements registered.",
     })
 
@@ -765,6 +829,9 @@ class StartScoringRequest(BaseModel):
     parallel: bool = True
     resume_link: Optional[str] = None
     weights: Optional[Dict[str, float]] = None
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
 
 
 def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
@@ -949,15 +1016,21 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
     return downloaded_count
 
 
+_CLEANUP_TIMERS: Dict[str, threading.Timer] = {}
+
+
 def _silent_cleanup_role(slug: str) -> None:
-    """Silently delete original resumes, extracted, processed JSONs, and temporary index files after 10 minutes."""
+    """Silently delete original resumes, extracted, processed JSONs, and temporary index files after the session."""
     import shutil
     orig = Path(f"recruiter/data/original/{slug}")
     extr = Path(f"recruiter/data/extracted/{slug}")
     proc = Path(f"recruiter/data/processed/{slug}")
-    jd_dir = Path(f"recruiter/data/job_descriptions/{slug}")
     idx_file = Path(f"recruiter/data/embeddings/{slug}_index.npz")
     chk_file = Path(f"recruiter/data/embeddings/{slug}_chunks.jsonl")
+    
+    # Remove from active timers tracking
+    _CLEANUP_TIMERS.pop(slug, None)
+    
     try:
         if orig.exists():
             shutil.rmtree(orig)
@@ -968,9 +1041,6 @@ def _silent_cleanup_role(slug: str) -> None:
         if proc.exists():
             shutil.rmtree(proc)
             logger.info("Auto-cleanup: Deleted processed JSONs directory: %s", proc)
-        if jd_dir.exists():
-            shutil.rmtree(jd_dir)
-            logger.info("Auto-cleanup: Deleted weight config directory: %s", jd_dir)
         if idx_file.exists():
             idx_file.unlink()
             logger.info("Auto-cleanup: Deleted temporary index file: %s", idx_file)
@@ -988,10 +1058,19 @@ def _silent_cleanup_role(slug: str) -> None:
 def start_scoring(req: StartScoringRequest) -> JSONResponse:
     """
     Launch auto-download and run extraction + scoring pipeline in the background.
-    Schedules silent deletion of data files after 10 minutes.
+    Schedules silent deletion of data files after 30 seconds of completing.
     """
     job_id = uuid.uuid4().hex[:10]
     
+    # Cancel any existing cleanup timer for this role immediately
+    old_timer = _CLEANUP_TIMERS.pop(req.role_slug, None)
+    if old_timer:
+        try:
+            old_timer.cancel()
+            logger.info("Cancelled existing cleanup timer for role %s on start-scoring request", req.role_slug)
+        except Exception as te:
+            logger.warning("Failed to cancel cleanup timer for %s: %s", req.role_slug, te)
+            
     # We don't know the count or ETA until we download. Start with estimate.
     _SCORING_JOBS[job_id] = {
         "status": "running",
@@ -1007,15 +1086,10 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     import threading
     t = threading.Thread(
         target=_run_pipeline_bg,
-        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights),
+        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights, req.api_key, req.model, req.base_url),
         daemon=True,
     )
     t.start()
-
-    # Schedule silent auto-cleanup in 10 minutes (600 seconds)
-    cleanup_timer = threading.Timer(600.0, _silent_cleanup_role, args=(req.role_slug,))
-    cleanup_timer.daemon = True
-    cleanup_timer.start()
 
     return JSONResponse({
         "job_id": job_id,
@@ -1024,137 +1098,249 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     })
 
 
-def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]]) -> None:
+def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]], api_key: Optional[str], model: Optional[str], base_url: Optional[str]) -> None:
     """Run download → extract → score pipeline in a background thread, updating _SCORING_JOBS."""
     job = _SCORING_JOBS.get(job_id)
     if not job:
         return
-        return
 
-    resume_dir = Path(f"recruiter/data/original/{slug}")
-    resume_dir.mkdir(parents=True, exist_ok=True)
-
-    # 1. Download resumes in background
-    if link:
-        job["phase"] = "downloading"
-        job["log"].append(f"Downloading files from: {link}")
-        try:
-            n_dl = _download_resumes_from_link(link, resume_dir)
-            job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
-        except Exception as e:
-            job["status"] = "error"
-            job["log"].append(f"✗ Download failed: {e}")
-            return
-    else:
-        job["log"].append("No shared link provided. Checking local folder...")
-
-    # Count files
-    exts = {".pdf", ".docx", ".doc"}
-    resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
-    if not resumes:
-        job["status"] = "error"
-        job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
-        return
-
-    n = len(resumes)
-    job["total"] = n
-    
-    # Calculate true ETA
-    eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
-    job["eta_seconds"] = eta_seconds
-
-    # Helper function to run scripts
-    def _run(cmd: list[str], phase: str) -> bool:
-        job["phase"] = phase
-        job["log"].append(f"▶ {' '.join(cmd)}")
-        try:
-            proc = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-            )
-            for line in proc.stdout:
-                line = line.rstrip()
-                if line:
-                    job["log"] = job["log"][-40:] + [line]
-            proc.wait()
-            if proc.returncode != 0:
-                job["status"] = "error"
-                job["log"].append(f"✗ Exited with code {proc.returncode}")
-                return False
-        except Exception as exc:
-            job["status"] = "error"
-            job["log"].append(f"✗ {exc}")
-            return False
-        return True
-
-    # 1.5 Generate recruiter WeightConfig JSON dynamically from SQLite DB and user input
     try:
-        from src.models.database import get_db_session
-        db = get_db_session()
-        role_row = db.query(Role).filter(Role.name == slug).first()
-        if role_row:
-            req_rows = db.query(Requirement).filter(Requirement.role_id == role_row.id).all()
-            weight_list = []
-            for r in req_rows:
-                pct = 100.0 / len(req_rows)
-                if weights and r.req_id in weights:
-                    pct = weights[r.req_id]
+        # 0. Delete old rankings, embeddings, and score data to avoid stale UI state
+        old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
+        old_cand_dir = Path("recruiter/data/scores/composed") / slug
+        idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
+        chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
+        try:
+            import shutil
+            if old_ranked_file.exists():
+                old_ranked_file.unlink()
+            if old_cand_dir.exists():
+                shutil.rmtree(old_cand_dir)
+            if idx_path_old.exists():
+                idx_path_old.unlink()
+            if chk_path_old.exists():
+                chk_path_old.unlink()
+            job["log"].append("✓ Cleared old scores and index files.")
+        except Exception as exc:
+            logger.warning("Failed to clear old score files for %s: %s", slug, exc)
+
+        resume_dir = Path(f"recruiter/data/original/{slug}")
+        resume_dir.mkdir(parents=True, exist_ok=True)
+
+        # 1. Download resumes in background
+        if link:
+            job["phase"] = "downloading"
+            job["log"].append(f"Downloading files from: {link}")
+            try:
+                n_dl = _download_resumes_from_link(link, resume_dir)
+                job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
+            except Exception as e:
+                job["status"] = "error"
+                job["log"].append(f"✗ Download failed: {e}")
+                return
+        else:
+            job["log"].append("No shared link provided. Checking local folder...")
+
+        # Count files
+        exts = {".pdf", ".docx", ".doc"}
+        resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
+        if not resumes:
+            job["status"] = "error"
+            job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
+            return
+
+        n = len(resumes)
+        job["total"] = n
+        
+        # Calculate true ETA
+        eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
+        job["eta_seconds"] = eta_seconds
+
+        # Helper function to run scripts with custom recruiter environment variables
+        sub_env = os.environ.copy()
+        if api_key:
+            sub_env["RECRUITER_API_KEY"] = api_key
+        if base_url:
+            sub_env["RECRUITER_BASE_URL"] = base_url
+        if model:
+            sub_env["RECRUITER_MODEL"] = model
+
+        def _run(cmd: list[str], phase: str) -> bool:
+            job["phase"] = phase
+            job["log"].append(f"▶ {' '.join(cmd)}")
+            try:
+                proc = subprocess.Popen(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    env=sub_env,
+                )
+                for line in proc.stdout:
+                    line = line.rstrip()
+                    if line:
+                        job["log"] = job["log"][-40:] + [line]
+                proc.wait()
+                if proc.returncode != 0:
+                    job["status"] = "error"
+                    job["log"].append(f"✗ Exited with code {proc.returncode}")
+                    return False
+            except Exception as exc:
+                job["status"] = "error"
+                job["log"].append(f"✗ {exc}")
+                return False
+            return True
+
+        # 1.5 Generate recruiter WeightConfig JSON dynamically from SQLite DB and user input
+        try:
+            from recruiter.src.models.database import get_db_session
+            db = get_db_session()
+            role_row = db.query(Role).filter(Role.name == slug).first()
+            if role_row:
+                req_rows = db.query(Requirement).filter(Requirement.role_id == role_row.id).all()
+                weight_list = []
+                for r in req_rows:
+                    pct = 100.0 / len(req_rows)
+                    if weights and r.req_id in weights:
+                        pct = weights[r.req_id]
+                    
+                    weight_list.append({
+                        "requirement_id": r.req_id,
+                        "requirement_name": r.name,
+                        "category": r.category,
+                        "type": r.requirement_type,
+                        "weight_percentage": float(pct)
+                    })
                 
-                weight_list.append({
-                    "requirement_id": r.req_id,
-                    "requirement_name": r.name,
-                    "category": r.category,
-                    "type": r.requirement_type,
-                    "weight_percentage": float(pct)
-                })
+                wc_dir = Path("recruiter/data/job_descriptions") / slug
+                wc_dir.mkdir(parents=True, exist_ok=True)
+                wc_file = wc_dir / f"{slug}_WeightConfig_recruiter.json"
+                
+                wc_data = {
+                    "role": slug,
+                    "config_name": "recruiter",
+                    "created_by": "recruiter_wizard",
+                    "created_date": datetime.utcnow().strftime("%Y-%m-%d"),
+                    "scale_factor": 1.0,
+                    "requirements_weights": weight_list
+                }
+                wc_file.write_text(json.dumps(wc_data, indent=2, ensure_ascii=False), encoding="utf-8")
+                job["log"].append("✓ Weight configuration JSON generated successfully.")
+            db.close()
+        except Exception as we:
+            logger.error("Failed to generate recruiter WeightConfig: %s", we)
+            job["log"].append(f"⚠ Warning: WeightConfig generation failed: {we}")
+
+        # 1.6 Generate recruiter SubQuery Markdown file dynamically if missing or needs update (self-healing)
+        try:
+            job_dir = JOBS_DIR / slug
+            reqs_file = job_dir / "requirements.json"
+            subqueries_file = job_dir / "subqueries.json"
             
-            wc_dir = Path("recruiter/data/job_descriptions") / slug
-            wc_dir.mkdir(parents=True, exist_ok=True)
-            wc_file = wc_dir / f"{slug}_WeightConfig_recruiter.json"
+            if reqs_file.exists() and subqueries_file.exists():
+                reqs_data = json.loads(reqs_file.read_text(encoding="utf-8"))
+                subqueries_data = json.loads(subqueries_file.read_text(encoding="utf-8"))
+                
+                jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
+                jd_desc_dir.mkdir(parents=True, exist_ok=True)
+                
+                md_lines = [
+                    f"# {slug}: Sub-Query Decomposition",
+                    "",
+                    "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
+                    "",
+                    "---",
+                    "",
+                    "## SECTION 1: REQUIREMENTS",
+                    ""
+                ]
+                for r in reqs_data:
+                    r_id = r.get("req_id", "REQ-???")
+                    r_name = r.get("name", "Unknown")
+                    r_cat = r.get("category", "Core Skill")
+                    sq_list = subqueries_data.get(r_id, [])
+                    
+                    md_lines.append(f"### {r_id}: {r_name}")
+                    md_lines.append("")
+                    md_lines.append(f"**Category:** {r_cat}  ")
+                    md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
+                    
+                    formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
+                    formula = " * ".join(formula_parts)
+                    md_lines.append(f"**Scoring Formula:** {formula}  ")
+                    md_lines.append("")
+                    
+                    md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
+                    md_lines.append("|---|-----------|------|-------|-------------------|")
+                    for sq in sq_list:
+                        sq_id = sq.get("sq_id") or "SQ???"
+                        text = sq.get("text") or ""
+                        sq_type = sq.get("type") or "Binary"
+                        scale = sq.get("scale") or "0 or 1"
+                        method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
+                        md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
+                    
+                    md_lines.append("")
+                    md_lines.append("---")
+                    md_lines.append("")
+
+                sq_md_content = "\n".join(md_lines)
+                (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+                (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+                job["log"].append("✓ SubQuery markdown generated successfully (self-healing).")
+        except Exception as sqe:
+            logger.error("Failed to generate recruiter SubQuery markdown in pipeline: %s", sqe)
+            job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
+
+        # 2. Extract resumes using the recruiter extraction script
+        ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
+        if not ok:
+            return
+
+        # 2.5 Build dynamic embedding index containing only the recruiter's resumes
+        idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
+        chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
+        ok = _run(
+            [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
+            "indexing"
+        )
+        if not ok:
+            return
+
+        # 3. Score resumes using the recruiter scoring script and dynamic index file
+        ok = _run(
+            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
+            "scoring"
+        )
+        if not ok:
+            return
+
+        job["status"] = "done"
+        job["phase"] = "done"
+        job["log"].append("✓ Scoring complete — click ↻ Check for Rankings")
+
+    finally:
+        # Enforce valid end status
+        if job.get("status") not in ("done", "error"):
+            job["status"] = "error"
+            job["log"].append("✗ Pipeline ended unexpectedly.")
             
-            wc_data = {
-                "role": slug,
-                "config_name": "recruiter",
-                "created_by": "recruiter_wizard",
-                "created_date": datetime.utcnow().strftime("%Y-%m-%d"),
-                "scale_factor": 1.0,
-                "requirements_weights": weight_list
-            }
-            wc_file.write_text(json.dumps(wc_data, indent=2, ensure_ascii=False), encoding="utf-8")
-            job["log"].append("✓ Weight configuration JSON generated successfully.")
-        db.close()
-    except Exception as we:
-        logger.error("Failed to generate recruiter WeightConfig: %s", we)
-        job["log"].append(f"⚠ Warning: WeightConfig generation failed: {we}")
-
-    # 2. Extract resumes using the recruiter extraction script
-    ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
-    if not ok:
-        return
-
-    # 2.5 Build dynamic embedding index containing only the recruiter's resumes
-    idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
-    chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
-    ok = _run(
-        [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
-        "indexing"
-    )
-    if not ok:
-        return
-
-    # 3. Score resumes using the recruiter scoring script and dynamic index file
-    ok = _run(
-        [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
-        "scoring"
-    )
-    if not ok:
-        return
-
-    job["status"] = "done"
-    job["phase"] = "done"
-    job["log"].append("✓ Scoring complete — click ↻ Check for Rankings")
+        # Cancel any existing cleanup timer
+        old_timer = _CLEANUP_TIMERS.pop(slug, None)
+        if old_timer:
+            try:
+                old_timer.cancel()
+                logger.info("Cancelled older cleanup timer for %s", slug)
+            except Exception:
+                pass
+                
+        # Start a 30-second cleanup timer
+        cleanup_timer = threading.Timer(30.0, _silent_cleanup_role, args=(slug,))
+        cleanup_timer.daemon = True
+        cleanup_timer.start()
+        _CLEANUP_TIMERS[slug] = cleanup_timer
+        job["log"].append("✓ Scheduled data auto-cleanup in 30 seconds.")
+        logger.info("Scheduled 30-second cleanup timer for role %s", slug)
 
 
 # ---------------------------------------------------------------------------

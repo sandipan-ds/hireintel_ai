@@ -285,6 +285,7 @@ FastAPI + Jinja2 + Tailwind-alternative dark-mode layout providing a recruiter-f
 | Collapsible Trace Accordions | ✅ Complete | Visual trace details for each requirement showing sub-queries, scores, extracted evidence, and original cited text |
 | Inline PDF Viewer | ✅ Complete | Interactive iframe rendering candidate's source PDF inline |
 | Multi-Key Waterfall Chat | ✅ Complete | Live interactive candidate RAG chat falling back across OpenCode (DeepSeek/MiniMax) -> NVIDIA NIM (3 keys) -> OpenRouter |
+| **Wizard-Linked RAG Chat Link** | ✅ Complete | Clickable candidate IDs in Step 6 wizard table open the detailed profile + RAG chat panel in a new tab |
 
 ---
 

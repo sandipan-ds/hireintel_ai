@@ -16,9 +16,9 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from src.models.database import Role, get_db
+from recruiter.src.models.database import Role, get_db
 try:
-    from src.services.scoring_pipeline import (
+    from recruiter.src.services.scoring_pipeline import (
         list_candidate_ids,
         list_configs_for_role,
         load_weight_config,
