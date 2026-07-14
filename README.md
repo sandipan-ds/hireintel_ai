@@ -10,7 +10,7 @@ Here is a step-by-step guide through the platform's primary workflows, using the
 
 ### Phase 1: Candidate Review & Interactive Resume Chat (Steps 1–4)
 
-#### Step 1: Candidate Rankings Dashboard
+#### Step 1: My Project Ranking Dashboard
 View the overall ranked list of candidates with detailed requirement compliance scores, categories, and zero-evidence warning flags for missing qualifications.
 ![Step 1: Candidate Rankings Dashboard](data/dashboard/1_Candidate_Ranking.png)
 
@@ -70,7 +70,7 @@ To launch the local web application server:
    *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
 
 2. **Open the Web Browser URLs:**
-   * **Recruiter Wizard URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
+   * **Recruiter Board URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
    * **Interactive Dashboard URL:** [http://localhost:8000/](http://localhost:8000/)
 
 ---
@@ -106,4 +106,4 @@ HireIntel.AI implements a multi-layer design to ensure extreme performance and s
 * **Relational Store (SQLite):** Sandboxed database tracking recruiters, saved roles, requirements, and weight configuration records.
 * **Vector Store & Indexing (BGE-768):** Document-aware segment retrieval mapped by section type (experience, skills, education) to align sub-queries with candidate qualifications.
 * **Composed Scorer:** Computes factual compliance (e.g. CGPA, institution tiers, degree tiers, years of experience) combined with LLM-evaluated criteria (skill depth and context).
-* **Thread-Safe Parallel Scorer:** Runs sub-query evaluations across candidate requirements in parallel using standard thread pools, reducing runtimes from minutes to seconds.
+* **Thread-Safe Parallel Scorer (Multicall Parallelization):** Evaluates all requirements (e.g. 10 REQs) for a candidate concurrently using a `ThreadPoolExecutor`. Fast factual checks run locally, while slower LLM rubric evaluations are dispatched in parallel to OpenRouter, reducing scoring time per candidate from minutes to a few seconds.
