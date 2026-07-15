@@ -1,0 +1,115 @@
+{
+  "role": "DataScience",
+  "metrics": {
+    "spearman_rho": -0.13395872420262664,
+    "spearman_p_value": 0.40988979445397317,
+    "kendall_tau": -0.09487179487179487,
+    "kendall_p_value": 0.3885903677420194,
+    "jaccard_similarity_at_10": 0.1111111111111111,
+    "top_10_score_span_percentage": 0.7828870515028541
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "DataScience_CAND_0029",
+      "score": 60.939748277266816,
+      "rank": 1
+    },
+    {
+      "candidate_id": "DataScience_CAND_0008",
+      "score": 60.68219641844432,
+      "rank": 2
+    },
+    {
+      "candidate_id": "DataScience_CAND_0022",
+      "score": 60.67435646057129,
+      "rank": 3
+    },
+    {
+      "candidate_id": "DataScience_CAND_0026",
+      "score": 60.47704206903776,
+      "rank": 4
+    },
+    {
+      "candidate_id": "DataScience_CAND_0031",
+      "score": 60.46416370073955,
+      "rank": 5
+    },
+    {
+      "candidate_id": "DataScience_CAND_0024",
+      "score": 60.405690501133606,
+      "rank": 6
+    },
+    {
+      "candidate_id": "DataScience_CAND_0020",
+      "score": 60.38499614596367,
+      "rank": 7
+    },
+    {
+      "candidate_id": "DataScience_CAND_0012",
+      "score": 60.372945855061225,
+      "rank": 8
+    },
+    {
+      "candidate_id": "DataScience_CAND_0013",
+      "score": 60.372494250535965,
+      "rank": 9
+    },
+    {
+      "candidate_id": "DataScience_CAND_0017",
+      "score": 60.15686122576396,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "DataScience_CAND_0038",
+      "score": 75.1267,
+      "rank": 1
+    },
+    {
+      "candidate_id": "DataScience_CAND_0039",
+      "score": 74.0833,
+      "rank": 2
+    },
+    {
+      "candidate_id": "DataScience_CAND_0008",
+      "score": 73.5467,
+      "rank": 3
+    },
+    {
+      "candidate_id": "DataScience_CAND_0014",
+      "score": 71.0067,
+      "rank": 4
+    },
+    {
+      "candidate_id": "DataScience_CAND_0030",
+      "score": 69.8,
+      "rank": 5
+    },
+    {
+      "candidate_id": "DataScience_CAND_0024",
+      "score": 69.6833,
+      "rank": 6
+    },
+    {
+      "candidate_id": "DataScience_CAND_0004",
+      "score": 68.7234,
+      "rank": 7
+    },
+    {
+      "candidate_id": "DataScience_CAND_0042",
+      "score": 68.0784,
+      "rank": 8
+    },
+    {
+      "candidate_id": "DataScience_CAND_0016",
+      "score": 66.2034,
+      "rank": 9
+    },
+    {
+      "candidate_id": "DataScience_CAND_0006",
+      "score": 65.8234,
+      "rank": 10
+    }
+  ]
+}

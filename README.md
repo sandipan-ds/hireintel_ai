@@ -63,13 +63,18 @@ The background runner downloads the resumes, parses them, builds a vector index,
 
 To launch the local web application server:
 
-1. **Start the Uvicorn Reloader Server:**
+1. **Start the Recruiter Sandbox Server:**
    ```powershell
-   .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 0.0.0.0 --port 8000 --reload --reload-dir recruiter/src
+   .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 127.0.0.1 --port 8000 --reload --reload-dir recruiter/src
    ```
    *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
 
-2. **Open the Web Browser URLs:**
+2. **Or, Start the Main Project Server:**
+   ```powershell
+   .venv\Scripts\python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+3. **Open the Web Browser URLs:**
    * **Recruiter Board URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
    * **Interactive Dashboard URL:** [http://localhost:8000/](http://localhost:8000/)
 

@@ -1,0 +1,115 @@
+{
+  "role": "JavaDeveloper",
+  "metrics": {
+    "spearman_rho": 0.08461819510412862,
+    "spearman_p_value": 0.48938215189906076,
+    "kendall_tau": 0.05541346973572037,
+    "kendall_p_value": 0.500732815480418,
+    "jaccard_similarity_at_10": 0.05263157894736842,
+    "top_10_score_span_percentage": 0.7216568191846235
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "JavaDeveloper_CAND_0016",
+      "score": 60.75001319746177,
+      "rank": 1
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0007",
+      "score": 60.688162008921296,
+      "rank": 2
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0040",
+      "score": 60.64178481201331,
+      "rank": 3
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0015",
+      "score": 60.63769586881001,
+      "rank": 4
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0005",
+      "score": 60.58379072944323,
+      "rank": 5
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0058",
+      "score": 60.4743656863769,
+      "rank": 6
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0060",
+      "score": 60.25657381117344,
+      "rank": 7
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0065",
+      "score": 60.18747116625309,
+      "rank": 8
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0036",
+      "score": 60.03150125344594,
+      "rank": 9
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0032",
+      "score": 60.028356378277145,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "JavaDeveloper_CAND_0018",
+      "score": 80.29,
+      "rank": 1
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0047",
+      "score": 77.5301,
+      "rank": 2
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0045",
+      "score": 77.3833,
+      "rank": 3
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0065",
+      "score": 76.9566,
+      "rank": 4
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0013",
+      "score": 76.2633,
+      "rank": 5
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0002",
+      "score": 73.9217,
+      "rank": 6
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0064",
+      "score": 71.82,
+      "rank": 7
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0066",
+      "score": 71.7317,
+      "rank": 8
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0046",
+      "score": 70.5267,
+      "rank": 9
+    },
+    {
+      "candidate_id": "JavaDeveloper_CAND_0042",
+      "score": 70.3667,
+      "rank": 10
+    }
+  ]
+}

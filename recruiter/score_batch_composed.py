@@ -612,7 +612,7 @@ def main(argv: list[str] = None) -> int:
         help="Resume a previously interrupted scoring run using progress ledger.",
     )
     parser.add_argument(
-        "--workers", type=int, default=10,
+        "--workers", type=int, default=20,
         help="Number of REQs to evaluate in parallel per candidate "
              "(uses ThreadPoolExecutor). Each REQ is independent so "
              "thread-safety is guaranteed. Default 5. Set to 1 to force "

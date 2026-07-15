@@ -607,7 +607,9 @@ function getByok() {
 // Fill model field from recommendation click
 function fillModel(slug) {
   const el = document.getElementById('byok-model');
-  el.value = slug; el.focus();
+  el.value = slug;
+  localStorage.setItem('byok_model', slug);
+  el.focus();
   el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
   setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
 }
@@ -615,13 +617,16 @@ function fillModel(slug) {
 // Fill base URL field from hint click
 function fillBaseUrl(url) {
   const el = document.getElementById('byok-base-url');
-  el.value = url; el.focus();
+  el.value = url;
+  localStorage.setItem('byok_base_url', url);
+  el.focus();
   el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
   setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
 }
 
 function onKeyInput() {
   const key = document.getElementById('byok-key').value.trim();
+  localStorage.setItem('byok_key', key);
   const el  = document.getElementById('key-status');
   if (!key) { el.textContent = ''; el.className = ''; return; }
   if (key.startsWith('sk-or-')) {
@@ -631,6 +636,34 @@ function onKeyInput() {
     el.style.color = 'var(--muted)';
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const keyInput = document.getElementById('byok-key');
+  const modelInput = document.getElementById('byok-model');
+  const urlInput = document.getElementById('byok-base-url');
+
+  if (keyInput) {
+    keyInput.value = localStorage.getItem('byok_key') || '';
+    onKeyInput();
+  }
+  if (modelInput) {
+    modelInput.value = localStorage.getItem('byok_model') || '';
+  }
+  if (urlInput) {
+    urlInput.value = localStorage.getItem('byok_base_url') || '';
+  }
+
+  if (modelInput) {
+    modelInput.addEventListener('input', () => {
+      localStorage.setItem('byok_model', modelInput.value.trim());
+    });
+  }
+  if (urlInput) {
+    urlInput.addEventListener('input', () => {
+      localStorage.setItem('byok_base_url', urlInput.value.trim());
+    });
+  }
+});
 
 // ── Step navigation ───────────────────────────────────────────
 function goToStep(n) {

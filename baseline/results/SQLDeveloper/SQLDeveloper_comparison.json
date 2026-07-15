@@ -1,0 +1,115 @@
+{
+  "role": "SQLDeveloper",
+  "metrics": {
+    "spearman_rho": 0.0016937669376693766,
+    "spearman_p_value": 0.9880266147537937,
+    "kendall_tau": -0.0012345679012345679,
+    "kendall_p_value": 0.9869841868998133,
+    "jaccard_similarity_at_10": 0.1111111111111111,
+    "top_10_score_span_percentage": 1.858887419104576
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "SQLDeveloper_CAND_0052",
+      "score": 63.52402552465598,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0024",
+      "score": 62.28731493155162,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0036",
+      "score": 62.251223961512245,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0023",
+      "score": 62.01243720451991,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0013",
+      "score": 61.92136740684509,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0062",
+      "score": 61.92136740684509,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0055",
+      "score": 61.90087297558784,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0018",
+      "score": 61.88608436783155,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0004",
+      "score": 61.75047577917576,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0003",
+      "score": 61.66513810555141,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "SQLDeveloper_CAND_0024",
+      "score": 94.27,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0008",
+      "score": 85.645,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0001",
+      "score": 84.645,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0033",
+      "score": 83.7483,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0043",
+      "score": 81.665,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0023",
+      "score": 81.375,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0047",
+      "score": 80.3384,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0067",
+      "score": 79.7284,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0007",
+      "score": 79.395,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SQLDeveloper_CAND_0040",
+      "score": 78.2083,
+      "rank": 10
+    }
+  ]
+}

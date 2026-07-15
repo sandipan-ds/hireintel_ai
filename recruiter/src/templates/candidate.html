@@ -246,6 +246,50 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .loading-overlay { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: 3rem; color: var(--muted); }
+
+    /* ── Two-column page layout ─────────────────────────────── */
+    .page-wrapper {
+      max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 6rem;
+      display: grid; grid-template-columns: 1fr 296px; gap: 2rem; align-items: start;
+    }
+    @media (max-width: 900px) {
+      .page-wrapper { grid-template-columns: 1fr; }
+      .byok-sidebar { position: static !important; }
+    }
+    .main-content { min-width: 0; }
+
+    /* ── BYOK Sidebar ───────────────────────────────────────── */
+    .byok-sidebar {
+      position: sticky; top: 76px;
+      background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 12px; padding: 1.2rem 1.1rem;
+    }
+    .sidebar-title {
+      font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--accent); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .sidebar-section { margin-bottom: 1.1rem; }
+    .sidebar-label {
+      display: block; font-size: 0.72rem; font-weight: 600;
+      color: var(--muted); margin-bottom: 0.35rem;
+    }
+    .sidebar-input {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.55rem 0.75rem; color: var(--text);
+      font-family: inherit; font-size: 0.82rem; outline: none; transition: border .15s;
+      box-sizing: border-box;
+    }
+    .sidebar-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+    .sidebar-input::placeholder { color: var(--muted); }
+    .key-hint {
+      font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem;
+    }
+    .key-hint a { color: #a78bfa; text-decoration: none; }
+    .key-hint a:hover { text-decoration: underline; }
+    #key-status { margin-top: 0.5rem; font-size: 0.7rem; min-height: 1rem; transition: color .2s; }
+    .ks-ok { color: var(--green); }
+    .url-hint { color: #a78bfa; cursor: pointer; text-decoration: underline; }
+    .url-hint:hover { color: #c084fc; }
   </style>
 </head>
 <body>
@@ -259,13 +303,88 @@
   </div>
 </nav>
 
-<main id="mainGrid">
-  <!-- Loading state -->
-  <div class="loading-overlay" id="loadingOverlay" style="grid-column:1/-1">
-    <div class="spinner"></div>
-    <span>Loading candidate…</span>
+<div class="page-wrapper">
+  <div class="main-content">
+    <main id="mainGrid">
+      <!-- Loading state -->
+      <div class="loading-overlay" id="loadingOverlay" style="grid-column:1/-1">
+        <div class="spinner"></div>
+        <span>Loading candidate…</span>
+      </div>
+    </main>
   </div>
-</main>
+
+  <!-- Right — BYOK Sidebar (sticky, always visible) -->
+  <aside class="byok-sidebar">
+    <div class="sidebar-title">⚡ API Key (BYOK)</div>
+
+    <!-- Key input -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">OpenRouter API Key</span>
+      <input type="password" class="sidebar-input" id="byok-key"
+             placeholder="sk-or-v1-…"
+             oninput="onKeyInput()" />
+      <div class="key-hint">
+        Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
+      </div>
+      <div id="key-status"></div>
+    </div>
+
+    <!-- Model input — user types exact model slug -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Model <span style="color:var(--muted);font-weight:400">(exact slug)</span></span>
+      <input type="text" class="sidebar-input" id="byok-model"
+             placeholder="e.g. google/gemini-3.1-flash-lite" />
+      <div class="key-hint" style="margin-top:.35rem;">
+        Type the exact model slug from your provider.
+        <strong style="color:#f59e0b;">Must be multimodal</strong> — resumes may be scanned images.
+      </div>
+    </div>
+
+    <!-- Base URL input -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Provider Base URL</span>
+      <input type="text" class="sidebar-input" id="byok-base-url"
+             placeholder="https://openrouter.ai/api/v1" />
+      <div class="key-hint" style="margin-top:.35rem;line-height:1.55;">
+        Common base URLs:<br/>
+        <span class="url-hint" onclick="fillBaseUrl('https://openrouter.ai/api/v1')">OpenRouter ↗</span>
+        &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://opencode.ai/zen/go/v1')">OpenCode ↗</span>
+        &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://integrate.api.nvidia.com/v1')">NVIDIA NIM ↗</span><br/>
+        <span class="url-hint" onclick="fillBaseUrl('https://generativelanguage.googleapis.com/v1beta/openai/')">Google AI ↗</span>
+      </div>
+    </div>
+
+    <!-- Recommendations — multimodal models only -->
+    <div class="sidebar-section">
+      <div class="rec-box">
+        <div class="rec-box-title">Recommendations · multimodal only</div>
+        <div class="rec-row">
+          <span class="rec-pill paid">PAID</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('google/gemini-3.1-flash-lite')" title="Click to fill">google/gemini-3.1-flash-lite ↗</div>
+            <div class="rec-why">Fast, multimodal, high RPM — handles scanned PDFs &amp; image resumes</div>
+          </div>
+        </div>
+        <div class="rec-row">
+          <span class="rec-pill free">FREE</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('google/gemma-4-31b-it:free')" title="Click to fill">google/gemma-4-31b-it:free ↗</div>
+            <div class="rec-why">Multimodal, no cost — rate limited, good for small batches</div>
+          </div>
+        </div>
+        <div class="rec-row">
+          <span class="rec-pill free">FREE</span>
+          <div class="rec-detail">
+            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
+            <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
+          </div>
+        </div>
+        <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;">↑ Click a model to fill the field above</div>
+      </div>
+    </div>
+  </aside>
+</div>
 
 <script>
   // Read candidate_id from path
@@ -479,7 +598,13 @@
       const res = await fetch('/api/v1/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ candidate_id: CANDIDATE_ID, question: q })
+        body: JSON.stringify({
+          candidate_id: CANDIDATE_ID,
+          question: q,
+          api_key: localStorage.getItem('byok_key') || null,
+          model: localStorage.getItem('byok_model') || null,
+          base_url: localStorage.getItem('byok_base_url') || null
+        })
       });
       const data = await res.json();
       removeTyping(typingId);
@@ -529,6 +654,67 @@
       btn.textContent = '✕ Close PDF';
     }
   }
+
+  // ── BYOK Sidebar JS ──
+
+  function fillModel(slug) {
+    const el = document.getElementById('byok-model');
+    el.value = slug;
+    localStorage.setItem('byok_model', slug);
+    el.focus();
+    el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
+    setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
+  }
+
+  function fillBaseUrl(url) {
+    const el = document.getElementById('byok-base-url');
+    el.value = url;
+    localStorage.setItem('byok_base_url', url);
+    el.focus();
+    el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
+    setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
+  }
+
+  function onKeyInput() {
+    const key = document.getElementById('byok-key').value.trim();
+    localStorage.setItem('byok_key', key);
+    const el  = document.getElementById('key-status');
+    if (!key) { el.textContent = ''; el.className = ''; return; }
+    if (key.startsWith('sk-or-')) {
+      el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
+    } else {
+      el.textContent = 'ℹ Key format unrecognized'; el.className = '';
+      el.style.color = 'var(--muted)';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const keyInput = document.getElementById('byok-key');
+    const modelInput = document.getElementById('byok-model');
+    const urlInput = document.getElementById('byok-base-url');
+
+    if (keyInput) {
+      keyInput.value = localStorage.getItem('byok_key') || '';
+      onKeyInput();
+    }
+    if (modelInput) {
+      modelInput.value = localStorage.getItem('byok_model') || '';
+    }
+    if (urlInput) {
+      urlInput.value = localStorage.getItem('byok_base_url') || '';
+    }
+
+    if (modelInput) {
+      modelInput.addEventListener('input', () => {
+        localStorage.setItem('byok_model', modelInput.value.trim());
+      });
+    }
+    if (urlInput) {
+      urlInput.addEventListener('input', () => {
+        localStorage.setItem('byok_base_url', urlInput.value.trim());
+      });
+    }
+  });
 
   init();
 </script>

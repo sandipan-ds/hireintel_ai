@@ -17578,3 +17578,3539 @@ Extracted Content Length: 2730 chars
 Extracted Content: <think>
 The resume content lists skills like CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, Redux, Mocha, GitHub, Enzyme, Jest, ESLint, Webpack, REST API, UX/UI, etc. But there's no explicit mention of Material UI, Chakra UI, Tailwind CSS, Bootstrap, Ant Design, or shadcn/ui. The closest is "UX/UI" which is very generic and doesn't indicate any specific UI framework. There a...
 
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5744 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: RESTful APIs and backend integration
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3983 bytes
+Extracted Content Length: 3305 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement "RESTful APIs and backend integration".
+
+The resume content is:
+- A list of skills: CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing,...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5087 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Version control with Git
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Look...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4293 bytes
+Extracted Content Length: 3651 chars
+Extracted Content: <think>
+The requirement is "Version control with Git". Let me analyze the resume content.
+
+The resume content lists: "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation"
+
+Then "Bache...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5842 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4175 bytes
+Extracted Content Length: 3514 chars
+Extracted Content: <think>
+Let me analyze the resume content for the requirement: CSS, HTML, and responsive web design.
+
+The resume content is:
+- Skills: "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documenta...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6312 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: State management libraries (Redux, Zustand, Context API)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4201 bytes
+Extracted Content Length: 3528 chars
+Extracted Content: <think>
+The user wants me to score a resume for state management libraries (Redux, Zustand, Context API).
+
+Looking at the resume content, I can see "Redux" and "Flux" mentioned in the skills list.
+
+Let me answer each sub-question:
+
+SQ001: Does the candidate explicitly list any of Redux, Zustand, or Context API as a skill?
+- Yes, Redux is listed explicitly.
+- Score: 1
+
+SQ002: Has the candidate used...
+
+======================================================================
+Timestamp: 2026-07-15 01:59:00
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6950 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Performance optimization and accessibility best practices
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 3580 bytes
+Extracted Content Length: 2870 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+The resume content is:
+- Skills: CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation
+- Education: Bachelor's
+
+SQ0...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5236 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Frontend tooling (Webpack, Vite, or similar)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4888 bytes
+Extracted Content Length: 4230 chars
+Extracted Content: <think>
+The resume content lists "Webpack" explicitly in the skills section. Let me score each sub-question.
+
+SQ004a: Does the candidate mention any frontend build/bundling tool (Webpack, Vite, Rollup, Parcel, esbuild, Gulp, Grunt, Browserify)? Yes, Webpack is mentioned.
+
+SQ004b: How substantively is frontend tooling described beyond a bare mention? It's just listed in a skills list with no durati...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7294 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Testing frameworks (Jest, React Testing Library, Cypress)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 5929 bytes
+Extracted Content Length: 5168 chars
+Extracted Content: <think>
+Let me analyze the resume content against each sub-question.
+
+The resume content is a list of skills:
+"CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation"
+
+Plus: "Bachelor's"...
+
+======================================================================
+Timestamp: 2026-07-15 01:58:55
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6241 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Strong experience with React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 5921 bytes
+Extracted Content Length: 5200 chars
+Extracted Content: <think>
+Let me analyze the resume content carefully.
+
+The resume content provided is:
+1. A skills section: "CSS, HTML, JavaScript, TypeScript, JSX, JavaScript ES6, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation"
+2. Education: "Bachelo...
+
+======================================================================
+Timestamp: 2026-07-15 01:59:01
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 7331 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ years front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 4805 bytes
+Extracted Content Length: 4105 chars
+Extracted Content: <think>
+The resume content provided is very limited. It only contains a list of technical skills (CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation) and an education level of "Bachelor's". There ar...
+
+======================================================================
+Timestamp: 2026-07-15 01:59:02
+Endpoint: https://opencode.ai/zen/go/v1/chat/completions
+Model: minimax-m3
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6673 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Demonstrated experience building React applications in production
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Po...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 5207 bytes
+Extracted Content Length: 4487 chars
+Extracted Content: <think>
+The resume content shows skills like CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, Continuous Testing, Troubleshooting, Integration, UX/UI, REST API, Performance Testing, Documentation, and a Bachelor's degree.
+
+Looking for React specifically: The resume mentions "JSX" which is React's ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:35
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5258 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1567 bytes
+Extracted Content Length: 480 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:35
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5826 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1840 bytes
+Extracted Content Length: 720 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux",
+      "cited_text": "Redux",
+      "sub_score": 1,
+      "extracted_years": null,
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:35
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6091 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1936 bytes
+Extracted Content Length: 815 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "no...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:35
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6077 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1987 bytes
+Extracted Content Length: 863 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI, REST API",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "ke...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:35
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5309 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1793 bytes
+Extracted Content Length: 675 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Web Developer role listed with no dates provided.",
+      "cited_text": "Web Developer - Developed websites and web applications.",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      "evidence_found": "yes",
+      "closest_evide...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6199 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2009 bytes
+Extracted Content Length: 895 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6464 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1977 bytes
+Extracted Content Length: 849 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React",
+      "cited_text": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "n...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5631 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1530 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5682 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2030 bytes
+Extracted Content Length: 894 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "cited_text": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "sub_score": 0,
+      "extracted_years": null,
+...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6450 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2245 bytes
+Extracted Content Length: 1074 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_foun...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6925 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1739 bytes
+Extracted Content Length: 623 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "leve...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6106 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1536 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6157 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1753 bytes
+Extracted Content Length: 624 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "React Developer @ Bravoev 2020-01",
+      "cited_text": "React Developer @ Bravoev 2020-01",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced Java...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6674 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2085 bytes
+Extracted Content Length: 924 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:10:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6939 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2036 bytes
+Extracted Content Length: 864 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer... Proclent wth Personal Info React.",
+      "cited_text": "Reacts Developer xpatienced JavaScript Developer with 5 years inthe ndusty.Proclent wth Personal Info React.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:40
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5247 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1561 bytes
+Extracted Content Length: 480 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:40
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6138 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1771 bytes
+Extracted Content Length: 650 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux, Flux",
+      "cited_text": "Redux, Flux",
+      "sub_score": 1,
+      "extracted_years": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:40
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5340 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1645 bytes
+Extracted Content Length: 531 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "Ja...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:40
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5288 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1788 bytes
+Extracted Content Length: 660 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI, REST API",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "ke...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:40
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5309 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2029 bytes
+Extracted Content Length: 890 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Developed websites and web applications. Developed web applications in React JS environment. Performed front-end coding and deployment in a Javascript environment.",
+      "cited_text": "Developed websites and web applications. Developed web applications in React JS environment. Performed fr...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5661 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1794 bytes
+Extracted Content Length: 714 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_foun...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5620 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1514 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6511 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1873 bytes
+Extracted Content Length: 763 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5682 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1990 bytes
+Extracted Content Length: 898 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Front End Developer @ Keylocation (2016-07 - 2016-11); React Developer @ Scout Corporation (2016-11 - 2017-01)",
+      "cited_text": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "sub_score": 0,
+      "extracted_years": nu...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:44
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5713 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1670 bytes
+Extracted Content Length: 552 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React",
+      "cited_text": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "n...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:48
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6995 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2044 bytes
+Extracted Content Length: 927 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:48
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6104 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1517 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:48
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6145 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1518 bytes
+Extracted Content Length: 422 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "leve...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:48
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6166 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1741 bytes
+Extracted Content Length: 630 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "React Developer @ Bravoev 2020-01",
+      "cited_text": "React Developer @ Bravoev 2020-01",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      "evidence_found": "yes",
+      "closest_evidence": "React, JavaScript, macOS, React ...
+
+======================================================================
+Timestamp: 2026-07-15 02:11:48
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6197 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1721 bytes
+Extracted Content Length: 603 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Bravoev",
+      "cited_text": "React Developer @ Bravoev",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5323 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1619 bytes
+Extracted Content Length: 531 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "Ja...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6138 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1857 bytes
+Extracted Content Length: 736 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux, Flux",
+      "cited_text": "Redux, Flux",
+      "sub_score": 1,
+      "extracted_years": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5309 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2213 bytes
+Extracted Content Length: 1112 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "EMPLOYMENT HISTORY (computed deterministically from date ranges — use this pre-computed employment history to answer `years_experience` sub-questions; correlate them with the skill/bullets in the SECTION CONTENT): Columns: Role | Company | Dates | Duration - | | | None months (~0 yrs)",
+    ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5247 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1651 bytes
+Extracted Content Length: 571 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "TypeScript listed in skills section but n...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5290 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1774 bytes
+Extracted Content Length: 660 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI, REST API",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "ke...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:34
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5663 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1776 bytes
+Extracted Content Length: 689 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_foun...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:34
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6511 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1879 bytes
+Extracted Content Length: 763 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:34
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5682 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1990 bytes
+Extracted Content Length: 898 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Front End Developer @ Keylocation (2016-07 - 2016-11); React Developer @ Scout Corporation (2016-11 - 2017-01)",
+      "cited_text": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "sub_score": 0,
+      "extracted_years": nu...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:34
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5620 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1517 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:34
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5696 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1811 bytes
+Extracted Content Length: 697 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React",
+      "cited_text": "React",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data usi...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6166 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1789 bytes
+Extracted Content Length: 708 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with 5 years inthe ndusty.",
+      "cited_text": "Reacts Developer xpatienced JavaScript Developer with 5 years inthe ndusty.",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6995 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state management, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1973 bytes
+Extracted Content Length: 859 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6104 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1525 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6147 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive web design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1538 bytes
+Extracted Content Length: 422 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "leve...
+
+======================================================================
+Timestamp: 2026-07-15 02:29:39
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6180 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1716 bytes
+Extracted Content Length: 602 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Bravoev",
+      "cited_text": "React Developer @ Bravoev",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5286 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1615 bytes
+Extracted Content Length: 527 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed responsive UI/UX interfaces.",
+      "cited_text": "...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5839 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1848 bytes
+Extracted Content Length: 731 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux, Flux",
+      "cited_text": "Redux, Flux",
+      "sub_score": 1,
+      "extracted_years": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5309 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1985 bytes
+Extracted Content Length: 890 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Developed websites and web applications. Developed web applications in React JS environment. Performed front-end coding and deployment in a Javascript environment.",
+      "cited_text": "Developed websites and web applications. Developed web applications in React JS environment. Performed fr...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5254 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1569 bytes
+Extracted Content Length: 480 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:30
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5308 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1611 bytes
+Extracted Content Length: 519 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "no...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:33
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5681 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1571 bytes
+Extracted Content Length: 487 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Scout Corporation",
+      "cited_text": "React Developer @ Scout Corporation",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:33
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5659 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1782 bytes
+Extracted Content Length: 698 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_foun...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:33
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6212 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1887 bytes
+Extracted Content Length: 759 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:33
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5627 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1547 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:33
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5682 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2034 bytes
+Extracted Content Length: 898 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Front End Developer @ Keylocation (2016-07 - 2016-11); React Developer @ Scout Corporation (2016-11 - 2017-01)",
+      "cited_text": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "sub_score": 0,
+      "extracted_years": nu...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:37
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6156 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1692 bytes
+Extracted Content Length: 609 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Bravoev",
+      "cited_text": "React Developer @ Bravoev",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:37
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6102 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1510 bytes
+Extracted Content Length: 430 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:37
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6157 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1712 bytes
+Extracted Content Length: 624 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "React Developer @ Bravoev 2020-01",
+      "cited_text": "React Developer @ Bravoev 2020-01",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced Java...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:37
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6134 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1505 bytes
+Extracted Content Length: 422 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "leve...
+
+======================================================================
+Timestamp: 2026-07-15 02:43:37
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6687 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2082 bytes
+Extracted Content Length: 924 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:43
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5296 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and ES6+ experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Loo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1607 bytes
+Extracted Content Length: 519 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "no",
+      "closest_evidence": "no...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:43
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5297 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: Front-end development experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1828 bytes
+Extracted Content Length: 746 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ005-01",
+      "evidence_found": "no",
+      "closest_evidence": "Web Developer",
+      "cited_text": "Web Developer",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005-02",
+      "evidence_found": "yes",
+      "closest_evidence": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NP...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:43
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5827 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React hooks, state, and lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabor...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1852 bytes
+Extracted Content Length: 731 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ003",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux, Flux",
+      "cited_text": "Redux, Flux",
+      "sub_score": 1,
+      "extracted_years": ...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:43
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5246 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript experience
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1561 bytes
+Extracted Content Length: 480 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004-01",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ004-02",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:43
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5274 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1779 bytes
+Extracted Content Length: 687 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "no",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+    ...
+
+======================================================================
+Timestamp: 2026-07-15 02:53:46
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5658 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and responsive design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1817 bytes
+Extracted Content Length: 733 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, Express.js",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found"...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5721 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1927 bytes
+Extracted Content Length: 800 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "T...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5752 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2079 bytes
+Extracted Content Length: 951 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "CSS, HTML",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+   ...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5774 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1831 bytes
+Extracted Content Length: 720 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux",
+      "cited_text": "Redux",
+      "sub_score": 1,
+      "extracted_years": null,
+      ...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5224 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1652 bytes
+Extracted Content Length: 524 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, J...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5266 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1821 bytes
+Extracted Content Length: 693 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment. Performed front-end coding and deployment in a Javascript environment.",
+      "cited_text": "Developed web applications in React JS environment. Performed front-end coding and deployment in a Javascript environment.",
+      "sub_score": 1,
+ ...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:07
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5609 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1512 bytes
+Extracted Content Length: 424 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "le...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:07
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5651 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1820 bytes
+Extracted Content Length: 723 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "Front End Developer @ Keylocation; React Developer @ Scout Corporation",
+      "cited_text": "Front End Developer @ Keylocation; React Developer @ Scout Corporation",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:07
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6159 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2166 bytes
+Extracted Content Length: 1030 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:07
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6106 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2115 bytes
+Extracted Content Length: 990 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React",
+      "cited_text": "React",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data us...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:07
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6137 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2066 bytes
+Extracted Content Length: 938 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, GitHub, AJAX",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_foun...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:10
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6093 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1512 bytes
+Extracted Content Length: 424 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "le...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:10
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6643 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2025 bytes
+Extracted Content Length: 900 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:10
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6590 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2102 bytes
+Extracted Content Length: 974 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer",
+      "cited_text": "Reacts Developer xpatienced JavaScript Developer",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "Used un...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:10
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6135 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-End Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1688 bytes
+Extracted Content Length: 603 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ006",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Bravoev",
+      "cited_text": "React Developer @ Bravoev",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with...
+
+======================================================================
+Timestamp: 2026-07-15 12:20:10
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6621 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1742 bytes
+Extracted Content Length: 620 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "leve...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:00
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5295 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-end Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1855 bytes
+Extracted Content Length: 771 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ009",
+      "evidence_found": "no",
+      "closest_evidence": "None months (~0 yrs)",
+      "cited_text": "None months (~0 yrs)",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": "none"
+    },
+    {
+      "key": "SQ010",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment. Performe...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:00
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5727 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2072 bytes
+Extracted Content Length: 945 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed web applications in React JS environment.",
+      "cited_text": "Developed web applications in React JS environment.",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "P...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:00
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5720 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2079 bytes
+Extracted Content Length: 952 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "CSS, HTML, JavaScript, TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js, MongoDB, PostgreSQL, NPM, Redux, Mocha, GitHub, Enzyme, Bitrise, Jest, Sentry, ESLint, Webpack, Flux, UX/UI, REST API",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:00
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5223 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1612 bytes
+Extracted Content Length: 524 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, JavaScript, TypeScript, JSX, Node.js",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "yes",
+      "closest_evidence": "TypeScript",
+      "cited_text": "CSS, HTML, J...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:00
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5782 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1864 bytes
+Extracted Content Length: 736 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Redux, Flux",
+      "cited_text": "Redux, Flux",
+      "sub_score": 1,
+      "extracted_years": ...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6099 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2180 bytes
+Extracted Content Length: 1050 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Scout Corporation",
+      "cited_text": "React Developer @ Scout Corporation",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6154 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2028 bytes
+Extracted Content Length: 903 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Developed Single Page Application with Python Flask API for displaying JSON retrieved data using...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5667 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-end Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2093 bytes
+Extracted Content Length: 998 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ009",
+      "evidence_found": "no",
+      "closest_evidence": "Front End Developer @ Keylocation (2016-07 - 2016-11); React Developer @ Scout Corporation (2016-11 - 2017-01)",
+      "cited_text": "Front End Developer @ Keylocation 2016-07 - 2016-11; React Developer @ Scout Corporation 2016-11 - 2017-01",
+      "sub_score": 0,
+      "extracted_years": null,...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 5595 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1526 bytes
+Extracted Content Length: 424 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "le...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:03
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6092 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2151 bytes
+Extracted Content Length: 1011 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "JavaScript, Python, HTML5, Pug, CSS3, Sass, jQuery, React, Angular, D3.js, Bootstrap, Flexbox, SVG, Webpack, Node.js, Express.js",
+      "cited_text": "HTML5, CSS3",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found"...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:06
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6577 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: CSS, HTML, and Responsive Web Design
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "sea...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1969 bytes
+Extracted Content Length: 838 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "yes",
+      "closest_evidence": "CSS",
+      "cited_text": "CSS",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "lev...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:06
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6080 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: TypeScript
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn", "Looker", "Grafana"...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1507 bytes
+Extracted Content Length: 424 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ007",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ008",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "le...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:06
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6152 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: 3+ Years Front-end Development
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seaborn",...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 1872 bytes
+Extracted Content Length: 777 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ009",
+      "evidence_found": "no",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with 5 years inthe ndusty.",
+      "cited_text": "Reacts Developer xpatienced JavaScript Developer with 5 years inthe ndusty.",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": "some"
+    },
+    {
+      "key": "SQ010",
+      "e...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:06
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6639 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React Hooks, State Management, and Lifecycle
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotli...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2055 bytes
+Extracted Content Length: 897 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ004",
+      "evidence_found": "no",
+      "closest_evidence": "none",
+      "cited_text": "none",
+      "sub_score": 0,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ005",
+      "evidence_found": "yes",
+      "closest_evidence": "Introduced wider use of isomorphic React and Node for Redux applications.",
+      "cited_text": ...
+
+======================================================================
+Timestamp: 2026-07-15 12:57:06
+Endpoint: https://openrouter.ai/api/v1/chat/completions
+Model: google/gemini-3.1-flash-lite
+Temperature: 0.0
+Max Tokens: 4000
+Prompt Length: 6584 chars
+Prompt Sample: You are a resume evidence scorer. Score the candidate for ONE requirement.
+
+REQUIREMENT: React and Modern JavaScript (ES6+)
+
+SEMANTIC INFERENCE RULES — apply BEFORE deciding evidence_found:
+- "dashboard", "report", "chart", "plot", "visualization", "BI", "Tableau", "Power BI",
+  "matplotlib", "seabo...
+--- Request Sent ---
+HTTP Status: 200
+Response Content-Length: 2128 bytes
+Extracted Content Length: 944 chars
+Extracted Content: {
+  "sub_scores": [
+    {
+      "key": "SQ001",
+      "evidence_found": "yes",
+      "closest_evidence": "React Developer @ Bravoev",
+      "cited_text": "React Developer @ Bravoev",
+      "sub_score": 1,
+      "extracted_years": null,
+      "level": ""
+    },
+    {
+      "key": "SQ002",
+      "evidence_found": "yes",
+      "closest_evidence": "Reacts Developer xpatienced JavaScript Developer with...
+

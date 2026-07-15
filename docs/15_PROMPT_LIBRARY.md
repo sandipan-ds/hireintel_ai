@@ -16,7 +16,8 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 | Prompt ID | Purpose | Status |
 | --- | --- | --- |
-| JD-EXTRACT-001 | Extract structured hiring requirements from a job description | Planned |
+| JD-EXTRACT-001 | Extract structured hiring requirements from a job description | Active (`recruiter/src/api/recruiter.py`) |
+| JD-SUBQUERY-GEN-001 | Decompose requirements into structured binary and float sub-queries | Active (`recruiter/src/api/recruiter.py`) |
 | RESUME-PARSE-001 | Extract a structured candidate profile from resume content | Planned (current parser is rule-based; LLM extraction is the upgrade path) |
 | RUBRIC-SCORE-001 | Score candidate evidence against a recruiter-defined rubric | Active (`src/scoring/rubric_scorer.py`) |
 | CANDIDATE-SUMMARY-001 | Generate an evidence-based recruiter summary | Planned |
@@ -30,33 +31,175 @@ Each production prompt must include a prompt ID, purpose, inputs, outputs, const
 
 ## JD-EXTRACT-001
 
-**Purpose:** Extract role requirements from a job description.
+**Purpose:** Extract structured requirements from a job description text to initialize the recruiter onboarding session.
 
 **Inputs:**
 - Raw job description text
-- Optional role title
-- Optional employer-provided constraints
+- Role name
 
 **Outputs:**
-- Required skills
-- Preferred skills
-- experience requirements
-- education requirements
-- certifications
-- industry requirements
-- leadership requirements
-- technology stack
+A JSON array of requirement objects conforming to:
+```json
+[
+  {
+    "req_id": "REQ-001",
+    "name": "Short requirement name",
+    "category": "Core Skill",
+    "requirement_type": "required",
+    "description": "Requirement description",
+    "status": "GREEN",
+    "reason": "GREEN/YELLOW/RED rationale"
+  }
+]
+```
 
 **Constraints:**
-- Do not infer requirements that are not present in the JD.
-- Separate required and preferred requirements.
-- Preserve evidence snippets for each extracted requirement.
+- Extract ONLY requirements explicitly stated in the Job Description text. Do not infer or add generic skills.
+- Classify categories exactly into `Core Skill`, `Preferred Skill`, `Experience`, `Education`, or `Certification`.
+- Restrict `requirement_type` exactly to `"required"` or `"preferred"`.
+- Assign `status` exactly to `"GREEN"` (measurable/verifiable), `"YELLOW"` (somewhat vague but workable), or `"RED"` (too vague to score).
 
-**Known Limitations:**
-- Ambiguous job descriptions may require recruiter confirmation.
+**Few-Shot Exemplars:**
+* **Input Job Description Snippet:**
+  ```text
+  Required Skills:
+  - Strong business analysis and requirement gathering experience.
+  - Proficiency in SQL for data validation and analysis.
+  Experience:
+  - 6+ years in business analysis, product analysis, or related domain.
+  ```
+* **Output Extracted JSON:**
+  ```json
+  [
+    {
+      "req_id": "REQ-001",
+      "name": "Business Analysis & Requirement Gathering",
+      "category": "Core Skill",
+      "requirement_type": "required",
+      "description": "Strong business analysis and requirement gathering experience.",
+      "status": "GREEN",
+      "reason": "Specific core BA capability required."
+    },
+    {
+      "req_id": "REQ-002",
+      "name": "SQL for Data Validation & Analysis",
+      "category": "Core Skill",
+      "requirement_type": "required",
+      "description": "Proficiency in SQL for data validation and analysis.",
+      "status": "GREEN",
+      "reason": "Explicit database query capability."
+    },
+    {
+      "req_id": "REQ-003",
+      "name": "6+ Years Business Analysis or Related Domain",
+      "category": "Experience",
+      "requirement_type": "required",
+      "description": "6+ years in business analysis, product analysis, or related domain.",
+      "status": "GREEN",
+      "reason": "Specific tenure duration and domain defined."
+    }
+  ]
+  ```
 
 **Version History:**
 - v0.1: Initial planned prompt specification.
+- v1.0 (2026-07-15): Standardized exemplars around a unified Business Analyst Lead JD workflow at temperature 0.0.
+
+---
+
+## JD-SUBQUERY-GEN-001
+
+**Purpose:** Decompose job requirements into 2–6 atomic sub-queries that can be evaluated objectively against candidate resumes.
+
+**Inputs:**
+- A JSON list of requirements (extracted from the JD)
+
+**Outputs:**
+A JSON object mapping each `req_id` to a list of sub-query objects conforming to:
+```json
+{
+  "REQ-001": [
+    {
+      "sq_id": "SQ001",
+      "text": "Sub-query text",
+      "type": "binary",
+      "scoring_hint": "Guidelines for grading",
+      "status": "GREEN",
+      "reason": "Rational for sub-query"
+    }
+  ]
+}
+```
+
+**Constraints:**
+- Restrict sub-query `type` exactly to `"binary"` (yes/no scored 0 or 1) or `"float"` (graded 0.01 / 0.25 / 0.50 / 1.00).
+- Assign `status` exactly to `"GREEN"`, `"YELLOW"`, or `"RED"`.
+
+**Few-Shot Exemplars:**
+* **Input Extracted Requirements:**
+  (Uses the exact same `REQ-001`, `REQ-002`, `REQ-003` from `JD-EXTRACT-001` output)
+* **Output Decomposed JSON:**
+  ```json
+  {
+    "REQ-001": [
+      {
+        "sq_id": "SQ001",
+        "text": "Is there evidence that the candidate has served in a Business Analyst (or similar) role?",
+        "type": "binary",
+        "scoring_hint": "0 = no role evidence, 1 = role title/experience as BA/Analyst present",
+        "status": "GREEN",
+        "reason": "Directly verifiable BA role check."
+      },
+      {
+        "sq_id": "SQ002",
+        "text": "Has the candidate performed requirement gathering or elicitation activities?",
+        "type": "binary",
+        "scoring_hint": "0 = not mentioned, 1 = requirement gathering/elicitation explicitly mentioned",
+        "status": "GREEN",
+        "reason": "Verifiable activity check."
+      },
+      {
+        "sq_id": "SQ003",
+        "text": "How strong is their requirement gathering experience?",
+        "type": "float",
+        "scoring_hint": "0.01=No mention; 0.25=Few mentions (1-2 simple projects); 0.50=Some mentions (multiple projects, medium complexity); 1.00=Substantial (strategic role, complex enterprise projects)",
+        "status": "GREEN",
+        "reason": "Qualitative evaluation of experience depth."
+      }
+    ],
+    "REQ-002": [
+      {
+        "sq_id": "SQ004",
+        "text": "Is there evidence that the candidate knows SQL?",
+        "type": "binary",
+        "scoring_hint": "0 = not mentioned, 1 = SQL explicitly listed",
+        "status": "GREEN",
+        "reason": "Binary gate for database skill."
+      },
+      {
+        "sq_id": "SQ005",
+        "text": "Has the candidate used SQL specifically for data validation or analysis?",
+        "type": "binary",
+        "scoring_hint": "0 = no validation/analysis work, 1 = validation/analysis explicitly mentioned",
+        "status": "GREEN",
+        "reason": "Specific use case check."
+      }
+    ],
+    "REQ-003": [
+      {
+        "sq_id": "SQ006",
+        "text": "How many years of relevant experience does the candidate have (relative to expected 6 years minimum)?",
+        "type": "float",
+        "scoring_hint": "0.01=No mention; 0.25=Less than 2 years; 0.50=3 to 5 years; 1.00=6+ years",
+        "status": "GREEN",
+        "reason": "Duration gate checked using a 4-band scale."
+      }
+    ]
+  }
+  ```
+
+**Version History:**
+- v1.0 (2026-07-15): Implemented in `recruiter/src/api/recruiter.py` for sandbox onboarding. Runs concurrently in requirement chunks at temperature 0.0 using consistent Business Analyst exemplars.
 
 ---
 

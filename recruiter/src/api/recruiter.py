@@ -357,7 +357,7 @@ def extract_reqs(req: ExtractReqsRequest) -> JSONResponse:
         the JD. Every requirement you list must be traceable to a specific sentence or phrase in the JD.
 
         For each explicit requirement, classify it as GREEN, YELLOW, or RED:
-        - GREEN:  Specific, objectively measurable (e.g. "5+ years Python", "AWS Certified Solutions Architect")
+        - GREEN:  Specific, objectively measurable (e.g. "5+ years Python", "AWS Certified Solutions Architect", "BTech in CS")
         - YELLOW: Somewhat vague but contextually workable (e.g. "strong communication skills", "team player")
         - RED:    Too vague to score objectively — missing critical detail like years, tool name, or level
 
@@ -371,6 +371,47 @@ def extract_reqs(req: ExtractReqsRequest) -> JSONResponse:
         requirement_type values:
         - "required" for must-have items stated as mandatory in the JD
         - "preferred" for nice-to-have items stated as optional/preferred in the JD
+
+        ## FEW-SHOT EXEMPLAR TEMPLATES:
+        Below is a complete, consistent example of how a Job Description snippet is parsed into structured requirements:
+
+        ### INPUT JOB DESCRIPTION SNIPPET:
+        "Required Skills:
+        - Strong business analysis and requirement gathering experience.
+        - Proficiency in SQL for data validation and analysis.
+        Experience:
+        - 6+ years in business analysis, product analysis, or related domain."
+
+        ### OUTPUT EXTRACTED REQUIREMENTS (JSON format):
+        [
+          {
+            "req_id": "REQ-001",
+            "name": "Business Analysis & Requirement Gathering",
+            "category": "Core Skill",
+            "requirement_type": "required",
+            "description": "Strong business analysis and requirement gathering experience.",
+            "status": "GREEN",
+            "reason": "Specific core BA capability required."
+          },
+          {
+            "req_id": "REQ-002",
+            "name": "SQL for Data Validation & Analysis",
+            "category": "Core Skill",
+            "requirement_type": "required",
+            "description": "Proficiency in SQL for data validation and analysis.",
+            "status": "GREEN",
+            "reason": "Explicit database query capability."
+          },
+          {
+            "req_id": "REQ-003",
+            "name": "6+ Years Business Analysis or Related Domain",
+            "category": "Experience",
+            "requirement_type": "required",
+            "description": "6+ years in business analysis, product analysis, or related domain.",
+            "status": "GREEN",
+            "reason": "Specific tenure duration and domain defined."
+          }
+        ]
 
         Return ONLY a valid JSON array — no markdown fences, no explanation, no <think> tags:
         [
@@ -429,6 +470,7 @@ async def gen_subqueries(req: GenSubqueriesRequest) -> JSONResponse:
         You are an expert technical recruiter designing candidate evaluation rubrics for an AI scoring system.
 
         For each requirement, generate 2–6 atomic sub-queries evaluable from resume text alone.
+        Follow the exact patterns and structures of reference rubrics (decomposing requirements into structured binary gates and 4-band float rubrics).
 
         Sub-query types:
         - binary: yes/no question → scored 0 (absent) or 1 (present)
@@ -438,6 +480,89 @@ async def gen_subqueries(req: GenSubqueriesRequest) -> JSONResponse:
         - GREEN:  Specific, directly verifiable from resume text
         - YELLOW: Requires reasonable inference from context
         - RED:    Subjective, not verifiable from resume, or overlaps another sub-query
+
+        ## FEW-SHOT EXEMPLAR TEMPLATES:
+        Below is a complete, consistent example of how the extracted requirements from the Job Description are decomposed into measurable sub-queries:
+
+        ### INPUT REQUIREMENTS:
+        [
+          {
+            "req_id": "REQ-001",
+            "name": "Business Analysis & Requirement Gathering",
+            "category": "Core Skill",
+            "description": "Strong business analysis and requirement gathering experience."
+          },
+          {
+            "req_id": "REQ-002",
+            "name": "SQL for Data Validation & Analysis",
+            "category": "Core Skill",
+            "description": "Proficiency in SQL for data validation and analysis."
+          },
+          {
+            "req_id": "REQ-003",
+            "name": "6+ Years Business Analysis or Related Domain",
+            "category": "Experience",
+            "description": "6+ years in business analysis, product analysis, or related domain."
+          }
+        ]
+
+        ### OUTPUT SUB-QUERIES (JSON format):
+        {
+          "REQ-001": [
+            {
+              "sq_id": "SQ001",
+              "text": "Is there evidence that the candidate has served in a Business Analyst (or similar) role?",
+              "type": "binary",
+              "scoring_hint": "0 = no role evidence, 1 = role title/experience as BA/Analyst present",
+              "status": "GREEN",
+              "reason": "Directly verifiable BA role check."
+            },
+            {
+              "sq_id": "SQ002",
+              "text": "Has the candidate performed requirement gathering or elicitation activities?",
+              "type": "binary",
+              "scoring_hint": "0 = not mentioned, 1 = requirement gathering/elicitation explicitly mentioned",
+              "status": "GREEN",
+              "reason": "Verifiable activity check."
+            },
+            {
+              "sq_id": "SQ003",
+              "text": "How strong is their requirement gathering experience?",
+              "type": "float",
+              "scoring_hint": "0.01=No mention; 0.25=Few mentions (1-2 simple projects); 0.50=Some mentions (multiple projects, medium complexity); 1.00=Substantial (strategic role, complex enterprise projects)",
+              "status": "GREEN",
+              "reason": "Qualitative evaluation of experience depth."
+            }
+          ],
+          "REQ-002": [
+            {
+              "sq_id": "SQ004",
+              "text": "Is there evidence that the candidate knows SQL?",
+              "type": "binary",
+              "scoring_hint": "0 = not mentioned, 1 = SQL explicitly listed",
+              "status": "GREEN",
+              "reason": "Binary gate for database skill."
+            },
+            {
+              "sq_id": "SQ005",
+              "text": "Has the candidate used SQL specifically for data validation or analysis?",
+              "type": "binary",
+              "scoring_hint": "0 = no validation/analysis work, 1 = validation/analysis explicitly mentioned",
+              "status": "GREEN",
+              "reason": "Specific use case check."
+            }
+          ],
+          "REQ-003": [
+            {
+              "sq_id": "SQ006",
+              "text": "How many years of relevant experience does the candidate have (relative to expected 6 years minimum)?",
+              "type": "float",
+              "scoring_hint": "0.01=No mention; 0.25=Less than 2 years; 0.50=3 to 5 years; 1.00=6+ years",
+              "status": "GREEN",
+              "reason": "Duration gate checked using a 4-band scale."
+            }
+          ]
+        }
 
         Return ONLY a valid JSON object keyed by req_id — no markdown, no explanation, no <think> tags:
         {
@@ -624,7 +749,8 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
     # sessions never collide with the internal project's pre-scored roles
     # (e.g. internal "ReactDeveloper" vs wizard "React_Developer_20260714").
     date_suffix = datetime.utcnow().strftime("%Y%m%d")
-    slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}"
+    unique_suffix = uuid.uuid4().hex[:8]
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}_{unique_suffix}"
 
     # Delete old rankings, scores, and index files immediately when saving the role configuration
     old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
@@ -1309,7 +1435,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
 
         # 3. Score resumes using the recruiter scoring script and dynamic index file
         ok = _run(
-            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
+            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path, "--workers", "20"],
             "scoring"
         )
         if not ok:
