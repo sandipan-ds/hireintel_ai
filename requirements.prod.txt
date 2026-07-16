@@ -1,0 +1,122 @@
+# ===========================================================================
+# requirements.prod.txt — PRODUCTION ONLY (used by Dockerfile for Cloud Run)
+# ===========================================================================
+# This file is a stripped version of requirements.txt for the production
+# container image. It removes:
+#   - torch, torchvision, sentence-transformers, transformers, accelerate
+#     (replaced by GeminiEmbedder REST API — DEC-036)
+#   - docling, docling-slim, docling-core, docling-ibm-models, docling-parse
+#     (replaced by pypdfium2 — DEC-037; docling pulled torch transitively)
+#   - All dev/research tools (pytest, ruff, mypy, jupyterlab, streamlit)
+#   - LlamaIndex (not on the serving path)
+#   - MLflow, Optuna (experiment tracking, not serving)
+#   - tree-sitter (code analysis, not serving)
+#   - faiss-cpu, qdrant-client (not used at serve time; only chromadb)
+#
+# Expected image size: ~700 MB (vs 3.94 GB before DEC-036/DEC-037)
+# ===========================================================================
+
+# ==========================
+# LLM & NLP — serving subset
+# ==========================
+# sentence-transformers, torch, torchvision, transformers, accelerate REMOVED.
+# Embedding is now done via GeminiEmbedder (text-embedding-004 REST API).
+openai            # OpenAI-compatible client (used by llm_caller.py for NIM/OpenRouter)
+tiktoken          # Token counting for prompt budgeting
+rank-bm25         # BM25 lexical retrieval (section_routed.py)
+flashrank          # Lightweight reranker (no torch dependency)
+rapidfuzz         # Fuzzy string matching
+
+# ==========================
+# Vector Database — serving
+# ==========================
+chromadb          # In-process vector store used at serve time
+# faiss-cpu   ← REMOVED (offline indexing only, not on serving path)
+# qdrant-client ← REMOVED (not used in production serving path)
+
+# ==========================
+# Document Parsing — ML-free stack (DEC-037)
+# ==========================
+# docling ← REMOVED: pulled torch+transformers transitively (~2 GB).
+#           Replaced by pypdfium2 as primary native-PDF parser.
+#           The Gemini LLM normalizer is multimodal — no layout ML needed.
+pypdf
+pdfplumber
+pdfminer.six
+pypdfium2                  # PRIMARY native-PDF text extractor (Route A)
+python-docx
+docx2txt
+unstructured               # FALLBACK Route B (base package, no ML extras)
+pytesseract                # OCR Route C (scanned PDFs)
+pillow
+opencv-python-headless     # headless variant — smaller, no GUI deps
+
+# ==========================
+# Data Science — serving subset
+# ==========================
+numpy
+pandas
+scikit-learn      # Used for scoring math (no training at serve time)
+scipy
+joblib
+# matplotlib, seaborn REMOVED — plotting, not serving
+
+# ==========================
+# Backend
+# ==========================
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg[binary]
+redis
+celery
+jinja2
+python-multipart
+
+# ==========================
+# Utilities
+# ==========================
+python-dotenv
+requests          # Required by GeminiEmbedder
+httpx
+pydantic
+pyyaml
+tqdm
+rich
+orjson
+tenacity
+
+# ==========================
+# GCP integrations
+# ==========================
+google-api-python-client   # Used by gcp_kill_switch/main.py
+google-auth                # Required by google-api-python-client
+
+# ==========================
+# REMOVED FROM PRODUCTION
+# ==========================
+# The following are in requirements.txt (dev) but NOT here (prod):
+#
+#   torch                    — 1.5–2.5 GB; replaced by Gemini API embedding (DEC-036)
+#   torchvision              — GPU training only
+#   sentence-transformers    — replaced by GeminiEmbedder
+#   transformers             — no local model inference at serve time
+#   accelerate               — GPU training only
+#   docling                  — pulled torch transitively; replaced by pypdfium2 (DEC-037)
+#   docling-slim             — same issue
+#   docling-core             — same issue
+#   docling-ibm-models       — same issue (2 GB of AI models)
+#   docling-parse            — same issue
+#   llama-index*             — not on serving code path
+#   llama-parse              — not on serving code path
+#   faiss-cpu                — offline indexing, not serving
+#   qdrant-client            — not used in production serving path
+#   pytest                   — dev testing
+#   ruff                     — linting
+#   mypy                     — type checking
+#   streamlit                — dashboard exploration
+#   ipykernel / jupyterlab   — notebooks
+#   tree-sitter*             — code analysis
+#   mlflow                   — experiment tracking
+#   optuna*                  — hyperparameter search
+#   matplotlib / seaborn     — plotting

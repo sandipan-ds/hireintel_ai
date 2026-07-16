@@ -343,36 +343,33 @@ def _local_chunk_profile(
 # Embedding — text -> L2-normalized float32 vector.
 # ---------------------------------------------------------------------------
 
-
 def _load_embedder(model_name: str):
-    """Lazily import sentence_transformers and load the embedding model.
+    """Return a GeminiEmbedder for building the chunk index (DEC-036).
 
-    The import is deferred so ``--help`` and ``--dry-run`` work without the
-    (optional-at-test-time) sentence-transformers dependency. The model
-    download only happens on the first real build.
+    Replaces the previous SentenceTransformer + PyTorch loader.  The Gemini
+    REST API approach requires only the ``requests`` package (already in
+    requirements.prod.txt) and no local model weights, so ``--dry-run`` and
+    ``--help`` continue to work without any heavy ML dependencies.
+
+    Args:
+        model_name:
+            Gemini embedding model id.  Defaults to ``text-embedding-004``
+            (768-dim, free tier, 1,500 RPM).
+
+    Returns:
+        A :class:`recruiter.src.rag.gemini_embedder.GeminiEmbedder` instance
+        ready to call ``.encode()`` on chunk text lists.
     """
-    try:
-        from sentence_transformers import SentenceTransformer
-    except ImportError as e:
-        raise ImportError(
-            "sentence-transformers is required to build the index. "
-            "Install it with: pip install sentence-transformers"
-        ) from e
-        
-    import torch
-    if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
-        device = "cpu"
-    else:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    
-    # Try local models folder first
-    local_path = Path("recruiter/models/bge-base-en-v1.5")
-    if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
-        model_to_load = str(local_path.resolve())
-    else:
-        model_to_load = model_name
-        
-    return SentenceTransformer(model_to_load, device=device)
+    from recruiter.src.rag.gemini_embedder import GeminiEmbedder
+
+    # task_type=RETRIEVAL_DOCUMENT is the correct hint when embedding
+    # index passages (resume chunks), as opposed to search queries.
+    embedder = GeminiEmbedder(
+        model_name=model_name,
+        task_type="RETRIEVAL_DOCUMENT",
+    )
+    logger.info("GeminiEmbedder loaded for index build (model=%s).", model_name)
+    return embedder
 
 
 def embed_texts(
@@ -380,10 +377,11 @@ def embed_texts(
     embedder,
     batch_size: int,
 ) -> np.ndarray:
-    """Embed a list of chunk texts into an ``(N, D)`` float32 matrix.
+    """Embed a list of chunk texts into an ``(N, 768)`` float32 matrix.
 
-    BGE-base-en-v1.5 with ``normalize_embeddings=True`` returns unit vectors
-    ready for cosine similarity via dot product.
+    ``text-embedding-004`` with ``normalize_embeddings=True`` returns unit
+    vectors ready for cosine similarity via dot product (identical behaviour
+    to BGE-base-en-v1.5, DEC-036).
 
     Args:
         texts:
@@ -391,16 +389,16 @@ def embed_texts(
             produce zero-vector embeddings (they will never match a query
             because cosine of a zero vector is 0).
         embedder:
-            A loaded ``SentenceTransformer`` instance.
+            A loaded :class:`recruiter.src.rag.gemini_embedder.GeminiEmbedder`
+            instance (or any object implementing ``.encode()``).
         batch_size:
-            Number of texts per forward pass. 32 is a good default on a
-            CPU-only laptop; raise to 64-128 on GPU.
+            Number of texts per API request.  The Gemini free tier supports
+            up to 100 texts per ``batchEmbedContents`` call.
 
     Returns:
-        ``np.ndarray`` of shape ``(len(texts), D)`` with dtype float32,
-        where D=768 for ``BAAI/bge-base-en-v1.5``.
+        ``np.ndarray`` of shape ``(len(texts), 768)`` with dtype float32.
     """
-    dim = 768  # BGE-base-en-v1.5
+    dim = 768  # text-embedding-004 output dimension
     if not texts:
         return np.zeros((0, dim), dtype=np.float32)
     vecs = embedder.encode(

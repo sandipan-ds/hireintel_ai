@@ -13,3 +13,4 @@ __pycache__/
 .env.test
 docs/
 recruiter/models/
+GCP_Deployment_Details.md

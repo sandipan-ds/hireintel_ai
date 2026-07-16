@@ -1470,6 +1470,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
         sub_env["TRANSFORMERS_OFFLINE"] = "1"  # Force offline mode for Transformers
         sub_env["PYTHONUNBUFFERED"] = "1"     # Disable output buffering for real-time logs
         sub_env["TOKENIZERS_PARALLELISM"] = "false"  # Disable tokenizers parallelism to prevent deadlocks
+        sub_env["HF_HOME"] = "/app/.cache/huggingface"  # Uniform cache path for Hugging Face models
         if api_key:
             sub_env["RECRUITER_API_KEY"] = api_key
         if base_url:
@@ -1624,13 +1625,32 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             return
 
         # 3. Score resumes using the recruiter scoring script and dynamic index file
+        # Pre-flight: verify the index file exists before launching the scorer
+        if not Path(idx_path).exists():
+            job["status"] = "error"
+            job["log"].append(f"✗ Scoring aborted: index file not found at {idx_path}. Indexing may have failed silently.")
+            return
+
+        # Pre-flight: verify the weight config was generated.
+        # wc_file is always written to this deterministic path at line ~1530 above.
+        _expected_wc = Path("recruiter/data/job_descriptions") / slug / f"{slug}_WeightConfig_recruiter.json"
+        if not _expected_wc.exists():
+            job["log"].append(f"⚠ Weight config not found at {_expected_wc} — scorer may fail to discover role.")
+
         t_score_start = time.time()
         ok = _run(
-            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
+            [_PYTHON, "recruiter/score_batch_composed.py",
+             "--role", slug,
+             "--index-path", idx_path,
+             "--verbose"],  # --verbose surfaces import errors & crash traces in job log
             "scoring"
         )
         times["score"] = time.time() - t_score_start
         if not ok:
+            job["log"].append(
+                f"✗ Scorer exited with error after {times['score']:.2f}s. "
+                "Check lines above for import errors or missing files."
+            )
             return
 
         # Write and print the performance summary
