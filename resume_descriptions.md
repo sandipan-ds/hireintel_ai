@@ -1,31 +1,24 @@
 # Resume Formatting Options for HireIntel.AI
 
-Below are curated resume blocks tailored for different resume formats (Detailed Project/Portfolio Section vs. Bullet Points under Professional Experience).
+Below are curated resume blocks tailored for different resume formats (Detailed Project/Portfolio Section vs. Bullet Points under Professional Experience). These descriptions incorporate the exact architectural definitions (separating vector retrieval from rubric-bound LLM grading, JSON audits, and thread-safe concurrency).
 
 ---
 
 ## Option 1: Detailed Project Entry (Recommended for Portfolio/Projects Section)
 
-### **HireIntel.AI — Lead Architect / Developer** | *Python, FastAPI, RAG, Vector Databases, Async/Parallel Computing*
+### **HireIntel.AI — Lead AI Architect & Developer** | *Python, FastAPI, HTMX, SQLite, BAAI/bge-base-en-v1.5, Threading, Docker*
 Developed an enterprise-grade Candidate Intelligence Platform featuring explainable, multi-role screening, ranking, and interactive resume chatting powered by a custom Hybrid RAG pipeline.
 
-* **Hybrid RAG Retrieval Engine:** Designed and implemented a two-stage evaluation engine separating factual lookup queries (e.g., degrees, institutions, specific experience) from semantic capability checks (e.g., context-aware technical expertise, leadership scope) using BGE embeddings and similarity thresholds.
-* **High-Throughput Parallel Evaluator:** Built an async scoring scheduler (`ThreadPoolExecutor`) enabling concurrent requirement evaluation across multiple candidate resumes, achieving high throughput (20+ concurrent workers) under strict LLM API rate limits.
-* **Privacy-First Sandbox Architecture:** Engineered a secure, air-gapped recruiter sandbox environment supporting live job description parsing, requirements extraction, Google Drive/Dropbox validation, and automated 30-second background cleanup loops to safeguard candidate data.
-* **Interactive Resume Chat Bot:** Constructed an interactive resume-chat interface utilizing local-storage synchronized API slots (BYOK drawer/sidebar config) enabling demo viewers and recruiters to query resumes directly with full evidence-traceability.
+* **Two-Stage Hybrid RAG Engine:** Architected a search-evaluation split pipeline that uses BGE-v1.5 embeddings for document-aware evidence retrieval and routes evidence chunks to a rubric-bound LLM Judge for multi-band grading, keeping final scoring math deterministic and transparent.
+* **Five-Layer JSON Quality Audit & Vision Gap-Filling:** Designed a schema completeness audit (schema, data types, evidence tracing, Levenshtein consistency) paired with a multimodal vision recovery pipeline that renders PDF pages to images to salvage missing fields from scanned documents.
+* **High-Throughput Parallel Evaluator:** Built an asynchronous scoring scheduler (`ThreadPoolExecutor`) enabling concurrent requirement evaluation across 700+ candidate resumes, achieving high scoring throughput under strict LLM API rate limits.
+* **Secure BYOK & Sandbox Architecture:** Engineered a stateless 6-step recruiter onboarding board and a dashboard that decouples analytics from cloud credentials, persisting OpenRouter/Gemini API inputs strictly in browser localStorage to prevent server-side key leaks.
 
 ---
 
 ## Option 2: Concise Bullet Points (For Chronological Experience Section)
 
-* Designed and built **HireIntel.AI**, an explainable candidate screening platform utilizing a two-stage **Hybrid RAG** engine to score resumes against multi-role job descriptions.
-* Engineered a **multicall parallel scoring scheduler** in Python, utilizing asynchronous execution and concurrency controls to scale to 20+ parallel LLM workers for real-time candidate ranking.
-* Implemented a **privacy-first data lifecycle** featuring automated document parsing, external drive folder link validators, and a background thread-based **silent data auto-cleanup (30-second deletion)** loop.
-* Developed a responsive web interface utilizing modern CSS glassmorphism, dynamic scoring gauges, and a client-side **BYOK (Bring Your Own Key)** settings drawer to completely decouple local server API expenses from external testers.
-
----
-
-## 💡 Key Technical Buzzwords to Highlight
-* **Systems & Architecture:** Hybrid Retrieval-Augmented Generation (RAG), Thread-Safe Concurrency, Async Event-Driven Automation, API Key Decoupling (BYOK), SQLite/PostgreSQL Database schemas.
-* **AI & Search:** BGE Vector Embeddings, Cosine Similarity Thresholding, Multimodal Parsing, Natural Language Requirements Extraction.
-* **Backend:** FastAPI, Python, Uvicorn, Subprocess Pipelines, File System Air-gapping.
+* Engineered **HireIntel.AI**, an explainable candidate screening platform separating BGE-v1.5 vector retrieval (evidence collection) from a rubric-bound LLM Judge and a deterministic Python scoring engine.
+* Built a **five-layer JSON Quality Audit** and a **multimodal vision gap-fill pipeline** that renders resume PDFs to base64 images to re-extract missing credentials from scanned or OCR-failed profiles.
+* Implemented a **concurrent scoring engine** using a Python `ThreadPoolExecutor` to parallelize requirement scoring across candidates, reducing scoring latency.
+* Designed a **privacy-first BYOK (Bring Your Own Key) dashboard** using local-storage synchronization to enforce credential containment, allowing secure external runs with zero cloud-key exposure.

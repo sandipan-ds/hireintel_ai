@@ -12,3 +12,4 @@ __pycache__/
 .env.audit
 .env.test
 docs/
+recruiter/models/

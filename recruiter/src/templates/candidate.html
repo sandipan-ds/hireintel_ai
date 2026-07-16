@@ -46,7 +46,7 @@
 
     main {
       max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem;
-      display: grid; grid-template-columns: 380px 1fr; gap: 1.5rem; align-items: start;
+      display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 1.5rem; align-items: start;
     }
     @media (max-width: 960px) { main { grid-template-columns: 1fr; } }
 
@@ -186,8 +186,8 @@
     }
     .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .chat-title { font-weight: 700; font-size: 0.95rem; }
-    .chat-sub { font-size: 0.75rem; color: var(--muted); }
+    .chat-title { font-weight: 700; font-size: 0.95rem; word-break: break-word; overflow-wrap: anywhere; }
+    .chat-sub { font-size: 0.75rem; color: var(--muted); word-break: break-word; overflow-wrap: anywhere; }
 
     .chat-messages {
       flex: 1; padding: 1.25rem; display: flex; flex-direction: column;
@@ -250,7 +250,7 @@
     /* ── Two-column page layout ─────────────────────────────── */
     .page-wrapper {
       max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 6rem;
-      display: grid; grid-template-columns: 1fr 296px; gap: 2rem; align-items: start;
+      display: grid; grid-template-columns: minmax(0, 1fr) 296px; gap: 2rem; align-items: start;
     }
     @media (max-width: 900px) {
       .page-wrapper { grid-template-columns: 1fr; }
@@ -488,7 +488,8 @@
         <div class="chat-header">
           <div class="chat-dot"></div>
           <div>
-            <div class="chat-title">Chat with ${d.candidate_id}</div>
+            <div class="chat-title">Chat with Candidate #${d.rank}</div>
+            <div class="chat-sub" style="font-size: 0.68rem; opacity: 0.8; margin: 2px 0;">${d.candidate_id}</div>
             <div class="chat-sub">Ask anything about this candidate's resume</div>
           </div>
         </div>

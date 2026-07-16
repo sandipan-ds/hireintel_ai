@@ -4,6 +4,7 @@
 # (Docling, Unstructured, or PaddleOCR+Surya), groups elements into canonical sections,
 # normalizes fields via LLM, and validates the schema.
 
+import os
 import re
 import logging
 from datetime import datetime, timezone
@@ -57,14 +58,21 @@ def extract_resume(path: str | Path, registry: Optional[CandidateRegistry] = Non
     elements: Optional[List[ExtractedElement]] = None
     ocr_used = False
 
+    bypass_layout = os.environ.get("BYPASS_LAYOUT_PARSERS", "false").lower() == "true"
+
     if file_type == FileType.NATIVE_PDF:
-        # Route A: Primary Docling
-        logger.info("Routing %s to Route A: Docling", path_obj.name)
-        elements = extract_with_docling(path_obj)
-        if not elements:
-            logger.warning("Docling failed or returned empty. Falling back to Unstructured.")
-            elements = extract_with_unstructured(path_obj)
-        if not elements:
+        if bypass_layout:
+            logger.info("Bypassing layout-aware parsing (Docling/Unstructured) for %s due to BYPASS_LAYOUT_PARSERS=true", path_obj.name)
+            elements = None
+        else:
+            # Route A: Primary Docling
+            logger.info("Routing %s to Route A: Docling", path_obj.name)
+            elements = extract_with_docling(path_obj)
+            if not elements:
+                logger.warning("Docling failed or returned empty. Falling back to Unstructured.")
+                elements = extract_with_unstructured(path_obj)
+        
+        if not elements and not bypass_layout:
             logger.warning("Unstructured fallback failed. Trying OCR.")
             elements = extract_with_ocr(path_obj)
             ocr_used = True

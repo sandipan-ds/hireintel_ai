@@ -15,6 +15,7 @@ This is a stateless, demo-grade implementation by design.
 from __future__ import annotations
 
 import json
+import threading
 import logging
 import os
 import re
@@ -34,17 +35,74 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from src.models.database import Requirement, Role, get_db
+from recruiter.src.models.database import Requirement, Role, get_db
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/recruiter", tags=["recruiter"])
 
 # ---------------------------------------------------------------------------
+# GET /api/recruiter/diagnostic — Step-by-step trace import & loading hangs
+# ---------------------------------------------------------------------------
+@router.get("/diagnostic")
+def diagnostic() -> JSONResponse:
+    import os
+    import sys
+    import time
+    from pathlib import Path
+    
+    logs = []
+    def log(msg):
+        logs.append(f"{time.strftime('%H:%M:%S')} - {msg}")
+        logger.info(msg)
+        
+    log("Diagnostic started.")
+    log(f"Current working directory: {os.getcwd()}")
+    log(f"Python path: {sys.path}")
+    log(f"Environment: CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES')}, HF_HUB_OFFLINE={os.environ.get('HF_HUB_OFFLINE')}, TRANSFORMERS_OFFLINE={os.environ.get('TRANSFORMERS_OFFLINE')}")
+    
+    try:
+        log("Importing torch...")
+        import torch
+        log(f"Torch imported successfully. Version: {torch.__version__}")
+        
+        log("Checking torch.cuda.is_available()...")
+        if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
+            log("Bypassing torch.cuda.is_available() because CUDA_VISIBLE_DEVICES is empty.")
+            cuda_avail = False
+        else:
+            cuda_avail = torch.cuda.is_available()
+            log(f"torch.cuda.is_available() returned: {cuda_avail}")
+            
+        log("Importing sentence_transformers...")
+        from sentence_transformers import SentenceTransformer
+        log("sentence_transformers imported successfully.")
+        
+        model_path = Path("recruiter/models/bge-base-en-v1.5")
+        log(f"Checking model path {model_path.resolve()} exists: {model_path.exists()}")
+        if model_path.exists():
+            log(f"Listing model directory: {os.listdir(model_path)}")
+            
+        log("Loading SentenceTransformer model...")
+        model = SentenceTransformer(str(model_path.resolve()), device="cpu")
+        log("SentenceTransformer model loaded successfully.")
+        
+        log("Testing embedding of a sample text...")
+        emb = model.encode(["test text"])
+        log(f"Embedding successful. Shape: {emb.shape}")
+        
+        return JSONResponse({"status": "success", "logs": logs})
+    except Exception as e:
+        log(f"ERROR: {e}")
+        import traceback
+        log(traceback.format_exc())
+        return JSONResponse({"status": "error", "logs": logs})
+
+# ---------------------------------------------------------------------------
 # Storage root for recruiter-uploaded job artifacts
 # (kept separate from data/job_descriptions/ which holds pre-built reference JDs)
 # ---------------------------------------------------------------------------
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 JOBS_DIR = ROOT / "recruiter" / "data" / "jobs"
 JOBS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -333,6 +391,112 @@ class SaveRoleRequest(BaseModel):
     subqueries: Dict[str, List[Dict[str, Any]]]
 
 
+class ReclassifyReqRequest(BaseModel):
+    """Input for requirement re-classification."""
+    name: str
+    description: str
+    category: str
+    requirement_type: str
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
+
+
+@router.post("/reclassify-req")
+def reclassify_req(req: ReclassifyReqRequest) -> JSONResponse:
+    """
+    Re-evaluate the quality of an edited requirement and classify it as GREEN / YELLOW / RED.
+    """
+    system = textwrap.dedent("""\
+        You are an expert job requirements quality analyst for an AI candidate ranking system.
+        Analyze the edited requirement and classify it as GREEN, YELLOW, or RED:
+        - GREEN: Specific, objectively measurable (e.g. "3+ years Python", "AWS Certified Solutions Architect", "BTech in Computer Science")
+        - YELLOW: Somewhat vague but contextually workable (e.g. "present data-driven insights to stakeholders", "experience with cloud platforms")
+        - RED: Too vague to score objectively — missing critical details like tenure years, tool names, or level (e.g. "present insights", "communication skills")
+
+        Return ONLY a valid JSON object — no markdown fences, no explanation, no <think> tags:
+        {
+          "status": "GREEN",
+          "reason": "One sentence explaining the GREEN/YELLOW/RED classification"
+        }
+    """)
+    user = (
+        f"Requirement Name: {req.name}\n"
+        f"Requirement Description: {req.description}\n"
+        f"Category: {req.category}\n"
+        f"Type: {req.requirement_type}"
+    )
+
+    try:
+        if req.api_key and req.model:
+            raw = _call_byok(req.api_key, req.model, system, user, temperature=0.0, base_url=req.base_url)
+        else:
+            raw = _call_llm(system, user, temperature=0.0)
+        res = _parse_json(raw)
+        if not isinstance(res, dict):
+            raise ValueError("LLM returned a non-dict response")
+    except Exception as exc:
+        logger.error("REQ re-classification failed: %s", exc)
+        raise HTTPException(status_code=502, detail=f"REQ re-classification failed: {exc}")
+
+    status = res.get("status") if res.get("status") in {"GREEN", "YELLOW", "RED"} else "YELLOW"
+    reason = res.get("reason") or "Reclassified by AI"
+
+    return JSONResponse({"status": status, "reason": reason})
+
+
+class ReclassifySubqueryRequest(BaseModel):
+    """Input for sub-query re-classification."""
+    text: str
+    scoring_hint: str
+    type: str
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
+
+
+@router.post("/reclassify-subquery")
+def reclassify_subquery(req: ReclassifySubqueryRequest) -> JSONResponse:
+    """
+    Re-evaluate the quality of an edited sub-query and classify it as GREEN / YELLOW / RED.
+    """
+    system = textwrap.dedent("""\
+        You are an expert candidate evaluation rubric analyst for an AI candidate ranking system.
+        Analyze the edited sub-query and classify it as GREEN, YELLOW, or RED:
+        - GREEN: Specific, objectively verifiable from resume text alone (e.g. "Do they have at least 3 years of Python experience?", "Are they AWS certified?")
+        - YELLOW: Somewhat vague or requires subjective assessment (e.g. "Do they have strong communication skills?", "Do they demonstrate leadership?")
+        - RED: Extremely vague, subjective, or impossible to verify from a resume (e.g. "Are they a good team player?", "Are they highly motivated?")
+
+        Return ONLY a valid JSON object — no markdown fences, no explanation, no <think> tags:
+        {
+          "status": "GREEN",
+          "reason": "One sentence explaining the GREEN/YELLOW/RED classification"
+        }
+    """)
+    user = (
+        f"Sub-Query Text: {req.text}\n"
+        f"Scoring Hint: {req.scoring_hint}\n"
+        f"Type: {req.type}"
+    )
+
+    try:
+        if req.api_key and req.model:
+            raw = _call_byok(req.api_key, req.model, system, user, temperature=0.0, base_url=req.base_url)
+        else:
+            raw = _call_llm(system, user, temperature=0.0)
+        res = _parse_json(raw)
+        if not isinstance(res, dict):
+            raise ValueError("LLM returned a non-dict response")
+    except Exception as exc:
+        logger.error("Subquery re-classification failed: %s", exc)
+        raise HTTPException(status_code=502, detail=f"Subquery re-classification failed: {exc}")
+
+    status = res.get("status") if res.get("status") in {"GREEN", "YELLOW", "RED"} else "YELLOW"
+    reason = res.get("reason") or "Reclassified by AI"
+
+    return JSONResponse({"status": status, "reason": reason})
+
+
 # ---------------------------------------------------------------------------
 # Endpoint 1 — Extract + validate REQs from JD text
 # ---------------------------------------------------------------------------
@@ -356,7 +520,7 @@ def extract_reqs(req: ExtractReqsRequest) -> JSONResponse:
         the JD. Every requirement you list must be traceable to a specific sentence or phrase in the JD.
 
         For each explicit requirement, classify it as GREEN, YELLOW, or RED:
-        - GREEN:  Specific, objectively measurable (e.g. "5+ years Python", "AWS Certified Solutions Architect")
+        - GREEN:  Specific, objectively measurable (e.g. "5+ years Python", "AWS Certified Solutions Architect", "BTech in CS")
         - YELLOW: Somewhat vague but contextually workable (e.g. "strong communication skills", "team player")
         - RED:    Too vague to score objectively — missing critical detail like years, tool name, or level
 
@@ -370,6 +534,47 @@ def extract_reqs(req: ExtractReqsRequest) -> JSONResponse:
         requirement_type values:
         - "required" for must-have items stated as mandatory in the JD
         - "preferred" for nice-to-have items stated as optional/preferred in the JD
+
+        ## FEW-SHOT EXEMPLAR TEMPLATES:
+        Below is a complete, consistent example of how a Job Description snippet is parsed into structured requirements:
+
+        ### INPUT JOB DESCRIPTION SNIPPET:
+        "Required Skills:
+        - Strong business analysis and requirement gathering experience.
+        - Proficiency in SQL for data validation and analysis.
+        Experience:
+        - 6+ years in business analysis, product analysis, or related domain."
+
+        ### OUTPUT EXTRACTED REQUIREMENTS (JSON format):
+        [
+          {
+            "req_id": "REQ-001",
+            "name": "Business Analysis & Requirement Gathering",
+            "category": "Core Skill",
+            "requirement_type": "required",
+            "description": "Strong business analysis and requirement gathering experience.",
+            "status": "GREEN",
+            "reason": "Specific core BA capability required."
+          },
+          {
+            "req_id": "REQ-002",
+            "name": "SQL for Data Validation & Analysis",
+            "category": "Core Skill",
+            "requirement_type": "required",
+            "description": "Proficiency in SQL for data validation and analysis.",
+            "status": "GREEN",
+            "reason": "Explicit database query capability."
+          },
+          {
+            "req_id": "REQ-003",
+            "name": "6+ Years Business Analysis or Related Domain",
+            "category": "Experience",
+            "requirement_type": "required",
+            "description": "6+ years in business analysis, product analysis, or related domain.",
+            "status": "GREEN",
+            "reason": "Specific tenure duration and domain defined."
+          }
+        ]
 
         Return ONLY a valid JSON array — no markdown fences, no explanation, no <think> tags:
         [
@@ -428,6 +633,7 @@ async def gen_subqueries(req: GenSubqueriesRequest) -> JSONResponse:
         You are an expert technical recruiter designing candidate evaluation rubrics for an AI scoring system.
 
         For each requirement, generate 2–6 atomic sub-queries evaluable from resume text alone.
+        Follow the exact patterns and structures of reference rubrics (decomposing requirements into structured binary gates and 4-band float rubrics).
 
         Sub-query types:
         - binary: yes/no question → scored 0 (absent) or 1 (present)
@@ -437,6 +643,89 @@ async def gen_subqueries(req: GenSubqueriesRequest) -> JSONResponse:
         - GREEN:  Specific, directly verifiable from resume text
         - YELLOW: Requires reasonable inference from context
         - RED:    Subjective, not verifiable from resume, or overlaps another sub-query
+
+        ## FEW-SHOT EXEMPLAR TEMPLATES:
+        Below is a complete, consistent example of how the extracted requirements from the Job Description are decomposed into measurable sub-queries:
+
+        ### INPUT REQUIREMENTS:
+        [
+          {
+            "req_id": "REQ-001",
+            "name": "Business Analysis & Requirement Gathering",
+            "category": "Core Skill",
+            "description": "Strong business analysis and requirement gathering experience."
+          },
+          {
+            "req_id": "REQ-002",
+            "name": "SQL for Data Validation & Analysis",
+            "category": "Core Skill",
+            "description": "Proficiency in SQL for data validation and analysis."
+          },
+          {
+            "req_id": "REQ-003",
+            "name": "6+ Years Business Analysis or Related Domain",
+            "category": "Experience",
+            "description": "6+ years in business analysis, product analysis, or related domain."
+          }
+        ]
+
+        ### OUTPUT SUB-QUERIES (JSON format):
+        {
+          "REQ-001": [
+            {
+              "sq_id": "SQ001",
+              "text": "Is there evidence that the candidate has served in a Business Analyst (or similar) role?",
+              "type": "binary",
+              "scoring_hint": "0 = no role evidence, 1 = role title/experience as BA/Analyst present",
+              "status": "GREEN",
+              "reason": "Directly verifiable BA role check."
+            },
+            {
+              "sq_id": "SQ002",
+              "text": "Has the candidate performed requirement gathering or elicitation activities?",
+              "type": "binary",
+              "scoring_hint": "0 = not mentioned, 1 = requirement gathering/elicitation explicitly mentioned",
+              "status": "GREEN",
+              "reason": "Verifiable activity check."
+            },
+            {
+              "sq_id": "SQ003",
+              "text": "How strong is their requirement gathering experience?",
+              "type": "float",
+              "scoring_hint": "0.01=No mention; 0.25=Few mentions (1-2 simple projects); 0.50=Some mentions (multiple projects, medium complexity); 1.00=Substantial (strategic role, complex enterprise projects)",
+              "status": "GREEN",
+              "reason": "Qualitative evaluation of experience depth."
+            }
+          ],
+          "REQ-002": [
+            {
+              "sq_id": "SQ004",
+              "text": "Is there evidence that the candidate knows SQL?",
+              "type": "binary",
+              "scoring_hint": "0 = not mentioned, 1 = SQL explicitly listed",
+              "status": "GREEN",
+              "reason": "Binary gate for database skill."
+            },
+            {
+              "sq_id": "SQ005",
+              "text": "Has the candidate used SQL specifically for data validation or analysis?",
+              "type": "binary",
+              "scoring_hint": "0 = no validation/analysis work, 1 = validation/analysis explicitly mentioned",
+              "status": "GREEN",
+              "reason": "Specific use case check."
+            }
+          ],
+          "REQ-003": [
+            {
+              "sq_id": "SQ006",
+              "text": "How many years of relevant experience does the candidate have (relative to expected 6 years minimum)?",
+              "type": "float",
+              "scoring_hint": "0.01=No mention; 0.25=Less than 2 years; 0.50=3 to 5 years; 1.00=6+ years",
+              "status": "GREEN",
+              "reason": "Duration gate checked using a 4-band scale."
+            }
+          ]
+        }
 
         Return ONLY a valid JSON object keyed by req_id — no markdown, no explanation, no <think> tags:
         {
@@ -623,7 +912,8 @@ def save_role(req: SaveRoleRequest, db: Session = Depends(get_db)) -> JSONRespon
     # sessions never collide with the internal project's pre-scored roles
     # (e.g. internal "ReactDeveloper" vs wizard "React_Developer_20260714").
     date_suffix = datetime.utcnow().strftime("%Y%m%d")
-    slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}"
+    unique_suffix = uuid.uuid4().hex[:8]
+    slug = re.sub(r"[^a-zA-Z0-9]+", "_", req.role_name.strip()).strip("_") + f"_{date_suffix}_{unique_suffix}"
 
     # Delete old rankings, scores, and index files immediately when saving the role configuration
     old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
@@ -950,10 +1240,15 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
                 resp.raise_for_status()
                 html = resp.text
 
-                # Matches: ["ID", "filename.ext"]
+                # Matches: data-id="ID" ... data-tooltip="Name.pdf"
                 matches = re.findall(
-                    r'\["([a-zA-Z0-9-_]{28,})","([^"]+\.[a-zA-Z0-9]{3,4})"', html
+                    r'data-id="([a-zA-Z0-9-_]{28,})"[^>]*data-tooltip="([^"]+)"', html
                 )
+                if not matches:
+                    # Fallback regex to capture ["ID", "filename.ext"]
+                    matches = re.findall(
+                        r'\["([a-zA-Z0-9-_]{28,})","([^"]+\.[a-zA-Z0-9]{3,4})"', html
+                    )
                 if not matches:
                     # Fallback regex to capture /file/d/ID links
                     file_ids = list(set(re.findall(r"/file/d/([a-zA-Z0-9-_]+)", html)))
@@ -965,6 +1260,11 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
                     if file_id in seen_ids:
                         continue
                     seen_ids.add(file_id)
+
+                    # Clean Google Drive suffixes from tooltips (e.g. "filename.pdf PDF")
+                    for suffix in [" PDF", " Word", " Document"]:
+                        if file_name.endswith(suffix):
+                            file_name = file_name[:-len(suffix)]
 
                     ext = Path(file_name).suffix.lower()
                     if ext not in allowed_exts:
@@ -1015,15 +1315,21 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
     return downloaded_count
 
 
+_CLEANUP_TIMERS: Dict[str, threading.Timer] = {}
+
+
 def _silent_cleanup_role(slug: str) -> None:
-    """Silently delete original resumes, extracted, processed JSONs, and temporary index files after 10 minutes."""
+    """Silently delete original resumes, extracted, processed JSONs, and temporary index files after the session."""
     import shutil
     orig = Path(f"recruiter/data/original/{slug}")
     extr = Path(f"recruiter/data/extracted/{slug}")
     proc = Path(f"recruiter/data/processed/{slug}")
-    jd_dir = Path(f"recruiter/data/job_descriptions/{slug}")
     idx_file = Path(f"recruiter/data/embeddings/{slug}_index.npz")
     chk_file = Path(f"recruiter/data/embeddings/{slug}_chunks.jsonl")
+    
+    # Remove from active timers tracking
+    _CLEANUP_TIMERS.pop(slug, None)
+    
     try:
         if orig.exists():
             shutil.rmtree(orig)
@@ -1034,9 +1340,6 @@ def _silent_cleanup_role(slug: str) -> None:
         if proc.exists():
             shutil.rmtree(proc)
             logger.info("Auto-cleanup: Deleted processed JSONs directory: %s", proc)
-        if jd_dir.exists():
-            shutil.rmtree(jd_dir)
-            logger.info("Auto-cleanup: Deleted weight config directory: %s", jd_dir)
         if idx_file.exists():
             idx_file.unlink()
             logger.info("Auto-cleanup: Deleted temporary index file: %s", idx_file)
@@ -1054,10 +1357,19 @@ def _silent_cleanup_role(slug: str) -> None:
 def start_scoring(req: StartScoringRequest) -> JSONResponse:
     """
     Launch auto-download and run extraction + scoring pipeline in the background.
-    Schedules silent deletion of data files after 10 minutes.
+    Schedules silent deletion of data files after 30 seconds of completing.
     """
     job_id = uuid.uuid4().hex[:10]
     
+    # Cancel any existing cleanup timer for this role immediately
+    old_timer = _CLEANUP_TIMERS.pop(req.role_slug, None)
+    if old_timer:
+        try:
+            old_timer.cancel()
+            logger.info("Cancelled existing cleanup timer for role %s on start-scoring request", req.role_slug)
+        except Exception as te:
+            logger.warning("Failed to cancel cleanup timer for %s: %s", req.role_slug, te)
+            
     # We don't know the count or ETA until we download. Start with estimate.
     _SCORING_JOBS[job_id] = {
         "status": "running",
@@ -1078,11 +1390,6 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     )
     t.start()
 
-    # Schedule silent auto-cleanup in 10 minutes (600 seconds)
-    cleanup_timer = threading.Timer(600.0, _silent_cleanup_role, args=(req.role_slug,))
-    cleanup_timer.daemon = True
-    cleanup_timer.start()
-
     return JSONResponse({
         "job_id": job_id,
         "resume_count": 0,
@@ -1095,221 +1402,339 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
     job = _SCORING_JOBS.get(job_id)
     if not job:
         return
-        return
 
-    # 0. Delete old rankings, embeddings, and score data to avoid stale UI state
-    old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
-    old_cand_dir = Path("recruiter/data/scores/composed") / slug
-    idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
-    chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
     try:
-        import shutil
-        if old_ranked_file.exists():
-            old_ranked_file.unlink()
-        if old_cand_dir.exists():
-            shutil.rmtree(old_cand_dir)
-        if idx_path_old.exists():
-            idx_path_old.unlink()
-        if chk_path_old.exists():
-            chk_path_old.unlink()
-        job["log"].append("✓ Cleared old scores and index files.")
-    except Exception as exc:
-        logger.warning("Failed to clear old score files for %s: %s", slug, exc)
-
-    resume_dir = Path(f"recruiter/data/original/{slug}")
-    resume_dir.mkdir(parents=True, exist_ok=True)
-
-    # 1. Download resumes in background
-    if link:
-        job["phase"] = "downloading"
-        job["log"].append(f"Downloading files from: {link}")
+        # 0. Delete old rankings, embeddings, and score data to avoid stale UI state
+        old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
+        old_cand_dir = Path("recruiter/data/scores/composed") / slug
+        idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
+        chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
         try:
-            n_dl = _download_resumes_from_link(link, resume_dir)
-            job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
-        except Exception as e:
-            job["status"] = "error"
-            job["log"].append(f"✗ Download failed: {e}")
-            return
-    else:
-        job["log"].append("No shared link provided. Checking local folder...")
-
-    # Count files
-    exts = {".pdf", ".docx", ".doc"}
-    resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
-    if not resumes:
-        job["status"] = "error"
-        job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
-        return
-
-    n = len(resumes)
-    job["total"] = n
-    
-    # Calculate true ETA
-    eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
-    job["eta_seconds"] = eta_seconds
-
-    # Helper function to run scripts with custom recruiter environment variables
-    sub_env = os.environ.copy()
-    if api_key:
-        sub_env["RECRUITER_API_KEY"] = api_key
-    if base_url:
-        sub_env["RECRUITER_BASE_URL"] = base_url
-    if model:
-        sub_env["RECRUITER_MODEL"] = model
-
-    def _run(cmd: list[str], phase: str) -> bool:
-        job["phase"] = phase
-        job["log"].append(f"▶ {' '.join(cmd)}")
-        try:
-            proc = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                env=sub_env,
-            )
-            for line in proc.stdout:
-                line = line.rstrip()
-                if line:
-                    job["log"] = job["log"][-40:] + [line]
-            proc.wait()
-            if proc.returncode != 0:
-                job["status"] = "error"
-                job["log"].append(f"✗ Exited with code {proc.returncode}")
-                return False
+            import shutil
+            if old_ranked_file.exists():
+                old_ranked_file.unlink()
+            if old_cand_dir.exists():
+                shutil.rmtree(old_cand_dir)
+            if idx_path_old.exists():
+                idx_path_old.unlink()
+            if chk_path_old.exists():
+                chk_path_old.unlink()
+            job["log"].append("✓ Cleared old scores and index files.")
         except Exception as exc:
+            logger.warning("Failed to clear old score files for %s: %s", slug, exc)
+
+        resume_dir = Path(f"recruiter/data/original/{slug}")
+        resume_dir.mkdir(parents=True, exist_ok=True)
+
+        times = {"download": 0.0, "extract": 0.0, "index": 0.0, "score": 0.0}
+        t_download_start = time.time()
+
+        # 1. Download resumes in background
+        if link:
+            job["phase"] = "downloading"
+            job["log"].append(f"Downloading files from: {link}")
+            try:
+                n_dl = _download_resumes_from_link(link, resume_dir)
+                job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
+                times["download"] = time.time() - t_download_start
+            except Exception as e:
+                job["status"] = "error"
+                job["log"].append(f"✗ Download failed: {e}")
+                return
+        else:
+            job["log"].append("No shared link provided. Checking local folder...")
+
+        # Count files
+        exts = {".pdf", ".docx", ".doc"}
+        resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
+        if not resumes:
             job["status"] = "error"
-            job["log"].append(f"✗ {exc}")
-            return False
-        return True
+            job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
+            return
 
-    # 1.5 Generate recruiter WeightConfig JSON dynamically from SQLite DB and user input
-    try:
-        from src.models.database import get_db_session
-        db = get_db_session()
-        role_row = db.query(Role).filter(Role.name == slug).first()
-        if role_row:
-            req_rows = db.query(Requirement).filter(Requirement.role_id == role_row.id).all()
-            weight_list = []
-            for r in req_rows:
-                pct = 100.0 / len(req_rows)
-                if weights and r.req_id in weights:
-                    pct = weights[r.req_id]
-                
-                weight_list.append({
-                    "requirement_id": r.req_id,
-                    "requirement_name": r.name,
-                    "category": r.category,
-                    "type": r.requirement_type,
-                    "weight_percentage": float(pct)
-                })
-            
-            wc_dir = Path("recruiter/data/job_descriptions") / slug
-            wc_dir.mkdir(parents=True, exist_ok=True)
-            wc_file = wc_dir / f"{slug}_WeightConfig_recruiter.json"
-            
-            wc_data = {
-                "role": slug,
-                "config_name": "recruiter",
-                "created_by": "recruiter_wizard",
-                "created_date": datetime.utcnow().strftime("%Y-%m-%d"),
-                "scale_factor": 1.0,
-                "requirements_weights": weight_list
-            }
-            wc_file.write_text(json.dumps(wc_data, indent=2, ensure_ascii=False), encoding="utf-8")
-            job["log"].append("✓ Weight configuration JSON generated successfully.")
-        db.close()
-    except Exception as we:
-        logger.error("Failed to generate recruiter WeightConfig: %s", we)
-        job["log"].append(f"⚠ Warning: WeightConfig generation failed: {we}")
-
-    # 1.6 Generate recruiter SubQuery Markdown file dynamically if missing or needs update (self-healing)
-    try:
-        job_dir = JOBS_DIR / slug
-        reqs_file = job_dir / "requirements.json"
-        subqueries_file = job_dir / "subqueries.json"
+        n = len(resumes)
+        job["total"] = n
         
-        if reqs_file.exists() and subqueries_file.exists():
-            reqs_data = json.loads(reqs_file.read_text(encoding="utf-8"))
-            subqueries_data = json.loads(subqueries_file.read_text(encoding="utf-8"))
+        # Calculate true ETA
+        eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
+        job["eta_seconds"] = eta_seconds
+
+        # Helper function to run scripts with custom recruiter environment variables
+        sub_env = os.environ.copy()
+        sub_env["OMP_NUM_THREADS"] = "1"
+        sub_env["MKL_NUM_THREADS"] = "1"
+        sub_env["OPENBLAS_NUM_THREADS"] = "1"
+        sub_env["VECLIB_MAXIMUM_THREADS"] = "1"
+        sub_env["NUMEXPR_NUM_THREADS"] = "1"
+        sub_env["CUDA_VISIBLE_DEVICES"] = ""  # Force CPU-only mode for PyTorch to prevent container startup hangs
+        sub_env["HF_HUB_OFFLINE"] = "1"       # Force offline mode for Hugging Face Hub
+        sub_env["TRANSFORMERS_OFFLINE"] = "1"  # Force offline mode for Transformers
+        sub_env["PYTHONUNBUFFERED"] = "1"     # Disable output buffering for real-time logs
+        sub_env["TOKENIZERS_PARALLELISM"] = "false"  # Disable tokenizers parallelism to prevent deadlocks
+        if api_key:
+            sub_env["RECRUITER_API_KEY"] = api_key
+        if base_url:
+            sub_env["RECRUITER_BASE_URL"] = base_url
+        if model:
+            sub_env["RECRUITER_MODEL"] = model
+
+        def _run(cmd: list[str], phase: str) -> bool:
+            job["phase"] = phase
+            job["log"].append(f"▶ {' '.join(cmd)}")
+            try:
+                proc = subprocess.Popen(
+                    cmd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    env=sub_env,
+                )
+                for line in proc.stdout:
+                    line = line.rstrip()
+                    if line:
+                        job["log"] = job["log"][-40:] + [line]
+                proc.wait()
+                if proc.returncode != 0:
+                    job["status"] = "error"
+                    job["log"].append(f"✗ Exited with code {proc.returncode}")
+                    return False
+            except Exception as exc:
+                job["status"] = "error"
+                job["log"].append(f"✗ {exc}")
+                return False
+            return True
+
+        # 1.5 Generate recruiter WeightConfig JSON dynamically from SQLite DB and user input
+        try:
+            from recruiter.src.models.database import get_db_session
+            db = get_db_session()
+            role_row = db.query(Role).filter(Role.name == slug).first()
+            if role_row:
+                req_rows = db.query(Requirement).filter(Requirement.role_id == role_row.id).all()
+                weight_list = []
+                for r in req_rows:
+                    pct = 100.0 / len(req_rows)
+                    if weights and r.req_id in weights:
+                        pct = weights[r.req_id]
+                    
+                    weight_list.append({
+                        "requirement_id": r.req_id,
+                        "requirement_name": r.name,
+                        "category": r.category,
+                        "type": r.requirement_type,
+                        "weight_percentage": float(pct)
+                    })
+                
+                wc_dir = Path("recruiter/data/job_descriptions") / slug
+                wc_dir.mkdir(parents=True, exist_ok=True)
+                wc_file = wc_dir / f"{slug}_WeightConfig_recruiter.json"
+                
+                wc_data = {
+                    "role": slug,
+                    "config_name": "recruiter",
+                    "created_by": "recruiter_wizard",
+                    "created_date": datetime.utcnow().strftime("%Y-%m-%d"),
+                    "scale_factor": 1.0,
+                    "requirements_weights": weight_list
+                }
+                wc_file.write_text(json.dumps(wc_data, indent=2, ensure_ascii=False), encoding="utf-8")
+                job["log"].append("✓ Weight configuration JSON generated successfully.")
+            db.close()
+        except Exception as we:
+            logger.error("Failed to generate recruiter WeightConfig: %s", we)
+            job["log"].append(f"⚠ Warning: WeightConfig generation failed: {we}")
+
+        # 1.6 Generate recruiter SubQuery Markdown file dynamically if missing or needs update (self-healing)
+        try:
+            job_dir = JOBS_DIR / slug
+            reqs_file = job_dir / "requirements.json"
+            subqueries_file = job_dir / "subqueries.json"
             
-            jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
-            jd_desc_dir.mkdir(parents=True, exist_ok=True)
+            if reqs_file.exists() and subqueries_file.exists():
+                reqs_data = json.loads(reqs_file.read_text(encoding="utf-8"))
+                subqueries_data = json.loads(subqueries_file.read_text(encoding="utf-8"))
+                
+                jd_desc_dir = ROOT / "recruiter" / "data" / "job_descriptions" / slug
+                jd_desc_dir.mkdir(parents=True, exist_ok=True)
+                
+                md_lines = [
+                    f"# {slug}: Sub-Query Decomposition",
+                    "",
+                    "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
+                    "",
+                    "---",
+                    "",
+                    "## SECTION 1: REQUIREMENTS",
+                    ""
+                ]
+                for r in reqs_data:
+                    r_id = r.get("req_id", "REQ-???")
+                    r_name = r.get("name", "Unknown")
+                    r_cat = r.get("category", "Core Skill")
+                    sq_list = subqueries_data.get(r_id, [])
+                    
+                    md_lines.append(f"### {r_id}: {r_name}")
+                    md_lines.append("")
+                    md_lines.append(f"**Category:** {r_cat}  ")
+                    md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
+                    
+                    formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
+                    formula = " * ".join(formula_parts)
+                    md_lines.append(f"**Scoring Formula:** {formula}  ")
+                    md_lines.append("")
+                    
+                    md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
+                    md_lines.append("|---|-----------|------|-------|-------------------|")
+                    for sq in sq_list:
+                        sq_id = sq.get("sq_id") or "SQ???"
+                        text = sq.get("text") or ""
+                        sq_type = sq.get("type") or "Binary"
+                        scale = sq.get("scale") or "0 or 1"
+                        method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
+                        md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
+                    
+                    md_lines.append("")
+                    md_lines.append("---")
+                    md_lines.append("")
+
+                sq_md_content = "\n".join(md_lines)
+                (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+                (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
+                job["log"].append("✓ SubQuery markdown generated successfully (self-healing).")
+        except Exception as sqe:
+            logger.error("Failed to generate recruiter SubQuery markdown in pipeline: %s", sqe)
+            job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
+
+        # 2. Extract resumes using the recruiter extraction script
+        t_extract_start = time.time()
+        ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
+        times["extract"] = time.time() - t_extract_start
+        if not ok:
+            return
+
+        # 2.5 Build dynamic embedding index containing only the recruiter's resumes
+        t_index_start = time.time()
+        idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
+        chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
+        ok = _run(
+            [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
+            "indexing"
+        )
+        times["index"] = time.time() - t_index_start
+        if not ok:
+            return
+
+        # 3. Score resumes using the recruiter scoring script and dynamic index file
+        t_score_start = time.time()
+        ok = _run(
+            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
+            "scoring"
+        )
+        times["score"] = time.time() - t_score_start
+        if not ok:
+            return
+
+        # Write and print the performance summary
+        total_time = sum(times.values())
+        summary_log = [
+            "--------------------------------------------------",
+            "📊 PIPELINE PERFORMANCE PROFILE:",
+            "--------------------------------------------------",
+            f"1. Download Phase:     {times['download']:.2f} seconds",
+            f"2. Extraction Phase:   {times['extract']:.2f} seconds ({n} resumes)",
+            f"3. Indexing Phase:     {times['index']:.2f} seconds",
+            f"4. Scoring Phase:      {times['score']:.2f} seconds",
+            "--------------------------------------------------",
+            f"⏱️ TOTAL PIPELINE TIME: {total_time:.2f} seconds",
+            "--------------------------------------------------"
+        ]
+        
+        for line in summary_log:
+            job["log"].append(line)
+            logger.info(line)
             
-            md_lines = [
-                f"# {slug}: Sub-Query Decomposition",
-                "",
-                "**Purpose:** Break down each requirement from the JD into atomic, measurable sub-queries.",
-                "",
-                "---",
-                "",
-                "## SECTION 1: REQUIREMENTS",
-                ""
+        # Write to performance profile JSON file for later analysis
+        try:
+            profile_path = Path("recruiter/data/scores/composed") / f"{slug}_performance_profile.json"
+            profile_path.parent.mkdir(parents=True, exist_ok=True)
+            profile_data = {
+                "role": slug,
+                "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+                "num_resumes": n,
+                "phases": {
+                    "download_seconds": round(times["download"], 2),
+                    "extraction_seconds": round(times["extract"], 2),
+                    "indexing_seconds": round(times["index"], 2),
+                    "scoring_seconds": round(times["score"], 2)
+                },
+                "total_seconds": round(total_time, 2)
+            }
+            profile_path.write_text(json.dumps(profile_data, indent=2), encoding="utf-8")
+        except Exception as pfe:
+            logger.error("Failed to write performance profile JSON: %s", pfe)
+
+        # 4. Package and export job run results (including Google Drive transfer if configured)
+        try:
+            from recruiter.src.services.gdrive_exporter import package_and_export_job_run
+            package_and_export_job_run(slug, job_log=job["log"])
+        except Exception as exc:
+            logger.exception("Failed to run Google Drive export pipeline")
+            job["log"].append(f"⚠ Export pipeline failed: {exc}")
+
+        job["status"] = "done"
+        job["phase"] = "done"
+        job["log"].append("✓ Scoring complete — click ↻ Check for Rankings")
+
+    finally:
+        # Enforce valid end status
+        if job.get("status") not in ("done", "error"):
+            job["status"] = "error"
+            job["log"].append("✗ Pipeline ended unexpectedly.")
+            
+        # Log whatever performance stats we managed to gather before any early return or crash
+        if "times" in locals():
+            total_time = sum(times.values())
+            resumes_count = n if "n" in locals() else 0
+            summary_log = [
+                "--------------------------------------------------",
+                "📊 PIPELINE PERFORMANCE PROFILE:",
+                "--------------------------------------------------",
+                f"1. Download Phase:     {times.get('download', 0.0):.2f} seconds",
+                f"2. Extraction Phase:   {times.get('extract', 0.0):.2f} seconds ({resumes_count} resumes)",
+                f"3. Indexing Phase:     {times.get('index', 0.0):.2f} seconds",
+                f"4. Scoring Phase:      {times.get('score', 0.0):.2f} seconds",
+                "--------------------------------------------------",
+                f"⏱️ TOTAL PIPELINE TIME: {total_time:.2f} seconds",
+                "--------------------------------------------------"
             ]
-            for r in reqs_data:
-                r_id = r.get("req_id", "REQ-???")
-                r_name = r.get("name", "Unknown")
-                r_cat = r.get("category", "Core Skill")
-                sq_list = subqueries_data.get(r_id, [])
+            
+            # Print performance metrics block only if not already printed
+            has_profile = False
+            for line in job["log"][-20:]:
+                if "📊 PIPELINE PERFORMANCE PROFILE:" in line:
+                    has_profile = True
+                    break
+            if not has_profile:
+                for line in summary_log:
+                    job["log"].append(line)
+                    logger.info(line)
+
+        # Cancel any existing cleanup timer
+        old_timer = _CLEANUP_TIMERS.pop(slug, None)
+        if old_timer:
+            try:
+                old_timer.cancel()
+                logger.info("Cancelled older cleanup timer for %s", slug)
+            except Exception:
+                pass
                 
-                md_lines.append(f"### {r_id}: {r_name}")
-                md_lines.append("")
-                md_lines.append(f"**Category:** {r_cat}  ")
-                md_lines.append(f"**Sub-Query Count:** {len(sq_list)}  ")
-                
-                formula_parts = [sq.get("sq_id") or f"SQ{idx+1:03d}" for idx, sq in enumerate(sq_list)]
-                formula = " * ".join(formula_parts)
-                md_lines.append(f"**Scoring Formula:** {formula}  ")
-                md_lines.append("")
-                
-                md_lines.append("| # | Sub-Query | Type | Scale | Assessment Method |")
-                md_lines.append("|---|-----------|------|-------|-------------------|")
-                for sq in sq_list:
-                    sq_id = sq.get("sq_id") or "SQ???"
-                    text = sq.get("text") or ""
-                    sq_type = sq.get("type") or "Binary"
-                    scale = sq.get("scale") or "0 or 1"
-                    method = sq.get("reason") or sq.get("scoring_hint") or "Look for evidence in resume"
-                    md_lines.append(f"| {sq_id} | {text} | {sq_type} | {scale} | {method} |")
-                
-                md_lines.append("")
-                md_lines.append("---")
-                md_lines.append("")
-
-            sq_md_content = "\n".join(md_lines)
-            (jd_desc_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-            (job_dir / f"{slug}_SubQuery.md").write_text(sq_md_content, encoding="utf-8")
-            job["log"].append("✓ SubQuery markdown generated successfully (self-healing).")
-    except Exception as sqe:
-        logger.error("Failed to generate recruiter SubQuery markdown in pipeline: %s", sqe)
-        job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
-
-    # 2. Extract resumes using the recruiter extraction script
-    ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
-    if not ok:
-        return
-
-    # 2.5 Build dynamic embedding index containing only the recruiter's resumes
-    idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
-    chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
-    ok = _run(
-        [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
-        "indexing"
-    )
-    if not ok:
-        return
-
-    # 3. Score resumes using the recruiter scoring script and dynamic index file
-    ok = _run(
-        [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
-        "scoring"
-    )
-    if not ok:
-        return
-
-    job["status"] = "done"
-    job["phase"] = "done"
-    job["log"].append("✓ Scoring complete — click ↻ Check for Rankings")
+        # Start a 1-hour cleanup timer
+        cleanup_timer = threading.Timer(3600.0, _silent_cleanup_role, args=(slug,))
+        cleanup_timer.daemon = True
+        cleanup_timer.start()
+        _CLEANUP_TIMERS[slug] = cleanup_timer
+        job["log"].append("✓ Scheduled data auto-cleanup in 1 hour.")
+        logger.info("Scheduled 1-hour cleanup timer for role %s", slug)
 
 
 # ---------------------------------------------------------------------------

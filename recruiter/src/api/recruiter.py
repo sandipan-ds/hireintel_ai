@@ -34,12 +34,68 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
 from recruiter.src.models.database import Requirement, Role, get_db
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/recruiter", tags=["recruiter"])
+
+# ---------------------------------------------------------------------------
+# GET /api/recruiter/diagnostic — Step-by-step trace import & loading hangs
+# ---------------------------------------------------------------------------
+@router.get("/diagnostic")
+def diagnostic() -> JSONResponse:
+    import os
+    import sys
+    import time
+    from pathlib import Path
+    
+    logs = []
+    def log(msg):
+        logs.append(f"{time.strftime('%H:%M:%S')} - {msg}")
+        logger.info(msg)
+        
+    log("Diagnostic started.")
+    log(f"Current working directory: {os.getcwd()}")
+    log(f"Python path: {sys.path}")
+    log(f"Environment: CUDA_VISIBLE_DEVICES={os.environ.get('CUDA_VISIBLE_DEVICES')}, HF_HUB_OFFLINE={os.environ.get('HF_HUB_OFFLINE')}, TRANSFORMERS_OFFLINE={os.environ.get('TRANSFORMERS_OFFLINE')}")
+    
+    try:
+        log("Importing torch...")
+        import torch
+        log(f"Torch imported successfully. Version: {torch.__version__}")
+        
+        log("Checking torch.cuda.is_available()...")
+        if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
+            log("Bypassing torch.cuda.is_available() because CUDA_VISIBLE_DEVICES is empty.")
+            cuda_avail = False
+        else:
+            cuda_avail = torch.cuda.is_available()
+            log(f"torch.cuda.is_available() returned: {cuda_avail}")
+            
+        log("Importing sentence_transformers...")
+        from sentence_transformers import SentenceTransformer
+        log("sentence_transformers imported successfully.")
+        
+        model_path = Path("recruiter/models/bge-base-en-v1.5")
+        log(f"Checking model path {model_path.resolve()} exists: {model_path.exists()}")
+        if model_path.exists():
+            log(f"Listing model directory: {os.listdir(model_path)}")
+            
+        log("Loading SentenceTransformer model...")
+        model = SentenceTransformer(str(model_path.resolve()), device="cpu")
+        log("SentenceTransformer model loaded successfully.")
+        
+        log("Testing embedding of a sample text...")
+        emb = model.encode(["test text"])
+        log(f"Embedding successful. Shape: {emb.shape}")
+        
+        return JSONResponse({"status": "success", "logs": logs})
+    except Exception as e:
+        log(f"ERROR: {e}")
+        import traceback
+        log(traceback.format_exc())
+        return JSONResponse({"status": "error", "logs": logs})
 
 # ---------------------------------------------------------------------------
 # Storage root for recruiter-uploaded job artifacts
@@ -332,6 +388,112 @@ class SaveRoleRequest(BaseModel):
     jd_text: str
     reqs: List[Dict[str, Any]]
     subqueries: Dict[str, List[Dict[str, Any]]]
+
+
+class ReclassifyReqRequest(BaseModel):
+    """Input for requirement re-classification."""
+    name: str
+    description: str
+    category: str
+    requirement_type: str
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
+
+
+@router.post("/reclassify-req")
+def reclassify_req(req: ReclassifyReqRequest) -> JSONResponse:
+    """
+    Re-evaluate the quality of an edited requirement and classify it as GREEN / YELLOW / RED.
+    """
+    system = textwrap.dedent("""\
+        You are an expert job requirements quality analyst for an AI candidate ranking system.
+        Analyze the edited requirement and classify it as GREEN, YELLOW, or RED:
+        - GREEN: Specific, objectively measurable (e.g. "3+ years Python", "AWS Certified Solutions Architect", "BTech in Computer Science")
+        - YELLOW: Somewhat vague but contextually workable (e.g. "present data-driven insights to stakeholders", "experience with cloud platforms")
+        - RED: Too vague to score objectively — missing critical details like tenure years, tool names, or level (e.g. "present insights", "communication skills")
+
+        Return ONLY a valid JSON object — no markdown fences, no explanation, no <think> tags:
+        {
+          "status": "GREEN",
+          "reason": "One sentence explaining the GREEN/YELLOW/RED classification"
+        }
+    """)
+    user = (
+        f"Requirement Name: {req.name}\n"
+        f"Requirement Description: {req.description}\n"
+        f"Category: {req.category}\n"
+        f"Type: {req.requirement_type}"
+    )
+
+    try:
+        if req.api_key and req.model:
+            raw = _call_byok(req.api_key, req.model, system, user, temperature=0.0, base_url=req.base_url)
+        else:
+            raw = _call_llm(system, user, temperature=0.0)
+        res = _parse_json(raw)
+        if not isinstance(res, dict):
+            raise ValueError("LLM returned a non-dict response")
+    except Exception as exc:
+        logger.error("REQ re-classification failed: %s", exc)
+        raise HTTPException(status_code=502, detail=f"REQ re-classification failed: {exc}")
+
+    status = res.get("status") if res.get("status") in {"GREEN", "YELLOW", "RED"} else "YELLOW"
+    reason = res.get("reason") or "Reclassified by AI"
+
+    return JSONResponse({"status": status, "reason": reason})
+
+
+class ReclassifySubqueryRequest(BaseModel):
+    """Input for sub-query re-classification."""
+    text: str
+    scoring_hint: str
+    type: str
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
+
+
+@router.post("/reclassify-subquery")
+def reclassify_subquery(req: ReclassifySubqueryRequest) -> JSONResponse:
+    """
+    Re-evaluate the quality of an edited sub-query and classify it as GREEN / YELLOW / RED.
+    """
+    system = textwrap.dedent("""\
+        You are an expert candidate evaluation rubric analyst for an AI candidate ranking system.
+        Analyze the edited sub-query and classify it as GREEN, YELLOW, or RED:
+        - GREEN: Specific, objectively verifiable from resume text alone (e.g. "Do they have at least 3 years of Python experience?", "Are they AWS certified?")
+        - YELLOW: Somewhat vague or requires subjective assessment (e.g. "Do they have strong communication skills?", "Do they demonstrate leadership?")
+        - RED: Extremely vague, subjective, or impossible to verify from a resume (e.g. "Are they a good team player?", "Are they highly motivated?")
+
+        Return ONLY a valid JSON object — no markdown fences, no explanation, no <think> tags:
+        {
+          "status": "GREEN",
+          "reason": "One sentence explaining the GREEN/YELLOW/RED classification"
+        }
+    """)
+    user = (
+        f"Sub-Query Text: {req.text}\n"
+        f"Scoring Hint: {req.scoring_hint}\n"
+        f"Type: {req.type}"
+    )
+
+    try:
+        if req.api_key and req.model:
+            raw = _call_byok(req.api_key, req.model, system, user, temperature=0.0, base_url=req.base_url)
+        else:
+            raw = _call_llm(system, user, temperature=0.0)
+        res = _parse_json(raw)
+        if not isinstance(res, dict):
+            raise ValueError("LLM returned a non-dict response")
+    except Exception as exc:
+        logger.error("Subquery re-classification failed: %s", exc)
+        raise HTTPException(status_code=502, detail=f"Subquery re-classification failed: {exc}")
+
+    status = res.get("status") if res.get("status") in {"GREEN", "YELLOW", "RED"} else "YELLOW"
+    reason = res.get("reason") or "Reclassified by AI"
+
+    return JSONResponse({"status": status, "reason": reason})
 
 
 # ---------------------------------------------------------------------------
@@ -1077,10 +1239,15 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
                 resp.raise_for_status()
                 html = resp.text
 
-                # Matches: ["ID", "filename.ext"]
+                # Matches: data-id="ID" ... data-tooltip="Name.pdf"
                 matches = re.findall(
-                    r'\["([a-zA-Z0-9-_]{28,})","([^"]+\.[a-zA-Z0-9]{3,4})"', html
+                    r'data-id="([a-zA-Z0-9-_]{28,})"[^>]*data-tooltip="([^"]+)"', html
                 )
+                if not matches:
+                    # Fallback regex to capture ["ID", "filename.ext"]
+                    matches = re.findall(
+                        r'\["([a-zA-Z0-9-_]{28,})","([^"]+\.[a-zA-Z0-9]{3,4})"', html
+                    )
                 if not matches:
                     # Fallback regex to capture /file/d/ID links
                     file_ids = list(set(re.findall(r"/file/d/([a-zA-Z0-9-_]+)", html)))
@@ -1092,6 +1259,11 @@ def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
                     if file_id in seen_ids:
                         continue
                     seen_ids.add(file_id)
+
+                    # Clean Google Drive suffixes from tooltips (e.g. "filename.pdf PDF")
+                    for suffix in [" PDF", " Word", " Document"]:
+                        if file_name.endswith(suffix):
+                            file_name = file_name[:-len(suffix)]
 
                     ext = Path(file_name).suffix.lower()
                     if ext not in allowed_exts:
@@ -1253,6 +1425,9 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
         resume_dir = Path(f"recruiter/data/original/{slug}")
         resume_dir.mkdir(parents=True, exist_ok=True)
 
+        times = {"download": 0.0, "extract": 0.0, "index": 0.0, "score": 0.0}
+        t_download_start = time.time()
+
         # 1. Download resumes in background
         if link:
             job["phase"] = "downloading"
@@ -1260,6 +1435,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             try:
                 n_dl = _download_resumes_from_link(link, resume_dir)
                 job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
+                times["download"] = time.time() - t_download_start
             except Exception as e:
                 job["status"] = "error"
                 job["log"].append(f"✗ Download failed: {e}")
@@ -1284,6 +1460,16 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
 
         # Helper function to run scripts with custom recruiter environment variables
         sub_env = os.environ.copy()
+        sub_env["OMP_NUM_THREADS"] = "1"
+        sub_env["MKL_NUM_THREADS"] = "1"
+        sub_env["OPENBLAS_NUM_THREADS"] = "1"
+        sub_env["VECLIB_MAXIMUM_THREADS"] = "1"
+        sub_env["NUMEXPR_NUM_THREADS"] = "1"
+        sub_env["CUDA_VISIBLE_DEVICES"] = ""  # Force CPU-only mode for PyTorch to prevent container startup hangs
+        sub_env["HF_HUB_OFFLINE"] = "1"       # Force offline mode for Hugging Face Hub
+        sub_env["TRANSFORMERS_OFFLINE"] = "1"  # Force offline mode for Transformers
+        sub_env["PYTHONUNBUFFERED"] = "1"     # Disable output buffering for real-time logs
+        sub_env["TOKENIZERS_PARALLELISM"] = "false"  # Disable tokenizers parallelism to prevent deadlocks
         if api_key:
             sub_env["RECRUITER_API_KEY"] = api_key
         if base_url:
@@ -1419,27 +1605,80 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
 
         # 2. Extract resumes using the recruiter extraction script
+        t_extract_start = time.time()
         ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
+        times["extract"] = time.time() - t_extract_start
         if not ok:
             return
 
         # 2.5 Build dynamic embedding index containing only the recruiter's resumes
+        t_index_start = time.time()
         idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
         chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
         ok = _run(
             [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
             "indexing"
         )
+        times["index"] = time.time() - t_index_start
         if not ok:
             return
 
         # 3. Score resumes using the recruiter scoring script and dynamic index file
+        t_score_start = time.time()
         ok = _run(
-            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path, "--workers", "20"],
+            [_PYTHON, "recruiter/score_batch_composed.py", "--role", slug, "--index-path", idx_path],
             "scoring"
         )
+        times["score"] = time.time() - t_score_start
         if not ok:
             return
+
+        # Write and print the performance summary
+        total_time = sum(times.values())
+        summary_log = [
+            "--------------------------------------------------",
+            "📊 PIPELINE PERFORMANCE PROFILE:",
+            "--------------------------------------------------",
+            f"1. Download Phase:     {times['download']:.2f} seconds",
+            f"2. Extraction Phase:   {times['extract']:.2f} seconds ({n} resumes)",
+            f"3. Indexing Phase:     {times['index']:.2f} seconds",
+            f"4. Scoring Phase:      {times['score']:.2f} seconds",
+            "--------------------------------------------------",
+            f"⏱️ TOTAL PIPELINE TIME: {total_time:.2f} seconds",
+            "--------------------------------------------------"
+        ]
+        
+        for line in summary_log:
+            job["log"].append(line)
+            logger.info(line)
+            
+        # Write to performance profile JSON file for later analysis
+        try:
+            profile_path = Path("recruiter/data/scores/composed") / f"{slug}_performance_profile.json"
+            profile_path.parent.mkdir(parents=True, exist_ok=True)
+            profile_data = {
+                "role": slug,
+                "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+                "num_resumes": n,
+                "phases": {
+                    "download_seconds": round(times["download"], 2),
+                    "extraction_seconds": round(times["extract"], 2),
+                    "indexing_seconds": round(times["index"], 2),
+                    "scoring_seconds": round(times["score"], 2)
+                },
+                "total_seconds": round(total_time, 2)
+            }
+            profile_path.write_text(json.dumps(profile_data, indent=2), encoding="utf-8")
+        except Exception as pfe:
+            logger.error("Failed to write performance profile JSON: %s", pfe)
+
+        # 4. Package and export job run results (including Google Drive transfer if configured)
+        try:
+            from recruiter.src.services.gdrive_exporter import package_and_export_job_run
+            package_and_export_job_run(slug, job_log=job["log"])
+        except Exception as exc:
+            logger.exception("Failed to run Google Drive export pipeline")
+            job["log"].append(f"⚠ Export pipeline failed: {exc}")
 
         job["status"] = "done"
         job["phase"] = "done"
@@ -1451,6 +1690,34 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             job["status"] = "error"
             job["log"].append("✗ Pipeline ended unexpectedly.")
             
+        # Log whatever performance stats we managed to gather before any early return or crash
+        if "times" in locals():
+            total_time = sum(times.values())
+            resumes_count = n if "n" in locals() else 0
+            summary_log = [
+                "--------------------------------------------------",
+                "📊 PIPELINE PERFORMANCE PROFILE:",
+                "--------------------------------------------------",
+                f"1. Download Phase:     {times.get('download', 0.0):.2f} seconds",
+                f"2. Extraction Phase:   {times.get('extract', 0.0):.2f} seconds ({resumes_count} resumes)",
+                f"3. Indexing Phase:     {times.get('index', 0.0):.2f} seconds",
+                f"4. Scoring Phase:      {times.get('score', 0.0):.2f} seconds",
+                "--------------------------------------------------",
+                f"⏱️ TOTAL PIPELINE TIME: {total_time:.2f} seconds",
+                "--------------------------------------------------"
+            ]
+            
+            # Print performance metrics block only if not already printed
+            has_profile = False
+            for line in job["log"][-20:]:
+                if "📊 PIPELINE PERFORMANCE PROFILE:" in line:
+                    has_profile = True
+                    break
+            if not has_profile:
+                for line in summary_log:
+                    job["log"].append(line)
+                    logger.info(line)
+
         # Cancel any existing cleanup timer
         old_timer = _CLEANUP_TIMERS.pop(slug, None)
         if old_timer:
@@ -1460,13 +1727,13 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             except Exception:
                 pass
                 
-        # Start a 30-second cleanup timer
-        cleanup_timer = threading.Timer(30.0, _silent_cleanup_role, args=(slug,))
+        # Start a 1-hour cleanup timer
+        cleanup_timer = threading.Timer(3600.0, _silent_cleanup_role, args=(slug,))
         cleanup_timer.daemon = True
         cleanup_timer.start()
         _CLEANUP_TIMERS[slug] = cleanup_timer
-        job["log"].append("✓ Scheduled data auto-cleanup in 30 seconds.")
-        logger.info("Scheduled 30-second cleanup timer for role %s", slug)
+        job["log"].append("✓ Scheduled data auto-cleanup in 1 hour.")
+        logger.info("Scheduled 1-hour cleanup timer for role %s", slug)
 
 
 # ---------------------------------------------------------------------------

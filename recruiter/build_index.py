@@ -360,7 +360,21 @@ def _load_embedder(model_name: str):
             "sentence-transformers is required to build the index. "
             "Install it with: pip install sentence-transformers"
         ) from e
-    return SentenceTransformer(model_name)
+        
+    import torch
+    if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
+        device = "cpu"
+    else:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    
+    # Try local models folder first
+    local_path = Path("recruiter/models/bge-base-en-v1.5")
+    if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
+        model_to_load = str(local_path.resolve())
+    else:
+        model_to_load = model_name
+        
+    return SentenceTransformer(model_to_load, device=device)
 
 
 def embed_texts(

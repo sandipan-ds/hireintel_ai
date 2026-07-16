@@ -1,0 +1,94 @@
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 SQL Proficiency SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 System Knowledge SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0003 Leadership Experience SQ014_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 SQL Proficiency SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0002 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Leadership & Mentoring SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0006 Leadership Experience SQ014_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Technical Translation SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Leadership & Mentoring SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Leadership Experience SQ014_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0010 Cross-functional Experience SQ015_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 SQL Proficiency SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 System Knowledge SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0004 Cross-functional Experience SQ015_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Stakeholder Management & Communication SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Technical Translation SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Leadership & Mentoring SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Leadership Experience SQ014_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0009 Cross-functional Experience SQ015_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Technical Translation SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Leadership & Mentoring SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Leadership Experience SQ014_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0005 Cross-functional Experience SQ015_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Stakeholder Management & Communication SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Technical Translation SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Leadership & Mentoring SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0008 Cross-functional Experience SQ015_01 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 SQL Proficiency SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 Agile & Scrum SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 System Knowledge SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0001 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Process Mapping & Improvement SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Analytics & Reporting Tools SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 SQL Proficiency SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Documentation & User Story Writing SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 BI Tools SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Domain Experience SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260716_4b55b9ac_CAND_0007 Leadership & Mentoring SQ014 — no matching text found
