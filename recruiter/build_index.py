@@ -353,6 +353,7 @@ def _load_embedder(model_name: str):
     (optional-at-test-time) sentence-transformers dependency. The model
     download only happens on the first real build.
     """
+    print("[DIAG] Importing sentence_transformers...", flush=True)
     try:
         from sentence_transformers import SentenceTransformer
     except ImportError as e:
@@ -361,11 +362,14 @@ def _load_embedder(model_name: str):
             "Install it with: pip install sentence-transformers"
         ) from e
         
+    print("[DIAG] Importing torch...", flush=True)
     import torch
     if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
         device = "cpu"
     else:
         device = "cuda" if torch.cuda.is_available() else "cpu"
+    
+    print(f"[DIAG] PyTorch device resolved to: {device}", flush=True)
     
     # Try local models folder first
     local_path = Path("recruiter/models/bge-base-en-v1.5")
@@ -374,7 +378,10 @@ def _load_embedder(model_name: str):
     else:
         model_to_load = model_name
         
-    return SentenceTransformer(model_to_load, device=device)
+    print(f"[DIAG] Loading SentenceTransformer for model: {model_to_load}...", flush=True)
+    model = SentenceTransformer(model_to_load, device=device)
+    print("[DIAG] SentenceTransformer loaded successfully!", flush=True)
+    return model
 
 
 def embed_texts(

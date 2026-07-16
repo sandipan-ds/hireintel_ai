@@ -1471,6 +1471,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
         sub_env["TRANSFORMERS_OFFLINE"] = "1"  # Force offline mode for Transformers
         sub_env["PYTHONUNBUFFERED"] = "1"     # Disable output buffering for real-time logs
         sub_env["TOKENIZERS_PARALLELISM"] = "false"  # Disable tokenizers parallelism to prevent deadlocks
+        sub_env["HF_HOME"] = "/app/.cache/huggingface"  # Uniform cache path for Hugging Face models
         if api_key:
             sub_env["RECRUITER_API_KEY"] = api_key
         if base_url:

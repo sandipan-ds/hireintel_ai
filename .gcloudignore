@@ -1,27 +1,60 @@
+# ===========================================================================
+# .gcloudignore — files excluded from the Cloud Build source upload
+# ===========================================================================
+# This file mirrors .dockerignore so that the gcloud builds submit context
+# upload is as small as possible (target: <50 MiB).
+# ===========================================================================
+
 .git/
 .gitignore
 .gcloudignore
 .dockerignore
 .venv/
+.vscode/
+.opencode/
 __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
 .history/
 .checkpoints/
+AGENTS.md
+
+# Data (privacy + size)
+data/
+recruiter/data/
+
+# Local model weights — no longer needed (DEC-036: Gemini API embedding)
+recruiter/models/
+
+# Experiment tracking & run artifacts
 mlruns/
+reports/
+run_reports/
+scratch/
+scratch_diag.py
+
+# Developer-only
 notebooks/
 tests/
 baseline/
 graphify-out/
+recruiter/src/graphify-out/
+
+# Logs
 logs/
 recruiter/logs/
-recruiter/data/
-recruiter/models/
-data/
 *.log
+
+# Secrets
 .env
 .env.*
+
+# Documentation
+docs/
+
+# Legacy
 GCP_DEPLOYMENT_GUIDE.md
 gcp_deployment_plan.md
 task.md
+GCP_Deployment_Details.md

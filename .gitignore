@@ -11,5 +11,7 @@ __pycache__/
 .env
 .env.audit
 .env.test
+.env.gcp
 docs/
 recruiter/models/
+GCP_Deployment_Details.md

@@ -1,8 +1,14 @@
 # This module orchestrates the Stage 3 PDF -> JSON routed extraction pipeline.
 #
 # It classifies the input file, routes it to the most accurate extraction backend
-# (Docling, Unstructured, or PaddleOCR+Surya), groups elements into canonical sections,
-# normalizes fields via LLM, and validates the schema.
+# (pypdfium2, Unstructured, or PaddleOCR+Surya), groups elements into canonical
+# sections, normalizes fields via LLM, and validates the schema.
+#
+# DEC-037: Docling was removed and replaced with pypdfium2 (pypdf_parser).
+# Docling pulled in torch + transformers as transitive dependencies, inflating
+# the production image by ~2 GB. Since the LLM normalizer (Gemini) is
+# multimodal it does not need layout-ML pre-processing; pypdfium2 extracts
+# the text layer in correct reading order with zero ML dependencies.
 
 import os
 import re
@@ -12,7 +18,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from src.resume_parsing.extraction.file_classifier import classify_file, FileType
-from src.resume_parsing.extraction.docling_parser import extract_with_docling
+from src.resume_parsing.extraction.pypdf_parser import extract_with_pypdf
 from src.resume_parsing.extraction.unstructured_parser import extract_with_unstructured
 from src.resume_parsing.extraction.ocr_parser import extract_with_ocr
 from src.resume_parsing.extraction.section_builder import build_sections
@@ -62,14 +68,19 @@ def extract_resume(path: str | Path, registry: Optional[CandidateRegistry] = Non
 
     if file_type == FileType.NATIVE_PDF:
         if bypass_layout:
-            logger.info("Bypassing layout-aware parsing (Docling/Unstructured) for %s due to BYPASS_LAYOUT_PARSERS=true", path_obj.name)
+            logger.info(
+                "Bypassing layout-aware parsing for %s due to BYPASS_LAYOUT_PARSERS=true",
+                path_obj.name,
+            )
             elements = None
         else:
-            # Route A: Primary Docling
-            logger.info("Routing %s to Route A: Docling", path_obj.name)
-            elements = extract_with_docling(path_obj)
+            # Route A: pypdfium2 (primary, zero ML deps — DEC-037)
+            logger.info("Routing %s to Route A: pypdfium2", path_obj.name)
+            elements = extract_with_pypdf(path_obj)
             if not elements:
-                logger.warning("Docling failed or returned empty. Falling back to Unstructured.")
+                logger.warning(
+                    "pypdf parser failed or returned empty. Falling back to Unstructured."
+                )
                 elements = extract_with_unstructured(path_obj)
         
         if not elements and not bypass_layout:
@@ -194,8 +205,8 @@ def extract_resume(path: str | Path, registry: Optional[CandidateRegistry] = Non
             "page_count": len(set(chunk["page_number"] for chunk in evidence_chunks)) or 1,
             "parsed_at": datetime.now(timezone.utc).isoformat(),
             "ocr_used": ocr_used,
-            "parser_name": "docling+llm-normalizer",
-            "parser_version": "1.0.0"
+            "parser_name": "pypdfium2+llm-normalizer",
+            "parser_version": "2.0.0"
         },
         "candidate_profile": profile_data,
         "normalized_features": normalized_features,

@@ -1,5 +1,0 @@
-- [/] Create test fallback parser script to verify regex-based fallback parsing
-- [ ] Implement lenient JSON template and regex fallback parsing in `recruiter/src/scoring/rubric_scorer.py`
-- [ ] Implement cleanup timer cancellation, 30s delay after job finishes, and keep JD directory in `recruiter/src/api/recruiter.py`
-- [ ] Add troubleshooting notes in `docs/23_TROUBLESHOOTING.md`
-- [ ] Verify unit tests and manually test the updated pipeline
