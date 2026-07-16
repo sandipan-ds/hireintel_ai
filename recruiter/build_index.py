@@ -347,41 +347,56 @@ def _local_chunk_profile(
 
 
 def _load_embedder(model_name: str):
-    """Lazily import sentence_transformers and load the embedding model.
+    """Load the appropriate embedding model for the given model name.
 
-    The import is deferred so ``--help`` and ``--dry-run`` work without the
-    (optional-at-test-time) sentence-transformers dependency. The model
-    download only happens on the first real build.
+    For ``text-embedding-004`` (the active production model, DEC-036):
+        Uses :class:`src.rag.gemini_embedder.GeminiEmbedder` — a
+        lightweight REST-API wrapper. No PyTorch, no sentence-transformers.
+        Eliminates the 60–90 second cold-start hang in Cloud Run (DEC-036).
+
+    For ``BAAI/bge-base-en-v1.5`` (offline testing only):
+        Falls back to ``SentenceTransformer`` when the local model folder
+        ``recruiter/models/bge-base-en-v1.5`` exists. This path is only
+        taken in local / CI environments where the folder was pre-downloaded.
+        If the local folder is absent, we fall through to GeminiEmbedder
+        regardless of model name.
+
+    Args:
+        model_name:
+            The embedding model identifier. Must match the model used by
+            :func:`src.rag.per_req_retrieval.embed_sub_queries` so that
+            index vectors and query vectors live in the same embedding space.
     """
-    print("[DIAG] Importing sentence_transformers...", flush=True)
-    try:
-        from sentence_transformers import SentenceTransformer
-    except ImportError as e:
-        raise ImportError(
-            "sentence-transformers is required to build the index. "
-            "Install it with: pip install sentence-transformers"
-        ) from e
-        
-    print("[DIAG] Importing torch...", flush=True)
-    import torch
-    if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
-        device = "cpu"
-    else:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    
-    print(f"[DIAG] PyTorch device resolved to: {device}", flush=True)
-    
-    # Try local models folder first
+    # --- Local BGE fallback (offline testing only) ---
     local_path = Path("recruiter/models/bge-base-en-v1.5")
     if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
-        model_to_load = str(local_path.resolve())
-    else:
-        model_to_load = model_name
-        
-    print(f"[DIAG] Loading SentenceTransformer for model: {model_to_load}...", flush=True)
-    model = SentenceTransformer(model_to_load, device=device)
-    print("[DIAG] SentenceTransformer loaded successfully!", flush=True)
-    return model
+        print("[DIAG] Loading local SentenceTransformer (BAAI/bge-base-en-v1.5)...", flush=True)
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as exc:
+            raise ImportError(
+                "sentence-transformers is required to use the local BGE model. "
+                "Install it with: pip install sentence-transformers"
+            ) from exc
+        import torch
+        device = "cpu" if os.environ.get("CUDA_VISIBLE_DEVICES") == "" else (
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
+        model = SentenceTransformer(str(local_path.resolve()), device=device)
+        print("[DIAG] Local SentenceTransformer loaded.", flush=True)
+        return model
+
+    # --- GeminiEmbedder (production default, DEC-036) ---
+    # text-embedding-004 and any other Gemini model: use the lightweight
+    # REST-API wrapper. Zero PyTorch / sentence-transformers dependency.
+    print(f"[DIAG] Loading GeminiEmbedder for model: {model_name} ...", flush=True)
+    from src.rag.gemini_embedder import GeminiEmbedder
+    embedder = GeminiEmbedder(
+        model_name=model_name,
+        task_type="RETRIEVAL_DOCUMENT",  # Corpus documents, not queries.
+    )
+    print("[DIAG] GeminiEmbedder ready.", flush=True)
+    return embedder
 
 
 def embed_texts(
