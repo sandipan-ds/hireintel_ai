@@ -56,8 +56,10 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-#: Gemini embedding model. text-embedding-004 = 768-dim, free tier, REST API.
-GEMINI_EMBEDDING_MODEL: str = "text-embedding-004"
+#: Gemini embedding model. gemini-embedding-001 replaces the deprecated text-embedding-004
+#: (shut down by Google, returns 404). Supports outputDimensionality for flexible dims;
+#: we request 768 to stay compatible with the existing index format.
+GEMINI_EMBEDDING_MODEL: str = "gemini-embedding-001"
 
 #: Gemini Generative Language REST endpoint template.
 _EMBED_URL_TEMPLATE: str = (
@@ -207,12 +209,16 @@ class GeminiEmbedder:
         import requests  # already confirmed available in __init__
 
         # batchEmbedContents accepts a list of ``requests`` objects.
+        # outputDimensionality=768 keeps vectors compatible with the existing index format.
+        # gemini-embedding-001 defaults to 3072-dim; truncating to 768 matches the
+        # dimension produced by the retired text-embedding-004.
         payload = {
             "requests": [
                 {
                     "model": f"models/{self.model_name}",
                     "content": {"parts": [{"text": text}]},
                     "taskType": self.task_type,
+                    "outputDimensionality": 768,
                 }
                 for text in texts
             ]

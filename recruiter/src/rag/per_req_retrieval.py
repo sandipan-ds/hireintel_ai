@@ -55,12 +55,11 @@ from src.rag.retriever import (
 
 logger = logging.getLogger(__name__)
 
-# Embedding model used to build the chunk index (DEC-036).
-# Must match the model used in ``recruiter/src/rag/build_index.py``.
-# ``text-embedding-004``: 768-dim Gemini API model (free tier, 1500 RPM).
-# Replaces the local ``BAAI/bge-base-en-v1.5`` SentenceTransformer to eliminate
-# the PyTorch dependency and cold-start hang in Cloud Run containers.
-DEFAULT_EMBEDDING_MODEL = "text-embedding-004"
+# Embedding model used to build the chunk index and embed sub-queries (DEC-037).
+# Must match the model used in ``recruiter/build_index.py``.
+# ``gemini-embedding-001``: 768-dim (with outputDimensionality=768), Gemini API.
+# Replaces the deprecated ``text-embedding-004`` (shut down by Google, returns 404).
+DEFAULT_EMBEDDING_MODEL = "gemini-embedding-001"
 
 #: Default top-K per REQ. Each REQ retrieves its top-K chunks from the
 #: candidate's DocumentAware index. Callers may override per-call.
@@ -99,7 +98,7 @@ def _load_embed_model(model_name: str):
 
     # GeminiEmbedder has no heavy imports at construction time — it only
     # calls ``requests`` at encode() time, so this is essentially free.
-    from recruiter.src.rag.gemini_embedder import GeminiEmbedder
+    from src.rag.gemini_embedder import GeminiEmbedder
 
     _EMBED_MODEL = GeminiEmbedder(
         model_name=model_name,
