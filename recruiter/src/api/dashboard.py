@@ -33,7 +33,7 @@ router = APIRouter(prefix="/api/v1", tags=["dashboard"])
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
+ROOT = pathlib.Path(__file__).resolve().parent.parent.parent.parent
 SCORES_DIR = ROOT / "data" / "scores" / "composed"
 PROCESSED_DIR = ROOT / "data" / "processed"
 ORIGINAL_DIR = ROOT / "data" / "original"
@@ -262,6 +262,10 @@ class ChatRequest(BaseModel):
     candidate_id: str
     question: str
     max_chunks: int = 8
+    api_key: Optional[str] = None
+    model: Optional[str] = None
+    base_url: Optional[str] = None
+
 
 
 @router.post("/chat")
@@ -325,41 +329,20 @@ def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
         "Answer based only on the evidence above."
     )
 
-    # Waterfall order (exact):
-    #  1. OpenCode  — deepseek/deepseek-v4-flash:free
-    #  2. OpenCode  — minimax-m3
-    #  3. NVIDIA NIM key-1 — google/gemma-4-31b-it
-    #  4. NVIDIA NIM key-2 — google/gemma-4-31b-it
-    #  5. NVIDIA NIM key-3 — google/gemma-4-31b-it
-    #  6. OpenRouter       — google/gemma-4-31b-it:free
-    oc_key    = _env_value("OPENCODE_KEY_1")
-    oc_url    = _env_value("OPENCODE_BASE_URL", "https://opencode.ai/zen/go/v1")
-    nv_url    = _env_value("NVIDIA_NIM_BASE_URL", "https://integrate.api.nvidia.com/v1")
-    or_url    = _env_value("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
-    or_key    = _env_value("OPENROUTER_API_KEY_1") or _env_value("OPENROUTER_API_KEY")
+    # Decouple entirely from internal env keys — only accept client-provided (BYOK) settings
+    if not req.api_key:
+      return {
+          "candidate_id": req.candidate_id,
+          "answer": "Please configure your OpenRouter API Key in the API Key panel (🔑 API Key in the top-right navbar) to chat with this candidate.",
+          "source_chunks": [],
+      }
 
-    providers = []
-    if oc_key:
-        providers.append({"name": "OpenCode/deepseek-v4-flash", "api_key": oc_key,
-                          "base_url": oc_url, "model": "deepseek/deepseek-v4-flash:free"})
-        providers.append({"name": "OpenCode/minimax-m3",        "api_key": oc_key,
-                          "base_url": oc_url, "model": "minimax-m3"})
-    for idx, nv_env in enumerate(["NVIDIA_NIM_API_KEY_1", "NVIDIA_NIM_API_KEY_2", "NVIDIA_NIM_API_KEY_3"], 1):
-        nv_key = _env_value(nv_env)
-        if nv_key:
-            providers.append({"name": f"NVIDIA-key{idx}/gemma-4-31b", "api_key": nv_key,
-                              "base_url": nv_url, "model": "google/gemma-4-31b-it"})
-    if or_key:
-        providers.append({"name": "OpenRouter/gemma-4-31b:free", "api_key": or_key,
-                          "base_url": or_url, "model": "google/gemma-4-31b-it:free"})
-
-
-    if not providers:
-        return {
-            "candidate_id": req.candidate_id,
-            "answer": "Chat is unavailable: no API keys configured.",
-            "source_chunks": [],
-        }
+    providers = [{
+        "name": "BYOK",
+        "api_key": req.api_key,
+        "base_url": req.base_url or "https://openrouter.ai/api/v1",
+        "model": req.model or "google/gemini-3.1-flash-lite"
+    }]
 
     answer = None
     last_error = None

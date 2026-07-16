@@ -40,7 +40,7 @@ For the full decision history, see `18_DECISIONS.md`.
 | 4A| **Chunking & Embedding Index** — RecursiveChunker + ThresholdRetriever | ✅ |
 | 4B| **JSON Quality Audit** — five-layer extraction audit (DEC-036) | ✅ |
 | 4C| **Gap-Fill Re-Extraction** — multimodal vision pass on audit-flagged candidates | ✅ |
-| 4D| **RAG Hyperparameter Optimization** — Optuna multi-objective sweep + rank stability | ✅ |
+| 4D| **Baseline Evaluation** — Cross-role comparison of raw vector ranking vs. LLM rubric judge | ✅ |
 | 5 | **Scoring Engine** — additive formula, deterministic, LLM evidence only | ✅ |
 | 6 | **Candidate Ranking** — deterministic sort, per-candidate JSON output | ✅ |
 | 7 | **Rankings Dashboard & Candidate Chat** — dropdown, leaderboard, inline PDF, waterfall RAG chat | ✅ |
@@ -104,6 +104,7 @@ Recruiters assign weights to each REQ and run candidate intake via a FastAPI + H
 | **Reasoning Model Thought-Stripping** | ✅ | Regex-based thought tag removal (`<think>...</think>`) to support JSON extraction from reasoning LLMs like `minimax-m3` |
 | **Clean Slate Cache Clearing** | ✅ | Deletes old rankings and index files upon saving new config to prevent cached display in Step 6 |
 | **Hyphenated Sub-Query Key Parsing** | ✅ | Updates sub-query row regex pattern to match hyphenated IDs (e.g. `SQ013-5`), resolving the false-positive blocked status bug |
+| **Standardized Few-Shot Exemplars** | ✅ | Standardized `extract-reqs` and `gen-subqueries` prompts to use a single, consistent Business Analyst Lead JD workflow at temperature 0.0 to maximize determinism. |
 
 **Launch:** `python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000`
 
@@ -207,13 +208,22 @@ After the JSON Quality Audit (Stage 4B) identified 12 candidates with missing fi
 
 ---
 
-## Stage 4D — RAG Parameter Sweep & Stability Evaluation
+## Stage 4D — Baseline Evaluation (no-LLM Cosine Baseline)
 
-**Status: ⬜ Retired (DEC-035)**
+**Status: ✅ Complete**
 
-Optuna hyperparameter tuning and threshold-based sweeps are retired due to the pivot from cosine thresholding to top-K retrieval (`top_k=10`). 
+A raw embedding cosine similarity baseline has been implemented and run to compare pure vector similarity ranking against the production LLM rubric scorer across all 8 pre-scored roles.
 
-Grid sweep, rank stability metrics, and parameter sweeps conducted pre-pivot (with `RecursiveChunker` + `ThresholdRetriever` + `all-MiniLM-L6-v2`) are archived, and related files have been deleted.
+* **Script:** `baseline/no-llm/evaluate_all_baselines.py`
+* **Outputs:** `baseline/no-llm/results/{role}/{role}_comparison.json`, `{role}_report.md`
+* **Comprehensive Report:** `baseline/no-llm/results/comprehensive_evaluation_report.md`
+
+### Summary Metrics:
+- **Spearman Rank Correlation (Rho):** Averaged **~0.15** (extremely weak or near-zero correlation).
+- **Jaccard Overlap @ Top 10:** Averaged **~10%** (only 1 out of 10 candidates overlap on average).
+- **Score Clustering:** Pure embedding scores for the top-10 candidates were clustered in a narrow band of **<2%**, failing to provide clear candidate differentiation.
+
+This baseline confirms that relying on raw embeddings is equivalent to keyword searching and fails to evaluate qualifications, negations, experience years, or institution tiers, proving that the LLM Rubric Scorer is a mandatory architectural layer.
 
 ---
 

@@ -41,6 +41,7 @@ against the unioned evidence, never per-sub-query.
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from src.rag.retriever import (
@@ -88,8 +89,21 @@ def _load_embed_model(model_name: str):
         return _EMBED_MODEL
     # Local import so the module imports without torch loaded.
     from sentence_transformers import SentenceTransformer
+    import torch
 
-    _EMBED_MODEL = SentenceTransformer(model_name)
+    if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
+        device = "cpu"
+    else:
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    
+    # Try local models folder first
+    local_path = Path("recruiter/models/bge-base-en-v1.5")
+    if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
+        model_to_load = str(local_path.resolve())
+    else:
+        model_to_load = model_name
+
+    _EMBED_MODEL = SentenceTransformer(model_to_load, device=device)
     _EMBED_MODEL_NAME = model_name
     return _EMBED_MODEL
 

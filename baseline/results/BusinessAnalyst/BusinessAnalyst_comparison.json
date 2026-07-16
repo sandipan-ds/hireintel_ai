@@ -1,0 +1,115 @@
+{
+  "role": "BusinessAnalyst",
+  "metrics": {
+    "spearman_rho": 0.36674615059508586,
+    "spearman_p_value": 1.5238817974599564e-05,
+    "kendall_tau": 0.25213971778857275,
+    "kendall_p_value": 1.799751443649306e-05,
+    "jaccard_similarity_at_10": 0.1111111111111111,
+    "top_10_score_span_percentage": 1.2589539264639242
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0034",
+      "score": 60.88781427592039,
+      "rank": 1
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0080",
+      "score": 60.64806052049001,
+      "rank": 2
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0108",
+      "score": 60.58296197156112,
+      "rank": 3
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0131",
+      "score": 60.48993642628193,
+      "rank": 4
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0021",
+      "score": 60.23137050370375,
+      "rank": 5
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0064",
+      "score": 60.03833659986655,
+      "rank": 6
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0053",
+      "score": 59.77006710817416,
+      "rank": 7
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0132",
+      "score": 59.762919957439095,
+      "rank": 8
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0014",
+      "score": 59.6856559291482,
+      "rank": 9
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0054",
+      "score": 59.62886034945647,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0075",
+      "score": 82.4425,
+      "rank": 1
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0025",
+      "score": 80.8108,
+      "rank": 2
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0047",
+      "score": 78.3325,
+      "rank": 3
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0054",
+      "score": 77.1866,
+      "rank": 4
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0131",
+      "score": 76.8541,
+      "rank": 5
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0088",
+      "score": 76.2691,
+      "rank": 6
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0028",
+      "score": 75.6441,
+      "rank": 7
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0033",
+      "score": 75.0267,
+      "rank": 8
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0059",
+      "score": 75.0191,
+      "rank": 9
+    },
+    {
+      "candidate_id": "BusinessAnalyst_CAND_0089",
+      "score": 72.9017,
+      "rank": 10
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "role": "SrPythonDeveloper",
+  "metrics": {
+    "spearman_rho": 0.4902061855670103,
+    "spearman_p_value": 3.987172867432771e-07,
+    "kendall_tau": 0.34605263157894733,
+    "kendall_p_value": 5.891567028814487e-07,
+    "jaccard_similarity_at_10": 0.17647058823529413,
+    "top_10_score_span_percentage": 0.7490981519222188
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0010",
+      "score": 61.05705357591311,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0052",
+      "score": 61.05705357591311,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0026",
+      "score": 60.59052115678787,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0078",
+      "score": 60.549732794364296,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0065",
+      "score": 60.48183128237724,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0073",
+      "score": 60.48183128237724,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0087",
+      "score": 60.48183128237724,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0093",
+      "score": 60.38779636224111,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0063",
+      "score": 60.387795885403946,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0009",
+      "score": 60.30795542399089,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0009",
+      "score": 84.7083,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0077",
+      "score": 84.16,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0066",
+      "score": 82.9934,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0063",
+      "score": 80.505,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0093",
+      "score": 80.505,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0092",
+      "score": 74.42,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0094",
+      "score": 73.3517,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0076",
+      "score": 72.6134,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0080",
+      "score": 72.2517,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SrPythonDeveloper_CAND_0051",
+      "score": 70.7883,
+      "rank": 10
+    }
+  ]
+}

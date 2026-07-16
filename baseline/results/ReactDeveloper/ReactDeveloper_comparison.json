@@ -1,0 +1,115 @@
+{
+  "role": "ReactDeveloper",
+  "metrics": {
+    "spearman_rho": -0.07533539731682146,
+    "spearman_p_value": 0.766392281347839,
+    "kendall_tau": -0.08496732026143793,
+    "kendall_p_value": 0.6540288801767573,
+    "jaccard_similarity_at_10": 0.42857142857142855,
+    "top_10_score_span_percentage": 1.7026038219531259
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "ReactDeveloper_CAND_0012",
+      "score": 61.7611222465833,
+      "rank": 1
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0010",
+      "score": 61.53280188639959,
+      "rank": 2
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0003",
+      "score": 61.3496495683988,
+      "rank": 3
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0013",
+      "score": 61.31438416739306,
+      "rank": 4
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0017",
+      "score": 61.2477966149648,
+      "rank": 5
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0002",
+      "score": 61.163287157813706,
+      "rank": 6
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0006",
+      "score": 61.096856301029526,
+      "rank": 7
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0001",
+      "score": 61.03537455201149,
+      "rank": 8
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0008",
+      "score": 61.00959030290445,
+      "rank": 9
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0009",
+      "score": 60.05851842463017,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "ReactDeveloper_CAND_0004",
+      "score": 90.0,
+      "rank": 1
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0014",
+      "score": 78.0,
+      "rank": 2
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0001",
+      "score": 64.81,
+      "rank": 3
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0015",
+      "score": 63.9167,
+      "rank": 4
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0010",
+      "score": 59.22,
+      "rank": 5
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0018",
+      "score": 58.0033,
+      "rank": 6
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0009",
+      "score": 57.575,
+      "rank": 7
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0013",
+      "score": 56.4267,
+      "rank": 8
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0012",
+      "score": 55.9717,
+      "rank": 9
+    },
+    {
+      "candidate_id": "ReactDeveloper_CAND_0006",
+      "score": 54.735,
+      "rank": 10
+    }
+  ]
+}

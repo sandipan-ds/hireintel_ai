@@ -1,0 +1,115 @@
+{
+  "role": "WebDesigning",
+  "metrics": {
+    "spearman_rho": 0.28329316796959186,
+    "spearman_p_value": 0.003108369942129399,
+    "kendall_tau": 0.19555633926997004,
+    "kendall_p_value": 0.002832179595097523,
+    "jaccard_similarity_at_10": 0.0,
+    "top_10_score_span_percentage": 0.7431123008330545
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "WebDesigning_CAND_0051",
+      "score": 62.1408859193325,
+      "rank": 1
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0071",
+      "score": 61.9972693324089,
+      "rank": 2
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0042",
+      "score": 61.98202676574389,
+      "rank": 3
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0033",
+      "score": 61.923007612427085,
+      "rank": 4
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0054",
+      "score": 61.747556587060295,
+      "rank": 5
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0082",
+      "score": 61.747556587060295,
+      "rank": 6
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0011",
+      "score": 61.48190897703171,
+      "rank": 7
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0074",
+      "score": 61.42805788914363,
+      "rank": 8
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0078",
+      "score": 61.40055021146933,
+      "rank": 9
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0015",
+      "score": 61.39777361849944,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "WebDesigning_CAND_0067",
+      "score": 75.405,
+      "rank": 1
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0014",
+      "score": 74.215,
+      "rank": 2
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0112",
+      "score": 72.655,
+      "rank": 3
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0047",
+      "score": 71.57,
+      "rank": 4
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0003",
+      "score": 69.32,
+      "rank": 5
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0099",
+      "score": 69.11,
+      "rank": 6
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0058",
+      "score": 67.83,
+      "rank": 7
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0041",
+      "score": 67.695,
+      "rank": 8
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0049",
+      "score": 66.08,
+      "rank": 9
+    },
+    {
+      "candidate_id": "WebDesigning_CAND_0068",
+      "score": 64.955,
+      "rank": 10
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "role": "SalesManager",
+  "metrics": {
+    "spearman_rho": 0.16739984277994413,
+    "spearman_p_value": 0.033237606595287426,
+    "kendall_tau": 0.10374971244536464,
+    "kendall_p_value": 0.05004349870957434,
+    "jaccard_similarity_at_10": 0.1111111111111111,
+    "top_10_score_span_percentage": 1.3506350119908603
+  },
+  "top_10_baseline": [
+    {
+      "candidate_id": "SalesManager_CAND_0012",
+      "score": 63.4850837290287,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0135",
+      "score": 63.228242595990494,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0090",
+      "score": 63.16009816527367,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0052",
+      "score": 62.835698296626404,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0019",
+      "score": 62.61334716280301,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0040",
+      "score": 62.51807150244713,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0056",
+      "score": 62.4386539955934,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0042",
+      "score": 62.25147379438083,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0087",
+      "score": 62.227478335301086,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0100",
+      "score": 62.13444871703784,
+      "rank": 10
+    }
+  ],
+  "top_10_production": [
+    {
+      "candidate_id": "SalesManager_CAND_0011",
+      "score": 83.125,
+      "rank": 1
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0150",
+      "score": 81.4583,
+      "rank": 2
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0009",
+      "score": 80.3333,
+      "rank": 3
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0108",
+      "score": 78.0,
+      "rank": 4
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0140",
+      "score": 76.5833,
+      "rank": 5
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0092",
+      "score": 75.2283,
+      "rank": 6
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0133",
+      "score": 75.1717,
+      "rank": 7
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0087",
+      "score": 74.0833,
+      "rank": 8
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0137",
+      "score": 74.0,
+      "rank": 9
+    },
+    {
+      "candidate_id": "SalesManager_CAND_0090",
+      "score": 73.895,
+      "rank": 10
+    }
+  ]
+}

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HireIntel.AI — New Job</title>
-  <meta name="description" content="Create a new job posting, extract requirements, configure weights, and rank candidates with HireIntel.AI." />
+  <title>HireIntel.AI — Recruiter Board</title>
+  <meta name="description" content="Create a recruiter board, extract requirements, configure weights, and rank candidates with HireIntel.AI." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -274,6 +274,11 @@
     .weight-input { width: 54px; text-align: right; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 6px; padding: .3rem .4rem; color: var(--text); font-size: .82rem; font-weight: 600; outline: none; transition: border .15s; }
     .weight-input:focus { border-color: var(--accent); }
     .weight-pct { font-size: .78rem; color: var(--muted); font-weight: 600; }
+    .candidate-link {
+      color: #a78bfa; text-decoration: none; font-weight: 600;
+      border-bottom: 1px dashed rgba(167,139,250,0.3); transition: all .15s;
+    }
+    .candidate-link:hover { color: #c4b5fd; border-bottom-color: rgba(196,181,253,0.8); }
   </style>
 </head>
 <body>
@@ -282,8 +287,8 @@
 <nav>
   <span class="logo">HireIntel<span>.AI</span></span>
   <div class="nav-links">
-    <a href="/recruiter" class="new-job active">✦ New Job</a>
-    <a href="/dashboard">Rankings</a>
+    <a href="/recruiter" class="new-job active">✦ Recruiter Board</a>
+    <a href="/dashboard">My Project Ranking</a>
     <a href="/api/docs">API</a>
   </div>
 </nav>
@@ -294,7 +299,7 @@
        LEFT — Wizard Steps
   ═══════════════════════════════════════════════════════════════ -->
   <div class="wizard-main">
-    <h1>Create a <span>New Job</span></h1>
+    <h1>Recruiter <span>Board</span></h1>
     <p class="subtitle">Upload a JD, extract requirements, set weights, and rank candidates — step by step.</p>
 
     <div class="session-notice">
@@ -496,7 +501,6 @@
       <span class="sidebar-label">OpenRouter API Key</span>
       <input type="password" class="sidebar-input" id="byok-key"
              placeholder="sk-or-v1-…"
-             autocomplete="new-password"
              oninput="onKeyInput()" />
       <div class="key-hint">
         Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -550,7 +554,7 @@
         <div class="rec-row">
           <span class="rec-pill free">FREE</span>
           <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('minimax-m3')" title="Click to fill">minimax-m3 ↗</div>
+            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
             <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
           </div>
         </div>
@@ -581,11 +585,6 @@
      JavaScript — Wizard state machine + API calls
 ──────────────────────────────────────────────────────────────── -->
 <script>
-window.onerror = function(message, source, lineno, colno, error) {
-  alert("Unhandled JS Error: " + message + "\nat line " + lineno + "\nStack: " + (error ? error.stack : ''));
-  return false;
-};
-
 // ── State ─────────────────────────────────────────────────────
 const state = {
   currentStep: 1,
@@ -608,7 +607,9 @@ function getByok() {
 // Fill model field from recommendation click
 function fillModel(slug) {
   const el = document.getElementById('byok-model');
-  el.value = slug; el.focus();
+  el.value = slug;
+  localStorage.setItem('byok_model', slug);
+  el.focus();
   el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
   setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
 }
@@ -616,13 +617,16 @@ function fillModel(slug) {
 // Fill base URL field from hint click
 function fillBaseUrl(url) {
   const el = document.getElementById('byok-base-url');
-  el.value = url; el.focus();
+  el.value = url;
+  localStorage.setItem('byok_base_url', url);
+  el.focus();
   el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px rgba(124,58,237,0.2)';
   setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 800);
 }
 
 function onKeyInput() {
   const key = document.getElementById('byok-key').value.trim();
+  localStorage.setItem('byok_key', key);
   const el  = document.getElementById('key-status');
   if (!key) { el.textContent = ''; el.className = ''; return; }
   if (key.startsWith('sk-or-')) {
@@ -632,6 +636,34 @@ function onKeyInput() {
     el.style.color = 'var(--muted)';
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const keyInput = document.getElementById('byok-key');
+  const modelInput = document.getElementById('byok-model');
+  const urlInput = document.getElementById('byok-base-url');
+
+  if (keyInput) {
+    keyInput.value = localStorage.getItem('byok_key') || '';
+    onKeyInput();
+  }
+  if (modelInput) {
+    modelInput.value = localStorage.getItem('byok_model') || '';
+  }
+  if (urlInput) {
+    urlInput.value = localStorage.getItem('byok_base_url') || '';
+  }
+
+  if (modelInput) {
+    modelInput.addEventListener('input', () => {
+      localStorage.setItem('byok_model', modelInput.value.trim());
+    });
+  }
+  if (urlInput) {
+    urlInput.addEventListener('input', () => {
+      localStorage.setItem('byok_base_url', urlInput.value.trim());
+    });
+  }
+});
 
 // ── Step navigation ───────────────────────────────────────────
 function goToStep(n) {
@@ -740,36 +772,39 @@ function renderReqs() {
           <div class="req-name" id="rn-${i}">${esc(r.name)}</div>
           <div class="req-desc" id="rd-${i}">${esc(r.description||'')}</div>
           <div class="req-meta">
-            ${badgeHtml(r.status)}
-            <span class="chip">${esc(r.category)}</span>
-            <span class="chip">${esc(r.requirement_type)}</span>
+            <span id="rb-${i}">${badgeHtml(r.status)}</span>
+            <span class="chip" id="rcat-${i}">${esc(r.category)}</span>
+            <span class="chip" id="rtype-${i}">${esc(r.requirement_type)}</span>
             <button class="btn btn-secondary btn-sm" style="margin-left:auto" onclick="toggleEdit(${i})">✏ Edit</button>
           </div>
-          <div class="req-reason">AI reason: ${esc(r.reason||'')}</div>
+          <div class="req-reason" id="rr-${i}">AI reason: ${esc(r.reason||'')}</div>
           <div class="req-edit-area" id="re-${i}">
             <div class="field" style="margin-top:.5rem">
               <label>Name</label>
-              <input type="text" value="${escAttr(r.name)}" onchange="updateReq(${i},'name',this.value)" />
+              <input type="text" class="edit-name" value="${escAttr(r.name)}" />
             </div>
             <div class="field">
               <label>Description</label>
-              <textarea onchange="updateReq(${i},'description',this.value)">${esc(r.description||'')}</textarea>
+              <textarea class="edit-desc">${esc(r.description||'')}</textarea>
             </div>
             <div class="field-row">
               <div class="field">
                 <label>Category</label>
-                <select onchange="updateReq(${i},'category',this.value)">
+                <select class="edit-category">
                   ${['Core Skill','Preferred Skill','Experience','Education','Certification']
                     .map(c=>`<option value="${c}"${c===r.category?' selected':''}>${c}</option>`).join('')}
                 </select>
               </div>
               <div class="field">
                 <label>Type</label>
-                <select onchange="updateReq(${i},'requirement_type',this.value)">
+                <select class="edit-type">
                   <option value="required"${r.requirement_type==='required'?' selected':''}>Required</option>
                   <option value="preferred"${r.requirement_type==='preferred'?' selected':''}>Preferred</option>
                 </select>
               </div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+              <button class="btn btn-primary btn-sm save-btn" style="height:38px;padding:0 1.5rem;" onclick="saveEdit(${i})">✓ Save & Close</button>
             </div>
           </div>
         </div>
@@ -778,25 +813,85 @@ function renderReqs() {
   `).join('');
 }
 
-function toggleEdit(i) { document.getElementById(`re-${i}`).classList.toggle('open'); }
-function updateReq(i, f, v) {
-  state.reqs[i][f] = v;
-  if (f==='name') document.getElementById(`rn-${i}`).textContent = v;
-  if (f==='description') document.getElementById(`rd-${i}`).textContent = v;
+function toggleEdit(i) {
+  const el = document.getElementById(`re-${i}`);
+  el.classList.toggle('open');
 }
 
-// Flush any open edit fields into state.reqs before sending to backend.
-// Prevents edits that haven't triggered onchange (e.g. mid-typing) from being missed.
+async function saveEdit(i) {
+  const nameInput = document.querySelector(`#re-${i} .edit-name`);
+  const descTA    = document.querySelector(`#re-${i} .edit-desc`);
+  const catSel    = document.querySelector(`#re-${i} .edit-category`);
+  const typeSel   = document.querySelector(`#re-${i} .edit-type`);
+  
+  const name = nameInput.value.trim();
+  const description = descTA.value.trim();
+  const category = catSel.value;
+  const requirement_type = typeSel.value;
+
+  if (!name || !description) {
+    alert('Please enter a name and description.');
+    return;
+  }
+  if (!requireByok()) return;
+
+  const saveBtn = document.querySelector(`#re-${i} .save-btn`);
+  const originalText = saveBtn.textContent;
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<span class="spinner" style="width:12px;height:12px;margin-right:4px;"></span> Re-evaluating…';
+
+  try {
+    const { api_key, model, base_url } = getByok();
+    const r = await fetch('/api/recruiter/reclassify-req', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description, category, requirement_type, api_key, model, base_url }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Reclassification failed');
+    
+    // Update local state
+    state.reqs[i].name = name;
+    state.reqs[i].description = description;
+    state.reqs[i].category = category;
+    state.reqs[i].requirement_type = requirement_type;
+    state.reqs[i].status = d.status;
+    state.reqs[i].reason = d.reason;
+
+    // Update DOM
+    document.getElementById(`rn-${i}`).textContent = name;
+    document.getElementById(`rd-${i}`).textContent = description;
+    document.getElementById(`rcat-${i}`).textContent = category;
+    document.getElementById(`rtype-${i}`).textContent = requirement_type;
+    document.getElementById(`rb-${i}`).innerHTML = badgeHtml(d.status);
+    document.getElementById(`rr-${i}`).textContent = `AI reason: ${d.reason}`;
+
+    // Close panel
+    toggleEdit(i);
+  } catch (e) {
+    alert(`Re-evaluation failed: ${e.message}`);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = originalText;
+  }
+}
+
 function flushReqEdits() {
   state.reqs.forEach((r, i) => {
-    const nameInput = document.querySelector(`#re-${i} input[type="text"]`);
-    const descTA    = document.querySelector(`#re-${i} textarea`);
-    const catSel    = document.querySelector(`#re-${i} select:nth-of-type(1)`);
-    const typeSel   = document.querySelector(`#re-${i} select:nth-of-type(2)`);
+    const nameInput = document.querySelector(`#re-${i} .edit-name`);
+    const descTA    = document.querySelector(`#re-${i} .edit-desc`);
+    const catSel    = document.querySelector(`#re-${i} .edit-category`);
+    const typeSel   = document.querySelector(`#re-${i} .edit-type`);
     if (nameInput) r.name        = nameInput.value.trim() || r.name;
     if (descTA)    r.description = descTA.value.trim()    || r.description;
-    if (catSel)    r.category    = catSel.value           || r.category;
-    if (typeSel)   r.requirement_type = typeSel.value    || r.requirement_type;
+    if (catSel) {
+      r.category = catSel.value || r.category;
+      document.getElementById(`rcat-${i}`).textContent = r.category;
+    }
+    if (typeSel) {
+      r.requirement_type = typeSel.value || r.requirement_type;
+      document.getElementById(`rtype-${i}`).textContent = r.requirement_type;
+    }
   });
 }
 
@@ -830,12 +925,41 @@ function renderSubqueries() {
   document.getElementById('sq-list').innerHTML = state.reqs.map((r, ri) => {
     const sqs = state.subqueries[r.req_id] || [];
     const items = sqs.map((sq, si) => `
-      <div class="sq-item">
-        <div class="sq-num">${sq.sq_id||`SQ${si+1}`}</div>
-        <div class="sq-body">
-          <div class="sq-text">${esc(sq.text||'')}</div>
-          <div class="sq-hint">${esc(sq.scoring_hint||'')}</div>
-          <div class="sq-meta">${badgeHtml(sq.status||'YELLOW')}<span class="sq-type">${sq.type||'binary'}</span></div>
+      <div class="sq-item" style="flex-direction: column; align-items: stretch;">
+        <div style="display: flex; gap: 0.65rem;">
+          <div class="sq-num">${sq.sq_id||`SQ${si+1}`}</div>
+          <div class="sq-body" style="flex: 1;">
+            <div class="sq-text" id="sqt-${ri}-${si}">${esc(sq.text||'')}</div>
+            <div class="sq-hint" id="sqh-${ri}-${si}">${esc(sq.scoring_hint||'')}</div>
+            <div class="sq-meta">
+              <span id="sqb-badge-${ri}-${si}">${badgeHtml(sq.status||'YELLOW')}</span>
+              <span class="sq-type" id="sqtype-${ri}-${si}">${sq.type||'binary'}</span>
+              <button class="btn btn-secondary btn-sm" style="margin-left:auto; padding:0.2rem 0.5rem; font-size:0.68rem;" onclick="toggleSqEdit(${ri},${si})">✏ Edit</button>
+            </div>
+            
+            <div class="req-edit-area" id="sqe-${ri}-${si}" style="margin-top: 0.50rem;">
+              <div class="field" style="margin-top:.5rem">
+                <label>Sub-Query Text</label>
+                <input type="text" class="edit-sq-text" value="${escAttr(sq.text)}" />
+              </div>
+              <div class="field">
+                <label>Assessment Hint</label>
+                <textarea class="edit-sq-hint" style="min-height:80px;height:80px;">${esc(sq.scoring_hint||'')}</textarea>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label>Type</label>
+                  <select class="edit-sq-type">
+                    <option value="binary"${sq.type==='binary'?' selected':''}>Binary (0 or 1)</option>
+                    <option value="float"${sq.type==='float'?' selected':''}>Float (0.01 - 1.00 graded)</option>
+                  </select>
+                </div>
+                <div class="field" style="display:flex;align-items:flex-end;">
+                  <button class="btn btn-primary btn-sm save-sq-btn" style="width:100%;height:38px;justify-content:center;" onclick="saveSubqueryEdit(${ri},${si})">✓ Save & Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>`).join('');
     return `
@@ -849,6 +973,64 @@ function renderSubqueries() {
         <div class="sq-items" id="sqi-${ri}">${items}</div>
       </div>`;
   }).join('');
+}
+
+function toggleSqEdit(ri, si) {
+  const el = document.getElementById(`sqe-${ri}-${si}`);
+  el.classList.toggle('open');
+}
+
+async function saveSubqueryEdit(ri, si) {
+  const textInput = document.querySelector(`#sqe-${ri}-${si} .edit-sq-text`);
+  const hintTA    = document.querySelector(`#sqe-${ri}-${si} .edit-sq-hint`);
+  const typeSel   = document.querySelector(`#sqe-${ri}-${si} .edit-sq-type`);
+  
+  const text = textInput.value.trim();
+  const scoring_hint = hintTA.value.trim();
+  const type = typeSel.value;
+
+  if (!text || !scoring_hint) {
+    alert('Please enter text and assessment hint.');
+    return;
+  }
+  if (!requireByok()) return;
+
+  const saveBtn = document.querySelector(`#sqe-${ri}-${si} .save-sq-btn`);
+  const originalText = saveBtn.textContent;
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<span class="spinner" style="width:12px;height:12px;margin-right:4px;"></span> Re-evaluating…';
+
+  try {
+    const { api_key, model, base_url } = getByok();
+    const r = await fetch('/api/recruiter/reclassify-subquery', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, scoring_hint, type, api_key, model, base_url }),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Reclassification failed');
+    
+    // Update local state
+    const req_id = state.reqs[ri].req_id;
+    state.subqueries[req_id][si].text = text;
+    state.subqueries[req_id][si].scoring_hint = scoring_hint;
+    state.subqueries[req_id][si].type = type;
+    state.subqueries[req_id][si].status = d.status;
+
+    // Update DOM
+    document.getElementById(`sqt-${ri}-${si}`).textContent = text;
+    document.getElementById(`sqh-${ri}-${si}`).textContent = scoring_hint;
+    document.getElementById(`sqtype-${ri}-${si}`).textContent = type;
+    document.getElementById(`sqb-badge-${ri}-${si}`).innerHTML = badgeHtml(d.status);
+
+    // Close panel
+    toggleSqEdit(ri, si);
+  } catch (e) {
+    alert(`Re-evaluation failed: ${e.message}`);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = originalText;
+  }
 }
 
 function toggleSq(i) {
@@ -1019,15 +1201,11 @@ async function startScoring() {
   const etaEl = document.getElementById('scoring-eta');
   const prog = document.getElementById('scoring-progress');
 
-  const byok = getByok();
-  const apiKey = byok.api_key;
-  const modelName = byok.model;
-  const baseUrl = byok.base_url;
-
   const link = (state.resumeLinks && state.resumeLinks.length) ? state.resumeLinks[0] : null;
   btn.disabled = true; btn.textContent = '… Starting';
 
   try {
+    const { api_key, model, base_url } = getByok();
     const res = await fetch('/api/recruiter/start-scoring', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1036,9 +1214,9 @@ async function startScoring() {
         parallel: true,
         resume_link: link,
         weights: state.weights,
-        api_key: apiKey,
-        model: modelName,
-        base_url: baseUrl
+        api_key,
+        model,
+        base_url
       }),
     });
     const d = await res.json();
@@ -1123,7 +1301,7 @@ async function checkRankings() {
   if (status) status.textContent = '';
 
   try {
-    const res = await fetch(`/api/v1/rankings/${encodeURIComponent(slug)}?t=${Date.now()}`);
+    const res = await fetch(`/api/v1/rankings/${encodeURIComponent(slug)}`);
 
     // 404 means the role hasn't been scored yet — show a friendly processing message
     if (res.status === 404) {
@@ -1156,11 +1334,11 @@ async function checkRankings() {
     const rows = candidates.map((c, idx) => {
       const score = (c.total || 0).toFixed(1);
       const blocked = c.blocked_count > 0 ? '<span style="color:var(--red)">Blocked</span>' : '<span style="color:var(--green)">✓ Clean</span>';
-      return `<tr>
-        <td style="width:32px;font-weight:700;color:var(--accent)">${idx+1}</td>
-        <td>${esc(c.candidate_id || c.name || 'Candidate')}</td>
-        <td style="font-weight:700;color:var(--green)">${score}</td>
-        <td>${blocked}</td>
+      return `<tr style="border-bottom: 1px solid var(--border); transition: background .15s;">
+        <td style="padding:.75rem .6rem;width:32px;font-weight:700;color:var(--accent)">${idx+1}</td>
+        <td style="padding:.75rem .6rem;"><a href="/candidate/${encodeURIComponent(c.candidate_id)}" target="_blank" class="candidate-link">${esc(c.candidate_id || c.name || 'Candidate')}</a></td>
+        <td style="padding:.75rem .6rem;font-weight:700;color:var(--green)">${score}</td>
+        <td style="padding:.75rem .6rem;">${blocked}</td>
       </tr>`;
     }).join('');
 
@@ -1168,10 +1346,10 @@ async function checkRankings() {
       <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
         <thead>
           <tr style="color:var(--muted);text-align:left;border-bottom:1px solid var(--border);">
-            <th style="padding:.4rem .6rem">#</th>
-            <th style="padding:.4rem .6rem">Candidate</th>
-            <th style="padding:.4rem .6rem">Score</th>
-            <th style="padding:.4rem .6rem">Status</th>
+            <th style="padding:.75rem .6rem">#</th>
+            <th style="padding:.75rem .6rem">Candidate</th>
+            <th style="padding:.75rem .6rem">Score</th>
+            <th style="padding:.75rem .6rem">Status</th>
           </tr>
         </thead>
         <tbody>${rows}</tbody>

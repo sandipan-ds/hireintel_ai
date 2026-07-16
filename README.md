@@ -1,35 +1,91 @@
-# HireIntel AI
+# HireIntel.AI — Candidate Intelligence Platform
 
-Explainable candidate intelligence platform for recruiter-controlled screening and ranking.
-
----
-
-## 🚀 Running the Server
-
-To launch the local web application server, run the following command in PowerShell/Command Prompt:
-
-```powershell
-.venv\Scripts\python -m uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload
-```
-
-* **Recruiter Wizard URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
-* **Automatic Reloading:** The server is configured with WatchFiles to automatically reload when you save changes in python scripts, HTML templates, or DB schemas.
+An explainable candidate intelligence platform for recruiter-controlled screening, ranking, and interactive resume chatting. Powered by a sandboxed Hybrid RAG (Mode1 × Mode2) evaluation engine.
 
 ---
 
-## Run Server 
+## 🧭 End-to-End System Walkthrough (Steps 1–10)
 
-.venv\Scripts\python -m uvicorn src.api.app:app --host 0.0.0.0 --port 8000 --reload 2>&1
+Here is a step-by-step guide through the platform's primary workflows, using the matching dashboard screenshots.
 
-## RAG Parameter Sensitivity & Rank Stability Findings (July 2026)
+### Phase 1: Candidate Review & Interactive Resume Chat (Steps 1–4)
+
+#### Step 1: My Project Ranking Dashboard
+View the overall ranked list of candidates with detailed requirement compliance scores, categories, and zero-evidence warning flags for missing qualifications.
+![Step 1: Candidate Rankings Dashboard](data/dashboard/1_Candidate_Ranking.png)
+
+#### Step 2: Open Resume Chat (Loading State)
+Click on a candidate to start an interactive chat session. The RAG system loads and prepares the candidate's parsed resume text chunks.
+![Step 2: Resume Chat Loading](data/dashboard/2_Chat_with_pdf_loading.png)
+
+#### Step 3: Interactive Resume Chatting
+Ask natural language questions about the candidate's experience, skills, or projects. The assistant answers based strictly on resume evidence.
+![Step 3: Resume Chatting](data/dashboard/3_Chatting_with_candidate_pdf.png)
+
+#### Step 4: Evidence Highlighting & Verification
+The chat displays direct references and source-attribute verification from the candidate's resume, highlighting matching text.
+![Step 4: Evidence Verification](data/dashboard/4_Chatting_with_candidate_pdf.png)
+
+---
+
+### Phase 2: The Recruiter Onboarding Wizard (Steps 5–10)
+
+Create custom roles, extract requirements, configure scoring weights, and score resumes on the fly inside a sandboxed session.
+
+#### Step 5: Upload Job Description
+Enter a role title and paste or upload the raw Job Description text to define the position.
+![Step 5: Job Description Upload](data/dashboard/5_The_Job_Description_Uploaded.png)
+
+#### Step 6: Requirement Extraction
+AI models automatically extract core requirements, classifying them into Green (Factual), Yellow (Core skills), and Red (Preferred skills).
+![Step 6: Requirement Extraction](data/dashboard/6_The_REQs_are_extracted.png)
+
+#### Step 7: Edit Requirements
+Refine requirement names, details, categories, and types before locking them down.
+![Step 7: Edit Requirements](data/dashboard/7_The_REQs_being_edited.png)
+
+#### Step 8: Weight Adjustment
+Allocate importance percentages (totalling 100%) and specify target years of experience for each requirement using sliders.
+![Step 8: Weight Adjustment](data/dashboard/8_The_Weight_Adjustment.png)
+
+#### Step 9: Shared Resume Folder Link
+Submit a shared Google Drive or Dropbox link containing candidate resumes. An active validation utility checks the URL for public access.
+![Step 9: Shared Resume Folder Link](data/dashboard/9_Sharing_The_Resume_Folder_Link.png)
+
+#### Step 10: View Scored Rankings
+The background runner downloads the resumes, parses them, builds a vector index, scores the candidates using the Mode1 × Mode2 engine, and shows the ranked dashboard.
+*(🔒 Note: Exactly 30 seconds after completion, all original resumes, processed JSONs, indexes, and manifests under `recruiter/data/` are automatically deleted to ensure privacy.)*
+![Step 10: Recruiter Sandbox Rankings](data/dashboard/10_Candidate_Ranking_ReactDeveloper.png)
+
+---
+
+## 🚀 Running the Local Server
+
+To launch the local web application server:
+
+1. **Start the Recruiter Sandbox Server:**
+   ```powershell
+   .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 127.0.0.1 --port 8000 --reload --reload-dir recruiter/src
+   ```
+   *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
+
+2. **Or, Start the Main Project Server:**
+   ```powershell
+   .venv\Scripts\python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+3. **Open the Web Browser URLs:**
+   * **Recruiter Board URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
+   * **Interactive Dashboard URL:** [http://localhost:8000/](http://localhost:8000/)
+
+---
+
+## 📊 RAG Parameter Sensitivity & Rank Stability Findings
 
 A structured grid search sweep (45 configurations × 8 roles = 360 runs) was executed against all candidate pools to analyze rank sensitivity across variations in similarity threshold (`theta`), chunk size, and top-k retrieval cap.
 
 All stability metrics below are computed relative to the locked baseline configuration:
-* `chunk_size = 1000`
-* `chunk_overlap = 500`
-* `top_k = 20`
-* `theta = 0.35`
+* `chunk_size = 1000`, `chunk_overlap = 500`, `top_k = 20`, `theta = 0.35`
 
 ### 1. Cross-Role Stability Summary (`grid_sweep_20260712`)
 
@@ -49,49 +105,10 @@ All stability metrics below are computed relative to the locked baseline configu
 
 ---
 
-### 2. Parameter-Specific Sensitivity & Variance Slices
+## ⚙️ Technical Architecture Overview
 
-The following tables show how shortlist Jaccard overlap @10 and average rank shift vary across the tested ranges for each parameter, averaged across all 8 roles:
-
-#### A. Chunk Size & Overlap (Overlap is 50% of Chunk Size)
-* Larger chunk sizes improve context retention, stabilizing shortlist overlap up to a peak at `700` characters.
-* Very small chunks (`500` characters) fragment sentences and context boundaries, causing a drop in Jaccard overlap.
-
-| Chunk Size | Overlap Size | Average Jaccard @10 | Average Rank Shift |
-| :--- | :--- | :---: | :---: |
-| `500` | `250` | `0.4209` | `10.3266` |
-| `700` | `350` | `0.5100` | `9.8317` |
-| `1000` | `500` | `0.5003` | `9.9607` |
-
-#### B. Retrieval Cap (Top-k Chunks per Query)
-* A lower cap (`5` or `10`) reduces context noise and keeps the rank shift lower on average.
-* A high cap (`20`) introduces low-scoring/irrelevant chunks into the scoring context window, causing additional rank volatility (average rank shift increases to `10.52`).
-
-| Top-K | Average Jaccard @10 | Average Rank Shift |
-| :--- | :---: | :---: |
-| `5` | `0.4881` | `9.8183` |
-| `10` | `0.4881` | `9.8183` |
-| `20` | `0.4516` | `10.5196` |
-
-#### C. Cosine Similarity Threshold (Theta)
-* The threshold `theta` is the single most dominant driver of ranking stability.
-* Setting `theta = 0.35` aligned closely with the locked baseline configuration (Jaccard @10 = `0.8108`).
-* Extremes (`0.1` or `0.5`) degrade ranking stability significantly by either pulling in too much background noise (low threshold) or dropping critical matching chunks entirely (high threshold).
-
-| Theta | Average Jaccard @10 | Average Rank Shift |
-| :--- | :---: | :---: |
-| `0.10` | `0.4566` | `8.7723` |
-| `0.25` | `0.3684` | `10.1221` |
-| `0.35` | `0.8108` | `1.9841` |
-| `0.40` | `0.4551` | `9.9412` |
-| `0.50` | `0.3288` | `18.4923` |
-
----
-
-### 3. Key Findings & Recommendations
-
-1. **Threshold Dominance**: The similarity threshold (`theta` / `θ`) explains **40% to 75%** of the rank variance. In comparison, chunk size, overlap, and top_k variations explain less than 3% of the variance.
-2. **Shortlist Robustness**: Technical roles like `ReactDeveloper` and `JavaDeveloper` demonstrate high shortlist overlap, whereas generalist or soft-skill heavy roles like `BusinessAnalyst` and `SalesManager` are highly sensitive, swinging candidates frequently due to overlapping semantic terminology.
-3. **Safe Operating Verdicts**:
-   - For highly precise technical roles (e.g., `ReactDeveloper`, `SQLDeveloper`), similarity thresholds can be set higher (e.g. `0.40` to `0.45`) because candidate resumes contain explicit technical terms that match query vectors strongly. This yields maximum retrieval quality with minimal context noise.
-   - For soft-skill heavy or generalist roles (e.g., `SalesManager`, `BusinessAnalyst`), setting a restricted similarity threshold band (e.g. `[0.30, 0.35]`) is recommended to prevent dropping relevant candidate context while maintaining shortlist stability.
+HireIntel.AI implements a multi-layer design to ensure extreme performance and safety:
+* **Relational Store (SQLite):** Sandboxed database tracking recruiters, saved roles, requirements, and weight configuration records.
+* **Vector Store & Indexing (BGE-768):** Document-aware segment retrieval mapped by section type (experience, skills, education) to align sub-queries with candidate qualifications.
+* **Composed Scorer:** Computes factual compliance (e.g. CGPA, institution tiers, degree tiers, years of experience) combined with LLM-evaluated criteria (skill depth and context).
+* **Thread-Safe Parallel Scorer (Multicall Parallelization):** Evaluates all requirements (e.g. 10 REQs) for a candidate concurrently using a `ThreadPoolExecutor`. Fast factual checks run locally, while slower LLM rubric evaluations are dispatched in parallel to OpenRouter, reducing scoring time per candidate from minutes to a few seconds.

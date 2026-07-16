@@ -1,0 +1,330 @@
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 SQL for Data Validation & Analysis SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0001 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 SQL for Data Validation & Analysis SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0002 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 SQL for Data Validation & Analysis SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Leadership or Senior Analyst Role SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0003 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Stakeholder Management & Communication SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 SQL for Data Validation & Analysis SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Translating Technical Concepts SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Cross-Functional Teamwork in Fast-Paced Environment SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0004 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Translating Technical Concepts SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Leadership or Senior Analyst Role SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0005 Cross-Functional Teamwork in Fast-Paced Environment SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Leadership or Senior Analyst Role SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0006 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Stakeholder Management & Communication SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 SQL for Data Validation & Analysis SQ014 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0007 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Stakeholder Management & Communication SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Stakeholder Management & Communication SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Translating Technical Concepts SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Cross-Functional Teamwork in Fast-Paced Environment SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0008 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Stakeholder Management & Communication SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Stakeholder Management & Communication SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Translating Technical Concepts SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Leadership or Senior Analyst Role SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Cross-Functional Teamwork in Fast-Paced Environment SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0009 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Business Analysis & Requirement Gathering SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Business Analysis & Requirement Gathering SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Business Analysis & Requirement Gathering SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Stakeholder Management & Communication SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Stakeholder Management & Communication SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Stakeholder Management & Communication SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Process Mapping & Business Process Improvement SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Process Mapping & Business Process Improvement SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Process Mapping & Business Process Improvement SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Analytics & Reporting Tools Familiarity SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Analytics & Reporting Tools Familiarity SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 SQL for Data Validation & Analysis SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Documentation, User Stories & Acceptance Criteria SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Documentation, User Stories & Acceptance Criteria SQ018 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Documentation, User Stories & Acceptance Criteria SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Translating Technical Concepts SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Translating Technical Concepts SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Translating Technical Concepts SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Agile & Scrum Methodologies SQ005 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Agile & Scrum Methodologies SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Agile & Scrum Methodologies SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 BI Tools (Power BI, Tableau, Looker) SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 BI Tools (Power BI, Tableau, Looker) SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 BI Tools (Power BI, Tableau, Looker) SQ011 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 BI Tools (Power BI, Tableau, Looker) SQ012 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 CRM, ERP or Data Warehouse Systems Knowledge SQ001 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 CRM, ERP or Data Warehouse Systems Knowledge SQ002 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 CRM, ERP or Data Warehouse Systems Knowledge SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 CRM, ERP or Data Warehouse Systems Knowledge SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Product-Led or Digital Transformation Environment SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Product-Led or Digital Transformation Environment SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Team Leadership / Mentoring Junior Analysts SQ009 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Team Leadership / Mentoring Junior Analysts SQ010 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 6+ Years in Business/Product Analysis or Related SQ013 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Leadership or Senior Analyst Role SQ015 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Leadership or Senior Analyst Role SQ016 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Leadership or Senior Analyst Role SQ017 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Cross-Functional Teamwork in Fast-Paced Environment SQ019 — no matching text found
+[ZERO_NO_EVIDENCE]       Business_Analyst_Lead_20260715_7da59bc2_CAND_0010 Cross-Functional Teamwork in Fast-Paced Environment SQ020 — no matching text found

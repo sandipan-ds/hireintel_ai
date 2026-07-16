@@ -1,0 +1,6 @@
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0001 React Hooks, State Management, and Lifecycle SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0002 React Hooks, State Management, and Lifecycle SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0002 TypeScript SQ007 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0003 React Hooks, State Management, and Lifecycle SQ004 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0003 CSS, HTML, and Responsive Web Design SQ008 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260715_9f32fec1_CAND_0003 TypeScript SQ007 — no matching text found

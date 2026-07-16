@@ -1,0 +1,10 @@
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0001 React hooks, state management, and lifecycle SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0001 CSS, HTML, and responsive web design SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0001 Front-end development experience SQ005-01 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0002 React hooks, state management, and lifecycle SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0002 TypeScript SQ004-01 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0002 Front-end development experience SQ005-01 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0003 React hooks, state management, and lifecycle SQ003 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0003 CSS, HTML, and responsive web design SQ006 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0003 TypeScript SQ004-01 — no matching text found
+[ZERO_NO_EVIDENCE]       VerifyReactDeveloper_20260714_492790e6_CAND_0003 Front-end development experience SQ005-01 — no matching text found
