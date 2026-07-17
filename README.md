@@ -74,22 +74,51 @@ gcloud run deploy recruiter-app --source . --region us-central1 --quiet
 
 ## 🚀 Running the Local Server
 
-To launch the local web application server:
+To launch and test the local web application server using Python:
 
-1. **Start the Recruiter Sandbox Server:**
-   ```powershell
-   .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 127.0.0.1 --port 8000 --reload --reload-dir recruiter/src
-   ```
-   *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
+### 1. Run the FastAPI Servers Locally
 
-2. **Or, Start the Main Project Server:**
-   ```powershell
-   .venv\Scripts\python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
-   ```
+* **Start the Recruiter Sandbox Server:**
+  ```powershell
+  .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 127.0.0.1 --port 8000 --reload --reload-dir recruiter/src
+  ```
+  *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
 
-3. **Open the Web Browser URLs:**
-   * **Recruiter Board URL:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
-   * **Interactive Dashboard URL:** [http://localhost:8000/](http://localhost:8000/)
+* **Or, Start the Main Project Server:**
+  ```powershell
+  .venv\Scripts\python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
+  ```
+
+* **Verify / Test Locally:**
+  * Open the **Recruiter Board UI:** [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
+  * Open the **Interactive Dashboard UI:** [http://localhost:8000/](http://localhost:8000/)
+  * Test APIs via curl:
+    ```bash
+    curl http://localhost:8000/api/recruiter/health
+    ```
+
+---
+
+### 2. Run the Docker Container Locally
+
+To run the application inside a container matching the production Cloud Run environment:
+
+* **Build the Docker Image:**
+  ```bash
+  docker build -t recruiter-app .
+  ```
+
+* **Run the Container (with local port mapping):**
+  ```bash
+  docker run -p 8000:7860 -e PORT=7860 recruiter-app
+  ```
+
+* **Test the Local Container:**
+  * Access the Web UI at: [http://localhost:8000/recruiter](http://localhost:8000/recruiter)
+  * Send a health check request:
+    ```bash
+    curl http://localhost:8000/api/recruiter/health
+    ```
 
 ---
 
