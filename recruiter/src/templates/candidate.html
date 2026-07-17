@@ -516,7 +516,20 @@
     accordion.innerHTML = `<div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:700;margin-bottom:0.5rem">Score Evidence — Per Requirement</div>`;
     (d.reqs || []).forEach(r => {
       const trace = r.rubric_trace || {};
-      const subScores = trace.sub_scores || [];
+      let subScores = trace.sub_scores || [];
+      if (subScores.length === 0 && r.sub_queries && r.sub_queries.length > 0) {
+        subScores = r.sub_queries.map(sq => {
+          const key = sq.key;
+          const score = r.code_only_sq_scores && r.code_only_sq_scores[key] !== undefined ? r.code_only_sq_scores[key] : 1.0;
+          return {
+            key: key,
+            question: sq.text || '',
+            sub_score: score,
+            closest_evidence: 'Factual verification from structured profile details (e.g. education/degree/certifications).',
+            cited_text: null
+          };
+        });
+      }
       const pct = r.weight_percentage > 0 ? Math.min(((r.contribution||0)/r.weight_percentage)*100,100) : 0;
 
       const card = document.createElement('div');

@@ -935,6 +935,7 @@ class ComposedREQResult:
             "requirement_name": self.requirement_name,
             "category": self.category,
             "weight_percentage": self.weight_percentage,
+            "sub_queries": self.sub_queries,
             "code_only_sq_scores": dict(self.code_only_sq_scores),
             "rubric_sq_scores": dict(self.rubric_sq_scores),
             "code_only_part": round(self.code_only_part, 4),
