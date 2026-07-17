@@ -59,6 +59,19 @@ The background runner downloads the resumes, parses them, builds a vector index,
 
 ---
 
+## 🌐 Live GCP Deployments
+
+The platform is deployed and hosted on Google Cloud Run:
+* **Live Recruiter Onboarding Board:** [https://recruiter-app-632852742603.us-central1.run.app/recruiter](https://recruiter-app-632852742603.us-central1.run.app/recruiter)
+* **Live Main Projects Dashboard:** [https://recruiter-app-632852742603.us-central1.run.app/](https://recruiter-app-632852742603.us-central1.run.app/)
+
+To re-deploy the backend container to Google Cloud Run:
+```powershell
+gcloud run deploy recruiter-app --source . --region us-central1 --quiet
+```
+
+---
+
 ## 🚀 Running the Local Server
 
 To launch the local web application server:
