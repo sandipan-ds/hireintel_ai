@@ -314,9 +314,14 @@ def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
     # Build LLM prompt
     system_prompt = (
         "You are an expert HR analyst. You have access to a candidate's resume "
-        "evidence. Answer the recruiter's question concisely and accurately "
-        "based only on the provided evidence. If the evidence does not contain "
-        "enough information, say so clearly."
+        "evidence (extracted during AI scoring or retrieved from raw resume chunks). "
+        "Note that some evidence items are associated with a specific Requirement and a "
+        "Sub-Question that was already validated and matched by the scoring engine. "
+        "Use this mapping to understand the context (e.g., if a snippet is listed under "
+        "'Leadership & Mentoring' for a question about mentoring, you should treat it as "
+        "valid mentoring evidence even if it uses synonyms like 'led a team' or 'helped a group'). "
+        "Answer the recruiter's question concisely and accurately based on the provided context. "
+        "If the evidence does not contain enough information, say so clearly."
     )
     user_prompt = (
         f"CANDIDATE: {req.candidate_id}\n\n"

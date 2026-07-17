@@ -271,71 +271,120 @@ class ChatRequest(BaseModel):
 @router.post("/chat")
 def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
     """
-    Answer a question about a candidate using their resume evidence chunks.
+    Answer a question about a candidate using their scored rubric evidence.
 
-    Uses a RAG-lite approach: relevant evidence_chunks from the processed JSON
-    are selected as context, then passed to the LLM with the question.
+    Reads evidence from the already-deployed *_ranked.json rubric traces
+    (closest_evidence + cited_text per sub-query) so that no processed JSON
+    files are needed in the container. Falls back to trying _load_processed
+    if evidence_chunks are available there.
 
     Args:
-        req: ChatRequest with candidate_id, question, max_chunks.
+        req: ChatRequest with candidate_id, question, api_key, model, base_url.
 
     Returns:
         Dict with answer, source_chunks used, and candidate_id.
     """
+    if not req.api_key:
+        return {
+            "candidate_id": req.candidate_id,
+            "answer": "Please configure your OpenRouter API Key in the API Key panel (🔑 API Key in the top-right navbar) to chat with this candidate.",
+            "source_chunks": [],
+        }
+
     role = _role_from_candidate_id(req.candidate_id)
+
+    # -----------------------------------------------------------------------
+    # Build context from rubric traces in the ranked JSON (always available).
+    # Each requirement's sub-queries carry closest_evidence + cited_text
+    # which together form a reliable summary of the candidate's resume.
+    # -----------------------------------------------------------------------
+    context_parts: list[str] = []
+    source_chunks: list[Dict[str, Any]] = []
+
     try:
-        proc = _load_processed(role, req.candidate_id)
-    except HTTPException as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+        ranked_data = _load_ranked(role)
+        cand_entry = next(
+            (c for c in ranked_data.get("rankings", [])
+             if c.get("candidate_id") == req.candidate_id),
+            None,
+        )
+        if cand_entry:
+            for req_item in cand_entry.get("reqs", []):
+                req_name = req_item.get("requirement_name", "")
+                trace = req_item.get("rubric_trace", {})
+                sub_scores = trace.get("sub_scores", [])
+                for sq in sub_scores:
+                    evidence = sq.get("closest_evidence") or sq.get("cited_text") or ""
+                    if evidence:
+                        chunk_text = (
+                            f"[{req_name} — {sq.get('key', '')}]\n"
+                            f"Q: {sq.get('question', '')}\n"
+                            f"Evidence: {evidence}"
+                        )
+                        context_parts.append(chunk_text)
+                        source_chunks.append({
+                            "section": req_name,
+                            "text": evidence[:300],
+                        })
+    except Exception as exc:
+        logger.warning("Could not load ranked evidence for chat: %s", exc)
 
-    # Build context from evidence chunks (simple keyword relevance filter)
-    all_chunks = proc.get("evidence_chunks", [])
-    question_lower = req.question.lower()
-    question_words = set(re.findall(r"\w+", question_lower)) - {
-        "the", "a", "an", "is", "are", "was", "were", "has", "have",
-        "what", "how", "when", "where", "who", "why", "does", "do",
-        "their", "this", "that", "with", "for", "and", "or", "in",
-        "of", "to", "on", "at", "can", "did", "they",
-    }
+    # Fallback: try processed JSON evidence_chunks if ranked evidence is sparse
+    if len(context_parts) < 3:
+        try:
+            proc = _load_processed(role, req.candidate_id)
+            all_chunks = proc.get("evidence_chunks", [])
+            question_lower = req.question.lower()
+            question_words = set(re.findall(r"\w+", question_lower)) - {
+                "the", "a", "an", "is", "are", "was", "were", "has", "have",
+                "what", "how", "when", "where", "who", "why", "does", "do",
+                "their", "this", "that", "with", "for", "and", "or", "in",
+                "of", "to", "on", "at", "can", "did", "they",
+            }
+            scored = sorted(
+                all_chunks,
+                key=lambda c: sum(1 for w in question_words if w in (c.get("text") or "").lower()),
+                reverse=True,
+            )
+            for c in scored[: req.max_chunks]:
+                context_parts.append(
+                    f"[{c.get('section_type', 'section')}]\n{c.get('text', '')}"
+                )
+                source_chunks.append({
+                    "section": c.get("section_type"),
+                    "text": c.get("text", "")[:300],
+                })
+        except Exception:
+            pass  # processed files not available in production — that's fine
 
-    def _relevance(chunk: Dict[str, Any]) -> int:
-        text = (chunk.get("text") or "").lower()
-        return sum(1 for w in question_words if w in text)
+    # Last resort: return a helpful message if truly no evidence exists
+    if not context_parts:
+        return {
+            "candidate_id": req.candidate_id,
+            "answer": "No resume evidence is available for this candidate yet. Run the pipeline to generate scores first.",
+            "source_chunks": [],
+        }
 
-    scored = sorted(all_chunks, key=_relevance, reverse=True)
-    context_chunks = scored[: req.max_chunks]
-
-    # Also include raw_text summary if chunks are sparse
-    raw_text = proc.get("raw", {}).get("raw_text", "")
-    if not context_chunks and raw_text:
-        context_chunks = [{"text": raw_text[:4000], "section_type": "full_resume"}]
-
-    context_text = "\n\n---\n\n".join(
-        f"[{c.get('section_type', 'section')}]\n{c.get('text', '')}"
-        for c in context_chunks
-    )
+    context_text = "\n\n---\n\n".join(context_parts[: req.max_chunks])
 
     # Build LLM prompt
     system_prompt = (
         "You are an expert HR analyst. You have access to a candidate's resume "
-        "evidence. Answer the recruiter's question concisely and accurately "
-        "based only on the provided evidence. If the evidence does not contain "
-        "enough information, say so clearly."
+        "evidence (extracted during AI scoring or retrieved from raw resume chunks). "
+        "Note that some evidence items are associated with a specific Requirement and a "
+        "Sub-Question that was already validated and matched by the scoring engine. "
+        "Use this mapping to understand the context (e.g., if a snippet is listed under "
+        "'Leadership & Mentoring' for a question about mentoring, you should treat it as "
+        "valid mentoring evidence even if it uses synonyms like 'led a team' or 'helped a group'). "
+        "Answer the recruiter's question concisely and accurately based on the provided context. "
+        "If the evidence does not contain enough information, say so clearly."
     )
     user_prompt = (
         f"CANDIDATE: {req.candidate_id}\n\n"
-        f"RESUME EVIDENCE:\n```\n{context_text}\n```\n\n"
+        f"RESUME EVIDENCE (from AI scoring):\n```\n{context_text}\n```\n\n"
         f"RECRUITER QUESTION: {req.question}\n\n"
         "Answer based only on the evidence above."
     )
-
-    # Decouple entirely from internal env keys — only accept client-provided (BYOK) settings
-    if not req.api_key:
-      return {
-          "candidate_id": req.candidate_id,
-          "answer": "Please configure your OpenRouter API Key in the API Key panel (🔑 API Key in the top-right navbar) to chat with this candidate.",
-          "source_chunks": [],
-      }
 
     providers = [{
         "name": "BYOK",
@@ -369,21 +418,18 @@ def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
             resp.raise_for_status()
             answer = resp.json()["choices"][0]["message"]["content"]
             logger.info("Chat answered via %s (model=%s)", provider["name"], provider["model"])
-            break  # success — stop waterfall
+            break
         except Exception as exc:
             last_error = exc
-            logger.warning("Chat provider %s failed: %s — trying next.", provider["name"], exc)
+            logger.warning("Chat provider %s failed: %s", provider["name"], exc)
             continue
 
     if answer is None:
         logger.error("All chat providers failed. Last error: %s", last_error)
-        answer = f"Chat unavailable — all providers failed. Last error: {last_error}"
+        answer = f"Chat unavailable — provider failed. Last error: {last_error}"
 
     return {
         "candidate_id": req.candidate_id,
         "answer": answer,
-        "source_chunks": [
-            {"section": c.get("section_type"), "text": c.get("text", "")[:300]}
-            for c in context_chunks
-        ],
+        "source_chunks": source_chunks[:8],
     }
