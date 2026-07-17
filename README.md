@@ -122,7 +122,7 @@ To run the application inside a container matching the production Cloud Run envi
 
 ---
 
-## 📊 RAG Parameter Sensitivity & Rank Stability Findings
+## 📊 RAG Parameter Sensitivity & Rank Stability Findings from the Recursive Chunker experiment (deprecated)
 
 A structured grid search sweep (45 configurations × 8 roles = 360 runs) was executed against all candidate pools to analyze rank sensitivity across variations in similarity threshold (`theta`), chunk size, and top-k retrieval cap.
 
@@ -151,6 +151,6 @@ All stability metrics below are computed relative to the locked baseline configu
 
 HireIntel.AI implements a multi-layer design to ensure extreme performance and safety:
 * **Relational Store (SQLite):** Sandboxed database tracking recruiters, saved roles, requirements, and weight configuration records.
-* **Vector Store & Indexing (BGE-768):** Document-aware segment retrieval mapped by section type (experience, skills, education) to align sub-queries with candidate qualifications.
+* **Vector Store & Indexing (BGE-768):** Document-aware segment retrieval mapped by section type (experience, skills, education) to align sub-queries with candidate qualifications. *Note: BGE-768 is used only locally. For GCP deployment, we use `gemini-embedding-001` as BGE took a very long time to load, embed, and index.*
 * **Composed Scorer:** Computes factual compliance (e.g. CGPA, institution tiers, degree tiers, years of experience) combined with LLM-evaluated criteria (skill depth and context).
 * **Thread-Safe Parallel Scorer (Multicall Parallelization):** Evaluates all requirements (e.g. 10 REQs) for a candidate concurrently using a `ThreadPoolExecutor`. Fast factual checks run locally, while slower LLM rubric evaluations are dispatched in parallel to OpenRouter, reducing scoring time per candidate from minutes to a few seconds.
