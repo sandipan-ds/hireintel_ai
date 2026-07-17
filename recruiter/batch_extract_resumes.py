@@ -132,7 +132,7 @@ def main():
         roles_to_process = [args.role]
     else:
         roles_to_process = ROLES
-    
+
     total_processed = 0
     total_failed = 0
 
@@ -174,9 +174,24 @@ def main():
             chunk_label = f"{role} chunk {chunk_idx+1}/{len(chunks)}"
             logger.info("--- %s (%d resumes) ---", chunk_label, len(chunk))
 
+            # ------------------------------------------------------------------
+            # BUG FIX: Previously this passed registry=None to extract_resume,
+            # causing every parallel thread to create its own fresh_registry()
+            # starting at counter=0.  All 10 threads would independently derive
+            # the same sequential ID (e.g. {slug}_CAND_0001) for their file and
+            # write to the SAME output path — the last write won and 9 of 10
+            # candidates silently disappeared from the ranking.
+            #
+            # Fix: pass the shared ``registry`` instance directly.
+            # CandidateRegistry.allocate_or_lookup() is already guarded by an
+            # internal RLock, so ID allocation is serialised (correct) while
+            # the expensive PDF-parsing and LLM-normalisation work still runs
+            # in parallel across threads.
+            # ------------------------------------------------------------------
+
             def process_resume(path):
                 try:
-                    # Skip if output already exists (makes runs safely resumable)
+                    # Skip-check: registry.lookup() is thread-safe (internal RLock).
                     if not args.dry_run and not args.overwrite:
                         existing_entry = registry.lookup(source_path=path)
                         if existing_entry:
@@ -191,7 +206,12 @@ def main():
                                     logger.info("Skipping %s — already extracted as %s", path.name, cid)
                                     return "skipped"
 
-                    # Run extraction pipeline
+                    # Run extraction pipeline passing the SHARED registry.
+                    # CandidateRegistry is internally thread-safe (RLock): the
+                    # quick allocate_or_lookup() call serialises, but the slow
+                    # PDF-parsing / OCR / LLM-normalisation work runs fully in
+                    # parallel because the lock is released immediately after
+                    # ID allocation.  Each file now gets a unique sequential ID.
                     result = extract_resume(path, registry=registry)
 
                     candidate_id = result["candidate_id"]
@@ -201,7 +221,9 @@ def main():
                         with output_path.open("w", encoding="utf-8") as f:
                             json.dump(result, f, indent=2, ensure_ascii=False)
 
-                    logger.info("Saved %s", output_path.name)
+                    # No separate merge-back needed: extract_resume() already
+                    # registered the candidate via the shared registry above.
+                    logger.info("Saved %s → %s", path.name, output_path.name)
                     return "success"
 
                 except Exception as exc:
