@@ -33,8 +33,6 @@ class RateLimitException(Exception):
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = ROOT / ".env"
-if not ENV_PATH.exists() and (ROOT.parent / ".env").exists():
-    ENV_PATH = ROOT.parent / ".env"
 
 
 # ---------------------------------------------------------------------------

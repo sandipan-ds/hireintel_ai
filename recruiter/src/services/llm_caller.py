@@ -33,8 +33,6 @@ class RateLimitException(Exception):
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = ROOT / ".env"
-if not ENV_PATH.exists() and (ROOT.parent / ".env").exists():
-    ENV_PATH = ROOT.parent / ".env"
 
 
 # ---------------------------------------------------------------------------
@@ -708,7 +706,6 @@ class LLMRubricCaller:
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / "llm_calls.log"
 
-        import time
         if not self._available or not self.api_key:
             with log_file.open("a", encoding="utf-8") as f:
                 f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] SKIP: caller not available or api_key missing\n")
@@ -716,6 +713,7 @@ class LLMRubricCaller:
         
         import httpx
         import random
+        import time
 
         endpoint = f"{self.base_url.rstrip('/')}/chat/completions"
         max_retries = 3

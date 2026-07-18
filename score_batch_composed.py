@@ -767,9 +767,9 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                     
                 # 1. Context Relevance (Precision)
                 for chunk in retrieved_chunks[:1]:
-                    prompt_cr = f"Analyze the sub-query: {sub_query}. Now read the retrieved text chunk: {chunk}.\n\nDoes this chunk contain semantic evidence, related experience, or synonyms that help verify the sub-query? Answer strictly YES or NO."
+                    prompt_cr = f"Analyze the sub-query: {sub_query}. Now read the retrieved text chunk: {chunk}. Does this chunk contain concrete evidence that directly helps in answering the sub-query? Answer strictly YES or NO."
                     cr_ans = judge_call_with_retry(
-                        system_prompt="You are a semantic relevance evaluator. Output YES if the retrieved chunk contains semantic evidence, synonyms, or context that directly helps verify or answer the sub-query. Output NO if the chunk is completely irrelevant. Answer strictly YES or NO.",
+                        system_prompt="You are a strict evaluator for RAG context relevance. Answer strictly YES or NO.",
                         user_prompt=prompt_cr,
                         max_tokens=10
                     )
@@ -781,12 +781,11 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 prompt_f = (
                     f"Compare the scoring explanation: {explanation} against the raw source evidence text:\n"
                     f"```\n{retrieved_text}\n```\n\n"
-                    f"Ignoring qualitative score bands or metrics (like 'some', 'substantial', 'yes', 'no'), "
-                    f"is the core professional qualification or skill claim in the explanation supported by the source evidence? "
-                    f"Answer strictly YES or NO."
+                    f"Is every claim, qualification statement, or number of years mentioned in the explanation "
+                    f"directly supported by the source evidence? Answer strictly YES or NO."
                 )
                 f_ans = judge_call_with_retry(
-                    system_prompt="You are a semantic faithfulness auditor. Output YES if the core professional qualifications and skill claims in the explanation are grounded and supported by the source evidence. Output NO if there are active hallucinations or unsupported claims. Answer strictly YES or NO.",
+                    system_prompt="You are a strict evaluator for RAG faithfulness. Output YES if all claims in the explanation are grounded, or NO if there are any claims that are not grounded. Do not output anything else.",
                     user_prompt=prompt_f,
                     max_tokens=10
                 )
@@ -795,9 +794,9 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                     faithfulness_scores.append(is_faithful)
                     
                 # 3. Answer Relevance
-                prompt_ar = f"Evaluate if the explanation: {explanation} semantically answers the question raised in the sub-query: {sub_query}. Ignore rigid syntax matching and rate from 0.0 (completely off-topic/evasive) to 1.0 (directly answers). Output only the numeric score."
+                prompt_ar = f"Evaluate if the explanation: {explanation} directly and completely answers the question raised in the sub-query: {sub_query}. Rate the answer relevance from 0.0 (completely off-topic/evasive) to 1.0 (directly answers). Output only the numeric score."
                 ar_ans = judge_call_with_retry(
-                    system_prompt="You are a semantic evaluator for answer relevance. Output a single numeric rating from 0.0 to 1.0.",
+                    system_prompt="You are a strict evaluator for RAG answer relevance. Output a single numeric rating from 0.0 to 1.0.",
                     user_prompt=prompt_ar,
                     max_tokens=10
                 )
