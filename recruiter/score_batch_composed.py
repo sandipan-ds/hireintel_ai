@@ -678,6 +678,7 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
     context_relevance_scores = []
     faithfulness_scores = []
     answer_relevance_scores = []
+    errors = []
     
     rate_limit_encountered = False
 
@@ -718,6 +719,7 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 
                 # For non-rate limit errors or exhausted retries, log and return None
                 logger.warning("⚖️ Judge LLM call failed: %s", e)
+                errors.append(str(e))
                 if attempt < max_retries:
                     time.sleep(2.0)
                     continue
@@ -823,6 +825,8 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
         },
         "sample_size": sample_size
     }
+    if errors:
+        eval_results["errors"] = list(sorted(set(errors)))
     
     # If rate limit encountered, log recommendations banner
     if rate_limit_encountered:
