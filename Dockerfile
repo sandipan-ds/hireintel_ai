@@ -16,20 +16,14 @@ WORKDIR /app
 # Environment flags
 # ---------------------------------------------------------------------------
 # CUDA_VISIBLE_DEVICES="" — force CPU mode; prevents PyTorch CUDA init hangs
-#   (kept here even though torch is no longer installed, in case any indirect
-#   dependency tries to probe for CUDA).
 ENV CUDA_VISIBLE_DEVICES=""
 ENV PYTHONUNBUFFERED=1
 # TOKENIZERS_PARALLELISM=false — prevents Rust tokenizer deadlocks inside
 #   gVisor (Cloud Run sandboxed kernel).
 ENV TOKENIZERS_PARALLELISM=false
-# HF_HOME is kept to silence any stale HF cache path warnings from packages
-#   that depend on transformers transitively (e.g. unstructured).
+# HF_HOME is kept to silence any HF cache path warnings.
 ENV HF_HOME=/app/.cache/huggingface
-# HF_HUB_OFFLINE=1 — no network downloads at startup; all model weights have
-#   been removed from the image (DEC-036: embedding is now via Gemini REST API).
-ENV HF_HUB_OFFLINE=1
-ENV TRANSFORMERS_OFFLINE=1
+ENV FASTEMBED_CACHE_PATH=/app/.cache/fastembed
 
 # ---------------------------------------------------------------------------
 # Python dependencies — production-only (no torch / sentence-transformers)
@@ -37,9 +31,16 @@ ENV TRANSFORMERS_OFFLINE=1
 COPY requirements.prod.txt .
 
 # Use requirements.prod.txt instead of requirements.txt (DEC-036).
-# This drops torch, torchvision, sentence-transformers, transformers, and all
-# dev tools, reducing the image from ~3.94 GB to ~700 MB.
 RUN pip install --no-cache-dir -r requirements.prod.txt
+
+# Pre-download FastEmbed model weights during building to bake them into the image.
+# This ensures zero runtime network request and fast startup.
+RUN python -c "from fastembed import TextEmbedding; TextEmbedding(model_name='BAAI/bge-base-en-v1.5')"
+
+# Set offline flags at runtime after the downloads are completed.
+ENV HF_HUB_OFFLINE=1
+ENV TRANSFORMERS_OFFLINE=1
+
 
 # ---------------------------------------------------------------------------
 # Application source

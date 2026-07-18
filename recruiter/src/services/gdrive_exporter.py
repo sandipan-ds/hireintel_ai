@@ -195,6 +195,11 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     if ranked_file.exists():
         shutil.copy(ranked_file, dest_dir / f"{slug}_ranked.json")
 
+    # D2. RAG evaluation report (correctness audit)
+    eval_file = SCORES_DIR / f"{slug}_rag_evaluation.json"
+    if eval_file.exists():
+        shutil.copy(eval_file, dest_dir / f"{slug}_rag_evaluation.json")
+
     # E. Detailed candidate score traces
     traces_src = SCORES_DIR / slug
     if traces_src.exists():
@@ -202,13 +207,34 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
             if item.is_file() and item.suffix == ".json":
                 shutil.copy(item, scores_dest / item.name)
 
+    if job_log is not None:
+        log_file = dest_dir / "scoring_run_log.txt"
+        log_file.write_text("\n".join(job_log), encoding="utf-8")
+    else:
+        log_file = None
+
     log_update("✓ Locally packaged successfully.")
+
+    def clean_folder_id_helper(val: Optional[str]) -> Optional[str]:
+        if not val:
+            return None
+        val = val.strip()
+        if "?" in val:
+            val = val.partition("?")[0]
+        if "/" in val:
+            val = val.rstrip("/").split("/")[-1]
+        return val
 
     # 5. Connect to Google Drive if environment variables are set
     client_id = os.getenv("OWNER_GDRIVE_CLIENT_ID")
     client_secret = os.getenv("OWNER_GDRIVE_CLIENT_SECRET")
     refresh_token = os.getenv("OWNER_GDRIVE_REFRESH_TOKEN")
-    folder_id = os.getenv("OWNER_GDRIVE_FOLDER_ID")
+    
+    raw_user_data_folder = os.getenv("OWNER_GDRIVE_FOR_USER_DATA")
+    if raw_user_data_folder:
+        folder_id = clean_folder_id_helper(raw_user_data_folder)
+    else:
+        folder_id = os.getenv("OWNER_GDRIVE_FOLDER_ID")
 
     if all([client_id, client_secret, refresh_token, folder_id]):
         log_update("Connecting to owner's Google Drive...")
@@ -223,6 +249,21 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
             
             log_update(f"Uploading folder '{folder_name}' to Google Drive...")
             uploader.upload_directory_recursive(dest_dir, folder_id)
+
+            # Upload session log directly to OWNER_GDRIVE_FOR_USER_LOGS folder if configured
+            user_logs_folder = os.getenv("OWNER_GDRIVE_FOR_USER_LOGS")
+            if user_logs_folder and log_file and log_file.exists():
+                user_logs_folder_id = clean_folder_id_helper(user_logs_folder)
+                if user_logs_folder_id:
+                    log_update("Uploading user session log to dedicated logs folder...")
+                    uploader.upload_file(log_file, user_logs_folder_id)
+
+            # Sync SQLite DB to Google Drive
+            try:
+                from recruiter.src.services.gdrive_syncer import backup_db_to_gdrive
+                backup_db_to_gdrive()
+            except Exception as dbe:
+                logger.warning("Failed to trigger DB backup from exporter: %s", dbe)
             
             log_update("✓ Upload complete. Cleaning up local export cache...")
             shutil.rmtree(dest_dir)

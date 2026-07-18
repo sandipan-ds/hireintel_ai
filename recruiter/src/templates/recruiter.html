@@ -289,7 +289,7 @@
   <div class="nav-links">
     <a href="/recruiter" class="new-job active">✦ Recruiter Board</a>
     <a href="/dashboard">My Project Ranking</a>
-    <a href="/api/docs">API</a>
+    <a href="/docs">API</a>
   </div>
 </nav>
 
@@ -498,9 +498,9 @@
 
     <!-- Key input -->
     <div class="sidebar-section">
-      <span class="sidebar-label">OpenRouter API Key</span>
+      <span class="sidebar-label">API Key</span>
       <input type="password" class="sidebar-input" id="byok-key"
-             placeholder="sk-or-v1-…"
+             placeholder="Enter your API key…"
              oninput="onKeyInput()" />
       <div class="key-hint">
         Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -519,6 +519,16 @@
       </div>
     </div>
 
+    <!-- Judge Model input — user types exact judge model slug -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Judge Model <span style="color:var(--muted);font-weight:400">(optional evaluator)</span></span>
+      <input type="text" class="sidebar-input" id="byok-judge-model"
+             placeholder="e.g. google/gemini-3.1-pro" />
+      <div class="key-hint" style="margin-top:.35rem;">
+        Type the exact judge model slug. If specified, computes RAG retrieval correctness metrics.
+      </div>
+    </div>
+
     <!-- Base URL input -->
     <div class="sidebar-section">
       <span class="sidebar-label">Provider Base URL</span>
@@ -533,34 +543,49 @@
       </div>
     </div>
 
-    <!-- Recommendations — multimodal models only -->
-    <div class="sidebar-section">
-      <div class="rec-box">
-        <div class="rec-box-title">Recommendations · multimodal only</div>
-        <div class="rec-row">
-          <span class="rec-pill paid">PAID</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('google/gemini-3.1-flash-lite')" title="Click to fill">google/gemini-3.1-flash-lite ↗</div>
-            <div class="rec-why">Fast, multimodal, high RPM — handles scanned PDFs &amp; image resumes</div>
-          </div>
+    <!-- Concurrency Settings -->
+    <div class="sidebar-section" style="display: none;">
+      <span class="sidebar-label">Concurrency Settings</span>
+      <div style="display:flex;gap:.5rem;margin-top:.35rem;">
+        <div style="flex:1;">
+          <span style="font-size:.65rem;color:var(--muted);display:block;margin-bottom:.2rem;">Candidates</span>
+          <select class="sidebar-input" id="byok-candidate-concurrency" style="padding:.2rem .4rem;font-size:.72rem;">
+            <option value="auto" selected>Auto</option>
+            <option value="1">1 (Seq)</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
         </div>
-        <div class="rec-row">
-          <span class="rec-pill free">FREE</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('google/gemma-4-31b-it:free')" title="Click to fill">google/gemma-4-31b-it:free ↗</div>
-            <div class="rec-why">Multimodal, no cost — rate limited, good for small batches</div>
-          </div>
+        <div style="flex:1;">
+          <span style="font-size:.65rem;color:var(--muted);display:block;margin-bottom:.2rem;">Requirements</span>
+          <select class="sidebar-input" id="byok-req-concurrency" style="padding:.2rem .4rem;font-size:.72rem;">
+            <option value="auto" selected>Auto</option>
+            <option value="1">1 (Seq)</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+          </select>
         </div>
-        <div class="rec-row">
-          <span class="rec-pill free">FREE</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
-            <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
-          </div>
-        </div>
-        <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;">↑ Click a model to fill the field above</div>
+      </div>
+      <div class="key-hint" style="margin-top:.35rem;line-height:1.45;">
+        Reduce concurrency if encountering rate limits (429/403) from your provider.
       </div>
     </div>
+
+
 
     <!-- Parallelization explanation -->
     <div class="parallel-box">
@@ -598,9 +623,10 @@ const state = {
 // ── Read sidebar key / model / base_url ───────────────────────
 function getByok() {
   return {
-    api_key:  document.getElementById('byok-key').value.trim() || null,
-    model:    document.getElementById('byok-model').value.trim() || null,
-    base_url: document.getElementById('byok-base-url').value.trim() || null,
+    api_key:      document.getElementById('byok-key').value.trim() || null,
+    model:        document.getElementById('byok-model').value.trim() || null,
+    judge_model:  document.getElementById('byok-judge-model').value.trim() || null,
+    base_url:     document.getElementById('byok-base-url').value.trim() || null,
   };
 }
 
@@ -629,18 +655,15 @@ function onKeyInput() {
   localStorage.setItem('byok_key', key);
   const el  = document.getElementById('key-status');
   if (!key) { el.textContent = ''; el.className = ''; return; }
-  if (key.startsWith('sk-or-')) {
-    el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
-  } else {
-    el.textContent = 'ℹ Key format unrecognized — will try anyway'; el.className = '';
-    el.style.color = 'var(--muted)';
-  }
+  el.textContent = '✓ API key detected'; el.className = 'ks-ok';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const keyInput = document.getElementById('byok-key');
   const modelInput = document.getElementById('byok-model');
   const urlInput = document.getElementById('byok-base-url');
+  const candInput = document.getElementById('byok-candidate-concurrency');
+  const reqInput = document.getElementById('byok-req-concurrency');
 
   if (keyInput) {
     keyInput.value = localStorage.getItem('byok_key') || '';
@@ -652,15 +675,38 @@ document.addEventListener('DOMContentLoaded', () => {
   if (urlInput) {
     urlInput.value = localStorage.getItem('byok_base_url') || '';
   }
+  if (candInput) {
+    candInput.value = localStorage.getItem('byok_candidate_concurrency') || 'auto';
+  }
+  if (reqInput) {
+    reqInput.value = localStorage.getItem('byok_req_concurrency') || 'auto';
+  }
 
   if (modelInput) {
     modelInput.addEventListener('input', () => {
       localStorage.setItem('byok_model', modelInput.value.trim());
     });
   }
+  const judgeInput = document.getElementById('byok-judge-model');
+  if (judgeInput) {
+    judgeInput.value = localStorage.getItem('byok_judge_model') || '';
+    judgeInput.addEventListener('input', () => {
+      localStorage.setItem('byok_judge_model', judgeInput.value.trim());
+    });
+  }
   if (urlInput) {
     urlInput.addEventListener('input', () => {
       localStorage.setItem('byok_base_url', urlInput.value.trim());
+    });
+  }
+  if (candInput) {
+    candInput.addEventListener('change', () => {
+      localStorage.setItem('byok_candidate_concurrency', candInput.value);
+    });
+  }
+  if (reqInput) {
+    reqInput.addEventListener('change', () => {
+      localStorage.setItem('byok_req_concurrency', reqInput.value);
     });
   }
 });
@@ -1177,7 +1223,7 @@ async function validateThisLink(btn) {
 
 // ── Step 6 — Build run summary ────────────────────────────────
 function buildRunSummary() {
-  const { model } = getByok();
+  const { model, judge_model } = getByok();
   const slug  = state.savedRoleSlug || 'your_role';
   const links = [...document.querySelectorAll('.link-input')].map(i => i.value.trim()).filter(Boolean);
   state.resumeLinks = links;
@@ -1187,6 +1233,7 @@ function buildRunSummary() {
     <div class="summary-item"><div class="summary-label">Requirements</div><div class="summary-val">${state.reqs.length}</div></div>
     <div class="summary-item"><div class="summary-label">Sub-Queries</div><div class="summary-val">${Object.values(state.subqueries).flat().length}</div></div>
     <div class="summary-item"><div class="summary-label">Model</div><div class="summary-val" style="font-size:.78rem;word-break:break-all">${esc(model||'(none selected)')}</div></div>
+    <div class="summary-item"><div class="summary-label">Judge Model</div><div class="summary-val" style="font-size:.78rem;word-break:break-all">${esc(judge_model||'(none)')}</div></div>
   `;
   checkRankings(); // pre-check in case it was already scored
 }
@@ -1205,7 +1252,12 @@ async function startScoring() {
   btn.disabled = true; btn.textContent = '… Starting';
 
   try {
-    const { api_key, model, base_url } = getByok();
+    const { api_key, model, judge_model, base_url } = getByok();
+    const candConcurrencyVal = document.getElementById('byok-candidate-concurrency').value;
+    const reqConcurrencyVal = document.getElementById('byok-req-concurrency').value;
+    const candidate_concurrency = candConcurrencyVal === 'auto' ? null : parseInt(candConcurrencyVal, 10);
+    const requirement_concurrency = reqConcurrencyVal === 'auto' ? null : parseInt(reqConcurrencyVal, 10);
+
     const res = await fetch('/api/recruiter/start-scoring', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1216,7 +1268,10 @@ async function startScoring() {
         weights: state.weights,
         api_key,
         model,
-        base_url
+        judge_model,
+        base_url,
+        candidate_concurrency,
+        requirement_concurrency
       }),
     });
     const d = await res.json();
@@ -1277,7 +1332,8 @@ function pollScoringStatus(initialEta) {
       if (d.status === 'done') {
         clearInterval(_etaInterval);
         if (etaEl) etaEl.textContent = '✓ Scoring complete!';
-        document.getElementById('btn-start-scoring').textContent = '✓ Scored';
+        const b = document.getElementById('btn-start-scoring');
+        b.disabled = false; b.textContent = '↻ Rescore';
         checkRankings(); // auto-load
       } else if (d.status === 'error') {
         clearInterval(_etaInterval);

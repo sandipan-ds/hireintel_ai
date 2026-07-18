@@ -324,7 +324,7 @@
     <a href="/recruiter" style="color:#a78bfa;font-weight:700;">✦ Recruiter Board</a>
     <a href="/dashboard" class="active">My Project Ranking</a>
     <a href="/configure">Configure</a>
-    <a href="/api/docs" target="_blank">API</a>
+    <a href="/docs" target="_blank">API</a>
     <span class="badge">BETA</span>
   </div>
 </nav>
@@ -415,9 +415,9 @@
 
       <!-- Key input -->
       <div class="sidebar-section">
-        <span class="sidebar-label">OpenRouter API Key</span>
+        <span class="sidebar-label">API Key</span>
         <input type="password" class="sidebar-input" id="byok-key"
-               placeholder="sk-or-v1-…"
+               placeholder="Enter your API key…"
                oninput="onKeyInput()" />
         <div class="key-hint">
           Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -433,6 +433,14 @@
         <div class="key-hint" style="margin-top:.35rem;">
           Type the exact model slug from your provider.
           <strong style="color:#f59e0b;">Must be multimodal</strong> — resumes may be scanned images.
+        </div>
+      </div>      <!-- Judge Model input — user types exact judge model slug -->
+      <div class="sidebar-section">
+        <span class="sidebar-label">Judge Model <span style="color:var(--muted);font-weight:400">(optional evaluator)</span></span>
+        <input type="text" class="sidebar-input" id="byok-judge-model"
+               placeholder="e.g. google/gemini-3.1-pro" />
+        <div class="key-hint" style="margin-top:.35rem;">
+          Type the exact judge model slug. If specified, computes RAG retrieval correctness metrics.
         </div>
       </div>
 
@@ -450,32 +458,68 @@
         </div>
       </div>
 
-      <!-- Recommendations — multimodal models only -->
-      <div class="sidebar-section">
-        <div class="rec-box">
-          <div class="rec-box-title">Recommendations · multimodal only</div>
-          <div class="rec-row">
-            <span class="rec-pill paid">PAID</span>
-            <div class="rec-detail">
-              <div class="rec-model" onclick="fillModel('google/gemini-3.1-flash-lite')" title="Click to fill">google/gemini-3.1-flash-lite ↗</div>
-              <div class="rec-why">Fast, multimodal, high RPM — handles scanned PDFs &amp; image resumes</div>
-            </div>
+      <!-- Concurrency Settings -->
+      <div class="sidebar-section" style="display: none;">
+        <span class="sidebar-label">Concurrency Settings</span>
+        <div style="display:flex;gap:.5rem;margin-top:.35rem;">
+          <div style="flex:1;">
+            <span style="font-size:.65rem;color:var(--muted);display:block;margin-bottom:.2rem;">Candidates</span>
+            <select class="sidebar-input" id="byok-candidate-concurrency" style="padding:.2rem .4rem;font-size:.72rem;">
+              <option value="auto" selected>Auto</option>
+              <option value="1">1 (Seq)</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
-          <div class="rec-row">
-            <span class="rec-pill free">FREE</span>
-            <div class="rec-detail">
-              <div class="rec-model" onclick="fillModel('google/gemma-4-31b-it:free')" title="Click to fill">google/gemma-4-31b-it:free ↗</div>
-              <div class="rec-why">Multimodal, no cost — rate limited, good for small batches</div>
-            </div>
+          <div style="flex:1;">
+            <span style="font-size:.65rem;color:var(--muted);display:block;margin-bottom:.2rem;">Requirements</span>
+            <select class="sidebar-input" id="byok-req-concurrency" style="padding:.2rem .4rem;font-size:.72rem;">
+              <option value="auto" selected>Auto</option>
+              <option value="1">1 (Seq)</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
           </div>
-          <div class="rec-row">
-            <span class="rec-pill free">FREE</span>
-            <div class="rec-detail">
-              <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
-              <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
-            </div>
+        </div>
+        <div class="key-hint" style="margin-top:.35rem;line-height:1.45;">
+          Reduce concurrency if encountering rate limits (429/403) from your provider.
+        </div>
+      </div>
+
+
+      <!-- RAG Correctness Metrics Box (hidden by default, shown when role loaded and metrics exist) -->
+      <div class="sidebar-section" id="rag-eval-box" style="display:none">
+        <div class="rec-box" style="background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);">
+          <div class="rec-box-title" style="color:var(--green)">📊 RAG Correctness Audit</div>
+          <div style="font-size:0.75rem;margin-top:0.4rem;display:flex;justify-content:space-between;align-items:center;line-height:1.6;">
+            <span>Context Precision:</span>
+            <strong id="rag-cr-val">—</strong>
           </div>
-          <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;">↑ Click a model to fill the field above</div>
+          <div style="font-size:0.75rem;margin-top:0.3rem;display:flex;justify-content:space-between;align-items:center;line-height:1.6;">
+            <span>Faithfulness:</span>
+            <strong id="rag-f-val">—</strong>
+          </div>
+          <div style="font-size:0.75rem;margin-top:0.3rem;display:flex;justify-content:space-between;align-items:center;line-height:1.6;">
+            <span>Answer Relevance:</span>
+            <strong id="rag-ar-val">—</strong>
+          </div>
+          <div class="key-hint" style="font-size:0.62rem;margin-top:0.4rem;word-break:break-all;" id="rag-judge-info">
+            Audited by: —
+          </div>
         </div>
       </div>
     </aside>
@@ -535,9 +579,28 @@
       }
       updateStats(data);
       document.getElementById('statsStrip').style.display = '';
+      
+      if (data.rag_evaluation && data.rag_evaluation.metrics) {
+        const m = data.rag_evaluation.metrics;
+        document.getElementById('rag-cr-val').textContent = `${(m.context_relevance * 100).toFixed(1)}%`;
+        document.getElementById('rag-cr-val').style.color = m.context_relevance >= 0.75 ? 'var(--green)' : 'var(--yellow)';
+        
+        document.getElementById('rag-f-val').textContent = `${(m.faithfulness * 100).toFixed(1)}%`;
+        document.getElementById('rag-f-val').style.color = m.faithfulness >= 0.99 ? 'var(--green)' : 'var(--red)';
+        
+        document.getElementById('rag-ar-val').textContent = `${(m.answer_relevance * 100).toFixed(1)}%`;
+        document.getElementById('rag-ar-val').style.color = m.answer_relevance >= 0.90 ? 'var(--green)' : 'var(--yellow)';
+        
+        document.getElementById('rag-judge-info').textContent = `Audited by: ${data.rag_evaluation.judge_model} (${data.rag_evaluation.sample_size} candidates)`;
+        document.getElementById('rag-eval-box').style.display = '';
+      } else {
+        document.getElementById('rag-eval-box').style.display = 'none';
+      }
+
       filterTable();
     } catch(e) {
       showEmpty('Failed to load rankings. Check server.');
+      document.getElementById('rag-eval-box').style.display = 'none';
     }
   }
 
@@ -700,18 +763,15 @@
     localStorage.setItem('byok_key', key);
     const el  = document.getElementById('key-status');
     if (!key) { el.textContent = ''; el.className = ''; return; }
-    if (key.startsWith('sk-or-')) {
-      el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
-    } else {
-      el.textContent = 'ℹ Key format unrecognized'; el.className = '';
-      el.style.color = 'var(--muted)';
-    }
+    el.textContent = '✓ API key detected'; el.className = 'ks-ok';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     const keyInput = document.getElementById('byok-key');
     const modelInput = document.getElementById('byok-model');
     const urlInput = document.getElementById('byok-base-url');
+    const candInput = document.getElementById('byok-candidate-concurrency');
+    const reqInput = document.getElementById('byok-req-concurrency');
 
     if (keyInput) {
       keyInput.value = localStorage.getItem('byok_key') || '';
@@ -720,8 +780,18 @@
     if (modelInput) {
       modelInput.value = localStorage.getItem('byok_model') || '';
     }
+    const judgeInput = document.getElementById('byok-judge-model');
+    if (judgeInput) {
+      judgeInput.value = localStorage.getItem('byok_judge_model') || '';
+    }
     if (urlInput) {
       urlInput.value = localStorage.getItem('byok_base_url') || '';
+    }
+    if (candInput) {
+      candInput.value = localStorage.getItem('byok_candidate_concurrency') || 'auto';
+    }
+    if (reqInput) {
+      reqInput.value = localStorage.getItem('byok_req_concurrency') || 'auto';
     }
 
     if (modelInput) {
@@ -729,9 +799,24 @@
         localStorage.setItem('byok_model', modelInput.value.trim());
       });
     }
+    if (judgeInput) {
+      judgeInput.addEventListener('input', () => {
+        localStorage.setItem('byok_judge_model', judgeInput.value.trim());
+      });
+    }
     if (urlInput) {
       urlInput.addEventListener('input', () => {
         localStorage.setItem('byok_base_url', urlInput.value.trim());
+      });
+    }
+    if (candInput) {
+      candInput.addEventListener('change', () => {
+        localStorage.setItem('byok_candidate_concurrency', candInput.value);
+      });
+    }
+    if (reqInput) {
+      reqInput.addEventListener('change', () => {
+        localStorage.setItem('byok_req_concurrency', reqInput.value);
       });
     }
   });

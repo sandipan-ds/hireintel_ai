@@ -78,10 +78,8 @@ DEFAULT_INDEX_PATH: str = "recruiter/data/embeddings/index.npz"
 #: Path to the line-delimited JSONL metadata file produced alongside the index.
 DEFAULT_CHUNKS_PATH: str = "recruiter/data/embeddings/chunks.jsonl"
 
-#: Embedding model identifier — updated from text-embedding-004 (DEC-036, retired/404)
-#: to gemini-embedding-001 (DEC-037). Same REST endpoint, same 768-dim output when
-#: outputDimensionality=768 is set in the payload. All callers via GeminiEmbedder stay in sync.
-DEFAULT_EMBEDDING_MODEL: str = "gemini-embedding-001"
+#: Embedding model identifier — updated to BAAI/bge-base-en-v1.5 (DEC-036)
+DEFAULT_EMBEDDING_MODEL: str = "BAAI/bge-base-en-v1.5"
 
 #: Retired by DEC-035. Retained for backward-compat with tests and callers not yet
 #: updated to top-K retrieval. Do not use in new code.

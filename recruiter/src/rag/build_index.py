@@ -344,31 +344,25 @@ def _local_chunk_profile(
 # ---------------------------------------------------------------------------
 
 def _load_embedder(model_name: str):
-    """Return a GeminiEmbedder for building the chunk index (DEC-036).
-
-    Replaces the previous SentenceTransformer + PyTorch loader.  The Gemini
-    REST API approach requires only the ``requests`` package (already in
-    requirements.prod.txt) and no local model weights, so ``--dry-run`` and
-    ``--help`` continue to work without any heavy ML dependencies.
+    """Return a FastEmbedder for building the chunk index (DEC-036).
 
     Args:
         model_name:
-            Gemini embedding model id.  Defaults to ``text-embedding-004``
-            (768-dim, free tier, 1,500 RPM).
+            Embedding model id. Defaults to ``BAAI/bge-base-en-v1.5``.
 
     Returns:
-        A :class:`recruiter.src.rag.gemini_embedder.GeminiEmbedder` instance
+        A :class:`recruiter.src.rag.local_embedder.FastEmbedder` instance
         ready to call ``.encode()`` on chunk text lists.
     """
-    from recruiter.src.rag.gemini_embedder import GeminiEmbedder
+    from src.rag.local_embedder import FastEmbedder
 
     # task_type=RETRIEVAL_DOCUMENT is the correct hint when embedding
     # index passages (resume chunks), as opposed to search queries.
-    embedder = GeminiEmbedder(
+    embedder = FastEmbedder(
         model_name=model_name,
         task_type="RETRIEVAL_DOCUMENT",
     )
-    logger.info("GeminiEmbedder loaded for index build (model=%s).", model_name)
+    logger.info("FastEmbedder loaded for index build (model=%s).", model_name)
     return embedder
 
 
@@ -389,7 +383,7 @@ def embed_texts(
             produce zero-vector embeddings (they will never match a query
             because cosine of a zero vector is 0).
         embedder:
-            A loaded :class:`recruiter.src.rag.gemini_embedder.GeminiEmbedder`
+            A loaded :class:`recruiter.src.rag.local_embedder.FastEmbedder`
             instance (or any object implementing ``.encode()``).
         batch_size:
             Number of texts per API request.  The Gemini free tier supports

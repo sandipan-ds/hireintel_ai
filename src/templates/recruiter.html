@@ -498,9 +498,9 @@
 
     <!-- Key input -->
     <div class="sidebar-section">
-      <span class="sidebar-label">OpenRouter API Key</span>
+      <span class="sidebar-label">API Key</span>
       <input type="password" class="sidebar-input" id="byok-key"
-             placeholder="sk-or-v1-…"
+             placeholder="Enter your API key…"
              oninput="onKeyInput()" />
       <div class="key-hint">
         Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -629,12 +629,7 @@ function onKeyInput() {
   localStorage.setItem('byok_key', key);
   const el  = document.getElementById('key-status');
   if (!key) { el.textContent = ''; el.className = ''; return; }
-  if (key.startsWith('sk-or-')) {
-    el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
-  } else {
-    el.textContent = 'ℹ Key format unrecognized — will try anyway'; el.className = '';
-    el.style.color = 'var(--muted)';
-  }
+  el.textContent = '✓ API key detected'; el.className = 'ks-ok';
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -320,9 +320,9 @@
 
     <!-- Key input -->
     <div class="sidebar-section">
-      <span class="sidebar-label">OpenRouter API Key</span>
+      <span class="sidebar-label">API Key</span>
       <input type="password" class="sidebar-input" id="byok-key"
-             placeholder="sk-or-v1-…"
+             placeholder="Enter your API key…"
              oninput="onKeyInput()" />
       <div class="key-hint">
         Get a free key at <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>
@@ -340,6 +340,15 @@
         <strong style="color:#f59e0b;">Must be multimodal</strong> — resumes may be scanned images.
       </div>
     </div>
+    <!-- Judge Model input — user types exact judge model slug -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">Judge Model <span style="color:var(--muted);font-weight:400">(optional evaluator)</span></span>
+      <input type="text" class="sidebar-input" id="byok-judge-model"
+             placeholder="e.g. google/gemini-3.1-pro" />
+      <div class="key-hint" style="margin-top:.35rem;">
+        Type the exact judge model slug. If specified, computes RAG retrieval correctness metrics.
+      </div>
+    </div>
 
     <!-- Base URL input -->
     <div class="sidebar-section">
@@ -352,35 +361,6 @@
         &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://opencode.ai/zen/go/v1')">OpenCode ↗</span>
         &nbsp;· <span class="url-hint" onclick="fillBaseUrl('https://integrate.api.nvidia.com/v1')">NVIDIA NIM ↗</span><br/>
         <span class="url-hint" onclick="fillBaseUrl('https://generativelanguage.googleapis.com/v1beta/openai/')">Google AI ↗</span>
-      </div>
-    </div>
-
-    <!-- Recommendations — multimodal models only -->
-    <div class="sidebar-section">
-      <div class="rec-box">
-        <div class="rec-box-title">Recommendations · multimodal only</div>
-        <div class="rec-row">
-          <span class="rec-pill paid">PAID</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('google/gemini-3.1-flash-lite')" title="Click to fill">google/gemini-3.1-flash-lite ↗</div>
-            <div class="rec-why">Fast, multimodal, high RPM — handles scanned PDFs &amp; image resumes</div>
-          </div>
-        </div>
-        <div class="rec-row">
-          <span class="rec-pill free">FREE</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('google/gemma-4-31b-it:free')" title="Click to fill">google/gemma-4-31b-it:free ↗</div>
-            <div class="rec-why">Multimodal, no cost — rate limited, good for small batches</div>
-          </div>
-        </div>
-        <div class="rec-row">
-          <span class="rec-pill free">FREE</span>
-          <div class="rec-detail">
-            <div class="rec-model" onclick="fillModel('minimax/minimax-m3')" title="Click to fill">minimax/minimax-m3 ↗</div>
-            <div class="rec-why">Multimodal, free — handles text &amp; image resume formats</div>
-          </div>
-        </div>
-        <div style="font-size:.62rem;color:var(--muted);margin-top:.5rem;">↑ Click a model to fill the field above</div>
       </div>
     </div>
   </aside>
@@ -426,10 +406,20 @@
     const arcOff = arcCirc * (1 - total / 100);
     const role = d.candidate_id.split('_').slice(0,-2).join(' ');
 
+    // Prioritize full_name if available, otherwise display Candidate sequence number (e.g. CAND_0001 -> Candidate #0001)
+    let displayName = "";
+    if (d.profile && d.profile.full_name && d.profile.full_name.trim()) {
+      displayName = d.profile.full_name;
+    } else {
+      const match = d.candidate_id.match(/_CAND_(\d+)$/);
+      const suffix = match ? match[1] : "";
+      displayName = suffix ? `Candidate #${suffix}` : "Candidate Profile";
+    }
+
     left.innerHTML = `
       <div class="profile-card">
         <div class="candidate-id">${d.candidate_id}</div>
-        <div class="candidate-name">Candidate #${d.rank}</div>
+        <div class="candidate-name">${displayName}</div>
         <div class="candidate-role">${role}</div>
 
         <div class="score-arc-wrap">
@@ -488,7 +478,7 @@
         <div class="chat-header">
           <div class="chat-dot"></div>
           <div>
-            <div class="chat-title">Chat with Candidate #${d.rank}</div>
+            <div class="chat-title">Chat with ${displayName}</div>
             <div class="chat-sub" style="font-size: 0.68rem; opacity: 0.8; margin: 2px 0;">${d.candidate_id}</div>
             <div class="chat-sub">Ask anything about this candidate's resume</div>
           </div>
@@ -694,12 +684,7 @@
     localStorage.setItem('byok_key', key);
     const el  = document.getElementById('key-status');
     if (!key) { el.textContent = ''; el.className = ''; return; }
-    if (key.startsWith('sk-or-')) {
-      el.textContent = '✓ OpenRouter key detected'; el.className = 'ks-ok';
-    } else {
-      el.textContent = 'ℹ Key format unrecognized'; el.className = '';
-      el.style.color = 'var(--muted)';
-    }
+    el.textContent = '✓ API key detected'; el.className = 'ks-ok';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -714,6 +699,10 @@
     if (modelInput) {
       modelInput.value = localStorage.getItem('byok_model') || '';
     }
+    const judgeInput = document.getElementById('byok-judge-model');
+    if (judgeInput) {
+      judgeInput.value = localStorage.getItem('byok_judge_model') || '';
+    }
     if (urlInput) {
       urlInput.value = localStorage.getItem('byok_base_url') || '';
     }
@@ -721,6 +710,11 @@
     if (modelInput) {
       modelInput.addEventListener('input', () => {
         localStorage.setItem('byok_model', modelInput.value.trim());
+      });
+    }
+    if (judgeInput) {
+      judgeInput.addEventListener('input', () => {
+        localStorage.setItem('byok_judge_model', judgeInput.value.trim());
       });
     }
     if (urlInput) {

@@ -25,7 +25,9 @@ openai            # OpenAI-compatible client (used by llm_caller.py for NIM/Open
 tiktoken          # Token counting for prompt budgeting
 rank-bm25         # BM25 lexical retrieval (section_routed.py)
 flashrank          # Lightweight reranker (no torch dependency)
+fastembed          # Local ONNX-based embedding engine (no torch dependency)
 rapidfuzz         # Fuzzy string matching
+
 
 # ==========================
 # Vector Database — serving

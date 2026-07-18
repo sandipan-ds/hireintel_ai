@@ -311,11 +311,14 @@ The FastAPI application and interactive wizard interface have been fully contain
 | **Multi-Stage Dockerization** | ✅ Complete | Containerized using a resource-optimized `python:3.10-slim` build with dynamic `$PORT` binding |
 | **GCP Artifact Registry Push** | ✅ Complete | Integrated build via Google Cloud Build to `us-central1-docker.pkg.dev` |
 | **Cloud Run Service (Scale-to-Zero)** | ✅ Complete | Service `recruiter-app` deployed to `us-central1` with max-instances=2, min-instances=0 (idle scale-to-zero to minimize host cost) |
-| **Model Weights & Resource Tuning** | ✅ Complete | Configured 2GiB RAM and 2 vCPUs allocation to support initialization of SentenceTransformer embeddings model |
+| **Model Weights & Resource Tuning** | ✅ Complete | Configured 2GiB RAM and 2 vCPUs allocation to support initialization of local BAAI/bge-base-en-v1.5 embeddings model via FastEmbed |
 | **Billing Protection Kill Switch** | ✅ Complete | Deployed Python Cloud Function `limit-billing` triggered by Pub/Sub topic `billing-alerts` that forces scale-to-zero and revokes ingress if budget is exceeded |
 | **Tokenizer Deadlock Resolution** | ✅ Complete | Set `TOKENIZERS_PARALLELISM=false` to prevent Rust multithreading deadlock hangs under Cloud Run serverless environments |
 | **Real-Time Log Streaming** | ✅ Complete | Configured `PYTHONUNBUFFERED=1` in both Docker environment and runner subprocesses for instant stdout flushes and logs visibility |
 | **Cloud Build Image Baking** | ✅ Complete | Excluded `recruiter/models/` local weights via `.gcloudignore`/`.dockerignore` to shrink uploads from 466.5 MiB to 48.1 MiB (10x faster), downloading and baking the BGE model weights directly into the image during Cloud Build |
+| **Google Drive Exporter Sync** | ✅ Complete | Automatically exports evaluation runs, logs, and RAG correctness JSON metadata to the shared Google Drive folder |
+| **Always-Allocated CPU Tuning** | ✅ Complete | Configured Cloud Run with `--no-cpu-throttling` to ensure background thread processing and local FastEmbed query encoding runs at maximum speeds |
+| **Dynamic Cross-Candidate RAG Chat** | ✅ Complete | Chat endpoint dynamically parses queried ranks/names, retrieves relevant evidence chunks for compared candidates, and formats a registry lookup mapping to keep contexts clean |
 
 ---
 

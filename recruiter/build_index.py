@@ -349,17 +349,9 @@ def _local_chunk_profile(
 def _load_embedder(model_name: str):
     """Load the appropriate embedding model for the given model name.
 
-    For ``text-embedding-004`` (the active production model, DEC-036):
-        Uses :class:`src.rag.gemini_embedder.GeminiEmbedder` — a
-        lightweight REST-API wrapper. No PyTorch, no sentence-transformers.
-        Eliminates the 60–90 second cold-start hang in Cloud Run (DEC-036).
-
-    For ``BAAI/bge-base-en-v1.5`` (offline testing only):
-        Falls back to ``SentenceTransformer`` when the local model folder
-        ``recruiter/models/bge-base-en-v1.5`` exists. This path is only
-        taken in local / CI environments where the folder was pre-downloaded.
-        If the local folder is absent, we fall through to GeminiEmbedder
-        regardless of model name.
+    Uses :class:`src.rag.local_embedder.FastEmbedder` — which wraps
+    the lightweight, CPU-efficient, local `fastembed` ONNX model.
+    No PyTorch or sentence-transformers dependencies required.
 
     Args:
         model_name:
@@ -367,36 +359,15 @@ def _load_embedder(model_name: str):
             :func:`src.rag.per_req_retrieval.embed_sub_queries` so that
             index vectors and query vectors live in the same embedding space.
     """
-    # --- Local BGE fallback (offline testing only) ---
-    local_path = Path("recruiter/models/bge-base-en-v1.5")
-    if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
-        print("[DIAG] Loading local SentenceTransformer (BAAI/bge-base-en-v1.5)...", flush=True)
-        try:
-            from sentence_transformers import SentenceTransformer
-        except ImportError as exc:
-            raise ImportError(
-                "sentence-transformers is required to use the local BGE model. "
-                "Install it with: pip install sentence-transformers"
-            ) from exc
-        import torch
-        device = "cpu" if os.environ.get("CUDA_VISIBLE_DEVICES") == "" else (
-            "cuda" if torch.cuda.is_available() else "cpu"
-        )
-        model = SentenceTransformer(str(local_path.resolve()), device=device)
-        print("[DIAG] Local SentenceTransformer loaded.", flush=True)
-        return model
-
-    # --- GeminiEmbedder (production default, DEC-036) ---
-    # text-embedding-004 and any other Gemini model: use the lightweight
-    # REST-API wrapper. Zero PyTorch / sentence-transformers dependency.
-    print(f"[DIAG] Loading GeminiEmbedder for model: {model_name} ...", flush=True)
-    from src.rag.gemini_embedder import GeminiEmbedder
-    embedder = GeminiEmbedder(
+    print(f"[DIAG] Loading FastEmbedder for model: {model_name} ...", flush=True)
+    from src.rag.local_embedder import FastEmbedder
+    embedder = FastEmbedder(
         model_name=model_name,
         task_type="RETRIEVAL_DOCUMENT",  # Corpus documents, not queries.
     )
-    print("[DIAG] GeminiEmbedder ready.", flush=True)
+    print("[DIAG] FastEmbedder ready.", flush=True)
     return embedder
+
 
 
 def embed_texts(
@@ -575,12 +546,13 @@ def build(
     backup: bool = True,
     role: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Run the full chunk → embed → persist pipeline (DEC-035).
+    """Run the full chunk → embed → persist pipeline (DEC-035 / DEC-036).
 
-    Uses DocumentAwareChunker (one chunk per section entry) + BGE-base-en-v1.5
-    (768-dim, retrieval-trained). Chunk-size and overlap parameters have been
-    removed — DocumentAware chunking is not configurable by character count;
-    it is driven by the parsed resume's section structure.
+    Uses DocumentAwareChunker (one chunk per section entry) + GeminiEmbedder
+    with ``text-embedding-004`` (768-dim, REST API — DEC-036).  Chunk-size
+    and overlap parameters have been removed — DocumentAware chunking is not
+    configurable by character count; it is driven by the parsed resume's
+    section structure.
 
     Args:
         processed_root:
@@ -590,9 +562,12 @@ def build(
         chunks_path:
             Output ``.jsonl`` path.
         model_name:
-            Sentence-Transformers model id (DEC-035 = bge-base-en-v1.5).
+            Embedding model identifier (default: ``text-embedding-004`` via
+            GeminiEmbedder, DEC-036). Must match the model used by
+            :func:`src.rag.per_req_retrieval.embed_sub_queries` so that
+            index vectors and query vectors share the same embedding space.
         batch_size:
-            Encode batch size.
+            Encode batch size (passed to ``GeminiEmbedder.encode()``).
         dry_run:
             If True, chunk + count but do not embed or write. Used to
             sanity-check counts and bounds without paying the embedding cost.

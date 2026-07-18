@@ -531,6 +531,11 @@ def evaluate_candidate_unified(
                 item.get("expected_years")
                 or item.get("expected_years", default_expected_years)
             )
+            if not expected_years:
+                import re
+                match = re.search(r"(\d+)\+?\s*years?", item_name, re.IGNORECASE)
+                if match:
+                    expected_years = float(match.group(1))
 
             # Classify the dimension type for this item.
             dim_type = classify_requirement_type(cat_name, item_name)
@@ -1428,6 +1433,13 @@ def _evaluate_single_req(
         except (TypeError, ValueError):
             pass
 
+    # Track 7.5 fallback: If target_years is missing (None) or 0, parse from requirement name using regex
+    if target_years is None or target_years == 0:
+        import re
+        match = re.search(r"(\d+)\+?\s*years?", name, re.IGNORECASE)
+        if match:
+            target_years = float(match.group(1))
+
     try:
         trace = score_requirement_with_rubric(
             requirement_name=name,
@@ -1605,6 +1617,9 @@ def evaluate_candidate_composed(
                 try:
                     reqs_results_map[idx] = future.result()
                 except Exception as exc:
+                    exc_class_name = exc.__class__.__name__
+                    if "RateLimitException" in exc_class_name or (exc.__cause__ and "RateLimitException" in exc.__cause__.__class__.__name__):
+                        raise exc
                     # Hard fallback: zero one REQ rather than crash the
                     # entire candidate evaluation.
                     bad_req = req_list[idx]

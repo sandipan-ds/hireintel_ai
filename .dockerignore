@@ -34,10 +34,29 @@ __pycache__/
 AGENTS.md
 
 # ---------------------------------------------------------------------------
-# Data — never bake recruiter data into the image (privacy + size)
-# ---------------------------------------------------------------------------
-data/
-recruiter/data/
+# Data — exclude raw/processed resumes (privacy + size) but KEEP pre-computed
+# ranked score files so the My Project Ranking tab works in production.
+data/original/
+data/processed/
+data/embeddings/
+data/job_descriptions/
+data/candidate_registry.json
+data/scoring_progress.json
+recruiter/data/original/
+recruiter/data/processed/
+recruiter/data/embeddings/
+recruiter/data/job_descriptions/
+recruiter/data/candidate_registry.json
+recruiter/data/scoring_progress.json
+# Exclude per-candidate score subdirs (large) but keep role-level ranked JSONs
+data/scores/composed/BusinessAnalyst/
+data/scores/composed/DataScience/
+data/scores/composed/JavaDeveloper/
+data/scores/composed/ReactDeveloper/
+data/scores/composed/SQLDeveloper/
+data/scores/composed/SalesManager/
+data/scores/composed/SrPythonDeveloper/
+data/scores/composed/WebDesigning/
 
 # ---------------------------------------------------------------------------
 # Local ML model weights — baking is replaced by Gemini API (DEC-036)

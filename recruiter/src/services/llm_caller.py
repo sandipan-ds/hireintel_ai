@@ -27,6 +27,10 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+class RateLimitException(Exception):
+    """Custom exception raised when the LLM provider returns a 429/rate-limit error."""
+    pass
+
 ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = ROOT / ".env"
 
@@ -707,77 +711,111 @@ class LLMRubricCaller:
                 f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] SKIP: caller not available or api_key missing\n")
             return ""
         
-        endpoint = f"{self.base_url.rstrip('/')}/chat/completions"
-        log_entry = [
-            f"======================================================================",
-            f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}",
-            f"Endpoint: {endpoint}",
-            f"Model: {self.model_name}",
-            f"Temperature: {self.temperature}",
-            f"Max Tokens: {self.max_tokens}",
-            f"Prompt Length: {len(prompt)} chars",
-            f"Prompt Sample: {prompt[:300]}...",
-            f"--- Request Sent ---"
-        ]
+        import httpx
+        import random
+        import time
 
-        try:
-            import httpx
-            resp = httpx.post(
-                endpoint,
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": "https://hireintel.ai",
-                    "X-Title": "HireIntel Recruiter Wizard",
-                },
-                json={
-                    "model": self.model_name,
-                    "temperature": self.temperature,
-                    "messages": [
-                        {
-                            "role": "system",
-                            "content": (
-                                "You are a strict rubric scorer for resume evidence. "
-                                "Follow the format instructions in the user message "
-                                "EXACTLY. Do not add explanations, prose, or "
-                                "commentary beyond what the format requires. Do not "
-                                "speculate beyond the resume content. If evidence is "
-                                "insufficient, return 0 / \"unknown\" / null as the "
-                                "format allows."
-                            ),
-                        },
-                        {"role": "user", "content": prompt},
-                    ],
-                    "max_tokens": self.max_tokens,
-                },
-                timeout=120.0,
-            )
-            
-            log_entry.append(f"HTTP Status: {resp.status_code}")
-            log_entry.append(f"Response Content-Length: {len(resp.content)} bytes")
-            
-            resp.raise_for_status()
-            data = resp.json()
-            msg = data.get("choices", [{}])[0].get("message", {})
-            content = msg.get("content") or msg.get("reasoning_content") or ""
-            
-            log_entry.append(f"Extracted Content Length: {len(content)} chars")
-            log_entry.append(f"Extracted Content: {content[:400]}...")
-            
-            with log_file.open("a", encoding="utf-8") as f:
-                f.write("\n".join(log_entry) + "\n\n")
+        endpoint = f"{self.base_url.rstrip('/')}/chat/completions"
+        max_retries = 3
+        
+        for attempt in range(max_retries + 1):
+            log_entry = [
+                f"======================================================================",
+                f"Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}",
+                f"Endpoint: {endpoint}",
+                f"Model: {self.model_name}",
+                f"Temperature: {self.temperature}",
+                f"Max Tokens: {self.max_tokens}",
+                f"Prompt Length: {len(prompt)} chars",
+                f"Prompt Sample: {prompt[:300]}...",
+                f"Attempt: {attempt + 1}/{max_retries + 1}",
+                f"--- Request Sent ---"
+            ]
+            try:
+                resp = httpx.post(
+                    endpoint,
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": "https://hireintel.ai",
+                        "X-Title": "HireIntel Recruiter Wizard",
+                    },
+                    json={
+                        "model": self.model_name,
+                        "temperature": self.temperature,
+                        "messages": [
+                            {
+                                "role": "system",
+                                "content": (
+                                    "You are a strict rubric scorer for resume evidence. "
+                                    "Follow the format instructions in the user message "
+                                    "EXACTLY. Do not add explanations, prose, or "
+                                    "commentary beyond what the format requires. Do not "
+                                    "speculate beyond the resume content. If evidence is "
+                                    "insufficient, return 0 / \"unknown\" / null as the "
+                                    "format allows."
+                                ),
+                            },
+                            {"role": "user", "content": prompt},
+                        ],
+                        "max_tokens": self.max_tokens,
+                    },
+                    timeout=120.0,
+                )
                 
-            return content.strip()
-        except Exception as e:
-            import traceback
-            log_entry.append(f"HTTP Call Failed: {e}")
-            log_entry.append(traceback.format_exc())
-            
-            with log_file.open("a", encoding="utf-8") as f:
-                f.write("\n".join(log_entry) + "\n\n")
+                log_entry.append(f"HTTP Status: {resp.status_code}")
+                log_entry.append(f"Response Content-Length: {len(resp.content)} bytes")
                 
-            logger.warning("LLM call failed for model %s: %s", self.model_name, e)
-            return ""
+                # Check for rate limit status codes
+                if resp.status_code in (429, 403, 503) or "rate limit" in resp.text.lower() or "too many requests" in resp.text.lower():
+                    raise httpx.HTTPStatusError("Rate limited by provider", request=resp.request, response=resp)
+                
+                resp.raise_for_status()
+                data = resp.json()
+                msg = data.get("choices", [{}])[0].get("message", {})
+                content = msg.get("content") or msg.get("reasoning_content") or ""
+                
+                log_entry.append(f"Extracted Content Length: {len(content)} chars")
+                log_entry.append(f"Extracted Content: {content[:400]}...")
+                
+                with log_file.open("a", encoding="utf-8") as f:
+                    f.write("\n".join(log_entry) + "\n\n")
+                    
+                return content.strip()
+                
+            except httpx.HTTPStatusError as hse:
+                status_code = hse.response.status_code if hse.response else None
+                response_text = hse.response.text if hse.response else ""
+                is_rate_limit = (
+                    status_code in (429, 403, 503)
+                    or "rate limit" in response_text.lower()
+                    or "too many requests" in response_text.lower()
+                )
+                
+                if is_rate_limit:
+                    if attempt < max_retries:
+                        backoff = (3.0 + random.uniform(0.0, 2.0)) * (2 ** attempt)
+                        logger.warning(
+                            "LLMRubricCaller rate limited (status %s). Retrying in %.2fs (attempt %d/%d)...",
+                            status_code, backoff, attempt + 1, max_retries
+                        )
+                        time.sleep(backoff)
+                        continue
+                    else:
+                        logger.error("LLMRubricCaller: Rate limit retries exhausted.")
+                        raise RateLimitException("Provider rate limit encountered after retries") from hse
+                else:
+                    logger.warning("LLMRubricCaller call failed with status %s: %s", status_code, hse)
+                    if attempt < max_retries:
+                        time.sleep(2.0)
+                        continue
+                    return ""
+            except Exception as e:
+                logger.warning("LLMRubricCaller call failed: %s", e)
+                if attempt < max_retries:
+                    time.sleep(2.0)
+                    continue
+                return ""
 
 
 # ---------------------------------------------------------------------------

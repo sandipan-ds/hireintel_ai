@@ -143,8 +143,6 @@ All stability metrics below are computed relative to the locked baseline configu
 | **SalesManager** | 0.3839 | 118.0 | 16.3478 | 0.7198 | 0.8590 | `theta` (R²=0.119) | 🟡 REVIEW |
 | **Global Average / Max** | **0.4765** | **118.0** | **10.0414** | **0.6711** | **0.8068** | — | — |
 
-*Plots and graphs visualizing parameter sensitivity curves are saved in `reports/plots_and_graphs/param_sensitivity_curves.png`.*
-
 ---
 
 ## ⚙️ Technical Architecture Overview

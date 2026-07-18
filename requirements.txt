@@ -22,7 +22,9 @@ openai
 tiktoken
 rank-bm25
 flashrank
+fastembed
 rapidfuzz
+
 
 # ==========================
 # Vector Database

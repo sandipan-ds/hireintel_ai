@@ -57,9 +57,8 @@ logger = logging.getLogger(__name__)
 
 # Embedding model used to build the chunk index and embed sub-queries (DEC-037).
 # Must match the model used in ``recruiter/build_index.py``.
-# ``gemini-embedding-001``: 768-dim (with outputDimensionality=768), Gemini API.
-# Replaces the deprecated ``text-embedding-004`` (shut down by Google, returns 404).
-DEFAULT_EMBEDDING_MODEL = "gemini-embedding-001"
+# BAAI/bge-base-en-v1.5: 768-dim, local ONNX model.
+DEFAULT_EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
 
 #: Default top-K per REQ. Each REQ retrieves its top-K chunks from the
 #: candidate's DocumentAware index. Callers may override per-call.
@@ -80,32 +79,25 @@ SubQuery = Tuple[str, str]
 # The singleton is lazy-loaded so the module imports without any heavy ML libs.
 # ---------------------------------------------------------------------------
 
-# Singleton GeminiEmbedder instance — created on first call to embed_sub_queries.
+# Singleton FastEmbedder instance — created on first call to embed_sub_queries.
 _EMBED_MODEL = None
 _EMBED_MODEL_NAME: Optional[str] = None
 
 
 def _load_embed_model(model_name: str):
-    """Return the cached GeminiEmbedder, creating it on first call.
-
-    The model_name parameter is kept for API compatibility but is passed
-    directly to GeminiEmbedder which uses it as the Gemini model identifier
-    (default: ``text-embedding-004``).
-    """
+    """Return the cached FastEmbedder, creating it on first call."""
     global _EMBED_MODEL, _EMBED_MODEL_NAME
     if _EMBED_MODEL is not None and _EMBED_MODEL_NAME == model_name:
         return _EMBED_MODEL
 
-    # GeminiEmbedder has no heavy imports at construction time — it only
-    # calls ``requests`` at encode() time, so this is essentially free.
-    from src.rag.gemini_embedder import GeminiEmbedder
+    from src.rag.local_embedder import FastEmbedder
 
-    _EMBED_MODEL = GeminiEmbedder(
+    _EMBED_MODEL = FastEmbedder(
         model_name=model_name,
         task_type="RETRIEVAL_QUERY",  # Sub-queries are search queries, not docs.
     )
     _EMBED_MODEL_NAME = model_name
-    logger.info("GeminiEmbedder loaded for per-req retrieval (model=%s).", model_name)
+    logger.info("FastEmbedder loaded for per-req retrieval (model=%s).", model_name)
     return _EMBED_MODEL
 
 
@@ -115,9 +107,9 @@ def embed_sub_queries(
 ):
     """Embed each sub-query text with the chunk-index embedding model.
 
-    Uses ``GeminiEmbedder`` (``text-embedding-004``, 768-dim) via the
-    Google Generative Language REST API.  No local PyTorch or
-    SentenceTransformer installation required (DEC-036).
+    Uses ``FastEmbedder`` (``BAAI/bge-base-en-v1.5``, 768-dim) running locally
+    via ONNX Runtime. No external REST API calls or local PyTorch/SentenceTransformer
+    installation required (DEC-036).
 
     Args:
         sub_queries: ``[(key, text), ...]``. The ``key`` is not embedded; only

@@ -27,6 +27,10 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+class RateLimitException(Exception):
+    """Custom exception raised when the LLM provider returns a 429/rate-limit error."""
+    pass
+
 ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = ROOT / ".env"
 
@@ -705,32 +709,71 @@ class LLMRubricCaller:
     def __call__(self, prompt: str) -> str:
         if not self._available or self._client is None:
             return ""
-        try:
-            response = self._client.chat.completions.create(
-                model=self.model_name,
-                messages=[
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are a strict rubric scorer for resume evidence. "
-                            "Follow the format instructions in the user message "
-                            "EXACTLY. Do not add explanations, prose, or "
-                            "commentary beyond what the format requires. Do not "
-                            "speculate beyond the resume content. If evidence is "
-                            "insufficient, return 0 / \"unknown\" / null as the "
-                            "format allows."
-                        ),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                max_tokens=self.max_tokens,
-                temperature=self.temperature,
-            )
-            content = response.choices[0].message.content or ""
-            return content.strip()
-        except Exception as e:
-            logger.warning("LLM call failed: %s", e)
-            return ""
+        
+        import openai
+        import random
+        import time
+
+        max_retries = 3
+        
+        for attempt in range(max_retries + 1):
+            try:
+                response = self._client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are a strict rubric scorer for resume evidence. "
+                                "Follow the format instructions in the user message "
+                                "EXACTLY. Do not add explanations, prose, or "
+                                "commentary beyond what the format requires. Do not "
+                                "speculate beyond the resume content. If evidence is "
+                                "insufficient, return 0 / \"unknown\" / null as the "
+                                "format allows."
+                            ),
+                        },
+                        {"role": "user", "content": prompt},
+                    ],
+                    max_tokens=self.max_tokens,
+                    temperature=self.temperature,
+                )
+                content = response.choices[0].message.content or ""
+                return content.strip()
+            except openai.RateLimitError as rle:
+                if attempt < max_retries:
+                    backoff = (3.0 + random.uniform(0.0, 2.0)) * (2 ** attempt)
+                    logger.warning(
+                        "LLMRubricCaller rate limited (primary/fallback model). Retrying in %.2fs (attempt %d/%d)...",
+                        backoff, attempt + 1, max_retries
+                    )
+                    time.sleep(backoff)
+                    continue
+                else:
+                    logger.error("LLMRubricCaller: Rate limit retries exhausted.")
+                    raise RateLimitException("Provider rate limit encountered after retries") from rle
+            except Exception as e:
+                # Some API providers return rate limit messages in error text instead of correct status code/class
+                err_text = str(e).lower()
+                is_rate_limit = "rate limit" in err_text or "too many requests" in err_text or "429" in err_text
+                if is_rate_limit:
+                    if attempt < max_retries:
+                        backoff = (3.0 + random.uniform(0.0, 2.0)) * (2 ** attempt)
+                        logger.warning(
+                            "LLMRubricCaller rate limited (exception text). Retrying in %.2fs (attempt %d/%d)...",
+                            backoff, attempt + 1, max_retries
+                        )
+                        time.sleep(backoff)
+                        continue
+                    else:
+                        logger.error("LLMRubricCaller: Rate limit retries exhausted.")
+                        raise RateLimitException("Provider rate limit encountered after retries") from e
+                
+                logger.warning("LLMRubricCaller call failed: %s", e)
+                if attempt < max_retries:
+                    time.sleep(2.0)
+                    continue
+                return ""
 
 
 # ---------------------------------------------------------------------------
@@ -755,23 +798,18 @@ def get_default_caller() -> Any:
 def get_rubric_caller() -> Any:
     """Factory returning the configured rubric LLM caller.
 
-    Backend selection order (first match wins):
-      1. ``LLM_BACKEND`` environment variable in the process environment.
-      2. ``LLM_BACKEND`` key in the ``.env`` file.
-      3. Default: ``openrouter``.
-
-    Supported values:
-      ``openrouter`` → :class:`OpenRouterRubricCaller` (google/gemma-4-31b-it,
-                       round-robin across 3 OpenRouter keys)
-      ``nvidia``     → :class:`NvidiaRubricCaller` (google/gemma-4-31b-it,
-                       round-robin across 3 NIM keys)
-      ``google``     → :class:`GoogleRubricCaller` (gemini-3.1-flash-lite,
-                       round-robin across 2 Google keys)
-      ``opencode``   → :class:`LLMRubricCaller` (legacy single-key endpoint)
-
-    Returns:
-        A rubric caller instance implementing ``__call__(prompt) -> str``.
+    Checks RECRUITER_API_KEY from environment variables first (recruiter BYOK).
     """
+    recruiter_key = os.environ.get("RECRUITER_API_KEY")
+    recruiter_base = os.environ.get("RECRUITER_BASE_URL")
+    recruiter_model = os.environ.get("RECRUITER_MODEL")
+    if recruiter_key:
+        return LLMRubricCaller(
+            api_key=recruiter_key,
+            base_url=recruiter_base or "https://openrouter.ai/api/v1",
+            model=recruiter_model or "google/gemma-4-31b-it"
+        )
+
     backend = (
         os.environ.get("LLM_BACKEND")
         or _ENV.get("LLM_BACKEND")

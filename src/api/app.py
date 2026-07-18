@@ -20,6 +20,25 @@ app = FastAPI(
 # Mount static files
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 
+# Database synchronization middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from fastapi import Request
+
+class GDriveDBSyncMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        if request.method in ("POST", "PUT", "DELETE"):
+            if response.status_code < 400:
+                try:
+                    from src.services.gdrive_syncer import backup_db_to_gdrive
+                    import threading
+                    threading.Thread(target=backup_db_to_gdrive, daemon=True).start()
+                except Exception as e:
+                    print(f"Failed to trigger DB backup: {e}")
+        return response
+
+app.add_middleware(GDriveDBSyncMiddleware)
+
 # Include routers
 app.include_router(roles.router)
 app.include_router(weights.router)
@@ -32,6 +51,11 @@ app.include_router(pages.router)  # pages last (catches / route)
 @app.on_event("startup")
 def startup_event() -> None:
     """Initialize database on startup."""
+    try:
+        from src.services.gdrive_syncer import restore_db_from_gdrive
+        restore_db_from_gdrive()
+    except Exception as e:
+        print(f"Error restoring SQLite DB from GDrive: {e}")
     init_db()
 
 

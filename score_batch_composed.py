@@ -172,16 +172,25 @@ def load_progress() -> dict:
             logger.warning("Failed to load progress ledger from %s: %s. Starting fresh.", PROGRESS_FILE, exc)
     return {"completed_roles": [], "scored_candidates": {}}
 
+_PROGRESS_LOCK = threading.Lock()
+
 def save_progress(progress: dict) -> None:
     """Atomically write the progress ledger to disk."""
     PROGRESS_FILE.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = PROGRESS_FILE.with_suffix(".tmp")
-    try:
-        with tmp_path.open("w", encoding="utf-8") as fh:
-            json.dump(progress, fh, indent=2)
-        tmp_path.replace(PROGRESS_FILE)
-    except Exception as exc:
-        logger.error("Failed to save progress ledger: %s", exc)
+    with _PROGRESS_LOCK:
+        try:
+            with tmp_path.open("w", encoding="utf-8") as fh:
+                json.dump(progress, fh, indent=2)
+            if PROGRESS_FILE.exists():
+                try:
+                    PROGRESS_FILE.unlink()
+                except Exception:
+                    pass
+            tmp_path.replace(PROGRESS_FILE)
+        except Exception as exc:
+            logger.error("Failed to save progress ledger: %s", exc)
+
 
 def is_role_complete(progress: dict, role: str) -> bool:
     """Return True if the role is marked complete in progress."""
@@ -283,7 +292,8 @@ def score_role(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     progress: dict | None = None,
     resume: bool = False,
-    n_workers: int = 10,
+    n_workers: int | None = None,
+    candidate_workers: int | None = None,
 ) -> dict[str, Any]:
     """Score every candidate in ``role`` and write the ranking JSON.
 
@@ -375,7 +385,7 @@ def score_role(
             max_chunks_per_query=max_chunks_per_query,
             chunker_id=chunker_id,
             sq_embedder=cached_embedder,
-            n_workers=n_workers,
+            n_workers=effective_req_workers,
         )
         
         # Write per-candidate JSON immediately
@@ -391,21 +401,155 @@ def score_role(
             
         return eval_result, "scored"
 
-    # Parallel path — ThreadPoolExecutor dispatches candidates in parallel.
-    # Bounded by up to 10 candidates concurrently to keep overall threads matching
-    # 10 * {number of REQs} since n_workers evaluates requirements.
-    logger.info("[%s] scoring %d candidates in parallel using up to 10 candidate workers", role, len(candidate_files))
+    # Set default concurrency levels
+    n_reqs = len(weights.get("requirements_weights", []))
+    effective_candidate_workers = 10
+    effective_req_workers = n_reqs
+
+    from src.services.llm_caller import RateLimitException
+
+    remaining_candidates = list(candidate_files)
+    completed_evals = []
+    level_retries = 2
+
+    # Level 1 Execution
+    level = 1
+    logger.info("[%s] Concurrency Level 1: candidate_workers=%d, requirement_workers=%d", role, effective_candidate_workers, effective_req_workers)
     
-    # We use a lock or thread-safe list to collect evaluations
-    evaluations_lock = threading.Lock() if 'threading' in sys.modules else None
-    
-    with ThreadPoolExecutor(max_workers=min(len(candidate_files), 10)) as pool:
-        futures = {pool.submit(process_cand_file, f): f for f in candidate_files}
-        for future in as_completed(futures):
-            eval_result, status = future.result()
-            if eval_result is not None:
-                evaluations.append(eval_result)
-                n_zero_evidence += len(eval_result.zero_evidence_reqs)
+    for attempt in range(level_retries + 1):
+        if not remaining_candidates:
+            break
+        try:
+            if len(remaining_candidates) > 1:
+                with ThreadPoolExecutor(max_workers=min(len(remaining_candidates), effective_candidate_workers)) as pool:
+                    futures = {
+                        pool.submit(process_cand_file, f): f for f in remaining_candidates
+                    }
+                    
+                    for future in as_completed(futures):
+                        f = futures[future]
+                        try:
+                            eval_result, status = future.result()
+                            if eval_result is not None:
+                                completed_evals.append(eval_result)
+                                n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                            remaining_candidates.remove(f)
+                        except RateLimitException as rle:
+                            logger.warning("[%s] RateLimitException caught in Concurrency Level 1: %s", role, rle)
+                            # Cancel all pending futures in this pool
+                            for fut in futures:
+                                fut.cancel()
+                            raise
+            else:
+                if remaining_candidates:
+                    eval_result, status = process_cand_file(remaining_candidates[0])
+                    if eval_result is not None:
+                        completed_evals.append(eval_result)
+                        n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    remaining_candidates.clear()
+            break  # Succeeded this level!
+        except RateLimitException:
+            if attempt < level_retries:
+                logger.warning("[%s] Level 1 failed due to rate limit. Retry %d/%d after 30s sleep...", role, attempt + 1, level_retries)
+                time.sleep(30.0)
+            else:
+                logger.warning("LOG LEVEL TRANSITION: Fallback from Concurrency Level 1 to Concurrency Level 2 (sequential candidate evaluation) due to persistent rate limits.")
+                time.sleep(30.0)
+                level = 2
+
+    # Level 2 Execution (sequential candidate evaluation, full requirements)
+    if level == 2 and remaining_candidates:
+        effective_candidate_workers = 1
+        effective_req_workers = n_reqs
+        logger.info("[%s] Concurrency Level 2: sequential candidate execution (candidate_workers=1), requirement_workers=%d", role, effective_req_workers)
+        
+        for attempt in range(level_retries + 1):
+            if not remaining_candidates:
+                break
+            try:
+                for f in list(remaining_candidates):
+                    eval_result, status = process_cand_file(f)
+                    if eval_result is not None:
+                        completed_evals.append(eval_result)
+                        n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    remaining_candidates.remove(f)
+                break  # Succeeded Level 2!
+            except RateLimitException as rle:
+                if attempt < level_retries:
+                    logger.warning("[%s] Level 2 failed due to rate limit. Retry %d/%d after 30s sleep...", role, attempt + 1, level_retries)
+                    time.sleep(30.0)
+                else:
+                    logger.warning("[%s] RateLimitException caught in Concurrency Level 2 after all retries: %s", role, rle)
+                    logger.warning("LOG LEVEL TRANSITION: Fallback from Concurrency Level 2 to Concurrency Level 3 (reduced requirement workers) due to persistent rate limits.")
+                    time.sleep(30.0)
+                    level = 3
+                    break
+
+    # Level 3 Execution (sequential candidate evaluation, 5 requirements)
+    if level == 3 and remaining_candidates:
+        effective_candidate_workers = 1
+        effective_req_workers = 5
+        logger.info("[%s] Concurrency Level 3: sequential candidate execution (candidate_workers=1), requirement_workers=%d", role, effective_req_workers)
+        
+        for attempt in range(level_retries + 1):
+            if not remaining_candidates:
+                break
+            try:
+                for f in list(remaining_candidates):
+                    eval_result, status = process_cand_file(f)
+                    if eval_result is not None:
+                        completed_evals.append(eval_result)
+                        n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    remaining_candidates.remove(f)
+                break  # Succeeded Level 3!
+            except RateLimitException as rle:
+                if attempt < level_retries:
+                    logger.warning("[%s] Level 3 failed due to rate limit. Retry %d/%d after 30s sleep...", role, attempt + 1, level_retries)
+                    time.sleep(30.0)
+                else:
+                    logger.warning("[%s] RateLimitException caught in Concurrency Level 3 after all retries: %s", role, rle)
+                    logger.warning("LOG LEVEL TRANSITION: Fallback from Concurrency Level 3 to Concurrency Level 4 (minimal requirement workers) due to persistent rate limits.")
+                    time.sleep(30.0)
+                    level = 4
+                    break
+
+    # Level 4 Execution (sequential candidate evaluation, 1 requirement)
+    if level == 4 and remaining_candidates:
+        effective_candidate_workers = 1
+        effective_req_workers = 1
+        logger.info("[%s] Concurrency Level 4: sequential candidate execution (candidate_workers=1), requirement_workers=%d", role, effective_req_workers)
+        
+        for attempt in range(level_retries + 1):
+            if not remaining_candidates:
+                break
+            try:
+                for f in list(remaining_candidates):
+                    eval_result, status = process_cand_file(f)
+                    if eval_result is not None:
+                        completed_evals.append(eval_result)
+                        n_zero_evidence += len(eval_result.zero_evidence_reqs)
+                    remaining_candidates.remove(f)
+                break  # Succeeded Level 4!
+            except RateLimitException as rle:
+                if attempt < level_retries:
+                    logger.warning("[%s] Level 4 failed due to rate limit. Retry %d/%d after 30s sleep...", role, attempt + 1, level_retries)
+                    time.sleep(30.0)
+                else:
+                    logger.error("[%s] RateLimitException caught in Concurrency Level 4 after all retries: %s", role, rle)
+                    logger.error("LOG LEVEL TRANSITION: Failure at Concurrency Level 4. Aborting scoring batch run.")
+                    level = 5
+                    break
+
+    # Level 5 Execution (failure and abort)
+    if level == 5:
+        sys.stderr.write(
+            "\n[ERROR] The number of parallel calls is being limited by the provider/server even at minimal settings.\n\n"
+        )
+        sys.stderr.flush()
+        logger.error("The number of parallel calls is being limited by the provider/server even at minimal settings. Aborting batch run.")
+        sys.exit(429)
+
+    evaluations.extend(completed_evals)
             
     # Re-build diagnostic lines for ALL evaluations (including loaded ones)
     for eval_result in evaluations:
@@ -483,6 +627,230 @@ def score_role(
         json.dump(summary, fh, ensure_ascii=False, indent=2)
 
     return summary
+
+
+def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
+    """Run sample-based RAG correctness evaluation on the scored candidates for a role."""
+    import os
+    import random
+    import re
+    import time
+    
+    logger.info("=" * 70)
+    logger.info("▶ Starting RAG Correctness Evaluation using Judge model: %s", judge_model)
+    logger.info("=" * 70)
+    ranked_file = output_dir / f"{role}_ranked.json"
+    if not ranked_file.exists():
+        logger.error("Ranked JSON file %s not found. Skipping RAG evaluation.", ranked_file)
+        return
+        
+    try:
+        with ranked_file.open("r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except Exception as exc:
+        logger.error("Failed to load ranked file: %s", exc)
+        return
+        
+    rankings = data.get("rankings", [])
+    if not rankings:
+        logger.info("No candidates scored for role '%s'. Skipping evaluation.", role)
+        return
+        
+    # Sample up to 5 candidates (lightweight to avoid quota limits)
+    sample_size = min(5, len(rankings))
+    sampled_candidates = random.sample(rankings, sample_size)
+    logger.info("Sampled %d candidates for RAG correctness audit.", sample_size)
+    
+    api_key = os.environ.get("RECRUITER_API_KEY")
+    base_url = os.environ.get("RECRUITER_BASE_URL") or "https://openrouter.ai/api/v1"
+    
+    if not api_key:
+        logger.warning("RECRUITER_API_KEY environment variable not set. Skipping RAG correctness evaluation.")
+        return
+        
+    try:
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key, base_url=base_url)
+    except Exception as exc:
+        logger.error("Failed to initialize Judge LLM client: %s", exc)
+        return
+
+    context_relevance_scores = []
+    faithfulness_scores = []
+    answer_relevance_scores = []
+    
+    rate_limit_encountered = False
+
+    def judge_call_with_retry(system_prompt: str, user_prompt: str, max_tokens: int) -> Optional[str]:
+        nonlocal rate_limit_encountered
+        import random
+        max_retries = 4
+        for attempt in range(max_retries + 1):
+            try:
+                resp = client.chat.completions.create(
+                    model=judge_model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    max_tokens=max_tokens,
+                    temperature=0.0
+                )
+                return (resp.choices[0].message.content or "").strip()
+            except Exception as e:
+                err_text = str(e).lower()
+                is_rate_limit = (
+                    "rate limit" in err_text 
+                    or "too many requests" in err_text 
+                    or "429" in err_text 
+                    or "quota" in err_text
+                )
+                if is_rate_limit:
+                    rate_limit_encountered = True
+                    if attempt < max_retries:
+                        backoff = (4.0 + random.uniform(0.0, 2.0)) * (2 ** attempt)
+                        logger.warning(
+                            "⚖️ Judge LLM rate limited (429). Retrying in %.2fs (attempt %d/%d)...",
+                            backoff, attempt + 1, max_retries
+                        )
+                        time.sleep(backoff)
+                        continue
+                
+                # For non-rate limit errors or exhausted retries, log and return None
+                logger.warning("⚖️ Judge LLM call failed: %s", e)
+                if attempt < max_retries:
+                    time.sleep(2.0)
+                    continue
+                return None
+
+    # Evaluate a few requirements per candidate
+    for cand in sampled_candidates:
+        candidate_id = cand.get("candidate_id", "Unknown")
+        reqs = cand.get("reqs", [])
+        if not reqs:
+            continue
+            
+        # Select up to 2 requirements
+        selected_reqs = reqs[:2]
+        for req in selected_reqs:
+            req_name = req.get("requirement_name", "")
+            trace = req.get("rubric_trace") or {}
+            sub_scores = trace.get("sub_scores") or []
+            
+            retrieved_chunks = []
+            for sq in sub_scores:
+                evidence = sq.get("closest_evidence") or sq.get("cited_text") or ""
+                if evidence and evidence.lower() != "none" and evidence.lower() != "unknown":
+                    retrieved_chunks.append(evidence)
+                    
+            if not retrieved_chunks:
+                continue
+                
+            retrieved_text = "\n---\n".join(retrieved_chunks)
+            explanation = trace.get("justification") or req.get("blocked_reason") or ""
+            if not explanation:
+                explanation_parts = []
+                for sq in sub_scores:
+                    desc = sq.get("anchor_description")
+                    if desc and desc != "none":
+                        explanation_parts.append(f"{sq.get('question', '')}: {desc}")
+                explanation = "; ".join(explanation_parts)
+                
+            if not explanation:
+                continue
+                
+            # Select up to 2 sub-scores
+            for sq in sub_scores[:2]:
+                sub_query = sq.get("question", "")
+                if not sub_query:
+                    continue
+                    
+                # 1. Context Relevance (Precision)
+                for chunk in retrieved_chunks[:1]:
+                    prompt_cr = f"Analyze the sub-query: {sub_query}. Now read the retrieved text chunk: {chunk}. Does this chunk contain concrete evidence that directly helps in answering the sub-query? Answer strictly YES or NO."
+                    cr_ans = judge_call_with_retry(
+                        system_prompt="You are a strict evaluator for RAG context relevance. Answer strictly YES or NO.",
+                        user_prompt=prompt_cr,
+                        max_tokens=10
+                    )
+                    if cr_ans is not None:
+                        is_relevant = 1.0 if "YES" in cr_ans.upper() else 0.0
+                        context_relevance_scores.append(is_relevant)
+                        
+                # 2. Faithfulness
+                prompt_f = (
+                    f"Compare the scoring explanation: {explanation} against the raw source evidence text:\n"
+                    f"```\n{retrieved_text}\n```\n\n"
+                    f"Is every claim, qualification statement, or number of years mentioned in the explanation "
+                    f"directly supported by the source evidence? Answer strictly YES or NO."
+                )
+                f_ans = judge_call_with_retry(
+                    system_prompt="You are a strict evaluator for RAG faithfulness. Output YES if all claims in the explanation are grounded, or NO if there are any claims that are not grounded. Do not output anything else.",
+                    user_prompt=prompt_f,
+                    max_tokens=10
+                )
+                if f_ans is not None:
+                    is_faithful = 1.0 if "YES" in f_ans.upper() else 0.0
+                    faithfulness_scores.append(is_faithful)
+                    
+                # 3. Answer Relevance
+                prompt_ar = f"Evaluate if the explanation: {explanation} directly and completely answers the question raised in the sub-query: {sub_query}. Rate the answer relevance from 0.0 (completely off-topic/evasive) to 1.0 (directly answers). Output only the numeric score."
+                ar_ans = judge_call_with_retry(
+                    system_prompt="You are a strict evaluator for RAG answer relevance. Output a single numeric rating from 0.0 to 1.0.",
+                    user_prompt=prompt_ar,
+                    max_tokens=10
+                )
+                if ar_ans is not None:
+                    match = re.search(r"(\d+(\.\d+)?)", ar_ans)
+                    if match:
+                        answer_relevance_scores.append(float(match.group(1)))
+                    else:
+                        answer_relevance_scores.append(0.5)
+
+    # Compute averages
+    avg_cr = sum(context_relevance_scores) / len(context_relevance_scores) if context_relevance_scores else 0.0
+    avg_f = sum(faithfulness_scores) / len(faithfulness_scores) if faithfulness_scores else 0.0
+    avg_ar = sum(answer_relevance_scores) / len(answer_relevance_scores) if answer_relevance_scores else 0.0
+    
+    eval_results = {
+        "role": role,
+        "judge_model": judge_model,
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "metrics": {
+            "context_relevance": round(avg_cr, 4),
+            "faithfulness": round(avg_f, 4),
+            "answer_relevance": round(avg_ar, 4)
+        },
+        "sample_size": sample_size
+    }
+    
+    # If rate limit encountered, log recommendations banner
+    if rate_limit_encountered:
+        logger.warning("=" * 70)
+        logger.warning("⚠️ RAG RETRIEVAL CORRECTNESS AUDIT ENCOUNTERED RATE LIMITS")
+        logger.warning("-" * 70)
+        logger.warning("The Judge LLM calls returned 429 Too Many Requests errors.")
+        logger.warning("To resolve this and optimize throughput:")
+        logger.warning("1. In the Recruiter Wizard UI, lower your Candidate Concurrency and Requirement Concurrency.")
+        logger.warning("2. Or supply a paid/higher-tier API key with higher RPM limits.")
+        logger.warning("=" * 70)
+        
+    eval_file = output_dir / f"{role}_rag_evaluation.json"
+    try:
+        eval_file.write_text(json.dumps(eval_results, indent=2), encoding="utf-8")
+        logger.info("=" * 70)
+        logger.info("📊 RAG RETRIEVAL CORRECTNESS EVALUATION SUMMARY:")
+        logger.info("-" * 70)
+        logger.info("1. Context Relevance (Precision): %.2f%% (Target: >= 75%%)", avg_cr * 100)
+        logger.info("2. Faithfulness (Groundedness):   %.2f%% (Target: 100%%)", avg_f * 100)
+        logger.info("3. Answer Relevance:              %.2f%% (Target: >= 90%%)", avg_ar * 100)
+        logger.info("Saved evaluation results to %s", eval_file)
+        logger.info("=" * 70)
+    except Exception as exc:
+        logger.error("Failed to save evaluation results: %s", exc)
+
+
+# ---------------------------------------------------------------------------
 
 
 # ---------------------------------------------------------------------------
@@ -633,8 +1001,18 @@ def main(argv: list[str] = None) -> int:
              "Set to 1 to force sequential execution (debug / rate-limit mode).",
     )
     parser.add_argument(
+        "--candidate-workers", type=int, default=None,
+        help="Number of candidates to evaluate in parallel (uses ThreadPoolExecutor). "
+             "Defaults to 10. Set to 1 to force sequential execution.",
+    )
+    parser.add_argument(
         "--verbose", "-v", action="store_true",
         help="Enable verbose logger output.",
+    )
+    parser.add_argument(
+        "--judge-model", default=None,
+        help="Model slug to use as the Judge LLM (e.g. google/gemini-3.1-pro) "
+             "for running sample-based RAG correctness evaluation.",
     )
     args = parser.parse_args(argv)
 
@@ -803,6 +1181,7 @@ def main(argv: list[str] = None) -> int:
             progress=progress,
             resume=args.resume,
             n_workers=args.workers,
+            candidate_workers=args.candidate_workers,
         )
         summaries.append(summary)
         
@@ -849,6 +1228,14 @@ def main(argv: list[str] = None) -> int:
             f"{s['role']:25s}  {s['n_candidates']:>5d}  {s['mean_score']:>7.2f}  "
             f"{top1:>7.2f}  {s['n_zero_evidence_reqs']:>7d}  {out}"
         )
+    # ---------------------------------------------------------------
+    # 8. Run RAG evaluation if requested
+    # ---------------------------------------------------------------
+    if args.judge_model:
+        for s in summaries:
+            if s.get("role"):
+                run_rag_evaluation(s["role"], args.judge_model, output_dir)
+
     return 0
 
 

@@ -55,6 +55,12 @@ def _load_ranked(role: str) -> Dict[str, Any]:
     if recruiter_path.exists():
         path = recruiter_path
     if not path.exists():
+        try:
+            from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
+            restore_role_files_from_gdrive(role)
+        except Exception as e:
+            logger.warning("GDrive Sync: Error during on-demand restore of ranked file: %s", e)
+    if not path.exists():
         raise HTTPException(status_code=404, detail=f"No rankings for role: {role}")
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -66,8 +72,53 @@ def _load_processed(role: str, candidate_id: str) -> Dict[str, Any]:
     if recruiter_path.exists():
         path = recruiter_path
     if not path.exists():
+        try:
+            from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
+            restore_role_files_from_gdrive(role)
+        except Exception as e:
+            logger.warning("GDrive Sync: Error during on-demand restore of processed file: %s", e)
+    if not path.exists():
         raise HTTPException(status_code=404, detail=f"No processed data for {candidate_id}")
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _get_candidate_profile_summary(role: str, candidate_id: str) -> Dict[str, Any]:
+    """
+    Load candidate's processed JSON profile and return their name, summary, and skills list.
+    """
+    try:
+        proc = _load_processed(role, candidate_id)
+        profile = proc.get("candidate_profile", {})
+        
+        name = profile.get("full_name") or ""
+        name = name.strip()
+        if not name:
+            match = re.search(r"_CAND_(\d+)$", candidate_id)
+            suffix = match.group(1) if match else ""
+            name = f"Candidate #{suffix}" if suffix else candidate_id
+
+        summary = profile.get("summary") or "No profile summary available."
+        
+        skills = []
+        for s in profile.get("skills", []):
+            skill_name = s.get("name_canonical") or s.get("name_raw")
+            if skill_name:
+                skills.append(skill_name)
+        
+        return {
+            "name": name,
+            "summary": summary,
+            "skills": skills
+        }
+    except Exception:
+        match = re.search(r"_CAND_(\d+)$", candidate_id)
+        suffix = match.group(1) if match else ""
+        name = f"Candidate #{suffix}" if suffix else candidate_id
+        return {
+            "name": name,
+            "summary": "No profile summary available.",
+            "skills": []
+        }
 
 
 def _env_value(key: str, default: str = "") -> str:
@@ -152,11 +203,21 @@ def get_rankings(role: str, top: int = 0) -> Dict[str, Any]:
             "reqs": slim_reqs,
         })
 
+    eval_data = None
+    eval_file = SCORES_DIR / f"{role}_rag_evaluation.json"
+    if eval_file.exists():
+        try:
+            with eval_file.open("r", encoding="utf-8") as ef:
+                eval_data = json.load(ef)
+        except Exception:
+            pass
+
     return {
         "role": role,
         "n_candidates": data.get("n_candidates", len(rankings)),
         "mean_score": data.get("mean_score"),
         "rankings": slim_rankings,
+        "rag_evaluation": eval_data,
     }
 
 
@@ -293,97 +354,247 @@ def chat_with_candidate(req: ChatRequest) -> Dict[str, Any]:
 
     role = _role_from_candidate_id(req.candidate_id)
 
+    # 1. Load the rankings to map ranks/indices/names to target candidate IDs
+    question_lower = req.question.lower()
+    target_candidate_ids = {req.candidate_id}  # Always start with the current candidate
+
+    global_context = ""
+    total_candidates = 0
+    top_score = 0.0
+    min_score = 0.0
+    avg_score = 0.0
+    median_score = 0.0
+    candidate_rank = None
+    cand_score = 0.0
+    req_comp_text = ""
+    pool_stats_text = ""
+
+    try:
+        ranked_data = _load_ranked(role)
+        rankings = ranked_data.get("rankings", [])
+        total_candidates = len(rankings)
+
+        # Parse ranks (e.g. Rank 1, Rank #2, Rank 12)
+        rank_matches = re.findall(r"(?:rank|position|place)\s*(?:#|no\.?)?\s*(\d+)", question_lower)
+        # Parse ordinals (e.g. 1st, 2nd, 3rd, 8th, 10th)
+        ordinal_matches = re.findall(r"(\d+)(?:st|nd|rd|th)\s*(?:rank|candidate|one)?", question_lower)
+        # Parse candidate numbers (e.g. candidate 2, cand_0003)
+        candidate_matches = re.findall(r"(?:candidate|cand)\s*(?:#|no\.?)?\s*(\d+)", question_lower)
+
+        extracted_ranks = [int(r) for r in rank_matches + ordinal_matches]
+        extracted_cand_nums = [int(c) for c in candidate_matches]
+
+        for rank_val in extracted_ranks:
+            match_cand = next((c for c in rankings if c.get("rank") == rank_val), None)
+            if match_cand:
+                target_candidate_ids.add(match_cand.get("candidate_id"))
+
+        for num_val in extracted_cand_nums:
+            suffix_str = f"_CAND_{num_val:04d}"
+            match_cand = next((c for c in rankings if c.get("candidate_id", "").endswith(suffix_str)), None)
+            if not match_cand:
+                match_cand = next((c for c in rankings if f"CAND_{num_val}" in c.get("candidate_id", "") or f"CAND_{num_val:03d}" in c.get("candidate_id", "")), None)
+            if match_cand:
+                target_candidate_ids.add(match_cand.get("candidate_id"))
+
+        # Check for candidate name mentions (e.g. Orlando Campa)
+        for c in rankings:
+            c_id = c.get("candidate_id")
+            c_name = _get_candidate_profile_summary(role, c_id)["name"].lower()
+            if c_name and c_name in question_lower:
+                target_candidate_ids.add(c_id)
+
+        # Build stats
+        candidate_entry = next((c for c in rankings if c.get("candidate_id") == req.candidate_id), None)
+        if candidate_entry:
+            for i, c in enumerate(rankings):
+                if c.get("candidate_id") == req.candidate_id:
+                    candidate_rank = i + 1
+                    break
+            cand_score = float(candidate_entry.get("total") or 0.0)
+
+        if rankings:
+            scores = [float(c.get("total") or 0.0) for c in rankings]
+            top_score = max(scores)
+            min_score = min(scores)
+            avg_score = sum(scores) / len(scores)
+
+            sorted_scores = sorted(scores)
+            n_scores = len(sorted_scores)
+            if n_scores % 2 == 1:
+                median_score = sorted_scores[n_scores // 2]
+            else:
+                median_score = (sorted_scores[n_scores // 2 - 1] + sorted_scores[n_scores // 2]) / 2.0
+
+            if candidate_entry:
+                req_names = [r.get("requirement_name") for r in candidate_entry.get("reqs", []) if r.get("requirement_name")]
+                req_comparisons = []
+                for rname in req_names:
+                    cand_req = next((r for r in candidate_entry.get("reqs", []) if r.get("requirement_name") == rname), None)
+                    cand_val = float(cand_req.get("contribution") or 0.0) if cand_req else 0.0
+
+                    top_10 = rankings[:10]
+                    top_10_vals = [float(r.get("contribution") or 0.0) for c in top_10 for r in c.get("reqs", []) if r.get("requirement_name") == rname]
+                    top_10_avg = sum(top_10_vals) / len(top_10_vals) if top_10_vals else 0.0
+
+                    others = rankings[10:]
+                    others_vals = [float(r.get("contribution") or 0.0) for c in others for r in c.get("reqs", []) if r.get("requirement_name") == rname]
+                    others_avg = sum(others_vals) / len(others_vals) if others_vals else 0.0
+
+                    req_comparisons.append(f"- {rname}: Candidate={cand_val:.2f}, Top 10 Avg={top_10_avg:.2f}, Rest of Pool Avg={others_avg:.2f}")
+                req_comp_text = "\n".join(req_comparisons)
+
+                pool_stats_parts = []
+                for limit in [10, 20, 50]:
+                    sub_pool = rankings[:limit]
+                    if sub_pool:
+                        req_sums = {}
+                        for c in sub_pool:
+                            for r in c.get("reqs", []):
+                                rname = r.get("requirement_name", "")
+                                req_sums[rname] = req_sums.get(rname, 0.0) + float(r.get("contribution") or 0.0)
+                        req_avgs = [f"    * {rname}: Avg Score={total_sum / len(sub_pool):.2f}" for rname, total_sum in req_sums.items()]
+                        pool_stats_parts.append(f"  - Top {len(sub_pool)} Candidates (Average scores per requirement):\n" + "\n".join(req_avgs))
+                pool_stats_text = "\n\n".join(pool_stats_parts)
+
+        # Build candidate registry index document (ranks, names, IDs) for the LLM
+        registry_lines = []
+        for idx, c in enumerate(rankings):
+            c_id = c.get("candidate_id")
+            c_rank = c.get("rank") or (idx + 1)
+            c_name = _get_candidate_profile_summary(role, c_id)["name"]
+            registry_lines.append(f"- Rank #{c_rank}: {c_name} (ID: {c_id})")
+        registry_document = "\n".join(registry_lines)
+
+        global_context = (
+            f"CANDIDATE RANKING REGISTRY (maps candidate ranks and names to unique IDs):\n"
+            f"{registry_document}\n\n"
+            f"GLOBAL POOL STATISTICS:\n"
+            f"- Current Candidate Rank: {candidate_rank} out of {total_candidates} candidates in pool\n"
+            f"- Current Candidate Score: {cand_score:.2f} / 100.0\n"
+            f"- Pool High Score: {top_score:.2f}\n"
+            f"- Pool Average Score: {avg_score:.2f}\n"
+            f"- Pool Median Score: {median_score:.2f}\n"
+            f"- Pool Low Score: {min_score:.2f}\n"
+            f"- Requirement Score Comparison:\n{req_comp_text}\n\n"
+            f"POOL LEVEL REQ averages (Top 10/20/50):\n{pool_stats_text}\n"
+        )
+    except Exception as exc:
+        logger.warning("Could not build registry context for chat: %s", exc)
+
     # -----------------------------------------------------------------------
-    # Build context from rubric traces in the ranked JSON (always available).
-    # Each requirement's sub-queries carry closest_evidence + cited_text
-    # which together form a reliable summary of the candidate's resume.
+    # Build context from rubric traces for all target candidates in comparison
     # -----------------------------------------------------------------------
     context_parts: list[str] = []
     source_chunks: list[Dict[str, Any]] = []
 
     try:
         ranked_data = _load_ranked(role)
-        cand_entry = next(
-            (c for c in ranked_data.get("rankings", [])
-             if c.get("candidate_id") == req.candidate_id),
-            None,
-        )
-        if cand_entry:
-            for req_item in cand_entry.get("reqs", []):
-                req_name = req_item.get("requirement_name", "")
-                trace = req_item.get("rubric_trace", {})
-                sub_scores = trace.get("sub_scores", [])
-                for sq in sub_scores:
-                    evidence = sq.get("closest_evidence") or sq.get("cited_text") or ""
-                    if evidence:
-                        chunk_text = (
-                            f"[{req_name} — {sq.get('key', '')}]\n"
-                            f"Q: {sq.get('question', '')}\n"
-                            f"Evidence: {evidence}"
-                        )
-                        context_parts.append(chunk_text)
-                        source_chunks.append({
-                            "section": req_name,
-                            "text": evidence[:300],
-                        })
+        rankings = ranked_data.get("rankings", [])
+        for c_id in target_candidate_ids:
+            cand_entry = next((c for c in rankings if c.get("candidate_id") == c_id), None)
+            if cand_entry:
+                c_name = _get_candidate_profile_summary(role, c_id)["name"]
+                c_rank = cand_entry.get("rank") or "?"
+                for req_item in cand_entry.get("reqs", []):
+                    req_name = req_item.get("requirement_name", "")
+                    trace = req_item.get("rubric_trace", {})
+                    sub_scores = trace.get("sub_scores", [])
+                    for sq in sub_scores:
+                        evidence = sq.get("closest_evidence") or sq.get("cited_text") or ""
+                        if evidence and evidence.lower() != "none" and evidence.lower() != "unknown":
+                            chunk_text = (
+                                f"[Candidate: {c_name} (Rank #{c_rank}, ID: {c_id}) — {req_name} — {sq.get('key', '')}]\n"
+                                f"Q: {sq.get('question', '')}\n"
+                                f"Evidence: {evidence}"
+                            )
+                            context_parts.append(chunk_text)
+                            source_chunks.append({
+                                "section": f"{c_name} — {req_name}",
+                                "text": evidence[:300],
+                            })
     except Exception as exc:
-        logger.warning("Could not load ranked evidence for chat: %s", exc)
+        logger.warning("Could not load ranked evidence for targets: %s", exc)
 
     # Fallback: try processed JSON evidence_chunks if ranked evidence is sparse
     if len(context_parts) < 3:
-        try:
-            proc = _load_processed(role, req.candidate_id)
-            all_chunks = proc.get("evidence_chunks", [])
-            question_lower = req.question.lower()
-            question_words = set(re.findall(r"\w+", question_lower)) - {
-                "the", "a", "an", "is", "are", "was", "were", "has", "have",
-                "what", "how", "when", "where", "who", "why", "does", "do",
-                "their", "this", "that", "with", "for", "and", "or", "in",
-                "of", "to", "on", "at", "can", "did", "they",
-            }
-            scored = sorted(
-                all_chunks,
-                key=lambda c: sum(1 for w in question_words if w in (c.get("text") or "").lower()),
-                reverse=True,
-            )
-            for c in scored[: req.max_chunks]:
-                context_parts.append(
-                    f"[{c.get('section_type', 'section')}]\n{c.get('text', '')}"
+        for c_id in target_candidate_ids:
+            try:
+                proc = _load_processed(role, c_id)
+                c_name = _get_candidate_profile_summary(role, c_id)["name"]
+                cand_entry = next((c for c in rankings if c.get("candidate_id") == c_id), None)
+                c_rank = cand_entry.get("rank") or "?" if cand_entry else "?"
+                
+                all_chunks = proc.get("evidence_chunks", [])
+                question_words = set(re.findall(r"\w+", question_lower)) - {
+                    "the", "a", "an", "is", "are", "was", "were", "has", "have",
+                    "what", "how", "when", "where", "who", "why", "does", "do",
+                    "their", "this", "that", "with", "for", "and", "or", "in",
+                    "of", "to", "on", "at", "can", "did", "they",
+                }
+                scored = sorted(
+                    all_chunks,
+                    key=lambda c: sum(1 for w in question_words if w in (c.get("text") or "").lower()),
+                    reverse=True,
                 )
-                source_chunks.append({
-                    "section": c.get("section_type"),
-                    "text": c.get("text", "")[:300],
-                })
-        except Exception:
-            pass  # processed files not available in production — that's fine
+                for c in scored[:req.max_chunks]:
+                    chunk_text = (
+                        f"[Candidate: {c_name} (Rank #{c_rank}, ID: {c_id}) — {c.get('section_type', 'section')}]\n"
+                        f"{c.get('text', '')}"
+                    )
+                    context_parts.append(chunk_text)
+                    source_chunks.append({
+                        "section": f"{c_name} — {c.get('section_type')}",
+                        "text": c.get("text", "")[:300],
+                    })
+            except Exception:
+                pass
 
     # Last resort: return a helpful message if truly no evidence exists
     if not context_parts:
         return {
             "candidate_id": req.candidate_id,
-            "answer": "No resume evidence is available for this candidate yet. Run the pipeline to generate scores first.",
+            "answer": "No resume evidence is available for these candidates yet. Run the pipeline to generate scores first.",
             "source_chunks": [],
         }
 
-    context_text = "\n\n---\n\n".join(context_parts[: req.max_chunks])
+    # Sort context chunks by keyword relevance to user query, then take top 50
+    question_words = set(re.findall(r"\w+", question_lower)) - {
+        "the", "a", "an", "is", "are", "was", "were", "has", "have",
+        "what", "how", "when", "where", "who", "why", "does", "do",
+        "their", "this", "that", "with", "for", "and", "or", "in",
+        "of", "to", "on", "at", "can", "did", "they", "about", "candidate", "resume", "experience", "skills"
+    }
+
+    def _evidence_relevance(part: str) -> int:
+        part_lower = part.lower()
+        return sum(2 for w in question_words if w in part_lower)
+
+    context_parts = sorted(context_parts, key=_evidence_relevance, reverse=True)
+    max_to_use = max(req.max_chunks, 50)
+    context_text = "\n\n---\n\n".join(context_parts[:max_to_use])
 
     # Build LLM prompt
     system_prompt = (
         "You are an expert HR analyst. You have access to a candidate's resume "
-        "evidence (extracted during AI scoring or retrieved from raw resume chunks). "
-        "Note that some evidence items are associated with a specific Requirement and a "
-        "Sub-Question that was already validated and matched by the scoring engine. "
-        "Use this mapping to understand the context (e.g., if a snippet is listed under "
-        "'Leadership & Mentoring' for a question about mentoring, you should treat it as "
-        "valid mentoring evidence even if it uses synonyms like 'led a team' or 'helped a group'). "
-        "Answer the recruiter's question concisely and accurately based on the provided context. "
-        "If the evidence does not contain enough information, say so clearly."
+        "evidence (extracted during AI scoring or retrieved from raw resume chunks) and global pool statistics.\n"
+        "STRICT COMPARISON & TRUTHFULNESS DIRECTIVES:\n"
+        "1. Never speculate, assume, or hallucinate candidate qualifications. If a candidate has a requirement "
+        "score of 0.0 or 0.01, or if a sub-question's evidence is 'none' or empty, that candidate has ZERO experience or evidence "
+        "for that requirement. Do not imply they might have it.\n"
+        "2. Double check all score comparisons: a higher score means superior experience and evidence. Do not invert the comparison "
+        "(e.g., if Candidate A has 4.5/9 and Candidate B has 0/9, Candidate A has superior OOD skills, and Candidate B has none. "
+        "Never say Candidate A ranks lower than Candidate B for OOD skills in this case).\n"
+        "3. Answer the recruiter's comparison questions using only these exact, verified score numbers and direct evidence snippets. "
+        "Refuse to speculate about potential future evidence that is not in the text.\n"
+        "Answer the recruiter's question concisely, accurately, and professionally based on the provided context."
     )
     user_prompt = (
-        f"CANDIDATE: {req.candidate_id}\n\n"
-        f"RESUME EVIDENCE (from AI scoring):\n```\n{context_text}\n```\n\n"
+        f"CURRENT CANDIDATE ID: {req.candidate_id}\n\n"
+        f"{global_context}\n"
+        f"RESUME EVIDENCE (from AI scoring for all compared candidates):\n```\n{context_text}\n```\n\n"
         f"RECRUITER QUESTION: {req.question}\n\n"
-        "Answer based only on the evidence above."
+        "Answer based on the evidence and global statistics above."
     )
 
     providers = [{

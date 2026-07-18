@@ -325,6 +325,26 @@
     </div>
   </div>
 
+  <!-- RAG Correctness Metrics Strip -->
+  <div class="stats-strip" id="ragEvalStrip" style="display:none;margin-top:1rem;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);">
+    <div class="stat-card">
+      <div class="stat-label" style="color:var(--green)">RAG Context Precision</div>
+      <div class="stat-value" id="rag-cr-val">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" style="color:var(--green)">RAG Faithfulness</div>
+      <div class="stat-value" id="rag-f-val">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label" style="color:var(--green)">RAG Answer Relevance</div>
+      <div class="stat-value" id="rag-ar-val">—</div>
+    </div>
+    <div class="stat-card" style="grid-column: span 2;">
+      <div class="stat-label">RAG Evaluation Details</div>
+      <div class="stat-value" id="rag-judge-info" style="font-size:0.85rem;margin-top:0.4rem;font-weight:400;color:var(--muted)">—</div>
+    </div>
+  </div>
+
   <!-- Table -->
   <div class="table-wrap" id="tableWrap">
     <div class="state-box" id="emptyState">
@@ -416,9 +436,28 @@
       }
       updateStats(data);
       document.getElementById('statsStrip').style.display = '';
+
+      if (data.rag_evaluation && data.rag_evaluation.metrics) {
+        const m = data.rag_evaluation.metrics;
+        document.getElementById('rag-cr-val').textContent = `${(m.context_relevance * 100).toFixed(1)}%`;
+        document.getElementById('rag-cr-val').style.color = m.context_relevance >= 0.75 ? 'var(--green)' : 'var(--yellow)';
+        
+        document.getElementById('rag-f-val').textContent = `${(m.faithfulness * 100).toFixed(1)}%`;
+        document.getElementById('rag-f-val').style.color = m.faithfulness >= 0.99 ? 'var(--green)' : 'var(--red)';
+        
+        document.getElementById('rag-ar-val').textContent = `${(m.answer_relevance * 100).toFixed(1)}%`;
+        document.getElementById('rag-ar-val').style.color = m.answer_relevance >= 0.90 ? 'var(--green)' : 'var(--yellow)';
+        
+        document.getElementById('rag-judge-info').textContent = `Audited by ${data.rag_evaluation.judge_model} over ${data.rag_evaluation.sample_size} candidates.`;
+        document.getElementById('ragEvalStrip').style.display = '';
+      } else {
+        document.getElementById('ragEvalStrip').style.display = 'none';
+      }
+
       filterTable();
     } catch(e) {
       showEmpty('Failed to load rankings. Check server.');
+      document.getElementById('ragEvalStrip').style.display = 'none';
     }
   }
 

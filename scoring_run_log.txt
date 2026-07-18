@@ -1,0 +1,53 @@
+[2026-07-18 08:38:28,426] DEBUG openai._base_client: request_id: None
+[2026-07-18 08:38:28,428] DEBUG openai._base_client: Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'idempotency_key': 'stainless-python-retry-b053396f-9da8-40ad-8dfe-6cdc76587c9c', 'security': {'bearer_auth': True}, 'content': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You are a strict evaluator for RAG faithfulness. Output YES if all claims in the explanation are grounded, or NO if there are any claims that are not grounded. Do not output anything else.'}, {'role': 'user', 'content': "Compare the scoring explanation: What is the depth of the candidate's business analysis experience?: some against the raw source evidence text:\n```\nWeb Designer\n---\nGathered all project requirements with 95% fidelity to client needs.\n---\nGathered all project requirements with 95% fidelity to client needs.\n```\n\nIs every claim, qualification statement, or number of years mentioned in the explanation directly supported by the source evidence? Answer strictly YES or NO."}], 'model': 'gemini-3.5-flash', 'max_tokens': 10, 'temperature': 0.0}}
+[2026-07-18 08:38:28,429] DEBUG openai._base_client: Sending HTTP Request: POST https://openrouter.ai/api/v1/chat/completions
+[2026-07-18 08:38:28,429] DEBUG httpcore.http11: send_request_headers.started request=<Request [b'POST']>
+[2026-07-18 08:38:28,429] DEBUG httpcore.http11: send_request_headers.complete
+[2026-07-18 08:38:28,429] DEBUG httpcore.http11: send_request_body.started request=<Request [b'POST']>
+[2026-07-18 08:38:28,430] DEBUG httpcore.http11: send_request_body.complete
+[2026-07-18 08:38:28,430] DEBUG httpcore.http11: receive_response_headers.started request=<Request [b'POST']>
+[2026-07-18 08:38:29,572] DEBUG httpcore.http11: receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sat, 18 Jul 2026 08:38:29 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Access-Control-Allow-Origin', b'*'), (b'X-Generation-Id', b'gen-1784363908-nf9SXrx29BTe3MRtiayn'), (b'access-control-expose-headers', b'X-Generation-Id,X-Provider-Name,cf-ray'), (b'x-clerk-auth-message', b'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)'), (b'x-clerk-auth-reason', b'token-invalid'), (b'x-clerk-auth-status', b'signed-out'), (b'Permissions-Policy', b'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'), (b'Referrer-Policy', b'no-referrer, strict-origin-when-cross-origin'), (b'X-Content-Type-Options', b'nosniff'), (b'Content-Encoding', b'gzip'), (b'Server', b'cloudflare'), (b'CF-RAY', b'a1d02b9bbc882562-DFW')])
+[2026-07-18 08:38:29,573] INFO httpx: HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+[2026-07-18 08:38:29,573] DEBUG httpcore.http11: receive_response_body.started request=<Request [b'POST']>
+[2026-07-18 08:38:29,624] DEBUG httpcore.http11: receive_response_body.complete
+[2026-07-18 08:38:29,624] DEBUG httpcore.http11: response_closed.started
+[2026-07-18 08:38:29,624] DEBUG httpcore.http11: response_closed.complete
+[2026-07-18 08:38:29,624] DEBUG openai._base_client: HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Sat, 18 Jul 2026 08:38:29 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'access-control-allow-origin': '*', 'x-generation-id': 'gen-1784363908-nf9SXrx29BTe3MRtiayn', 'access-control-expose-headers': 'X-Generation-Id,X-Provider-Name,cf-ray', 'x-clerk-auth-message': 'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)', 'x-clerk-auth-reason': 'token-invalid', 'x-clerk-auth-status': 'signed-out', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'content-encoding': 'gzip', 'server': 'cloudflare', 'cf-ray': 'a1d02b9bbc882562-DFW'})
+[2026-07-18 08:38:29,625] DEBUG openai._base_client: request_id: None
+[2026-07-18 08:38:29,628] DEBUG openai._base_client: Request options: {'method': 'post', 'url': '/chat/completions', 'files': None, 'idempotency_key': 'stainless-python-retry-b2e4101c-3768-4103-adc2-3b19e28f9990', 'security': {'bearer_auth': True}, 'content': None, 'json_data': {'messages': [{'role': 'system', 'content': 'You are a strict evaluator for RAG answer relevance. Output a single numeric rating from 0.0 to 1.0.'}, {'role': 'user', 'content': "Evaluate if the explanation: What is the depth of the candidate's business analysis experience?: some directly and completely answers the question raised in the sub-query: Does the candidate explicitly mention 'requirement gathering', 'elicitation', or 'user stories'?. Rate the answer relevance from 0.0 (completely off-topic/evasive) to 1.0 (directly answers). Output only the numeric score."}], 'model': 'gemini-3.5-flash', 'max_tokens': 10, 'temperature': 0.0}}
+[2026-07-18 08:38:29,629] DEBUG openai._base_client: Sending HTTP Request: POST https://openrouter.ai/api/v1/chat/completions
+[2026-07-18 08:38:29,629] DEBUG httpcore.http11: send_request_headers.started request=<Request [b'POST']>
+[2026-07-18 08:38:29,630] DEBUG httpcore.http11: send_request_headers.complete
+[2026-07-18 08:38:29,630] DEBUG httpcore.http11: send_request_body.started request=<Request [b'POST']>
+[2026-07-18 08:38:29,630] DEBUG httpcore.http11: send_request_body.complete
+[2026-07-18 08:38:29,630] DEBUG httpcore.http11: receive_response_headers.started request=<Request [b'POST']>
+[2026-07-18 08:38:30,954] DEBUG httpcore.http11: receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sat, 18 Jul 2026 08:38:30 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Access-Control-Allow-Origin', b'*'), (b'X-Generation-Id', b'gen-1784363909-oxc5uMnnzWvZSpW5Iukp'), (b'access-control-expose-headers', b'X-Generation-Id,X-Provider-Name,cf-ray'), (b'x-clerk-auth-message', b'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)'), (b'x-clerk-auth-reason', b'token-invalid'), (b'x-clerk-auth-status', b'signed-out'), (b'Permissions-Policy', b'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")'), (b'Referrer-Policy', b'no-referrer, strict-origin-when-cross-origin'), (b'X-Content-Type-Options', b'nosniff'), (b'Content-Encoding', b'gzip'), (b'Server', b'cloudflare'), (b'CF-RAY', b'a1d02ba33fa92562-DFW')])
+[2026-07-18 08:38:30,954] INFO httpx: HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+[2026-07-18 08:38:30,955] DEBUG httpcore.http11: receive_response_body.started request=<Request [b'POST']>
+[2026-07-18 08:38:31,026] DEBUG httpcore.http11: receive_response_body.complete
+[2026-07-18 08:38:31,027] DEBUG httpcore.http11: response_closed.started
+[2026-07-18 08:38:31,027] DEBUG httpcore.http11: response_closed.complete
+[2026-07-18 08:38:31,027] DEBUG openai._base_client: HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Sat, 18 Jul 2026 08:38:30 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'access-control-allow-origin': '*', 'x-generation-id': 'gen-1784363909-oxc5uMnnzWvZSpW5Iukp', 'access-control-expose-headers': 'X-Generation-Id,X-Provider-Name,cf-ray', 'x-clerk-auth-message': 'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)', 'x-clerk-auth-reason': 'token-invalid', 'x-clerk-auth-status': 'signed-out', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'content-encoding': 'gzip', 'server': 'cloudflare', 'cf-ray': 'a1d02ba33fa92562-DFW'})
+[2026-07-18 08:38:31,027] DEBUG openai._base_client: request_id: None
+[2026-07-18 08:38:31,029] INFO score_batch_composed: ======================================================================
+[2026-07-18 08:38:31,030] INFO score_batch_composed: 📊 RAG RETRIEVAL CORRECTNESS EVALUATION SUMMARY:
+[2026-07-18 08:38:31,030] INFO score_batch_composed: ----------------------------------------------------------------------
+[2026-07-18 08:38:31,030] INFO score_batch_composed: 1. Context Relevance (Precision): 0.00% (Target: >= 75%)
+[2026-07-18 08:38:31,030] INFO score_batch_composed: 2. Faithfulness (Groundedness):   0.00% (Target: 100%)
+[2026-07-18 08:38:31,030] INFO score_batch_composed: 3. Answer Relevance:              50.00% (Target: >= 90%)
+[2026-07-18 08:38:31,030] INFO score_batch_composed: Saved evaluation results to recruiter/data/scores/composed/Business_Analyst_Lead_20260718_7f798e90_rag_evaluation.json
+[2026-07-18 08:38:31,030] INFO score_batch_composed: ======================================================================
+[2026-07-18 08:38:31,164] DEBUG httpcore.connection: close.started
+[2026-07-18 08:38:31,164] DEBUG httpcore.connection: close.complete
+--------------------------------------------------
+📊 PIPELINE PERFORMANCE PROFILE:
+--------------------------------------------------
+1. Download Phase:     13.53 seconds
+2. Extraction Phase:   22.39 seconds (10 resumes)
+3. Indexing Phase:     45.72 seconds
+4. Scoring Phase:      70.07 seconds
+--------------------------------------------------
+⏱️ TOTAL PIPELINE TIME: 151.71 seconds
+--------------------------------------------------
+Export: Initializing job dataset packaging...
+Export: Packaging files locally to data/export/business_analyst_lead_20260718_7f798e90_20260718_1 ...

@@ -1119,7 +1119,10 @@ class StartScoringRequest(BaseModel):
     weights: Optional[Dict[str, float]] = None
     api_key: Optional[str] = None
     model: Optional[str] = None
+    judge_model: Optional[str] = None
     base_url: Optional[str] = None
+    candidate_concurrency: Optional[int] = None
+    requirement_concurrency: Optional[int] = None
 
 
 def _download_resumes_from_link(link: str, dest_dir: Path) -> int:
@@ -1384,7 +1387,7 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     import threading
     t = threading.Thread(
         target=_run_pipeline_bg,
-        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights, req.api_key, req.model, req.base_url),
+        args=(job_id, req.role_slug, req.resume_link, req.n_reqs, req.parallel, req.weights, req.api_key, req.model, req.base_url, req.candidate_concurrency, req.requirement_concurrency, req.judge_model),
         daemon=True,
     )
     t.start()
@@ -1396,64 +1399,114 @@ def start_scoring(req: StartScoringRequest) -> JSONResponse:
     })
 
 
-def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]], api_key: Optional[str], model: Optional[str], base_url: Optional[str]) -> None:
+def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, parallel: bool, weights: Optional[Dict[str, float]], api_key: Optional[str], model: Optional[str], base_url: Optional[str], candidate_concurrency: Optional[int] = None, requirement_concurrency: Optional[int] = None, judge_model: Optional[str] = None) -> None:
     """Run download → extract → score pipeline in a background thread, updating _SCORING_JOBS."""
     job = _SCORING_JOBS.get(job_id)
     if not job:
         return
 
     try:
-        # 0. Delete old rankings, embeddings, and score data to avoid stale UI state
+        # Check if link changed
+        last_link_file = Path(f"recruiter/data/original/{slug}/.last_link")
+        link_changed = True
+        if last_link_file.exists():
+            try:
+                if last_link_file.read_text(encoding="utf-8").strip() == (link or ""):
+                    link_changed = False
+            except Exception:
+                pass
+
+        # Define file/directory paths
         old_ranked_file = Path("recruiter/data/scores/composed") / f"{slug}_ranked.json"
         old_cand_dir = Path("recruiter/data/scores/composed") / slug
-        idx_path_old = Path("recruiter/data/embeddings") / f"{slug}_index.npz"
-        chk_path_old = Path("recruiter/data/embeddings") / f"{slug}_chunks.jsonl"
-        try:
-            import shutil
-            if old_ranked_file.exists():
-                old_ranked_file.unlink()
-            if old_cand_dir.exists():
-                shutil.rmtree(old_cand_dir)
-            if idx_path_old.exists():
-                idx_path_old.unlink()
-            if chk_path_old.exists():
-                chk_path_old.unlink()
-            job["log"].append("✓ Cleared old scores and index files.")
-        except Exception as exc:
-            logger.warning("Failed to clear old score files for %s: %s", slug, exc)
-
+        idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
+        chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
+        processed_dir = Path(f"recruiter/data/processed/{slug}")
         resume_dir = Path(f"recruiter/data/original/{slug}")
-        resume_dir.mkdir(parents=True, exist_ok=True)
 
-        times = {"download": 0.0, "extract": 0.0, "index": 0.0, "score": 0.0}
-        t_download_start = time.time()
-
-        # 1. Download resumes in background
-        if link:
-            job["phase"] = "downloading"
-            job["log"].append(f"Downloading files from: {link}")
+        # If link changed, clear cache to force rebuild
+        if link_changed:
+            logger.info("Link changed or first run for %s. Clearing cache...", slug)
             try:
-                n_dl = _download_resumes_from_link(link, resume_dir)
-                job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
-                times["download"] = time.time() - t_download_start
-            except Exception as e:
-                job["status"] = "error"
-                job["log"].append(f"✗ Download failed: {e}")
-                return
+                import shutil
+                if old_ranked_file.exists():
+                    old_ranked_file.unlink()
+                if old_cand_dir.exists():
+                    shutil.rmtree(old_cand_dir)
+                if Path(idx_path).exists():
+                    Path(idx_path).unlink()
+                if Path(chk_path).exists():
+                    Path(chk_path).unlink()
+                if processed_dir.exists():
+                    shutil.rmtree(processed_dir)
+                if resume_dir.exists():
+                    shutil.rmtree(resume_dir)
+                job["log"].append("✓ Cleared old scores and cache files due to link/configuration change.")
+            except Exception as exc:
+                logger.warning("Failed to clear old files for %s: %s", slug, exc)
         else:
-            job["log"].append("No shared link provided. Checking local folder...")
+            # We always delete scores, but NOT raw/processed/embedding files
+            try:
+                import shutil
+                if old_ranked_file.exists():
+                    old_ranked_file.unlink()
+                if old_cand_dir.exists():
+                    shutil.rmtree(old_cand_dir)
+                job["log"].append("✓ Cleared old score files.")
+            except Exception as exc:
+                logger.warning("Failed to clear old scores: %s", exc)
 
-        # Count files
-        exts = {".pdf", ".docx", ".doc"}
-        resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
-        if not resumes:
-            job["status"] = "error"
-            job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
-            return
+        resume_dir.mkdir(parents=True, exist_ok=True)
+        times = {"download": 0.0, "extract": 0.0, "index": 0.0, "score": 0.0}
 
-        n = len(resumes)
-        job["total"] = n
-        
+        # Check if processed JSONs and index exist
+        has_processed = processed_dir.is_dir() and any(processed_dir.iterdir())
+        has_index = Path(idx_path).exists()
+        quick_rescore = has_processed and has_index and not link_changed
+
+        if quick_rescore:
+            job["log"].append("✓ Found cached index and processed resumes. Quick Rescore activated.")
+            # Count files
+            exts = {".pdf", ".docx", ".doc"}
+            resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
+            n = len(resumes) if resumes else 1
+            job["total"] = n
+        else:
+            # 1. Download resumes in background
+            t_download_start = time.time()
+            if link:
+                job["phase"] = "downloading"
+                job["log"].append(f"Downloading files from: {link}")
+                try:
+                    n_dl = _download_resumes_from_link(link, resume_dir)
+                    job["log"].append(f"✓ Downloaded {n_dl} resume files successfully.")
+                    times["download"] = time.time() - t_download_start
+                    # Save last link
+                    last_link_file.parent.mkdir(parents=True, exist_ok=True)
+                    last_link_file.write_text(link, encoding="utf-8")
+                except Exception as e:
+                    job["status"] = "error"
+                    job["log"].append(f"✗ Download failed: {e}")
+                    return
+            else:
+                job["log"].append("No shared link provided. Checking local folder...")
+                try:
+                    last_link_file.parent.mkdir(parents=True, exist_ok=True)
+                    last_link_file.write_text("", encoding="utf-8")
+                except Exception:
+                    pass
+
+            # Count files
+            exts = {".pdf", ".docx", ".doc"}
+            resumes = [f for f in resume_dir.iterdir() if f.suffix.lower() in exts]
+            if not resumes:
+                job["status"] = "error"
+                job["log"].append("✗ No PDF/DOCX resumes found in the folder. Please verify the folder link has public read access.")
+                return
+
+            n = len(resumes)
+            job["total"] = n
+
         # Calculate true ETA
         eta_seconds = n * (15 + (6 if parallel else n_reqs * 5))
         job["eta_seconds"] = eta_seconds
@@ -1477,6 +1530,8 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             sub_env["RECRUITER_BASE_URL"] = base_url
         if model:
             sub_env["RECRUITER_MODEL"] = model
+        if judge_model:
+            sub_env["RECRUITER_JUDGE_MODEL"] = judge_model
 
         def _run(cmd: list[str], phase: str) -> bool:
             job["phase"] = phase
@@ -1493,6 +1548,7 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
                     line = line.rstrip()
                     if line:
                         job["log"] = job["log"][-40:] + [line]
+                        logger.info(f"[{phase}] {line}")
                 proc.wait()
                 if proc.returncode != 0:
                     job["status"] = "error"
@@ -1606,23 +1662,29 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             job["log"].append(f"⚠ Warning: SubQuery markdown generation failed: {sqe}")
 
         # 2. Extract resumes using the recruiter extraction script
-        t_extract_start = time.time()
-        ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
-        times["extract"] = time.time() - t_extract_start
-        if not ok:
-            return
+        if not quick_rescore:
+            t_extract_start = time.time()
+            ok = _run([_PYTHON, "recruiter/batch_extract_resumes.py", "--role", slug], "extracting")
+            times["extract"] = time.time() - t_extract_start
+            if not ok:
+                return
+        else:
+            job["log"].append("✓ Resumes already processed. Skipping extraction phase.")
 
         # 2.5 Build dynamic embedding index containing only the recruiter's resumes
-        t_index_start = time.time()
-        idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
-        chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
-        ok = _run(
-            [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
-            "indexing"
-        )
-        times["index"] = time.time() - t_index_start
-        if not ok:
-            return
+        if not quick_rescore:
+            t_index_start = time.time()
+            idx_path = f"recruiter/data/embeddings/{slug}_index.npz"
+            chk_path = f"recruiter/data/embeddings/{slug}_chunks.jsonl"
+            ok = _run(
+                [_PYTHON, "recruiter/build_index.py", "--index-path", idx_path, "--chunks-path", chk_path, "--role", slug],
+                "indexing"
+            )
+            times["index"] = time.time() - t_index_start
+            if not ok:
+                return
+        else:
+            job["log"].append("✓ Embeddings already indexed. Skipping indexing phase.")
 
         # 3. Score resumes using the recruiter scoring script and dynamic index file
         # Pre-flight: verify the index file exists before launching the scorer
@@ -1638,18 +1700,26 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
             job["log"].append(f"⚠ Weight config not found at {_expected_wc} — scorer may fail to discover role.")
 
         t_score_start = time.time()
-        ok = _run(
-            [_PYTHON, "recruiter/score_batch_composed.py",
-             "--role", slug,
-             "--index-path", idx_path,
-             "--verbose"],  # --verbose surfaces import errors & crash traces in job log
-            "scoring"
-        )
+        score_cmd = [
+            _PYTHON, "recruiter/score_batch_composed.py",
+            "--role", slug,
+            "--index-path", idx_path,
+            "--verbose",
+            "--flush-cache"
+        ]
+        if judge_model:
+            score_cmd.extend(["--judge-model", judge_model])
+        if candidate_concurrency is not None:
+            score_cmd.extend(["--candidate-workers", str(candidate_concurrency)])
+        if requirement_concurrency is not None:
+            score_cmd.extend(["--workers", str(requirement_concurrency)])
+
+        ok = _run(score_cmd, "scoring")
         times["score"] = time.time() - t_score_start
         if not ok:
             job["log"].append(
                 f"✗ Scorer exited with error after {times['score']:.2f}s. "
-                "Check lines above for import errors or missing files."
+                "Check lines above for import errors or rate limits."
             )
             return
 

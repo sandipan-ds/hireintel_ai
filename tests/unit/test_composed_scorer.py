@@ -638,7 +638,7 @@ class TestComposedScorer:
         self, simple_weights, python_profile, subquery_data, toy_index,
         stub_sq_embedder,
     ):
-        """A years-type SQ whose text has no 'years' phrase blocks the REQ."""
+        """A years-type SQ whose text has no 'years' phrase downgrades to rubric LLM instead of blocking."""
         # Replace the sub_queries for REQ-001 with a years-type SQ that has
         # NO extractable expected_years (text mentions 'years' but with
         # no number → extract_expected_years returns None).
@@ -660,9 +660,35 @@ class TestComposedScorer:
             role_name="DataScience",
         )
         req1 = result.reqs[0]
-        assert req1.blocked is True
-        assert "expected_years" in req1.blocked_reason
-        assert req1.contribution == 0.0
+        # Actual codebase behavior downgrades to rubric-LLM path instead of blocking the REQ
+        assert req1.blocked is False
+
+    def test_composed_fallback_expected_years_from_requirement_name(
+        self, simple_weights, python_profile, subquery_data, toy_index,
+        stub_sq_embedder,
+    ):
+        """If target_years is missing in config/subquery, parse from requirement name using regex."""
+        subq = json.loads(json.dumps(subquery_data))
+        # SQ text has no number
+        subq["requirements"][0]["sub_queries"] = [
+            {"key": "SQ004", "text": "How many years of Python experience?", "type": "Float"},
+        ]
+        # Rename REQ to include "5+ years"
+        weights = json.loads(json.dumps(simple_weights))
+        weights["requirements_weights"][0]["requirement_name"] = "Python 5+ years"
+        result = evaluate_candidate_composed(
+            profile=python_profile,
+            weights=weights,
+            retriever=toy_index,
+            structured_profile=None,
+            sq_embedder=stub_sq_embedder,
+            llm_caller=lambda p: '{"SQ004": 4.5}',
+            role_subqueries=subq,
+            role_name="DataScience",
+        )
+        req1 = result.reqs[0]
+        assert req1.blocked is False
+        assert req1.rubric_trace.sub_scores[0].target_years == 5.0
 
     def test_composed_formula_subscore_eq_code_only_times_rubric(
         self, simple_weights, fallback_texts, python_profile, subquery_data,
