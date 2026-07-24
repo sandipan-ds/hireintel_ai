@@ -66,21 +66,19 @@ import numpy as np
 #: Default number of top-K chunks to return per REQ (DEC-035).
 #: Replaces threshold-based retrieval — always returns K results, no floor.
 #: Guarantees the LLM always receives evidence, regardless of cosine scores.
-DEFAULT_TOP_K: int = 10
+DEFAULT_TOP_K: int = 5
 
 #: Hard cap on returned chunks per query (safety limit).
 DEFAULT_MAX_CHUNKS_PER_QUERY: int = 20
 
 #: Path to the canonical embedding index produced by ``src.rag.build_index``.
 #: DocumentAware chunker index (DEC-035, rebuilt with BGE-base-en-v1.5, 768-dim).
-DEFAULT_INDEX_PATH: str = "data/embeddings/document_aware/index.npz"
+DEFAULT_INDEX_PATH: str = "recruiter/data/embeddings/index.npz"
 
 #: Path to the line-delimited JSONL metadata file produced alongside the index.
-DEFAULT_CHUNKS_PATH: str = "data/embeddings/document_aware/chunks.jsonl"
+DEFAULT_CHUNKS_PATH: str = "recruiter/data/embeddings/chunks.jsonl"
 
-#: Embedding model identifier (DEC-035). Updated from all-MiniLM-L6-v2 (384-dim,
-#: STS-trained) to BAAI/bge-base-en-v1.5 (768-dim, retrieval-trained on MS-MARCO/BEIR).
-#: This constant is exported for callers that want to keep their config in sync.
+#: Embedding model identifier — updated to BAAI/bge-base-en-v1.5 (DEC-036)
 DEFAULT_EMBEDDING_MODEL: str = "BAAI/bge-base-en-v1.5"
 
 #: Retired by DEC-035. Retained for backward-compat with tests and callers not yet

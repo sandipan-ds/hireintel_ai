@@ -889,3 +889,62 @@ The secondary cause is the embedding model mismatch: `all-MiniLM-L6-v2` is train
 - When configuring path routing or mounting sub-routers in FastAPI (`app.include_router`), make sure any path changes are verified against the static UI pages.
 - Add an automated navigation test in verification runs to verify all header links (e.g. Recruiter Board, My Project Ranking, API) return HTTP 200.
 
+---
+
+### Google Drive Exporter: 401 Unauthorized / 400 Bad Request Expiration Error
+
+**Date:** 2026-07-24
+
+**Problem:**
+- Automated Google Drive exports failed during post-scoring sync with `400 Bad Request` or `401 Unauthorized` errors on `https://oauth2.googleapis.com/token`.
+
+**Symptoms:**
+- Cloud Run logs showed `GDrive Storage: Auth refresh failed: 401 Client Error: Unauthorized for url: https://oauth2.googleapis.com/token`.
+- Files were preserved locally, but failed to sync to the project owner's Google Drive folders.
+
+**Root Cause:**
+- Google Cloud OAuth Consent Screen was configured in **"Testing"** mode.
+- In Google Cloud Platform, OAuth refresh tokens issued for apps in "Testing" mode automatically expire after **7 days**, causing background token refreshes to fail after a week.
+
+**Solution:**
+- Moved the Google Auth Platform publishing status from **"Testing"** → **"In Production"** in the GCP Console.
+- Re-authorized via OAuth 2.0 Playground to issue a persistent, non-expiring `OWNER_GDRIVE_REFRESH_TOKEN`.
+- Updated `.env.gcp` and redeployed to Cloud Run via `gcloud run services update recruiter-app`.
+
+**Prevention Strategy:**
+- Ensure OAuth consent screens for internal automation apps using restricted/sensitive scopes are placed **In Production** mode to obtain permanent refresh tokens.
+- Test refresh tokens locally using `requests.post("https://oauth2.googleapis.com/token", ...)` before deploying container updates.
+
+---
+
+### RAG Correctness Evaluation: Context Relevance & Faithfulness Scores Stuck at 0.00%
+
+**Date:** 2026-07-24
+
+**Problem:**
+- RAG retrieval correctness evaluation reported `0.00%` for Context Relevance (Precision) and Faithfulness (Groundedness), while candidate scores and Answer Relevance were accurate.
+
+**Symptoms:**
+- RAG evaluation output printed:
+  ```text
+  1. Context Relevance (Precision): 0.00% (Target: >= 75%)
+  2. Faithfulness (Groundedness):   0.00% (Target: 100%)
+  3. Answer Relevance:              48.28% (Target: >= 90%)
+  ```
+
+**Root Cause:**
+1. **Unfiltered Negative Evidence Notes**: When a candidate lacked evidence for a requirement (`evidence_found == False`, `sub_score == 0`), the scoring engine recorded negative explanatory notes in `closest_evidence` (`"No mention of HTML in candidate resume"`). The evaluation loop treated these negative notes as RAG chunks.
+2. **`max_tokens=10` Completion Truncation on Reasoning Models**: Modern reasoning models (e.g. `google/gemini-3.5-flash`, `deepseek-r1`, `qwq-32b`) generate an internal reasoning block (`msg.reasoning = "**Analyzing Evidence...**"`). Setting `max_tokens=10` caused OpenRouter to truncate completions mid-reasoning before `msg.content = "YES"` was emitted, returning `content=None` and evaluating `0.0` for all sub-queries.
+
+**Solution:**
+- **File Modified:** [recruiter/score_batch_composed.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/score_batch_composed.py#L710-L975)
+- Updated `_collect_evaluable_reqs`, `has_any_evidence`, and `sq_has_evidence` checks to strictly require `evidence_found == True`, `sub_score > 0`, non-empty text, and absence of LLM negative phrases.
+- Increased `max_tokens` from `10` to `300` for all Judge LLM calls (`prompt_cr`, `prompt_f`, `prompt_ar`).
+- Updated `judge_call_with_retry` to extract `msg.content or getattr(msg, "reasoning", None) or msg.model_extra.get("reasoning")`, ensuring full compatibility with frontier reasoning models.
+
+**Prevention Strategy:**
+- Never pass small `max_tokens` caps (< 100) to API calls with reasoning/thinking models.
+- Always check both `msg.content` and `msg.reasoning` when handling OpenRouter completions from reasoning models.
+- Filter evaluation datasets strictly by positive evidence flags (`evidence_found == True` and `sub_score > 0`).
+
+

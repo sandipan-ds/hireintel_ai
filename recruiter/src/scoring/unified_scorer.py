@@ -1597,26 +1597,46 @@ def evaluate_candidate_composed(
     # calls.  Results are re-sorted to the original weight-config order
     # before aggregation so the output JSON is deterministic.
     # ------------------------------------------------------------------
-    # Resolve effective_workers dynamically: default to len(req_list) if n_workers is None.
-    if n_workers is None:
-        effective_workers = len(req_list)
-    else:
-        effective_workers = n_workers
+    # ------------------------------------------------------------------
+    # 4-Tier Adaptive ThreadPool Worker Fallback Strategy:
+    #   Tier 1: len(req_list) * 10 (Maximum Throughput)
+    #   Tier 2: len(req_list) * 1  (Standard Parallel)
+    #   Tier 3: 5 workers          (Conservative Parallel)
+    #   Tier 4: 1 worker           (Guaranteed Sequential)
+    # ------------------------------------------------------------------
+    worker_tiers = [
+        len(req_list) * 10,
+        len(req_list) * 1,
+        5,
+        1,
+    ]
+    if n_workers is not None and n_workers > 0:
+        worker_tiers.insert(0, n_workers)
+
+    # Deduplicate while preserving tier priority
+    seen_tiers = set()
+    dedup_tiers = []
+    for w in worker_tiers:
+        if w > 0 and w not in seen_tiers:
+            seen_tiers.add(w)
+            dedup_tiers.append(w)
 
     reqs_results: Optional[List[ComposedREQResult]] = None
 
-    if effective_workers > 1 and len(req_list) > 1:
+    for tier_workers in dedup_tiers:
+        if tier_workers == 1:
+            break
+
         future_to_idx: Dict[Any, int] = {}
         reqs_results_map: Dict[int, ComposedREQResult] = {}
         pool_success = False
 
-        # Attempt 1: Run with the dynamically calculated or specified number of workers.
         try:
             logger.debug(
-                "composed[%s/%s]: launching %d REQs across %d workers",
-                role, candidate_id, len(req_list), effective_workers,
+                "composed[%s/%s]: trying Tier with %d workers for %d REQs",
+                role, candidate_id, tier_workers, len(req_list),
             )
-            with ThreadPoolExecutor(max_workers=effective_workers) as pool:
+            with ThreadPoolExecutor(max_workers=tier_workers) as pool:
                 for idx, req in enumerate(req_list):
                     future = pool.submit(_evaluate_single_req, req, **_ctx)
                     future_to_idx[future] = idx
@@ -1652,68 +1672,15 @@ def evaluate_candidate_composed(
             pool_success = True
         except Exception as exc:
             logger.warning(
-                "composed[%s/%s]: ThreadPoolExecutor failed with %d workers: %s. "
-                "Retrying with safe fallback of 5 workers.",
-                role, candidate_id, effective_workers, exc,
+                "composed[%s/%s]: ThreadPoolExecutor failed with %d workers: %s. Trying next worker tier...",
+                role, candidate_id, tier_workers, exc,
             )
 
-        # Attempt 2: Fall back to a safe thread limit of 5 workers.
-        if not pool_success:
-            future_to_idx = {}
-            reqs_results_map = {}
-            effective_workers = 5
-            try:
-                logger.debug(
-                    "composed[%s/%s]: retrying with safe fallback of %d workers",
-                    role, candidate_id, effective_workers,
-                )
-                with ThreadPoolExecutor(max_workers=effective_workers) as pool:
-                    for idx, req in enumerate(req_list):
-                        future = pool.submit(_evaluate_single_req, req, **_ctx)
-                        future_to_idx[future] = idx
-
-                    for future in as_completed(future_to_idx):
-                        idx = future_to_idx[future]
-                        try:
-                            reqs_results_map[idx] = future.result()
-                        except Exception as exc:
-                            exc_class_name = exc.__class__.__name__
-                            if "RateLimitException" in exc_class_name or (exc.__cause__ and "RateLimitException" in exc.__cause__.__class__.__name__):
-                                raise exc
-                            bad_req = req_list[idx]
-                            req_id = bad_req.get("requirement_id") or bad_req.get("req_id") or ""
-                            name = bad_req.get("requirement_name") or bad_req.get("name") or ""
-                            logger.error(
-                                "composed[%s/%s]: unhandled exception in REQ %s — "
-                                "zeroing contribution. Error: %s",
-                                role, candidate_id, req_id, exc,
-                            )
-                            fallback = ComposedREQResult(
-                                requirement_id=req_id,
-                                requirement_name=name,
-                                category=bad_req.get("category", ""),
-                                weight_percentage=float(bad_req.get("weight_percentage") or 0.0),
-                                sub_queries=[],
-                            )
-                            fallback.blocked = True
-                            fallback.blocked_reason = f"Unhandled thread exception: {exc}"
-                            fallback.sub_score = 0.0
-                            fallback.contribution = 0.0
-                            reqs_results_map[idx] = fallback
-                pool_success = True
-            except Exception as exc:
-                logger.error(
-                    "composed[%s/%s]: safe fallback ThreadPoolExecutor with 5 workers "
-                    "also failed: %s. Falling back to sequential execution.",
-                    role, candidate_id, exc,
-                )
-
         if pool_success:
-            reqs_results = [
-                reqs_results_map[i] for i in sorted(reqs_results_map)
-            ]
+            reqs_results = [reqs_results_map[i] for i in sorted(reqs_results_map)]
+            break
 
-    # Sequential fallback path: n_workers == 1, single-REQ role, or pool failures.
+    # Sequential fallback path: single-REQ role, or all thread pools failed
     if reqs_results is None:
         reqs_results = [_evaluate_single_req(req, **_ctx) for req in req_list]
 

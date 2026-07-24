@@ -66,7 +66,7 @@ import numpy as np
 #: Default number of top-K chunks to return per REQ (DEC-035).
 #: Replaces threshold-based retrieval — always returns K results, no floor.
 #: Guarantees the LLM always receives evidence, regardless of cosine scores.
-DEFAULT_TOP_K: int = 10
+DEFAULT_TOP_K: int = 5
 
 #: Hard cap on returned chunks per query (safety limit).
 DEFAULT_MAX_CHUNKS_PER_QUERY: int = 20

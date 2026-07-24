@@ -317,8 +317,11 @@ The FastAPI application and interactive wizard interface have been fully contain
 | **Real-Time Log Streaming** | ✅ Complete | Configured `PYTHONUNBUFFERED=1` in both Docker environment and runner subprocesses for instant stdout flushes and logs visibility |
 | **Cloud Build Image Baking** | ✅ Complete | Excluded `recruiter/models/` local weights via `.gcloudignore`/`.dockerignore` to shrink uploads from 466.5 MiB to 48.1 MiB (10x faster), downloading and baking the BGE model weights directly into the image during Cloud Build |
 | **Google Drive Exporter Sync** | ✅ Complete | Automatically exports evaluation runs, logs, and RAG correctness JSON metadata to the shared Google Drive folder |
+| **Non-Expiring GDrive OAuth** | ✅ Complete | Migrated OAuth consent screen from Testing to Production mode, issuing non-expiring persistent refresh tokens for continuous automated sync |
 | **Always-Allocated CPU Tuning** | ✅ Complete | Configured Cloud Run with `--no-cpu-throttling` to ensure background thread processing and local FastEmbed query encoding runs at maximum speeds |
 | **Dynamic Cross-Candidate RAG Chat** | ✅ Complete | Chat endpoint dynamically parses queried ranks/names, retrieves relevant evidence chunks for compared candidates, and formats a registry lookup mapping to keep contexts clean |
+| **Strict RAG Correctness Audit** | ✅ Complete | Fixed LLM Judge evaluation by strictly isolating sub-queries with `evidence_found == True` and `sub_score > 0`, handling reasoning model outputs (`msg.reasoning`), and expanding `max_tokens=300` for 100% accurate binary RAG evaluation |
+| **4-Tier Adaptive ThreadPool Fallback** | ✅ Complete | Implemented 4-tier worker fallback strategy (Tier 1: $N \times 10$, Tier 2: $N \times 1$, Tier 3: 5 workers, Tier 4: 1 sequential worker) for maximum parallel throughput and 100% execution resilience |
 
 ---
 

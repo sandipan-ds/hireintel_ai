@@ -1099,3 +1099,28 @@ A successful AI implementation:
 • Produces maintainable code
 • Leaves a clear decision history for future contributors
 • Keeps documentation synchronized with implementation
+
+---
+
+## Google Cloud Run Deployment Rules
+
+When deploying to Google Cloud Run, the following flags are **MANDATORY** and must never be omitted:
+
+- `--no-cpu-throttling` — CPU must always be allocated, even outside of request processing. This is required for background tasks (scoring, embedding) to complete without being killed mid-execution.
+
+Standard deployment command:
+```bash
+gcloud run deploy recruiter-app \
+  --image gcr.io/hireintel-ai-502510/recruiter-app \
+  --region us-central1 \
+  --platform managed \
+  --allow-unauthenticated \
+  --no-cpu-throttling \
+  --min-instances=0 \
+  --max-instances=2 \
+  --memory=2Gi \
+  --cpu=2 \
+  --timeout=900
+```
+
+**Never use `--cpu-throttling`.** Background scoring jobs and embedding operations require persistent CPU access.

@@ -702,13 +702,15 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
     answer_relevance_scores: List[float] = []
     errors: List[str] = []
     rate_limit_encountered = False
+    eval_tasks = []
 
     # ----- helper: LLM call with retry + exponential backoff -----
     def judge_call_with_retry(
-        system_prompt: str, user_prompt: str, max_tokens: int
+        system_prompt: str, user_prompt: str, max_tokens: int = 300
     ) -> Optional[str]:
         nonlocal rate_limit_encountered
         max_retries = 4
+
         for attempt in range(max_retries + 1):
             try:
                 resp = client.chat.completions.create(
@@ -720,7 +722,11 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                     max_tokens=max_tokens,
                     temperature=0.0,
                 )
-                return (resp.choices[0].message.content or "").strip()
+                msg = resp.choices[0].message
+                content_text = msg.content or getattr(msg, "reasoning", None) or ""
+                if not content_text and hasattr(msg, "model_extra") and isinstance(msg.model_extra, dict):
+                    content_text = msg.model_extra.get("reasoning") or msg.model_extra.get("reasoning_content") or ""
+                return (content_text or "").strip()
             except Exception as e:
                 err_text = str(e).lower()
                 is_rate_limit = (
@@ -734,19 +740,19 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                     if attempt < max_retries:
                         backoff = (4.0 + random.uniform(0.0, 2.0)) * (2 ** attempt)
                         logger.warning(
-                            "⚖️ Judge LLM rate limited (429). "
-                            "Retrying in %.2fs (attempt %d/%d)...",
+                            "⚖️ Judge LLM rate limited (429). Retrying in %.2fs (attempt %d/%d)...",
                             backoff, attempt + 1, max_retries,
                         )
                         time.sleep(backoff)
                         continue
 
-                logger.warning("⚖️ Judge LLM call failed: %s", e)
+                logger.warning("⚖️ Judge LLM call failed on model '%s': %s", judge_model, e)
                 errors.append(str(e))
                 if attempt < max_retries:
                     time.sleep(2.0)
                     continue
-                return None
+
+        return None
 
     # ----- helper: collect evaluable requirements for a candidate -----
     #
@@ -769,10 +775,9 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
             ss_list = trace.get("sub_scores") or []
             if not ss_list:
                 continue
-            # Check that at least one sub-score has usable evidence
+            # Check that at least one sub-score has usable evidence (evidence_found=True and sub_score > 0)
             has_evidence = any(
-                (sq.get("closest_evidence") or sq.get("cited_text") or "").strip()
-                not in ("", "none", "unknown", "None", "Unknown")
+                bool(sq.get("evidence_found")) and float(sq.get("sub_score", 0)) > 0
                 for sq in ss_list
             )
             if has_evidence:
@@ -815,167 +820,132 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
             trace = req.get("rubric_trace") or {}
             sub_scores_data = trace.get("sub_scores") or []
 
-            # Gate: at least one sub-score must have real evidence.
+            # Gate: at least one sub-score must have real evidence (evidence_found=True and sub_score > 0).
             has_any_evidence = any(
-                (sq.get("closest_evidence") or sq.get("cited_text") or "").strip()
-                not in ("", "none", "unknown")
+                bool(sq.get("evidence_found")) and float(sq.get("sub_score", 0)) > 0
                 for sq in sub_scores_data
             )
             if not has_any_evidence:
                 continue
 
             total_reqs_evaluated += 1
+            logger.info(
+                "⚖️ EVAL req '%s': %d sub-scores, evaluating up to 2",
+                req_name, len(sub_scores_data),
+            )
 
-            # Evaluate up to 2 sub-queries per requirement.
-            # Each metric is scoped to THIS sub-query's own evidence
-            # and explanation fragment — never mixing in "Cited: none"
-            # fragments from other sub-queries that had no evidence.
-            for sq in sub_scores_data[:2]:
-                sub_query = sq.get("question", "")
+        for r in evaluable:
+            req_name = r.get("requirement_name", "")
+            trace = r.get("rubric_trace") or {}
+            ss_list = trace.get("sub_scores") or []
+
+            for sq in ss_list:
+                sub_query = sq.get("question") or ""
                 if not sub_query:
                     continue
 
-                # Extract this sub-query's own evidence.
                 sq_evidence = (
-                    sq.get("closest_evidence") or sq.get("cited_text") or ""
+                    sq.get("cited_text") or sq.get("closest_evidence") or ""
                 )
-                sq_has_evidence = (
-                    sq_evidence.strip()
-                    and sq_evidence.strip().lower() not in ("none", "unknown")
+                ev_found_flag = bool(sq.get("evidence_found"))
+                sub_score_val = float(sq.get("sub_score", 0))
+
+                has_neg_phrase = any(
+                    neg in sq_evidence.lower()
+                    for neg in ["no mention", "not listed", "no direct evidence", "no explicit mention", "not demonstrated"]
                 )
 
-                # Build a per-sub-query explanation fragment from ONLY
-                # this sub-query's fields. This prevents the "Cited:
-                # none" pollution that caused the Judge to return NO
-                # for Faithfulness on the old shared explanation.
+                sq_has_evidence = (
+                    ev_found_flag
+                    and sub_score_val > 0
+                    and bool(sq_evidence.strip())
+                    and sq_evidence.strip().lower() not in ("none", "unknown")
+                    and not has_neg_phrase
+                )
+
                 sq_score = sq.get("sub_score", 0)
                 sq_cited = sq.get("cited_text") or ""
                 sq_anchor = sq.get("anchor_description") or ""
+
                 if sq_has_evidence:
-                    sq_explanation = (
-                        f"For '{sub_query}': evidence found — "
-                        f"{sq_evidence}."
-                    )
+                    sq_explanation = f"For '{sub_query}': evidence found - {sq_evidence}."
                     if sq_cited and sq_cited.lower() not in ("none", "unknown"):
                         sq_explanation += f' Cited: "{sq_cited}".'
                     if sq_anchor and sq_anchor.lower() != "none":
                         sq_explanation += f" Level: {sq_anchor}."
                     sq_explanation += f" Score: {sq_score}."
                 else:
-                    # No evidence for this sub-query — skip CR and F
-                    # (they cannot be meaningfully evaluated without
-                    # evidence), but AR can still be evaluated.
-                    sq_explanation = (
-                        f"For '{sub_query}': no evidence found. "
-                        f"Score: {sq_score}."
-                    )
+                    sq_explanation = f"For '{sub_query}': no evidence found. Score: {sq_score}."
 
-                # ---- 1. Context Relevance (Precision) ----
-                # Only evaluated when this sub-query has real evidence.
+                # Task 1: Context Relevance
                 if sq_has_evidence:
                     prompt_cr = (
                         f"Sub-query: {sub_query}\n\n"
-                        f"Retrieved evidence chunk:\n\"\"\"\n"
-                        f"{sq_evidence}\n\"\"\"\n\n"
-                        f"Does this chunk contain concrete evidence that "
-                        f"directly helps answer the sub-query? "
-                        f"Answer strictly YES or NO."
+                        f"Retrieved evidence chunk:\n\"\"\"\n{sq_evidence}\n\"\"\"\n\n"
+                        f"Does this chunk contain concrete evidence that directly helps answer the sub-query? Answer strictly YES or NO."
                     )
-                    cr_ans = judge_call_with_retry(
-                        system_prompt=(
-                            "You are a strict evaluator for RAG context "
-                            "relevance. Answer strictly YES or NO."
-                        ),
-                        user_prompt=prompt_cr,
-                        max_tokens=10,
-                    )
-                    if cr_ans is not None:
-                        is_relevant = (
-                            1.0 if "YES" in cr_ans.upper() else 0.0
-                        )
-                        context_relevance_scores.append(is_relevant)
+                    eval_tasks.append(("CR", prompt_cr, "You are a strict evaluator for RAG context relevance. Answer strictly YES or NO."))
 
-                # ---- 2. Faithfulness (Groundedness) ----
-                # Only evaluated when this sub-query has real evidence.
-                # The explanation and evidence are both scoped to THIS
-                # sub-query, ensuring the Judge never sees "Cited: none"
-                # in the explanation alongside real evidence text.
+                # Task 2: Faithfulness
                 if sq_has_evidence:
                     prompt_f = (
-                        f"Scoring explanation:\n\"\"\"\n"
-                        f"{sq_explanation}\n\"\"\"\n\n"
-                        f"Source evidence text:\n\"\"\"\n"
-                        f"{sq_evidence}\n\"\"\"\n\n"
-                        f"Is every factual claim, qualification, or "
-                        f"number mentioned in the explanation directly "
-                        f"supported by the source evidence? "
-                        f"Answer strictly YES or NO."
+                        f"Scoring explanation:\n\"\"\"\n{sq_explanation}\n\"\"\"\n\n"
+                        f"Source evidence text:\n\"\"\"\n{sq_evidence}\n\"\"\"\n\n"
+                        f"Is every factual claim, qualification, or number mentioned in the explanation directly supported by the source evidence? Answer strictly YES or NO."
                     )
-                    f_ans = judge_call_with_retry(
-                        system_prompt=(
-                            "You are a strict evaluator for RAG "
-                            "faithfulness. Output YES if all claims are "
-                            "grounded in the evidence, or NO if any "
-                            "claim is not grounded. Do not output "
-                            "anything else."
-                        ),
-                        user_prompt=prompt_f,
-                        max_tokens=10,
-                    )
-                    if f_ans is not None:
-                        is_faithful = (
-                            1.0 if "YES" in f_ans.upper() else 0.0
-                        )
-                        faithfulness_scores.append(is_faithful)
+                    eval_tasks.append(("F", prompt_f, "You are a strict evaluator for RAG faithfulness. Output YES if all claims are grounded in the evidence, or NO if any claim is not grounded. Do not output anything else."))
 
-                # ---- 3. Answer Relevance ----
-                # Always evaluated (even without evidence, the
-                # explanation still addresses the sub-query).
+                # Task 3: Answer Relevance
                 prompt_ar = (
                     f"Explanation:\n\"\"\"\n{sq_explanation}\n\"\"\"\n\n"
                     f"Sub-query: {sub_query}\n\n"
-                    f"Does this explanation directly and completely "
-                    f"answer the sub-query? Rate relevance from 0.0 "
-                    f"(completely off-topic) to 1.0 (directly answers)."
-                    f" Output only the numeric score."
+                    f"Does this explanation directly and completely answer the sub-query? Rate relevance from 0.0 (completely off-topic) to 1.0 (directly answers). Output only the numeric score."
                 )
-                ar_ans = judge_call_with_retry(
-                    system_prompt=(
-                        "You are a strict evaluator for RAG answer "
-                        "relevance. Output a single numeric rating "
-                        "from 0.0 to 1.0."
-                    ),
-                    user_prompt=prompt_ar,
-                    max_tokens=10,
-                )
-                if ar_ans is not None:
-                    match = re.search(r"(\d+(\.\d+)?)", ar_ans)
-                    if match:
-                        answer_relevance_scores.append(
-                            float(match.group(1))
-                        )
-                    else:
-                        answer_relevance_scores.append(0.5)
+                eval_tasks.append(("AR", prompt_ar, "You are a strict evaluator for RAG answer relevance. Output a single numeric rating from 0.0 to 1.0."))
+
+    total_reqs_evaluated = len(eval_tasks)
+    logger.info("⚖️ Dispatching %d RAG evaluation tasks concurrently via ThreadPoolExecutor...", len(eval_tasks))
+
+    def _exec_eval_task(task_tuple):
+        metric_type, user_p, sys_p = task_tuple
+        res = judge_call_with_retry(system_prompt=sys_p, user_prompt=user_p, max_tokens=300)
+        return metric_type, res
+
+    with ThreadPoolExecutor(max_workers=min(10, max(1, len(eval_tasks)))) as pool:
+        futures = [pool.submit(_exec_eval_task, t) for t in eval_tasks]
+        for fut in as_completed(futures):
+            try:
+                metric_type, ans_str = fut.result()
+                if ans_str is not None:
+                    if metric_type == "CR":
+                        context_relevance_scores.append(1.0 if "YES" in ans_str.upper() else 0.0)
+                    elif metric_type == "F":
+                        faithfulness_scores.append(1.0 if "YES" in ans_str.upper() else 0.0)
+                    elif metric_type == "AR":
+                        match = re.search(r"(\d+(\.\d+)?)", ans_str)
+                        answer_relevance_scores.append(float(match.group(1)) if match else 0.5)
+            except Exception as e:
+                logger.warning("⚖️ Parallel eval task error: %s", e)
 
     # ----- compute averages -----
     avg_cr = (
         sum(context_relevance_scores) / len(context_relevance_scores)
-        if context_relevance_scores else 0.0
+        if context_relevance_scores else None
     )
     avg_f = (
         sum(faithfulness_scores) / len(faithfulness_scores)
-        if faithfulness_scores else 0.0
+        if faithfulness_scores else None
     )
     avg_ar = (
         sum(answer_relevance_scores) / len(answer_relevance_scores)
-        if answer_relevance_scores else 0.0
+        if answer_relevance_scores else None
     )
 
     # ----- build evaluation result -----
     no_evaluable_data = (
-        not context_relevance_scores
-        and not faithfulness_scores
-        and not answer_relevance_scores
+        avg_cr is None
+        and avg_f is None
+        and avg_ar is None
     )
 
     eval_results: Dict[str, Any] = {
@@ -983,9 +953,9 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
         "judge_model": judge_model,
         "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
         "metrics": {
-            "context_relevance": round(avg_cr, 4),
-            "faithfulness": round(avg_f, 4),
-            "answer_relevance": round(avg_ar, 4),
+            "context_relevance": round(avg_cr, 4) if avg_cr is not None else None,
+            "faithfulness": round(avg_f, 4) if avg_f is not None else None,
+            "answer_relevance": round(avg_ar, 4) if avg_ar is not None else None,
         },
         "sample_size": sample_size,
         "reqs_evaluated": total_reqs_evaluated,
@@ -1001,10 +971,8 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
     if no_evaluable_data:
         eval_results["no_evaluable_data"] = True
         eval_results["no_evaluable_data_reason"] = (
-            f"All {total_reqs_skipped_blocked} blocked requirements had zero "
-            f"retrieved evidence upstream. The RAG evaluation has nothing to "
-            f"evaluate — the 0.0% scores reflect missing retrieval data, not "
-            f"Judge LLM failure. Check the embedding/indexing pipeline."
+            f"No valid Judge LLM call completed successfully (rate limited or zero evidence). "
+            f"Check API key quota and rate limits."
         )
 
     if errors:
@@ -1034,11 +1002,9 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
         logger.info("-" * 70)
         if no_evaluable_data:
             logger.warning(
-                "⚠️ NO EVALUABLE DATA: %d reqs blocked (zero evidence), "
-                "%d had no rubric trace. All 0.0%% scores are due to "
-                "upstream retrieval gaps, not Judge LLM failure.",
-                total_reqs_skipped_blocked,
-                total_reqs_skipped_no_trace,
+                "⚠️ NO EVALUABLE DATA: %d reqs evaluated. All Judge LLM calls "
+                "failed or were rate-limited (429). Check API key limits.",
+                total_reqs_evaluated,
             )
         else:
             logger.info(
@@ -1048,18 +1014,30 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 total_reqs_skipped_blocked,
                 total_reqs_skipped_no_trace,
             )
-        logger.info(
-            "1. Context Relevance (Precision): %.2f%% (Target: >= 75%%)",
-            avg_cr * 100,
-        )
-        logger.info(
-            "2. Faithfulness (Groundedness):   %.2f%% (Target: 100%%)",
-            avg_f * 100,
-        )
-        logger.info(
-            "3. Answer Relevance:              %.2f%% (Target: >= 90%%)",
-            avg_ar * 100,
-        )
+        
+        if avg_cr is not None:
+            logger.info(
+                "1. Context Relevance (Precision): %.2f%% (Target: >= 75%%)",
+                avg_cr * 100,
+            )
+        else:
+            logger.warning("1. Context Relevance (Precision): N/A (0 Judge calls succeeded / rate-limited)")
+
+        if avg_f is not None:
+            logger.info(
+                "2. Faithfulness (Groundedness):   %.2f%% (Target: 100%%)",
+                avg_f * 100,
+            )
+        else:
+            logger.warning("2. Faithfulness (Groundedness):   N/A (0 Judge calls succeeded / rate-limited)")
+
+        if avg_ar is not None:
+            logger.info(
+                "3. Answer Relevance:              %.2f%% (Target: >= 90%%)",
+                avg_ar * 100,
+            )
+        else:
+            logger.warning("3. Answer Relevance:              N/A (0 Judge calls succeeded / rate-limited)")
         logger.info("Saved evaluation results to %s", eval_file)
         logger.info("=" * 70)
     except Exception as exc:

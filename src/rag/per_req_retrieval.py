@@ -8,8 +8,9 @@ Key change (DEC-035): top-K retrieval ALWAYS returns the best K chunks, regardle
 cosine score. This guarantees the LLM always receives evidence to reason over. The LLM then
 determines relevance, not a cosine floor.
 
-Embedding model: ``BAAI/bge-base-en-v1.5`` (768-dim, retrieval-trained on MS-MARCO/BEIR).
-Replaces ``sentence-transformers/all-MiniLM-L6-v2`` (384-dim, STS-trained).
+Embedding model: ``text-embedding-004`` via the Gemini REST API (768-dim, free tier).
+Replaces the previous local ``BAAI/bge-base-en-v1.5`` SentenceTransformer (DEC-036).
+Output dimensionality is identical (768), so the existing index.npz format is compatible.
 
 What this module does, end-to-end, for one (candidate, REQ) pair:
 
@@ -18,7 +19,8 @@ What this module does, end-to-end, for one (candidate, REQ) pair:
        :func:`src.services.subquery_parser.parse_subquery_document`.
 
     2. Embed each sub-query with the same embedding model that produced the
-       chunk index (``BAAI/bge-base-en-v1.5``, 768-dim). Embeddings are L2-normalized.
+       chunk index (``text-embedding-004`` via Gemini API, 768-dim). Embeddings
+       are L2-normalized.
 
     3. For each sub-query vector, compute cosine similarity against the
        candidate's chunk vectors in the :class:`src.rag.retriever.VectorIndex`
@@ -53,10 +55,9 @@ from src.rag.retriever import (
 
 logger = logging.getLogger(__name__)
 
-# Embedding model used to build the chunk index (DEC-035).
-# Must match the model used in ``src/rag/build_index.py``.
-# ``BAAI/bge-base-en-v1.5``: 768-dim, retrieval-trained on MS-MARCO/BEIR.
-# Replaces ``sentence-transformers/all-MiniLM-L6-v2`` (384-dim, STS-trained).
+# Embedding model used to build the chunk index and embed sub-queries (DEC-037).
+# Must match the model used in ``recruiter/build_index.py``.
+# BAAI/bge-base-en-v1.5: 768-dim, local ONNX model.
 DEFAULT_EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
 
 #: Default top-K per REQ. Each REQ retrieves its top-K chunks from the
@@ -74,37 +75,29 @@ SubQuery = Tuple[str, str]
 
 
 # ---------------------------------------------------------------------------
-# Embedding helper — lazy-loaded so the module imports without torch.
+# Embedding helper — uses GeminiEmbedder (DEC-036, replaces SentenceTransformer).
+# The singleton is lazy-loaded so the module imports without any heavy ML libs.
 # ---------------------------------------------------------------------------
 
-# Cached model instance. Loaded on first call to ``embed_sub_queries``.
+# Singleton FastEmbedder instance — created on first call to embed_sub_queries.
 _EMBED_MODEL = None
 _EMBED_MODEL_NAME: Optional[str] = None
 
 
 def _load_embed_model(model_name: str):
-    """Load the sentence-transformers model (lazy, cached)."""
+    """Return the cached FastEmbedder, creating it on first call."""
     global _EMBED_MODEL, _EMBED_MODEL_NAME
     if _EMBED_MODEL is not None and _EMBED_MODEL_NAME == model_name:
         return _EMBED_MODEL
-    # Local import so the module imports without torch loaded.
-    from sentence_transformers import SentenceTransformer
-    import torch
 
-    if os.environ.get("CUDA_VISIBLE_DEVICES") == "":
-        device = "cpu"
-    else:
-        device = "cuda" if torch.cuda.is_available() else "cpu"
-    
-    # Try local models folder first
-    local_path = Path("recruiter/models/bge-base-en-v1.5")
-    if model_name == "BAAI/bge-base-en-v1.5" and local_path.exists():
-        model_to_load = str(local_path.resolve())
-    else:
-        model_to_load = model_name
+    from src.rag.local_embedder import FastEmbedder
 
-    _EMBED_MODEL = SentenceTransformer(model_to_load, device=device)
+    _EMBED_MODEL = FastEmbedder(
+        model_name=model_name,
+        task_type="RETRIEVAL_QUERY",  # Sub-queries are search queries, not docs.
+    )
     _EMBED_MODEL_NAME = model_name
+    logger.info("FastEmbedder loaded for per-req retrieval (model=%s).", model_name)
     return _EMBED_MODEL
 
 
@@ -114,22 +107,27 @@ def embed_sub_queries(
 ):
     """Embed each sub-query text with the chunk-index embedding model.
 
+    Uses ``FastEmbedder`` (``BAAI/bge-base-en-v1.5``, 768-dim) running locally
+    via ONNX Runtime. No external REST API calls or local PyTorch/SentenceTransformer
+    installation required (DEC-036).
+
     Args:
         sub_queries: ``[(key, text), ...]``. The ``key`` is not embedded; only
             ``text`` is. Keys are preserved so callers can map hits back to
             the sub-query that produced them.
-        model_name: HuggingFace model id. Must match the model used to build
-            the chunk index at ``data/embeddings/index.npz``.
+        model_name: Gemini embedding model id. Must match the model used to
+            build the chunk index at ``data/embeddings/index.npz``.
+            Defaults to ``text-embedding-004``.
 
     Returns:
-        A ``(n_sub_queries, embedding_dim)`` float32 numpy array,
-        L2-normalized (the :class:`VectorIndex` expects normalized queries for
+        A ``(n_sub_queries, 768)`` float32 numpy array, L2-normalized
+        (the :class:`VectorIndex` expects normalized queries for
         cosine = dot product).
     """
     import numpy as np
 
     if not sub_queries:
-        return np.zeros((0, 1), dtype=np.float32)
+        return np.zeros((0, 768), dtype=np.float32)
 
     texts = [sq[1] for sq in sub_queries]
     model = _load_embed_model(model_name)
@@ -197,7 +195,10 @@ def retrieve_evidence_for_req(
         return []
 
     eff_top_k = int(top_k) if top_k is not None else DEFAULT_TOP_K
-    eff_cap = int(max_chunks_per_req) if max_chunks_per_req is not None else DEFAULT_MAX_CHUNKS_PER_QUERY
+    if max_chunks_per_req is not None:
+        eff_cap = int(max_chunks_per_req)
+    else:
+        eff_cap = min(20, max(10, len(sub_queries) * 3))
 
     # Embed the sub-queries (or use caller-supplied vectors).
     if sub_query_vectors is None:
