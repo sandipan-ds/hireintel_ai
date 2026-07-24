@@ -125,6 +125,39 @@ class CachedScoringTrace:
     sections_read: List[str]
     chunk_ids: List[str]
 
+    @property
+    def justification(self) -> str:
+        """Auto-generate a human-readable justification from sub-score evidence.
+
+        The RAG evaluation layer reads this field to judge faithfulness
+        and answer relevance. Without a proper justification, the Judge
+        LLM receives an empty string and returns NO/0.0 by default.
+
+        Returns:
+            A multi-sentence summary describing what evidence was found
+            (or not found) for each sub-question, including cited text
+            and anchor descriptions.
+        """
+        parts: List[str] = []
+        for ss in self.sub_scores:
+            frag = f"For '{ss.question}': "
+            if ss.evidence_found and ss.closest_evidence:
+                frag += f"evidence found — {ss.closest_evidence}."
+            elif ss.closest_evidence:
+                frag += f"no direct evidence (closest: {ss.closest_evidence})."
+            else:
+                frag += "no evidence found."
+            if ss.cited_text:
+                frag += f" Cited: \"{ss.cited_text}\"."
+            if ss.anchor_description and ss.anchor_description.lower() != "none":
+                frag += f" Level: {ss.anchor_description}."
+            if ss.extracted_years is not None:
+                target_str = f"{ss.target_years}" if ss.target_years else "unspecified"
+                frag += f" Years detected: {ss.extracted_years} (target: {target_str})."
+            frag += f" Score: {ss.sub_score:.2f}."
+            parts.append(frag)
+        return " ".join(parts)
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "requirement_name": self.requirement_name,
@@ -136,6 +169,7 @@ class CachedScoringTrace:
             "formula": self.formula,
             "sections_read": self.sections_read,
             "chunk_ids": self.chunk_ids,
+            "justification": self.justification,
         }
 
 

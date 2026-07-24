@@ -582,16 +582,35 @@
       
       if (data.rag_evaluation && data.rag_evaluation.metrics) {
         const m = data.rag_evaluation.metrics;
-        document.getElementById('rag-cr-val').textContent = `${(m.context_relevance * 100).toFixed(1)}%`;
-        document.getElementById('rag-cr-val').style.color = m.context_relevance >= 0.75 ? 'var(--green)' : 'var(--yellow)';
-        
-        document.getElementById('rag-f-val').textContent = `${(m.faithfulness * 100).toFixed(1)}%`;
-        document.getElementById('rag-f-val').style.color = m.faithfulness >= 0.99 ? 'var(--green)' : 'var(--red)';
-        
-        document.getElementById('rag-ar-val').textContent = `${(m.answer_relevance * 100).toFixed(1)}%`;
-        document.getElementById('rag-ar-val').style.color = m.answer_relevance >= 0.90 ? 'var(--green)' : 'var(--yellow)';
-        
-        document.getElementById('rag-judge-info').textContent = `Audited by: ${data.rag_evaluation.judge_model} (${data.rag_evaluation.sample_size} candidates)`;
+        const ev = data.rag_evaluation;
+
+        // When all requirements were blocked upstream (zero evidence
+        // retrieved), the metrics are all 0.0 — but this reflects a
+        // retrieval gap, not a scoring-quality failure.  Show a
+        // contextual warning instead of misleading red 0.0% values.
+        if (ev.no_evaluable_data) {
+          document.getElementById('rag-cr-val').textContent = 'N/A';
+          document.getElementById('rag-cr-val').style.color = 'var(--yellow)';
+          document.getElementById('rag-f-val').textContent = 'N/A';
+          document.getElementById('rag-f-val').style.color = 'var(--yellow)';
+          document.getElementById('rag-ar-val').textContent = 'N/A';
+          document.getElementById('rag-ar-val').style.color = 'var(--yellow)';
+          const reason = ev.no_evaluable_data_reason || 'All requirements blocked — no evidence retrieved.';
+          document.getElementById('rag-judge-info').innerHTML =
+            `<span style="color:var(--yellow)">⚠️ ${reason}</span>`;
+        } else {
+          document.getElementById('rag-cr-val').textContent = `${(m.context_relevance * 100).toFixed(1)}%`;
+          document.getElementById('rag-cr-val').style.color = m.context_relevance >= 0.75 ? 'var(--green)' : 'var(--yellow)';
+
+          document.getElementById('rag-f-val').textContent = `${(m.faithfulness * 100).toFixed(1)}%`;
+          document.getElementById('rag-f-val').style.color = m.faithfulness >= 0.99 ? 'var(--green)' : 'var(--red)';
+
+          document.getElementById('rag-ar-val').textContent = `${(m.answer_relevance * 100).toFixed(1)}%`;
+          document.getElementById('rag-ar-val').style.color = m.answer_relevance >= 0.90 ? 'var(--green)' : 'var(--yellow)';
+
+          const evalInfo = `Audited by: ${ev.judge_model} (${ev.sample_size} candidates, ${ev.reqs_evaluated || '?'} reqs evaluated)`;
+          document.getElementById('rag-judge-info').textContent = evalInfo;
+        }
         document.getElementById('rag-eval-box').style.display = '';
       } else {
         document.getElementById('rag-eval-box').style.display = 'none';
