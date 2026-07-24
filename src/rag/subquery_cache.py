@@ -96,14 +96,14 @@ logger = logging.getLogger(__name__)
 
 # Default on-disk cache location. Lives next to the chunk index
 # (``data/embeddings/``) since it is the same model and the same lifecycle.
-DEFAULT_CACHE_PATH = Path("data/embeddings/subqueries_cache.npz")
-DEFAULT_MANIFEST_PATH = Path("data/embeddings/subqueries_cache_manifest.jsonl")
+DEFAULT_CACHE_PATH = Path("recruiter/data/embeddings/subqueries_cache.npz")
+DEFAULT_MANIFEST_PATH = Path("recruiter/data/embeddings/subqueries_cache_manifest.jsonl")
 
 # How the SubQuery source file is partitioned in the manifest. We hash the
 # ``<Role>_SubQuery.md`` file once at build time so that an edit invalidates
 # only the affected role's sub-queries, not all of them. This keeps the eval
 # sets stable when one role is updated.
-DEFAULT_SUBQUERY_DIR = Path("data/job_descriptions")
+DEFAULT_SUBQUERY_DIR = Path("recruiter/data/job_descriptions")
 
 
 def _sha256(text: str) -> str:
@@ -213,148 +213,16 @@ class SubQueryCache:
         model_name: str = DEFAULT_EMBEDDING_MODEL,
         subquery_dir: Path = DEFAULT_SUBQUERY_DIR,
     ) -> "SubQueryCache":
-        """Construct the cache and re-hydrate from disk if present.
-
-        Reads ``manifest_path`` line-by-line; for each entry, verifies the
-        role's SubQuery file hash still matches the manifest. Entries whose
-        source file changed (or whose model no longer matches) are skipped.
-        Valid entries populate the in-memory dict; the surviving rows are
-        re-stacked into a fresh ``_vectors`` list so the dirty flag can be
-        set correctly.
-
-        Args:
-            cache_path: Path to the ``.npz`` matrix. Neither file needs to
-                exist; missing files just yield an empty cache.
-            manifest_path: Path to the JSONL manifest.
-            model_name: Embedding model name. Entries with a different model
-                are skipped.
-            subquery_dir: Root directory for ``<role>/<role>_SubQuery.md``
-                files. Used for file-hash invalidation.
-
-        Returns:
-            A populated :class:`SubQueryCache`. Empty if no on-disk cache
-            exists or if every entry was invalidated.
-        """
-        cache = cls(
+        """Create a clean, empty in-memory cache for each session (no on-disk load)."""
+        return cls(
             cache_path=cache_path,
             manifest_path=manifest_path,
             model_name=model_name,
         )
-        if not cache_path.exists() or not manifest_path.exists():
-            logger.info(
-                "subquery_cache: no on-disk cache at %s / %s — starting empty.",
-                cache_path,
-                manifest_path,
-            )
-            return cache
-
-        # Load the matrix rows.
-        try:
-            matrix = np.load(cache_path, allow_pickle=False)
-            arr_key = list(matrix.keys())[0]
-            all_rows: np.ndarray = matrix[arr_key]
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("subquery_cache: failed to load %s: %s", cache_path, exc)
-            return cache
-
-        # Load the manifest and filter entries.
-        kept_rows: List[np.ndarray] = []
-        kept_meta: List[Dict[str, Any]] = []
-        kept_keys: Dict[str, int] = {}
-        with manifest_path.open(encoding="utf-8") as fh:
-            for line in fh:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    entry = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                # Filter by model.
-                if entry.get("model_name") != model_name:
-                    continue
-                # Filter by source-file hash (invalidation).
-                role = entry.get("role")
-                if role:
-                    current_hash = _file_sha256(_subquery_file_for_role(role))
-                    manifest_hash = entry.get("subquery_file_hash")
-                    if current_hash is None or current_hash != manifest_hash:
-                        logger.info(
-                            "subquery_cache: dropping stale entry for %s/%s "
-                            "(file changed: %s → %s)",
-                            role, entry.get("sq_key"),
-                            (manifest_hash or "—")[:8], (current_hash or "—")[:8],
-                        )
-                        continue
-                idx = entry.get("index")
-                if not isinstance(idx, int) or idx < 0 or idx >= len(all_rows):
-                    continue
-                key = entry["cache_key"]
-                if key in kept_keys:
-                    # Skip duplicate (concurency-safety; last writer wins).
-                    continue
-                kept_keys[key] = len(kept_rows)
-                kept_rows.append(all_rows[idx])
-                kept_meta.append(entry)
-        cache._vectors = kept_rows
-        cache._meta = kept_meta
-        cache._key_to_index = kept_keys
-        cache._dirty = False
-        logger.info(
-            "subquery_cache: loaded %d valid entries from %s (%d skipped).",
-            len(cache), manifest_path, len(all_rows) - len(kept_rows),
-        )
-        return cache
 
     def flush(self) -> None:
-        """Persist the in-memory cache to disk atomically.
-
-        Writes ``cache_path`` (NumPy .npz) + ``manifest_path`` (JSONL) using
-        the temp-file + rename pattern so a crash mid-flush never leaves a
-        partially-written file. After the write, ``is_dirty`` is False.
-
-        No-op if ``cache_path`` or ``manifest_path`` is None (in-memory-only
-        cache) or if the cache hasn't changed since the last flush.
-        """
-        if self.cache_path is None or self.manifest_path is None:
-            return
-        if not self._dirty and self.cache_path.exists() and self.manifest_path.exists():
-            return
-        if not self._vectors:
-            return
-
-        # Stack vectors into a single matrix of shape (N, dim).
-        matrix = np.stack(self._vectors, axis=0).astype(np.float32)
-
-        # Ensure the parent directory exists.
-        self.cache_path.parent.mkdir(parents=True, exist_ok=True)
-        self.manifest_path.parent.mkdir(parents=True, exist_ok=True)
-
-        # Atomic write: temp file in same directory, then rename.
-        for target, write_fn in (
-            (self.cache_path, lambda p: np.savez(p, embeddings=matrix)),
-            (self.manifest_path, self._write_manifest_jsonl),
-        ):
-            with tempfile.NamedTemporaryFile(
-                mode="wb" if target == self.cache_path else "w",
-                dir=str(target.parent),
-                prefix=target.name + ".",
-                suffix=".tmp",
-                delete=False,
-                encoding=None if target == self.cache_path else "utf-8",
-            ) as tmp:
-                tmp_name = tmp.name
-                if target == self.cache_path:
-                    np.savez(tmp, embeddings=matrix)
-                else:
-                    self._write_manifest_jsonl(tmp)
-            shutil.move(tmp_name, str(target))
-
-        self._dirty = False
-        logger.info(
-            "subquery_cache: flushed %d entries to %s + %s",
-            len(self), self.cache_path, self.manifest_path,
-        )
+        """No-op to disable writing caching files to disk."""
+        return
 
     def _write_manifest_jsonl(self, fh) -> None:
         """Write the in-memory manifest to ``fh`` as one JSON object per line."""

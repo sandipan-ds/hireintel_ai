@@ -195,10 +195,7 @@ def retrieve_evidence_for_req(
         return []
 
     eff_top_k = int(top_k) if top_k is not None else DEFAULT_TOP_K
-    if max_chunks_per_req is not None:
-        eff_cap = int(max_chunks_per_req)
-    else:
-        eff_cap = min(20, max(10, len(sub_queries) * 3))
+    eff_cap = int(max_chunks_per_req) if max_chunks_per_req is not None else DEFAULT_MAX_CHUNKS_PER_QUERY
 
     # Embed the sub-queries (or use caller-supplied vectors).
     if sub_query_vectors is None:

@@ -64,10 +64,8 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 # than this so embedding models with small context windows are happy.
 MAX_CHUNK_CHARS: int = 1200
 
-# Overlap applied when sub-splitting an oversized chunk. Kept small because
-# sub-splits only happen on big free-text sections; we want each resulting
-# chunk to remain a coherent unit.
-SPLIT_OVERLAP_CHARS: int = 120
+# Overlap applied when sub-splitting an oversized chunk (50% overlap).
+SPLIT_OVERLAP_CHARS: int = 600
 
 
 # ---------------------------------------------------------------------------

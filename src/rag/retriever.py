@@ -69,7 +69,7 @@ import numpy as np
 DEFAULT_TOP_K: int = 5
 
 #: Hard cap on returned chunks per query (safety limit).
-DEFAULT_MAX_CHUNKS_PER_QUERY: int = 20
+DEFAULT_MAX_CHUNKS_PER_QUERY: int = 25
 
 #: Path to the canonical embedding index produced by ``src.rag.build_index``.
 #: DocumentAware chunker index (DEC-035, rebuilt with BGE-base-en-v1.5, 768-dim).

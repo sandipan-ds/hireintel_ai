@@ -844,31 +844,27 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 if not sub_query:
                     continue
 
-                sq_evidence = (
-                    sq.get("cited_text") or sq.get("closest_evidence") or ""
-                )
-                ev_found_flag = bool(sq.get("evidence_found"))
+                sq_cited = (sq.get("cited_text") or "").strip()
+                sq_closest = (sq.get("closest_evidence") or "").strip()
                 sub_score_val = float(sq.get("sub_score", 0))
 
                 has_neg_phrase = any(
-                    neg in sq_evidence.lower()
+                    neg in sq_closest.lower()
                     for neg in ["no mention", "not listed", "no direct evidence", "no explicit mention", "not demonstrated"]
                 )
 
+                # Evaluate whenever a real RAG chunk was retrieved, even if sub_score is 0
                 sq_has_evidence = (
-                    ev_found_flag
-                    and sub_score_val > 0
-                    and bool(sq_evidence.strip())
-                    and sq_evidence.strip().lower() not in ("none", "unknown")
+                    bool(sq_closest)
+                    and sq_closest.lower() not in ("none", "unknown", "n/a")
                     and not has_neg_phrase
                 )
 
                 sq_score = sq.get("sub_score", 0)
-                sq_cited = sq.get("cited_text") or ""
                 sq_anchor = sq.get("anchor_description") or ""
 
                 if sq_has_evidence:
-                    sq_explanation = f"For '{sub_query}': evidence found - {sq_evidence}."
+                    sq_explanation = f"For '{sub_query}': evidence found - {sq_closest}."
                     if sq_cited and sq_cited.lower() not in ("none", "unknown"):
                         sq_explanation += f' Cited: "{sq_cited}".'
                     if sq_anchor and sq_anchor.lower() != "none":
@@ -877,20 +873,20 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 else:
                     sq_explanation = f"For '{sub_query}': no evidence found. Score: {sq_score}."
 
-                # Task 1: Context Relevance
+                # Task 1: Context Relevance (Raw RAG Chunk Retrieval Quality)
                 if sq_has_evidence:
                     prompt_cr = (
                         f"Sub-query: {sub_query}\n\n"
-                        f"Retrieved evidence chunk:\n\"\"\"\n{sq_evidence}\n\"\"\"\n\n"
-                        f"Does this chunk contain concrete evidence that directly helps answer the sub-query? Answer strictly YES or NO."
+                        f"Retrieved RAG chunk:\n\"\"\"\n{sq_closest}\n\"\"\"\n\n"
+                        f"Does this retrieved chunk contain concrete evidence or details relevant to the sub-query? Answer strictly YES or NO."
                     )
                     eval_tasks.append(("CR", prompt_cr, "You are a strict evaluator for RAG context relevance. Answer strictly YES or NO."))
 
-                # Task 2: Faithfulness
+                # Task 2: Faithfulness / Groundedness (cited_text vs raw chunk)
                 if sq_has_evidence:
                     prompt_f = (
                         f"Scoring explanation:\n\"\"\"\n{sq_explanation}\n\"\"\"\n\n"
-                        f"Source evidence text:\n\"\"\"\n{sq_evidence}\n\"\"\"\n\n"
+                        f"Source evidence text:\n\"\"\"\n{sq_closest}\n\"\"\"\n\n"
                         f"Is every factual claim, qualification, or number mentioned in the explanation directly supported by the source evidence? Answer strictly YES or NO."
                     )
                     eval_tasks.append(("F", prompt_f, "You are a strict evaluator for RAG faithfulness. Output YES if all claims are grounded in the evidence, or NO if any claim is not grounded. Do not output anything else."))

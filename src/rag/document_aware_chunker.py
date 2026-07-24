@@ -585,6 +585,46 @@ def chunk_profile(profile: Dict[str, Any], role_bucket: str = "") -> List[ChunkR
             )
         )
 
+    # ---- 7) Robust Fallback: Use parsed evidence_chunks if structured chunks are empty -----
+    if not chunks and isinstance(profile.get("evidence_chunks"), list):
+        for idx, ec in enumerate(profile["evidence_chunks"]):
+            text = (ec.get("text") or "").strip()
+            if not text:
+                continue
+            chunks.append(
+                ChunkRecord(
+                    chunk_id=ec.get("chunk_id") or f"{candidate_id}__fallback__{idx}",
+                    candidate_id=candidate_id,
+                    role_bucket=role_bucket,
+                    source_file=source_file,
+                    section=ec.get("section") or "other",
+                    chunk_index=idx,
+                    text=text,
+                    char_span=(ec.get("char_start") or 0, ec.get("char_end") or len(text)),
+                    metadata=ec,
+                )
+            )
+
+    # ---- 7) Robust Fallback: Use parsed evidence_chunks if structured chunks are empty -----
+    if not chunks and isinstance(profile.get("evidence_chunks"), list):
+        for idx, ec in enumerate(profile["evidence_chunks"]):
+            text = (ec.get("text") or "").strip()
+            if not text:
+                continue
+            chunks.append(
+                ChunkRecord(
+                    chunk_id=ec.get("chunk_id") or f"{candidate_id}__fallback__{idx}",
+                    candidate_id=candidate_id,
+                    role_bucket=role_bucket,
+                    source_file=source_file,
+                    section=ec.get("section") or "other",
+                    chunk_index=idx,
+                    text=text,
+                    char_span=(ec.get("char_start") or 0, ec.get("char_end") or len(text)),
+                    metadata=ec,
+                )
+            )
+
     return chunks
 
 

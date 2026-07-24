@@ -1,0 +1,53 @@
+[2026-07-24 18:17:46,354] DEBUG openai._base_client: HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Fri, 24 Jul 2026 18:17:45 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'access-control-allow-origin': '*', 'x-generation-id': 'gen-1784917064-3bT4mn4Vcmke5jFpGNh3', 'access-control-expose-headers': 'X-Generation-Id,X-Provider-Name,cf-ray', 'x-clerk-auth-message': 'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)', 'x-clerk-auth-reason': 'token-invalid', 'x-clerk-auth-status': 'signed-out', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'content-encoding': 'gzip', 'server': 'cloudflare', 'cf-ray': 'a204ec61fb7a2c92-DFW'})
+[2026-07-24 18:17:46,355] DEBUG openai._base_client: request_id: None
+[2026-07-24 18:17:46,595] DEBUG httpcore.http11: receive_response_body.complete
+[2026-07-24 18:17:46,595] DEBUG httpcore.http11: response_closed.started
+[2026-07-24 18:17:46,595] DEBUG httpcore.http11: response_closed.complete
+[2026-07-24 18:17:46,596] DEBUG openai._base_client: HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Fri, 24 Jul 2026 18:17:45 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'access-control-allow-origin': '*', 'x-generation-id': 'gen-1784917063-Vw1C5tFpUFCxrpzD4AxK', 'access-control-expose-headers': 'X-Generation-Id,X-Provider-Name,cf-ray', 'x-clerk-auth-message': 'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)', 'x-clerk-auth-reason': 'token-invalid', 'x-clerk-auth-status': 'signed-out', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'content-encoding': 'gzip', 'server': 'cloudflare', 'cf-ray': 'a204ec617db990ff-DFW'})
+[2026-07-24 18:17:46,596] DEBUG openai._base_client: request_id: None
+[2026-07-24 18:17:46,813] DEBUG httpcore.http11: receive_response_body.complete
+[2026-07-24 18:17:46,814] DEBUG httpcore.http11: response_closed.started
+[2026-07-24 18:17:46,814] DEBUG httpcore.http11: response_closed.complete
+[2026-07-24 18:17:46,814] DEBUG openai._base_client: HTTP Response: POST https://openrouter.ai/api/v1/chat/completions "200 OK" Headers({'date': 'Fri, 24 Jul 2026 18:17:45 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'access-control-allow-origin': '*', 'x-generation-id': 'gen-1784917064-t1Z6VnRy4T31f7wCZlke', 'access-control-expose-headers': 'X-Generation-Id,X-Provider-Name,cf-ray', 'x-clerk-auth-message': 'Invalid JWT form. A JWT consists of three parts separated by dots. (reason=token-invalid, token-carrier=header)', 'x-clerk-auth-reason': 'token-invalid', 'x-clerk-auth-status': 'signed-out', 'permissions-policy': 'payment=(self "https://checkout.stripe.com" "https://connect-js.stripe.com" "https://js.stripe.com" "https://*.js.stripe.com" "https://hooks.stripe.com")', 'referrer-policy': 'no-referrer, strict-origin-when-cross-origin', 'x-content-type-options': 'nosniff', 'content-encoding': 'gzip', 'server': 'cloudflare', 'cf-ray': 'a204ec64cf426b2a-DFW'})
+[2026-07-24 18:17:46,814] DEBUG openai._base_client: request_id: None
+[2026-07-24 18:17:46,818] INFO score_batch_composed: ======================================================================
+[2026-07-24 18:17:46,818] INFO score_batch_composed: 📊 RAG RETRIEVAL CORRECTNESS EVALUATION SUMMARY:
+[2026-07-24 18:17:46,818] INFO score_batch_composed: ----------------------------------------------------------------------
+[2026-07-24 18:17:46,818] INFO score_batch_composed: Evaluated 82 requirements across 5 candidates (0 blocked, 10 no-trace skipped).
+[2026-07-24 18:17:46,819] INFO score_batch_composed: 1. Context Relevance (Precision): 53.85% (Target: >= 75%)
+[2026-07-24 18:17:46,819] INFO score_batch_composed: 2. Faithfulness (Groundedness):   84.62% (Target: 100%)
+[2026-07-24 18:17:46,819] INFO score_batch_composed: 3. Answer Relevance:              79.33% (Target: >= 90%)
+[2026-07-24 18:17:46,819] INFO score_batch_composed: Saved evaluation results to recruiter/data/scores/composed/Business_Analyst_Lead_20260724_d5d05245_rag_evaluation.json
+[2026-07-24 18:17:46,819] INFO score_batch_composed: ======================================================================
+[2026-07-24 18:17:46,928] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,929] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,930] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,931] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,931] DEBUG httpcore.connection: close.complete
+[2026-07-24 18:17:46,931] DEBUG httpcore.connection: close.started
+[2026-07-24 18:17:46,931] DEBUG httpcore.connection: close.complete
+--------------------------------------------------
+📊 PIPELINE PERFORMANCE PROFILE:
+--------------------------------------------------
+1. Download Phase:     12.34 seconds
+2. Extraction Phase:   21.42 seconds (10 resumes)
+3. Indexing Phase:     37.13 seconds
+4. Scoring Phase:      50.72 seconds
+--------------------------------------------------
+⏱️ TOTAL PIPELINE TIME: 121.61 seconds
+--------------------------------------------------
+Export: Initializing job dataset packaging...
+Export: Packaging files locally to data/export/business_analyst_lead_20260724_d5d05245_20260724_1 ...
