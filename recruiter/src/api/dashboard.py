@@ -203,14 +203,24 @@ def get_rankings(role: str, top: int = 0) -> Dict[str, Any]:
             "reqs": slim_reqs,
         })
 
-    eval_data = None
-    eval_file = SCORES_DIR / f"{role}_rag_evaluation.json"
-    if eval_file.exists():
-        try:
-            with eval_file.open("r", encoding="utf-8") as ef:
-                eval_data = json.load(ef)
-        except Exception:
-            pass
+    def _load_scores_json(fname: str) -> Optional[Dict[str, Any]]:
+        candidate_paths = [
+            SCORES_DIR / fname,
+            ROOT / "recruiter" / "data" / "scores" / "composed" / fname,
+            pathlib.Path("data/scores/composed") / fname,
+            pathlib.Path("recruiter/data/scores/composed") / fname,
+        ]
+        for p in candidate_paths:
+            if p.exists():
+                try:
+                    with p.open("r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception as exc:
+                    logger.warning("Error reading %s: %s", p, exc)
+        return None
+
+    eval_data = _load_scores_json(f"{role}_rag_evaluation.json")
+    perf_data = _load_scores_json(f"{role}_performance_profile.json")
 
     return {
         "role": role,
@@ -218,6 +228,7 @@ def get_rankings(role: str, top: int = 0) -> Dict[str, Any]:
         "mean_score": data.get("mean_score"),
         "rankings": slim_rankings,
         "rag_evaluation": eval_data,
+        "performance_profile": perf_data,
     }
 
 

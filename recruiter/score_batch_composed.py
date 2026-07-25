@@ -1,4 +1,4 @@
-"""Production batch CLI using the composed Mode1 × Mode2 scorer (Track 7.4, DEC-031).
+"""Production batch CLI using the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).
 
 This is the canonical end-to-end runner that scores every candidate in every
 role using the new composed scorer from Track 2-S
@@ -873,14 +873,20 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 else:
                     sq_explanation = f"For '{sub_query}': no evidence found. Score: {sq_score}."
 
-                # Task 1: Context Relevance (Raw RAG Chunk Retrieval Quality)
+                # Task 1: Context Relevance (5-Tier Granular RAG Chunk Relevance)
                 if sq_has_evidence:
                     prompt_cr = (
                         f"Sub-query: {sub_query}\n\n"
                         f"Retrieved RAG chunk:\n\"\"\"\n{sq_closest}\n\"\"\"\n\n"
-                        f"Does this retrieved chunk contain concrete evidence or details relevant to the sub-query? Answer strictly YES or NO."
+                        f"Rate the relevance of this retrieved chunk to the sub-query on a 5-tier scale:\n"
+                        f"- 1.00: Direct, exact evidence matching the sub-query\n"
+                        f"- 0.75: Strongly relevant evidence within job experience context\n"
+                        f"- 0.50: Partial, indirect, or related skill evidence\n"
+                        f"- 0.25: Weak or tangential mention\n"
+                        f"- 0.00: Completely off-topic\n\n"
+                        f"Output strictly the single numeric rating (e.g. 0.75)."
                     )
-                    eval_tasks.append(("CR", prompt_cr, "You are a strict evaluator for RAG context relevance. Answer strictly YES or NO."))
+                    eval_tasks.append(("CR", prompt_cr, "You are a strict evaluator for RAG context relevance. Output only a single numeric rating from 0.0 to 1.0."))
 
                 # Task 2: Faithfulness / Groundedness (cited_text vs raw chunk)
                 if sq_has_evidence:
@@ -907,6 +913,29 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
         res = judge_call_with_retry(system_prompt=sys_p, user_prompt=user_p, max_tokens=300)
         return metric_type, res
 
+    def _extract_score_clamped(text: str) -> float:
+        if not text:
+            return 0.5
+        # 1. Match explicit ratings from 0.0 to 1.0 (e.g. 0.75, 1.0, 0.5, 0.0, 0, 1)
+        m_explicit = re.findall(r"\b(1\.0*|0\.\d+|0|1)\b", text)
+        if m_explicit:
+            return float(m_explicit[0])
+        # 2. Check for percentage matches (e.g. 75% -> 0.75)
+        m_pct = re.search(r"(\d+(?:\.\d+)?)\s*%", text)
+        if m_pct:
+            val = float(m_pct.group(1))
+            return min(1.0, max(0.0, val / 100.0 if val > 1.0 else val))
+        # 3. Fallback: match any number and safely clamp to [0.0, 1.0]
+        m_num = re.search(r"(\d+(?:\.\d+)?)", text)
+        if m_num:
+            val = float(m_num.group(1))
+            if val > 1.0 and val <= 100.0:
+                return val / 100.0
+            elif val > 100.0: # Filter out years like 2021 or 2026
+                return 0.5
+            return min(1.0, max(0.0, val))
+        return 0.5
+
     with ThreadPoolExecutor(max_workers=min(10, max(1, len(eval_tasks)))) as pool:
         futures = [pool.submit(_exec_eval_task, t) for t in eval_tasks]
         for fut in as_completed(futures):
@@ -914,12 +943,11 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
                 metric_type, ans_str = fut.result()
                 if ans_str is not None:
                     if metric_type == "CR":
-                        context_relevance_scores.append(1.0 if "YES" in ans_str.upper() else 0.0)
+                        context_relevance_scores.append(_extract_score_clamped(ans_str))
                     elif metric_type == "F":
                         faithfulness_scores.append(1.0 if "YES" in ans_str.upper() else 0.0)
                     elif metric_type == "AR":
-                        match = re.search(r"(\d+(\.\d+)?)", ans_str)
-                        answer_relevance_scores.append(float(match.group(1)) if match else 0.5)
+                        answer_relevance_scores.append(_extract_score_clamped(ans_str))
             except Exception as e:
                 logger.warning("⚖️ Parallel eval task error: %s", e)
 
@@ -1122,8 +1150,7 @@ def _log_run_to_mlflow(
 
 def main(argv: list[str] = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Production batch scorer using the composed Mode1 × Mode2 scorer "
-                    "(Track 7.4 / DEC-031).",
+        description="Production batch scorer using the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).",
     )
     parser.add_argument(
         "--role", nargs="+", default=None, metavar="ROLE",

@@ -1398,7 +1398,77 @@ async function checkRankings() {
       </tr>`;
     }).join('');
 
+    // Extract RAG evaluation & performance profile metrics
+    const ragEval = data.rag_evaluation || {};
+    const metrics = ragEval.metrics || {};
+    const cr = metrics.context_relevance != null ? (metrics.context_relevance <= 1 ? metrics.context_relevance * 100 : metrics.context_relevance) : null;
+    const f  = metrics.faithfulness != null ? (metrics.faithfulness <= 1 ? metrics.faithfulness * 100 : metrics.faithfulness) : null;
+    const ar = metrics.answer_relevance != null ? (metrics.answer_relevance <= 1 ? metrics.answer_relevance * 100 : metrics.answer_relevance) : null;
+
+    const perf = data.performance_profile || {};
+    const phases = perf.phases || {};
+
+    let cardsHtml = '';
+    if (Object.keys(ragEval).length > 0 || Object.keys(perf).length > 0) {
+      cardsHtml = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;">
+          <!-- RAG Retrieval Summary -->
+          <div style="background:var(--surface-card, #1c1c28);border:1px solid var(--border, #2b2b3d);border-radius:8px;padding:1rem;">
+            <div style="font-weight:700;font-size:0.82rem;color:var(--accent, #a78bfa);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">
+              <span>📊</span> RAG RETRIEVAL CORRECTNESS EVALUATION SUMMARY:
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted, #94a3b8);margin-bottom:0.6rem;">
+              Evaluated ${ragEval.reqs_evaluated || 0} requirements across ${ragEval.sample_size || 5} candidates (${ragEval.reqs_skipped_blocked || 0} blocked, ${ragEval.reqs_skipped_no_trace || 0} no-trace skipped).
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.8rem;font-family:monospace;">
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>1. Context Relevance (Precision):</span>
+                <span style="font-weight:700;color:${cr >= 75 ? 'var(--green, #4ade80)' : '#facc15'}">${cr != null ? cr.toFixed(2) + '%' : 'N/A'} <span style="color:var(--muted);font-weight:400">(Target: &ge; 75%)</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>2. Faithfulness (Groundedness):</span>
+                <span style="font-weight:700;color:${f >= 100 ? 'var(--green, #4ade80)' : '#facc15'}">${f != null ? f.toFixed(2) + '%' : 'N/A'} <span style="color:var(--muted);font-weight:400">(Target: 100%)</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;">
+                <span>3. Answer Relevance:</span>
+                <span style="font-weight:700;color:${ar >= 90 ? 'var(--green, #4ade80)' : '#facc15'}">${ar != null ? ar.toFixed(2) + '%' : 'N/A'} <span style="color:var(--muted);font-weight:400">(Target: &ge; 90%)</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pipeline Performance Profile -->
+          <div style="background:var(--surface-card, #1c1c28);border:1px solid var(--border, #2b2b3d);border-radius:8px;padding:1rem;">
+            <div style="font-weight:700;font-size:0.82rem;color:var(--accent, #a78bfa);margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;">
+              <span>📊</span> PIPELINE PERFORMANCE PROFILE:
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.35rem;font-size:0.8rem;font-family:monospace;margin-top:0.5rem;">
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>1. Download Phase:</span>
+                <span style="font-weight:600;color:#f1f5f9">${phases.download_seconds ? phases.download_seconds.toFixed(2) : '0.00'} seconds</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>2. Extraction Phase:</span>
+                <span style="font-weight:600;color:#f1f5f9">${phases.extraction_seconds ? phases.extraction_seconds.toFixed(2) : '0.00'} seconds <span style="color:var(--muted);font-weight:400">(${perf.num_resumes || 10} resumes)</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>3. Indexing Phase:</span>
+                <span style="font-weight:600;color:#f1f5f9">${phases.indexing_seconds ? phases.indexing_seconds.toFixed(2) : '0.00'} seconds</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);padding-bottom:0.2rem;">
+                <span>4. Scoring Phase:</span>
+                <span style="font-weight:600;color:#f1f5f9">${phases.scoring_seconds ? phases.scoring_seconds.toFixed(2) : '0.00'} seconds</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:0.25rem;font-weight:700;color:var(--accent, #a78bfa);">
+                <span>⏱ TOTAL PIPELINE TIME:</span>
+                <span>${perf.total_seconds ? perf.total_seconds.toFixed(2) : '0.00'} seconds</span>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
     panel.innerHTML = `
+      ${cardsHtml}
       <table style="width:100%;border-collapse:collapse;font-size:.8rem;">
         <thead>
           <tr style="color:var(--muted);text-align:left;border-bottom:1px solid var(--border);">

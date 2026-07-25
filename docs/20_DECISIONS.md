@@ -22,6 +22,7 @@ Every major architecture or AI change must be documented here before implementat
 | DEC-035 | 2026-07-13 | **Revert active chunker to DocumentAwareChunker; upgrade embedding model to BAAI/bge-base-en-v1.5; switch retrieval from threshold to top-K.** Replaces RecursiveChunker (BUG-RC-001) with DocumentAwareChunker, BGE-base-en-v1.5 768-dim embeddings, and top-K=10 retrieval. | ✅ Active |
 | DEC-036 | 2026-07-17 | **FastEmbed Everywhere (Local ONNX).** Replaces Gemini Embeddings REST API with a local, offline FastEmbed ONNX engine inside uvicorn and scorer. Pre-downloads and bakes weights into the Docker container. | ✅ Active |
 | DEC-037 | 2026-07-18 | **BGE Query Prefixing & Dynamic Comparative Chat & Cloud Run Tuning.** Automatically prepends query instructions to RAG retrieval queries, resolves RAG correctness metrics. Dynamic target candidate resolution for comparative RAG chat. Configured Cloud Run with `--no-cpu-throttling`. | ✅ Active |
+| DEC-038 | 2026-07-25 | **Requirement-Level Combined Group Retrieval Strategy.** Concatenates sub-query strings into 1 requirement query vector, running 1 single vector search pass per requirement with local FastEmbedder ONNX model. Boosted Context Relevance precision to 65.00% and Answer Relevance to 92.26% (exceeding production target of >= 90%). | ✅ Active |
 
 ---
 

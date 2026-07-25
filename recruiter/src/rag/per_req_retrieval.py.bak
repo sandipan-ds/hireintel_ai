@@ -197,22 +197,61 @@ def retrieve_evidence_for_req(
     eff_top_k = int(top_k) if top_k is not None else DEFAULT_TOP_K
     eff_cap = int(max_chunks_per_req) if max_chunks_per_req is not None else DEFAULT_MAX_CHUNKS_PER_QUERY
 
-    # ------------------------------------------------------------------
-    # Requirement-Level Combined Group Retrieval (DEC-037).
-    # Concatenate all sub-query text into a single requirement query string,
-    # embed into a single query vector, and retrieve top_k (e.g. k=5) chunks
-    # directly for the requirement group.
-    # ------------------------------------------------------------------
-    combined_req_text = " ".join([t for _, t in sub_queries if t and t.strip()])
-    if not combined_req_text:
+    # Embed the sub-queries (or use caller-supplied vectors).
+    if sub_query_vectors is None:
+        sq_vectors = embed_sub_queries(sub_queries)
+    else:
+        import numpy as np
+        sq_vectors = np.asarray(sub_query_vectors, dtype=np.float32)
+
+    if sq_vectors.shape[0] == 0:
         return []
 
-    model = _load_embed_model(DEFAULT_EMBEDDING_MODEL)
-    req_vec = model.encode([combined_req_text], normalize_embeddings=True)[0]
+    # ------------------------------------------------------------------
+    # Per-sub-query top-K retrieval + union-with-dedup-by-chunk_id (DEC-035).
+    #
+    # For each sub-query, retrieve the top-K highest-cosine chunks for this
+    # candidate regardless of absolute cosine value. Union across the
+    # sub-query set: keep the highest cosine seen per chunk_id. Re-sort desc
+    # and apply the final cap.
+    # ------------------------------------------------------------------
 
-    # Retrieve top_k chunks for the requirement group
-    hits = retriever.retrieve_top_k(req_vec, candidate_id=candidate_id, k=eff_top_k)
-    return hits[:eff_cap]
+    # Best-known (cosine, source sub-query key) per chunk_id across the set.
+    best: Dict[str, Tuple[float, str, ScoredChunk]] = {}
+
+    for sq_idx, (sq_key, _sq_text) in enumerate(sub_queries):
+        q_vec = sq_vectors[sq_idx]
+        # retrieve_top_k returns the top-K chunks for this candidate, sorted
+        # by cosine descending. No threshold floor is applied.
+        hits = retriever.retrieve_top_k(q_vec, candidate_id=candidate_id, k=eff_top_k)
+        for hit in hits:
+            cur = best.get(hit.chunk_id)
+            if cur is None or hit.cosine > cur[0]:
+                best[hit.chunk_id] = (hit.cosine, sq_key, hit)
+
+    if not best:
+        # Should not happen with top-K retrieval (always returns chunks if candidate
+        # has any indexed chunks). If it does, return empty for the caller to handle.
+        logger.warning(
+            "per-REQ top-K retrieval returned no chunks "
+            "(candidate=%s, n_sub_queries=%d) — candidate may not be indexed.",
+            candidate_id, len(sub_queries),
+        )
+        return []
+
+    # Sort unioned hits by cosine desc.
+    union_sorted = sorted(best.values(), key=lambda t: t[0], reverse=True)
+
+    # Final cap on the UNION.
+    if len(union_sorted) > eff_cap:
+        logger.debug(
+            "per-REQ cap applied: unioned %d chunks capped to %d "
+            "(candidate=%s, n_sub_queries=%d)",
+            len(union_sorted), eff_cap, candidate_id, len(sub_queries),
+        )
+        union_sorted = union_sorted[:eff_cap]
+
+    return [t[2] for t in union_sorted]
 
 
 __all__ = [

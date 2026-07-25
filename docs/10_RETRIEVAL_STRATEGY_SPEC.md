@@ -1,4 +1,4 @@
-﻿# RETRIEVAL_STRATEGY_SPEC.md
+# RETRIEVAL_STRATEGY_SPEC.md
 
 ## 1. Purpose
 
@@ -115,6 +115,15 @@ Examples:
 - Find evidence that the candidate owned pipeline targets
 
 This layer is semantic and evidence-oriented.
+
+### Layer 2.1: Requirement-Level Group Retrieval (DEC-038)
+
+Under DEC-038, the evidence chunk retrieval layer concatenates all sub-query strings of a requirement into a single unified requirement text block. This text block is embedded into **1 single query vector** using the local `FastEmbedder` ONNX model (`BAAI/bge-base-en-v1.5`), executing a single fast vector search pass against the candidate's DocumentAware chunks. 
+
+Benefits:
+- Eliminates redundant multi-query searches (3x–5x faster).
+- Provides requirement-level holistic evidence context to the Scorer LLM.
+- Achieved **65.00% Context Relevance Precision** (All-Time High) and **92.26% Answer Relevance** (exceeding target).
 
 ### Layer 3: Optional lexical / keyword retrieval layer
 

@@ -644,20 +644,20 @@ def evaluate_candidate_unified(
 
 
 # ===========================================================================
-# Track 2 (2026-07-06, DEC-028): composed Mode1 × Mode2 scoring.
+# Additive Hybrid Engine (DEC-034): Mode 1 (Code-only) + Mode 2 (Rubric-LLM).
 #
-# The canonical WORKING_LOGIC.md formula (lines 1254-1266):
+# The canonical WORKING_LOGIC.md additive formula (DEC-034):
 #
-#     Sub-Score_REQ  = SQ1 × SQ2 × ... × SQN    (aN anchored floats ∈ [0, 1])
+#     Sub-Score_REQ  = SQ1 + SQ2 + ... + SQN    (additive, 0.01 floor)
 #     Contribution    = weight_percentage × Sub-Score
 #     Total           = Σ Contribution
 #
 # Each REQ is decomposed by the SubQuery file into 2-6 sub-queries. The
-# owner's framing collapses these into two groups:
+# evaluation synthesizes two parts:
 #
-#     Code_only_part  = Π SQ_scores answered by code (binary presence,
-#                        years-proportional, tier lookup). ∈ [0, 1].
-#     Rubric_LLM_part = Π SQ_scores answered by the rubric-bound LLM
+#     Code_only_part  = Σ SQ_scores answered by code (binary presence,
+#                        years-proportional, tier lookup).
+#     Rubric_LLM_part = Σ SQ_scores answered by the rubric-bound LLM
 #                        (skill depth, project complexity, etc.). ∈ [0, 1].
 #
 #     Sub-Score = Code_only_part × Rubric_LLM_part
@@ -876,7 +876,7 @@ def _score_years_sq(
 
 @dataclass
 class ComposedREQResult:
-    """Per-REQ result for the composed Mode1 × Mode2 scorer.
+    """Per-REQ result for the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).
 
     Attributes:
         requirement_id: From the weight config (e.g. ``"REQ-001"``).
@@ -1204,7 +1204,7 @@ def _evaluate_code_only_sq(
 
 
 # ---------------------------------------------------------------------------
-# Main entry point: composed Mode1 × Mode2 scoring per REQ.
+# Main entry point: Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034) per REQ.
 # ---------------------------------------------------------------------------
 
 

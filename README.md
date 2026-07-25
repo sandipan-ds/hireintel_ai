@@ -1,6 +1,6 @@
 # HireIntel.AI — Candidate Intelligence Platform
 
-An explainable candidate intelligence platform for recruiter-controlled screening, ranking, and interactive resume chatting. Powered by a sandboxed Hybrid RAG (Mode1 × Mode2) evaluation engine.
+An explainable candidate intelligence platform for recruiter-controlled screening, ranking, and interactive resume chatting. Powered by a sandboxed Hybrid Additive Evaluation Engine (Mode 1 + Mode 2, DEC-034).
 
 ---
 
@@ -52,10 +52,10 @@ Allocate importance percentages (totalling 100%) and specify target years of exp
 Submit a shared Google Drive or Dropbox link containing candidate resumes. An active validation utility checks the URL for public access.
 ![Step 9: Shared Resume Folder Link](data/dashboard/9_Sharing_The_Resume_Folder_Link.png)
 
-#### Step 10: View Scored Rankings
-The background runner downloads the resumes, parses them, builds a vector index, scores the candidates using the Mode1 × Mode2 engine, and shows the ranked dashboard.
+#### Step 10: View Scored Rankings & Performance Metrics
+The background runner downloads the resumes, parses them, builds a vector index, scores the candidates using the Hybrid Additive Evaluation Engine (Mode 1 + Mode 2, DEC-034), and displays the **RAG Retrieval Correctness Evaluation Summary**, **Pipeline Performance Profile**, and ranked candidate leaderboard.
 *(🔒 Note: Exactly 30 seconds after completion, all original resumes, processed JSONs, indexes, and manifests under `recruiter/data/` are automatically deleted to ensure privacy.)*
-![Step 10: Recruiter Sandbox Rankings](data/dashboard/10_Candidate_Ranking_ReactDeveloper.png)
+![Step 10: Recruiter Sandbox Rankings & Performance Summary](data/dashboard/13_Scoring_Ranks_and_other_metric.png)
 
 ---
 

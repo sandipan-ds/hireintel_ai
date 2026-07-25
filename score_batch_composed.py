@@ -1,4 +1,4 @@
-"""Production batch CLI using the composed Mode1 × Mode2 scorer (Track 7.4, DEC-031).
+"""Production batch CLI using the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).
 
 This is the canonical end-to-end runner that scores every candidate in every
 role using the new composed scorer from Track 2-S
@@ -936,8 +936,7 @@ def _log_run_to_mlflow(
 
 def main(argv: list[str] = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Production batch scorer using the composed Mode1 × Mode2 scorer "
-                    "(Track 7.4 / DEC-031).",
+        description="Production batch scorer using the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).",
     )
     parser.add_argument(
         "--role", nargs="+", default=None, metavar="ROLE",

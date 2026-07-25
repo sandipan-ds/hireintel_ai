@@ -13,8 +13,7 @@ Covers:
   :func:`src.audit.no_evidence_flags.read_flags` — the JSONL audit
   log writer/reader for zero-evidence flags.
 * :func:`src.scoring.unified_scorer.evaluate_candidate_composed` —
-  the full Mode1 × Mode2 composition that scores each REQ as
-  ``Code_only_part × Rubric_LLM_part`` and aggregates to a [0, 100]
+  the Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034) that scores each REQ and aggregates to a [0, 100]
   total via ``Σ weight% × sub_score``.
 
 The composed scorer's rubric path uses ``per_req_retrieval`` (the new
@@ -566,7 +565,7 @@ class TestPerSQScoring:
 
 
 # ---------------------------------------------------------------------------
-# evaluate_candidate_composed — full Mode1 × Mode2 composition.
+# evaluate_candidate_composed — Additive Hybrid Engine (Mode 1 + Mode 2, DEC-034).
 # ---------------------------------------------------------------------------
 
 
