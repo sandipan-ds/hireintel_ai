@@ -242,6 +242,11 @@ def discover_roles() -> list[str]:
     return roles
 
 
+def _norm_role_slug(s: str) -> str:
+    clean = s.lower().replace(" ", "_").replace("-", "_")
+    return clean.split("_202")[0] if "_202" in clean else clean
+
+
 def find_weight_config(role: str) -> Path:
     """Return the weight-config JSON path for the role.
 
@@ -250,7 +255,22 @@ def find_weight_config(role: str) -> Path:
     non-default config for a role.
     """
     role_dir = JOB_DESCRIPTIONS_DIR / role
-    candidates = sorted(role_dir.glob(f"{role}_WeightConfig_*.json"))
+    if not role_dir.exists():
+        r_norm = _norm_role_slug(role)
+        matched = [
+            d for d in JOB_DESCRIPTIONS_DIR.iterdir()
+            if d.is_dir() and (
+                _norm_role_slug(d.name) == r_norm or
+                r_norm in _norm_role_slug(d.name) or
+                _norm_role_slug(d.name) in r_norm
+            )
+        ]
+        if matched:
+            role_dir = matched[0]
+        else:
+            raise FileNotFoundError(f"No weight config directory found for role '{role}' in {JOB_DESCRIPTIONS_DIR}")
+
+    candidates = sorted(role_dir.glob("*WeightConfig_*.json"))
     if not candidates:
         raise FileNotFoundError(f"No weight config found for role '{role}' in {role_dir}")
     return candidates[0]
@@ -260,7 +280,19 @@ def iter_candidate_files(role: str, limit: int | None = None) -> list[Path]:
     """Yield parsed-resume JSON paths for ``role``, excluding downstream artifacts."""
     role_dir = PROCESSED_DIR / role
     if not role_dir.exists():
-        return []
+        r_norm = _norm_role_slug(role)
+        matched = [
+            d for d in PROCESSED_DIR.iterdir()
+            if d.is_dir() and (
+                _norm_role_slug(d.name) == r_norm or
+                r_norm in _norm_role_slug(d.name) or
+                _norm_role_slug(d.name) in r_norm
+            )
+        ]
+        if matched:
+            role_dir = matched[0]
+        else:
+            return []
     out = []
     for f in sorted(role_dir.glob("*.json")):
         # Skip the downstream ``_intelligence_report.json`` +

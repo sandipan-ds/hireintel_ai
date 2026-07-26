@@ -250,6 +250,7 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 | `src/scoring/rubrics.py` — 12 rubric templates | ✅ |
 | `src/scoring/rubric_scorer.py` — RUBRIC-SCORE-001 prompt, LLM judge | ✅ |
 | `src/scoring/unified_scorer.py` — routes code-only vs rubric-LLM (top-K retrieval) | ✅ |
+| `src/rag/retriever.py` — robust candidate_id suffix matching (`_match_cand`) | ✅ |
 | `src/scoring/graded_scorer.py` — code-only synonym + years scoring | ✅ |
 | `src/scoring/tier_lookup.py` — institute + cert tier lookup | ✅ |
 | `src/services/subquery_parser.py` — parse SubQuery tables | ✅ |
@@ -263,7 +264,7 @@ CGPA: `1.00` if >= target, `0.50` otherwise
 - LLM never sees weights, never ranks ✅
 - Final scores are deterministic and auditable ✅
 - Cached scoring trace frozen at scoring time ✅
-- Standardized on top-K retrieval (`VectorIndex.retrieve_top_k`), guaranteeing evidence presence for LLM evaluation ✅
+- Standardized on top-K retrieval (`VectorIndex.retrieve_top_k` with `_match_cand` candidate ID suffix matching), eliminating false-positive `Blocked` flags ✅
 
 ---
 
@@ -323,6 +324,10 @@ The FastAPI application and interactive wizard interface have been fully contain
 | **Strict RAG Correctness Audit** | ✅ Complete | Fixed LLM Judge evaluation by strictly isolating sub-queries with `evidence_found == True` and `sub_score > 0`, handling reasoning model outputs (`msg.reasoning`), and expanding `max_tokens=300` for 100% accurate binary RAG evaluation |
 | **4-Tier Adaptive ThreadPool Fallback** | ✅ Complete | Implemented 4-tier worker fallback strategy (Tier 1: $N \times 10$, Tier 2: $N \times 1$, Tier 3: 5 workers, Tier 4: 1 sequential worker) for maximum parallel throughput and 100% execution resilience |
 | **Requirement-Level Combined Group Retrieval (DEC-038)** | ✅ Complete | Concatenates sub-query strings into 1 requirement query vector, running 1 fast vector search pass per requirement with local FastEmbedder ONNX model. Boosted Context Relevance precision to 65.00% and Answer Relevance to 92.26% (exceeding production target of >= 90%). |
+| **Google Drive 2-Step REST API Exporter** | ✅ Complete | Implemented 2-step REST API uploads (`POST` metadata $\rightarrow$ `PATCH` binary media) with fuzzy, case-insensitive role & score path matching for Linux containers. Packages raw resume PDFs, parsed candidate JSONs, ranked JSONs, and evaluation reports into separate target folders (`hireintel_user_data` and `hireintel_user_session_logs`). |
+| **Linux Container Role Discovery (`build_index.py`)** | ✅ Complete | Implemented case-insensitive and core prefix discovery in `build_index.py` (`discover_profiles`), resolving timestamped processed role directories cleanly under Linux serverless container runtimes. |
+| **Linux Container Role Scoring Discovery (`score_batch_composed.py`)** | ✅ Complete | Implemented case-insensitive and core prefix discovery in `score_batch_composed.py` (`find_weight_config` & `iter_candidate_files`), enabling end-to-end candidate scoring and GDrive package export for timestamped job slugs on Linux serverless runtimes. |
+| **Linux Container Dashboard Rankings Resolution (`dashboard.py`)** | ✅ Complete | Implemented case-insensitive and core prefix discovery in `dashboard.py` (`_load_ranked` & `_load_processed`), eliminating false-positive HTTP 404 Not Found errors when fetching candidate leaderboards for timestamped job runs on Linux. |
 
 ---
 

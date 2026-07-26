@@ -274,9 +274,22 @@ class VectorIndex:
 
         # Build the candidate mask.
         if candidate_id is not None:
+            def _match_cand(m_id: Any) -> bool:
+                if not m_id:
+                    return False
+                ms = str(m_id).strip()
+                ts = str(candidate_id).strip()
+                return (
+                    ms == ts or
+                    ts.endswith(ms) or
+                    ms.endswith(ts) or
+                    ms in ts or
+                    ts in ms
+                )
+
             mask = np.fromiter(
                 (
-                    m.get("candidate_id") == candidate_id
+                    _match_cand(m.get("candidate_id"))
                     for m in self._metadatas
                 ),
                 dtype=bool,
@@ -401,9 +414,22 @@ class ThresholdRetriever:
 
         # Build the candidate mask. None means "search everything".
         if candidate_id is not None:
+            def _match_cand(m_id: Any) -> bool:
+                if not m_id:
+                    return False
+                ms = str(m_id).strip()
+                ts = str(candidate_id).strip()
+                return (
+                    ms == ts or
+                    ts.endswith(ms) or
+                    ms.endswith(ts) or
+                    ms in ts or
+                    ts in ms
+                )
+
             mask = np.fromiter(
                 (
-                    m.get("candidate_id") == candidate_id
+                    _match_cand(m.get("candidate_id"))
                     for m in self.index.metadatas
                 ),
                 dtype=bool,

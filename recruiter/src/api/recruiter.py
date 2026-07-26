@@ -1762,14 +1762,6 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
         except Exception as pfe:
             logger.error("Failed to write performance profile JSON: %s", pfe)
 
-        # 4. Package and export job run results (including Google Drive transfer if configured)
-        try:
-            from recruiter.src.services.gdrive_exporter import package_and_export_job_run
-            package_and_export_job_run(slug, job_log=job["log"])
-        except Exception as exc:
-            logger.exception("Failed to run Google Drive export pipeline")
-            job["log"].append(f"⚠ Export pipeline failed: {exc}")
-
         job["status"] = "done"
         job["phase"] = "done"
         job["log"].append("✓ Scoring complete — click ↻ Check for Rankings")
@@ -1807,6 +1799,15 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
                 for line in summary_log:
                     job["log"].append(line)
                     logger.info(line)
+
+        # 4. Package and export job run results (including Google Drive transfer if configured)
+        # Guaranteed to execute even on early returns or pipeline errors so session logs are always saved.
+        try:
+            from recruiter.src.services.gdrive_exporter import package_and_export_job_run
+            package_and_export_job_run(slug, job_log=job["log"])
+        except Exception as exc:
+            logger.exception("Failed to run Google Drive export pipeline")
+            job["log"].append(f"⚠ Export pipeline failed: {exc}")
 
         # Cancel any existing cleanup timer
         old_timer = _CLEANUP_TIMERS.pop(slug, None)

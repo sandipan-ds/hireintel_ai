@@ -177,37 +177,30 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     scores_dest.mkdir(exist_ok=True)
 
     # Helper: Case-insensitive and fuzzy slug matching for Linux & Windows path consistency
+    def _norm_slug(s: str) -> str:
+        clean = s.lower().replace(" ", "_").replace("-", "_")
+        return clean.split("_202")[0] if "_202" in clean else clean
+
     def _get_matching_slug_dirs(base_dir: Path, target_slug: str) -> List[Path]:
         if not base_dir.exists():
             return []
         matches = []
-        slug_lower = target_slug.lower()
-        slug_core = slug_lower.split("_202")[0] if "_202" in slug_lower else slug_lower
-        
+        t_norm = _norm_slug(target_slug)
         for child in base_dir.iterdir():
             if child.is_dir():
-                c_name_lower = child.name.lower()
-                if (c_name_lower == slug_lower or 
-                    target_slug in child.name or 
-                    child.name in target_slug or 
-                    c_name_lower.startswith(slug_core) or 
-                    slug_core in c_name_lower):
+                c_norm = _norm_slug(child.name)
+                if c_norm == t_norm or t_norm in c_norm or c_norm in t_norm:
                     matches.append(child)
         return matches
 
     def _get_matching_score_items(scores_dir: Path, target_slug: str) -> List[Path]:
         if not scores_dir.exists():
             return []
-        slug_lower = target_slug.lower()
-        slug_core = slug_lower.split("_202")[0] if "_202" in slug_lower else slug_lower
-        
+        t_norm = _norm_slug(target_slug)
         matched_items = []
         for item in scores_dir.iterdir():
-            item_name_lower = item.name.lower()
-            if (slug_lower in item_name_lower or 
-                target_slug in item.name or 
-                item_name_lower.startswith(slug_core) or 
-                slug_core in item_name_lower):
+            i_norm = _norm_slug(item.name)
+            if t_norm in i_norm or i_norm in t_norm:
                 matched_items.append(item)
         return matched_items
 
@@ -215,7 +208,10 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     n_jds, n_resumes, n_scores = 0, 0, 0
 
     # A. Job Metadata and extracted JD/REQs (from JOBS_DIR)
-    job_dirs = _get_matching_slug_dirs(JOBS_DIR, slug)
+    job_dirs = set(_get_matching_slug_dirs(JOBS_DIR, slug))
+    if (JOBS_DIR / slug).is_dir():
+        job_dirs.add(JOBS_DIR / slug)
+    log_update(f"Found {len(job_dirs)} job directories for JD metadata.")
     for jdir in job_dirs:
         for file_name in ["jd.md", "requirements.json", "subqueries.json", "metadata.json"]:
             src_file = jdir / file_name
@@ -231,8 +227,10 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
                     n_resumes += 1
 
     # B. SubQuery Markdown definition
-    sq_dirs = _get_matching_slug_dirs(JD_DIR, slug)
-    search_jd_dirs = sq_dirs if sq_dirs else ([JD_DIR / slug] if (JD_DIR / slug).exists() else [JD_DIR])
+    sq_dirs = set(_get_matching_slug_dirs(JD_DIR, slug))
+    if (JD_DIR / slug).is_dir():
+        sq_dirs.add(JD_DIR / slug)
+    search_jd_dirs = list(sq_dirs) if sq_dirs else ([JD_DIR / slug] if (JD_DIR / slug).exists() else [JD_DIR])
     for sdir in search_jd_dirs:
         if sdir.is_dir():
             for item in sdir.iterdir():
@@ -241,14 +239,21 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
                     n_jds += 1
 
     # C. Processed candidate JSON profiles & raw original source resumes
-    proc_dirs = _get_matching_slug_dirs(PROCESSED_DIR, slug)
+    proc_dirs = set(_get_matching_slug_dirs(PROCESSED_DIR, slug))
+    if (PROCESSED_DIR / slug).is_dir():
+        proc_dirs.add(PROCESSED_DIR / slug)
+    log_update(f"Found {len(proc_dirs)} processed resume directories.")
     for pdir in proc_dirs:
         for item in pdir.iterdir():
             if item.is_file() and item.suffix == ".json":
                 shutil.copy(item, resumes_dest / item.name)
                 n_resumes += 1
 
-    orig_dirs = _get_matching_slug_dirs(ROOT / "recruiter" / "data" / "original", slug)
+    orig_base = ROOT / "recruiter" / "data" / "original"
+    orig_dirs = set(_get_matching_slug_dirs(orig_base, slug))
+    if (orig_base / slug).is_dir():
+        orig_dirs.add(orig_base / slug)
+    log_update(f"Found {len(orig_dirs)} original source resume directories.")
     for odir in orig_dirs:
         for item in odir.iterdir():
             if item.is_file() and item.suffix.lower() in (".pdf", ".docx", ".doc", ".txt", ".png", ".jpg", ".jpeg"):
@@ -256,7 +261,13 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
                 n_resumes += 1
 
     # D. Candidate Rankings, RAG Evaluation, Performance Profile, and Trace JSONs
-    score_items = _get_matching_score_items(SCORES_DIR, slug)
+    score_items = set(_get_matching_score_items(SCORES_DIR, slug))
+    if (SCORES_DIR / f"{slug}_ranked.json").exists():
+        score_items.add(SCORES_DIR / f"{slug}_ranked.json")
+    if (SCORES_DIR / slug).is_dir():
+        score_items.add(SCORES_DIR / slug)
+    log_update(f"Found {len(score_items)} score files/directories.")
+
     for sitem in score_items:
         if sitem.is_file():
             if sitem.name.endswith("_ranked.json"):
@@ -298,11 +309,14 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
         if not val:
             return None
         val = val.strip()
+        if "#" in val:
+            val = val.partition("#")[0].strip()
         if "?" in val:
-            val = val.partition("?")[0]
+            val = val.partition("?")[0].strip()
         if "/" in val:
-            val = val.rstrip("/").split("/")[-1]
-        return val
+            val = val.rstrip("/").split("/")[-1].strip()
+        val = val.strip('"\'')
+        return val if val else None
 
     # 5. Connect to Google Drive if environment variables are set
     client_id = os.getenv("OWNER_GDRIVE_CLIENT_ID")
@@ -313,7 +327,7 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     if raw_user_data_folder:
         folder_id = clean_folder_id_helper(raw_user_data_folder)
     else:
-        folder_id = os.getenv("OWNER_GDRIVE_FOLDER_ID")
+        folder_id = clean_folder_id_helper(os.getenv("OWNER_GDRIVE_FOLDER_ID"))
 
     if all([client_id, client_secret, refresh_token, folder_id]):
         log_update("Connecting to owner's Google Drive...")
@@ -326,16 +340,23 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
             )
             uploader.refresh_access_token()
             
-            log_update(f"Uploading folder '{folder_name}' to Google Drive...")
+            log_update(f"Uploading folder '{folder_name}' to Google Drive data folder ({folder_id})...")
             uploader.upload_directory_recursive(dest_dir, folder_id)
 
-            # Upload session log directly to OWNER_GDRIVE_FOR_USER_LOGS folder if configured
+            # Upload session log to dedicated OWNER_GDRIVE_FOR_USER_LOGS folder if configured
             user_logs_folder = os.getenv("OWNER_GDRIVE_FOR_USER_LOGS")
             if user_logs_folder and log_file and log_file.exists():
                 user_logs_folder_id = clean_folder_id_helper(user_logs_folder)
                 if user_logs_folder_id:
-                    log_update("Uploading user session log to dedicated logs folder...")
-                    uploader.upload_file(log_file, user_logs_folder_id)
+                    try:
+                        # Copy to a unique timestamped file name so logs in Google Drive don't collide
+                        unique_log_file = dest_dir / f"{folder_name}_scoring_run_log.txt"
+                        shutil.copy(log_file, unique_log_file)
+                        log_update(f"Uploading session log '{unique_log_file.name}' to dedicated logs folder ({user_logs_folder_id})...")
+                        uploader.upload_file(unique_log_file, user_logs_folder_id)
+                    except Exception as log_exc:
+                        logger.error("GDrive: session log upload error: %s", log_exc)
+                        log_update(f"⚠ Dedicated session log upload notice: {log_exc}")
 
             # Sync SQLite DB to Google Drive
             try:

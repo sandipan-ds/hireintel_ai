@@ -48,38 +48,82 @@ def _role_from_candidate_id(candidate_id: str) -> str:
     return "_".join(candidate_id.split("_")[:-2])
 
 
+def _norm_dash_slug(s: str) -> str:
+    clean = s.lower().replace(" ", "_").replace("-", "_")
+    return clean.split("_202")[0] if "_202" in clean else clean
+
+
 def _load_ranked(role: str) -> Dict[str, Any]:
     """Load and return the ranked JSON for a role."""
-    path = SCORES_DIR / f"{role}_ranked.json"
-    recruiter_path = ROOT / "recruiter" / "data" / "scores" / "composed" / f"{role}_ranked.json"
-    if recruiter_path.exists():
-        path = recruiter_path
-    if not path.exists():
-        try:
-            from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
-            restore_role_files_from_gdrive(role)
-        except Exception as e:
-            logger.warning("GDrive Sync: Error during on-demand restore of ranked file: %s", e)
-    if not path.exists():
-        raise HTTPException(status_code=404, detail=f"No rankings for role: {role}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    composed_dir = ROOT / "recruiter" / "data" / "scores" / "composed"
+    
+    # 1. Exact path check
+    exact_path = composed_dir / f"{role}_ranked.json"
+    if exact_path.exists():
+        return json.loads(exact_path.read_text(encoding="utf-8"))
+
+    # 2. Case-insensitive / prefix matching in composed_dir
+    if composed_dir.exists():
+        r_norm = _norm_dash_slug(role)
+        for item in sorted(composed_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+            if item.is_file() and item.name.endswith(".json"):
+                i_norm = _norm_dash_slug(item.name)
+                if (r_norm in i_norm or i_norm in r_norm) and "ranked" in item.name.lower():
+                    return json.loads(item.read_text(encoding="utf-8"))
+
+    # 3. GDrive restore fallback
+    try:
+        from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
+        restore_role_files_from_gdrive(role)
+    except Exception as e:
+        logger.warning("GDrive Sync: Error during on-demand restore of ranked file: %s", e)
+
+    # Re-check after GDrive restore
+    if exact_path.exists():
+        return json.loads(exact_path.read_text(encoding="utf-8"))
+
+    if composed_dir.exists():
+        r_norm = _norm_dash_slug(role)
+        for item in sorted(composed_dir.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+            if item.is_file() and item.name.endswith(".json"):
+                i_norm = _norm_dash_slug(item.name)
+                if (r_norm in i_norm or i_norm in r_norm) and "ranked" in item.name.lower():
+                    return json.loads(item.read_text(encoding="utf-8"))
+
+    raise HTTPException(status_code=404, detail=f"No rankings for role: {role}")
 
 
 def _load_processed(role: str, candidate_id: str) -> Dict[str, Any]:
     """Load processed candidate JSON."""
-    path = PROCESSED_DIR / role / f"{candidate_id}.json"
-    recruiter_path = ROOT / "recruiter" / "data" / "processed" / role / f"{candidate_id}.json"
-    if recruiter_path.exists():
-        path = recruiter_path
-    if not path.exists():
-        try:
-            from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
-            restore_role_files_from_gdrive(role)
-        except Exception as e:
-            logger.warning("GDrive Sync: Error during on-demand restore of processed file: %s", e)
-    if not path.exists():
-        raise HTTPException(status_code=404, detail=f"No processed data for {candidate_id}")
-    return json.loads(path.read_text(encoding="utf-8"))
+    proc_base = ROOT / "recruiter" / "data" / "processed"
+    
+    exact_path = proc_base / role / f"{candidate_id}.json"
+    if exact_path.exists():
+        return json.loads(exact_path.read_text(encoding="utf-8"))
+
+    if proc_base.exists():
+        r_norm = _norm_dash_slug(role)
+        for d in proc_base.iterdir():
+            if d.is_dir():
+                d_norm = _norm_dash_slug(d.name)
+                if d_norm == r_norm or r_norm in d_norm or d_norm in r_norm:
+                    cand_file = d / f"{candidate_id}.json"
+                    if cand_file.exists():
+                        return json.loads(cand_file.read_text(encoding="utf-8"))
+                    for f in d.iterdir():
+                        if f.is_file() and candidate_id.lower() in f.name.lower():
+                            return json.loads(f.read_text(encoding="utf-8"))
+
+    try:
+        from recruiter.src.services.gdrive_syncer import restore_role_files_from_gdrive
+        restore_role_files_from_gdrive(role)
+    except Exception as e:
+        logger.warning("GDrive Sync: Error during on-demand restore of processed file: %s", e)
+
+    if exact_path.exists():
+        return json.loads(exact_path.read_text(encoding="utf-8"))
+
+    raise HTTPException(status_code=404, detail=f"Processed resume for {candidate_id} ({role}) not found.")
 
 
 def _get_candidate_profile_summary(role: str, candidate_id: str) -> Dict[str, Any]:

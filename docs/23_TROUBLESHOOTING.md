@@ -947,4 +947,75 @@ The secondary cause is the embedding model mismatch: `all-MiniLM-L6-v2` is train
 - Always check both `msg.content` and `msg.reasoning` when handling OpenRouter completions from reasoning models.
 - Filter evaluation datasets strictly by positive evidence flags (`evidence_found == True` and `sub_score > 0`).
 
+---
+
+### Google Drive Exporter: Ephemeral Container File Discovery & 2-Step REST API
+
+**Date:** 2026-07-26
+
+**Problem:**
+- Executing a job run on the Cloud Run live web service resulted in empty `resumes/` and `scores/` subfolders on Google Drive, and subsequently an indexing phase `FileNotFoundError` aborting scoring.
+
+**Symptoms:**
+- Google Drive received `scoring_run_log.txt` in `hireintel_user_session_logs`, but `resumes/` and `scores/` subfolders inside `hireintel_user_data` contained 0 files.
+- Indexing phase returned `0.00 seconds` and marked the job run as `Error — check log`.
+
+**Root Cause:**
+1. **Linux Path Case & Timestamp Slug Mismatch**: Cloud Run runs on Linux where path lookups are case-sensitive. The Web UI generated job slugs with date & timestamp hashes (e.g. `Senior_Python_Developer_20260726_a1b2c3d4`). Directory lookups in `gdrive_exporter.py` and `build_index.py` checked strict folder equality (`root_path / role`), raising `FileNotFoundError` when casing or timestamp suffixes differed.
+2. **Single-Step Multipart HTTP Error**: `upload_file` in `gdrive_exporter.py` sent a single `multipart/form-data` POST to Google Drive API's `uploadType=multipart` endpoint, which returned HTTP 400 Bad Request on file uploads, crashing directory traversal mid-way and leaving empty subfolders.
+
+**Solution:**
+- **File Modified:** [recruiter/src/services/gdrive_exporter.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/src/services/gdrive_exporter.py)
+  - Implemented `_get_matching_slug_dirs` and `_get_matching_score_items` using fuzzy and case-insensitive core prefix matching.
+  - Implemented standard 2-step REST API upload (Step 1: `POST /drive/v3/files` for metadata $\rightarrow$ Step 2: `PATCH /upload/drive/v3/files/{id}?uploadType=media` for binary stream).
+  - Added file-level `try...except` isolation to prevent single file network glitches from aborting full folder exports.
+- **File Modified:** [recruiter/build_index.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/build_index.py)
+  - Updated `discover_profiles` to use case-insensitive and core prefix matching (`role_core = role_lower.split("_202")[0]`), resolving timestamped processed role directories cleanly on Linux.
+- **File Modified:** [recruiter/score_batch_composed.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/score_batch_composed.py)
+  - Updated `find_weight_config` and `iter_candidate_files` to use case-insensitive and core prefix matching (`role_core = role_lower.split("_202")[0]`), resolving candidate profiles and weight configs for timestamped job slugs cleanly under Linux serverless container runtimes.
+- **File Modified:** [recruiter/src/api/dashboard.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/src/api/dashboard.py)
+  - Updated `_load_ranked` and `_load_processed` to use case-insensitive and core prefix matching (`role_core = role_lower.split("_202")[0]`), eliminating false-positive HTTP 404 Not Found errors when fetching candidate leaderboards for timestamped job runs on Linux.
+
+**Prevention Strategy:**
+- Always use 2-step REST API uploads for Google Drive API operations instead of multipart form data.
+- Ensure all directory and file discovery logic across container environments uses case-insensitive and prefix-tolerant matching.
+
+---
+
+### Candidate Vector Index Mask Mismatch: 100% False-Positive Candidate Blockade (`Status: Blocked`)
+
+**Date:** 2026-07-26
+
+**Problem:**
+- Candidate leaderboards rendered on the recruiter dashboard displayed every candidate with `Score: 7.1`, `Status: Blocked` (in red text).
+- `Business_Analyst_Lead_20260716_ebec8999_ranked.json` showed `blocked_count: 15` for 100% of evaluated candidates.
+
+**Symptoms:**
+- RAG vector evidence retrieval for every requirement failed with reason: `Zero retrieved evidence for REQ-XXX (top_k=10). Rubric part zeroed; flagged for human review.`
+- Requirements were flagged as `blocked = True`, incrementing candidate `blocked_count` to 15 and triggering the frontend `<span style="color:var(--red)">Blocked</span>` indicator.
+
+**Root Cause:**
+- In `recruiter/src/rag/retriever.py`, candidate filtering during vector retrieval built an exact equality mask:
+  ```python
+  mask = np.fromiter((m.get("candidate_id") == candidate_id for m in self._metadatas), dtype=bool, count=len(self._metadatas))
+  ```
+- Chunk metadata `m.get("candidate_id")` stored candidate IDs like `CAND_0001` (allocated by CandidateRegistry), whereas `score_batch_composed.py` passed candidate file stems like `Business_Analyst_Lead_20260716_ebec8999_CAND_0001`.
+- The strict equality check `"CAND_0001" == "Business_Analyst_Lead_20260716_ebec8999_CAND_0001"` evaluated to `False` for all chunks, creating a 100% masked-out vector matrix and returning 0 retrieved chunks.
+
+**Solution:**
+- **File Modified:** [recruiter/src/rag/retriever.py](file:///c:/Users/sandi/Desktop/ML%20Working%20Folder/hireintel_ai/recruiter/src/rag/retriever.py#L274-L290)
+  - Updated candidate mask filtering in `VectorIndex.retrieve_top_k` and `ThresholdRetriever.retrieve_scored` to support suffix and substring matching:
+    ```python
+    def _match_cand(m_id: Any) -> bool:
+        if not m_id:
+            return False
+        ms, ts = str(m_id).strip(), str(candidate_id).strip()
+        return ms == ts or ts.endswith(ms) or ms.endswith(ts) or ms in ts or ts in ms
+    ```
+- **Verification:** Re-scoring `Business_Analyst_Lead_20260716_ebec8999` reduced Zero Evidence count from 15 to **0** (`0-Evid: 0`), restoring clean candidate scoring and resolving candidate status to `✓ Clean` / `Passed`.
+
+**Prevention Strategy:**
+- Never perform strict string equality checks on candidate identifiers that may carry prefix or timestamp namespaces across different pipeline stages.
+- Use suffix or substring matching when filtering vector index metadata by candidate ID.
+
 

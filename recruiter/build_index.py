@@ -136,7 +136,23 @@ def discover_profiles(root: str = PROCESSED_ROOT, role: Optional[str] = None) ->
     if role:
         role_dir = root_path / role
         if not role_dir.is_dir():
-            raise FileNotFoundError(f"Role folder not found: {role_dir}")
+            def _norm(s: str) -> str:
+                clean = s.lower().replace(" ", "_").replace("-", "_")
+                return clean.split("_202")[0] if "_202" in clean else clean
+
+            r_norm = _norm(role)
+            matched_dirs = [
+                d for d in root_path.iterdir()
+                if d.is_dir() and (
+                    _norm(d.name) == r_norm or
+                    r_norm in _norm(d.name) or
+                    _norm(d.name) in r_norm
+                )
+            ]
+            if matched_dirs:
+                role_dir = matched_dirs[0]
+            else:
+                raise FileNotFoundError(f"Role folder not found: {role_dir}")
         for jf in sorted(role_dir.glob("*.json")):
             stem = jf.stem
             if any(stem.endswith(suf) for suf in _SKIP_SUFFIXES):
