@@ -62,8 +62,8 @@ from src.rag.document_aware_chunker import ChunkRecord
 #: Default chunk size in characters. Upper end of [500, 1000].
 RECURSIVE_CHUNK_SIZE: int = 1000
 
-#: Default chunk overlap in characters. 50% of chunk_size (= 500 at default).
-RECURSIVE_CHUNK_OVERLAP: int = 500
+#: Default chunk overlap in characters. 30% of chunk_size (= 300 at default).
+RECURSIVE_CHUNK_OVERLAP: int = 300
 
 #: Optuna lower/upper bounds for chunk_size (chars).
 CHUNK_SIZE_LOWER: int = 500

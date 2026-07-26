@@ -62,10 +62,10 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 # Soft upper bound for a single chunk. We split when a section is larger
 # than this so embedding models with small context windows are happy.
-MAX_CHUNK_CHARS: int = 600
+MAX_CHUNK_CHARS: int = 1000
 
-# Overlap applied when sub-splitting an oversized chunk.
-SPLIT_OVERLAP_CHARS: int = 200
+# Overlap applied when sub-splitting an oversized chunk (30% of chunk_size).
+SPLIT_OVERLAP_CHARS: int = 300
 
 
 # ---------------------------------------------------------------------------

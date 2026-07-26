@@ -75,43 +75,50 @@ class GoogleDriveUploader:
         return folder_id
 
     def upload_file(self, file_path: Path, parent_id: str) -> str:
-        """Upload a local file to a Google Drive folder and return its ID."""
-        logger.info("GDrive: uploading file '%s'...", file_path.name)
-        url = "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart"
+        """Upload a local file to a Google Drive folder using robust 2-step REST API calls."""
+        logger.info("GDrive: uploading file '%s' (%d bytes)...", file_path.name, file_path.stat().st_size)
+        
+        # Step 1: Create file metadata on Google Drive
+        meta_url = "https://www.googleapis.com/drive/v3/files"
         headers = {
             "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
         }
-        
-        metadata = {
+        body = {
             "name": file_path.name,
             "parents": [parent_id],
         }
-        
-        # Read file contents
+        resp = requests.post(meta_url, headers=headers, json=body, timeout=30)
+        resp.raise_for_status()
+        file_id = resp.json()["id"]
+
+        # Step 2: Upload raw file content via media PATCH endpoint
+        media_url = f"https://www.googleapis.com/upload/drive/v3/files/{file_id}?uploadType=media"
         with file_path.open("rb") as f:
             file_data = f.read()
 
-        # Build multipart payload
-        files = {
-            "metadata": ("metadata", json.dumps(metadata), "application/json; charset=UTF-8"),
-            "file": (file_path.name, file_data, "application/octet-stream"),
+        media_headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/octet-stream",
         }
-        
-        resp = requests.post(url, headers=headers, files=files, timeout=60)
-        resp.raise_for_status()
-        file_id = resp.json()["id"]
+        resp2 = requests.patch(media_url, headers=media_headers, data=file_data, timeout=60)
+        resp2.raise_for_status()
+
         logger.info("GDrive: successfully uploaded '%s' (ID: %s).", file_path.name, file_id)
         return file_id
 
     def upload_directory_recursive(self, local_dir: Path, remote_parent_id: str) -> None:
-        """Recursively upload a local directory to Google Drive."""
+        """Recursively upload a local directory to Google Drive with file-level error resilience."""
         remote_folder_id = self.create_folder(local_dir.name, remote_parent_id)
         
         for item in local_dir.iterdir():
             if item.is_dir():
                 self.upload_directory_recursive(item, remote_folder_id)
             elif item.is_file():
-                self.upload_file(item, remote_folder_id)
+                try:
+                    self.upload_file(item, remote_folder_id)
+                except Exception as fe:
+                    logger.error("GDrive: failed to upload file '%s': %s", item.name, fe)
 
 
 def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -> None:
@@ -169,43 +176,115 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     resumes_dest.mkdir(exist_ok=True)
     scores_dest.mkdir(exist_ok=True)
 
+    # Helper: Case-insensitive and fuzzy slug matching for Linux & Windows path consistency
+    def _get_matching_slug_dirs(base_dir: Path, target_slug: str) -> List[Path]:
+        if not base_dir.exists():
+            return []
+        matches = []
+        slug_lower = target_slug.lower()
+        slug_core = slug_lower.split("_202")[0] if "_202" in slug_lower else slug_lower
+        
+        for child in base_dir.iterdir():
+            if child.is_dir():
+                c_name_lower = child.name.lower()
+                if (c_name_lower == slug_lower or 
+                    target_slug in child.name or 
+                    child.name in target_slug or 
+                    c_name_lower.startswith(slug_core) or 
+                    slug_core in c_name_lower):
+                    matches.append(child)
+        return matches
+
+    def _get_matching_score_items(scores_dir: Path, target_slug: str) -> List[Path]:
+        if not scores_dir.exists():
+            return []
+        slug_lower = target_slug.lower()
+        slug_core = slug_lower.split("_202")[0] if "_202" in slug_lower else slug_lower
+        
+        matched_items = []
+        for item in scores_dir.iterdir():
+            item_name_lower = item.name.lower()
+            if (slug_lower in item_name_lower or 
+                target_slug in item.name or 
+                item_name_lower.startswith(slug_core) or 
+                slug_core in item_name_lower):
+                matched_items.append(item)
+        return matched_items
+
     # 4. Copy matching files
-    # A. Job Metadata and extracted JD/REQs
-    job_src = JOBS_DIR / slug
-    if job_src.exists():
+    n_jds, n_resumes, n_scores = 0, 0, 0
+
+    # A. Job Metadata and extracted JD/REQs (from JOBS_DIR)
+    job_dirs = _get_matching_slug_dirs(JOBS_DIR, slug)
+    for jdir in job_dirs:
         for file_name in ["jd.md", "requirements.json", "subqueries.json", "metadata.json"]:
-            src_file = job_src / file_name
+            src_file = jdir / file_name
             if src_file.exists():
                 shutil.copy(src_file, dest_dir / file_name)
+                n_jds += 1
+        # Also copy raw uploaded/downloaded resumes if stored under JOBS_DIR/<slug>/resumes
+        raw_sub = jdir / "resumes"
+        if raw_sub.exists():
+            for item in raw_sub.iterdir():
+                if item.is_file():
+                    shutil.copy(item, resumes_dest / item.name)
+                    n_resumes += 1
 
     # B. SubQuery Markdown definition
-    sq_file = JD_DIR / slug / f"{slug}_SubQuery.md"
-    if sq_file.exists():
-        shutil.copy(sq_file, dest_dir / f"{slug}_SubQuery.md")
+    sq_dirs = _get_matching_slug_dirs(JD_DIR, slug)
+    search_jd_dirs = sq_dirs if sq_dirs else ([JD_DIR / slug] if (JD_DIR / slug).exists() else [JD_DIR])
+    for sdir in search_jd_dirs:
+        if sdir.is_dir():
+            for item in sdir.iterdir():
+                if item.is_file() and item.name.endswith(".md"):
+                    shutil.copy(item, dest_dir / item.name)
+                    n_jds += 1
 
-    # C. Processed candidate resumes (JSON)
-    proc_src = PROCESSED_DIR / slug
-    if proc_src.exists():
-        for item in proc_src.iterdir():
+    # C. Processed candidate JSON profiles & raw original source resumes
+    proc_dirs = _get_matching_slug_dirs(PROCESSED_DIR, slug)
+    for pdir in proc_dirs:
+        for item in pdir.iterdir():
             if item.is_file() and item.suffix == ".json":
                 shutil.copy(item, resumes_dest / item.name)
+                n_resumes += 1
 
-    # D. Final candidate rankings
-    ranked_file = SCORES_DIR / f"{slug}_ranked.json"
-    if ranked_file.exists():
-        shutil.copy(ranked_file, dest_dir / f"{slug}_ranked.json")
+    orig_dirs = _get_matching_slug_dirs(ROOT / "recruiter" / "data" / "original", slug)
+    for odir in orig_dirs:
+        for item in odir.iterdir():
+            if item.is_file() and item.suffix.lower() in (".pdf", ".docx", ".doc", ".txt", ".png", ".jpg", ".jpeg"):
+                shutil.copy(item, resumes_dest / item.name)
+                n_resumes += 1
 
-    # D2. RAG evaluation report (correctness audit)
-    eval_file = SCORES_DIR / f"{slug}_rag_evaluation.json"
-    if eval_file.exists():
-        shutil.copy(eval_file, dest_dir / f"{slug}_rag_evaluation.json")
+    # D. Candidate Rankings, RAG Evaluation, Performance Profile, and Trace JSONs
+    score_items = _get_matching_score_items(SCORES_DIR, slug)
+    for sitem in score_items:
+        if sitem.is_file():
+            if sitem.name.endswith("_ranked.json"):
+                shutil.copy(sitem, dest_dir / f"{slug}_ranked.json")
+                shutil.copy(sitem, scores_dest / f"{slug}_ranked.json")
+                shutil.copy(sitem, scores_dest / sitem.name)
+                n_scores += 1
+            elif sitem.name.endswith("_rag_evaluation.json"):
+                shutil.copy(sitem, dest_dir / f"{slug}_rag_evaluation.json")
+                shutil.copy(sitem, scores_dest / f"{slug}_rag_evaluation.json")
+                shutil.copy(sitem, scores_dest / sitem.name)
+                n_scores += 1
+            elif sitem.name.endswith("_performance_profile.json"):
+                shutil.copy(sitem, dest_dir / f"{slug}_performance_profile.json")
+                shutil.copy(sitem, scores_dest / f"{slug}_performance_profile.json")
+                shutil.copy(sitem, scores_dest / sitem.name)
+                n_scores += 1
+            elif sitem.suffix == ".json":
+                shutil.copy(sitem, scores_dest / sitem.name)
+                n_scores += 1
+        elif sitem.is_dir():
+            # Copy all per-candidate trace JSON files from the trace subdirectory
+            for trace_file in sitem.iterdir():
+                if trace_file.is_file() and trace_file.suffix == ".json":
+                    shutil.copy(trace_file, scores_dest / trace_file.name)
+                    n_scores += 1
 
-    # E. Detailed candidate score traces
-    traces_src = SCORES_DIR / slug
-    if traces_src.exists():
-        for item in traces_src.iterdir():
-            if item.is_file() and item.suffix == ".json":
-                shutil.copy(item, scores_dest / item.name)
+    log_update(f"Packaged {n_jds} JD files, {n_resumes} resume files, and {n_scores} score files into export bundle.")
 
     if job_log is not None:
         log_file = dest_dir / "scoring_run_log.txt"

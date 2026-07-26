@@ -910,7 +910,7 @@ def run_rag_evaluation(role: str, judge_model: str, output_dir: Path) -> None:
 
     def _exec_eval_task(task_tuple):
         metric_type, user_p, sys_p = task_tuple
-        res = judge_call_with_retry(system_prompt=sys_p, user_prompt=user_p, max_tokens=300)
+        res = judge_call_with_retry(system_prompt=sys_p, user_prompt=user_p, max_tokens=500)
         return metric_type, res
 
     def _extract_score_clamped(text: str) -> float:
