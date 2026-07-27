@@ -34,32 +34,14 @@ __pycache__/
 AGENTS.md
 
 # ---------------------------------------------------------------------------
-# Data — exclude raw/processed resumes (privacy + size) but KEEP pre-computed
-# ranked score files so the My Project Ranking tab works in production.
-data/original/
-data/processed/
-data/embeddings/
-data/job_descriptions/
-data/candidate_registry.json
-data/scoring_progress.json
-recruiter/data/original/
-recruiter/data/processed/
-recruiter/data/embeddings/
-recruiter/data/job_descriptions/
-recruiter/data/candidate_registry.json
-recruiter/data/scoring_progress.json
-# Exclude per-candidate score subdirs (large) but keep role-level ranked JSONs
-data/scores/composed/BusinessAnalyst/
-data/scores/composed/DataScience/
-data/scores/composed/JavaDeveloper/
-data/scores/composed/ReactDeveloper/
-data/scores/composed/SQLDeveloper/
-data/scores/composed/SalesManager/
-data/scores/composed/SrPythonDeveloper/
-data/scores/composed/WebDesigning/
+# Data — ALL runtime data is excluded. The container creates these dirs at
+# runtime in ephemeral storage. Never bake resume/score data into the image.
+# ---------------------------------------------------------------------------
+data/
+recruiter/data/
 
 # ---------------------------------------------------------------------------
-# Local ML model weights — baking is replaced by Gemini API (DEC-036)
+# Local ML model weights — baked via Dockerfile RUN step instead
 # ---------------------------------------------------------------------------
 recruiter/models/
 
@@ -70,7 +52,6 @@ mlruns/
 reports/
 run_reports/
 scratch/
-scratch_diag.py
 
 # ---------------------------------------------------------------------------
 # Developer-only directories (not on serving path)
@@ -87,6 +68,7 @@ recruiter/src/graphify-out/
 logs/
 recruiter/logs/
 *.log
+scoring_run_log*.txt
 
 # ---------------------------------------------------------------------------
 # Secrets — never ever copy env files into the image
@@ -100,9 +82,10 @@ recruiter/logs/
 docs/
 
 # ---------------------------------------------------------------------------
-# Legacy doc files (old names)
+# Legacy doc files
 # ---------------------------------------------------------------------------
 GCP_DEPLOYMENT_GUIDE.md
 gcp_deployment_plan.md
 task.md
 GCP_Deployment_Details.md
+GDRIVE_EXPORT_ISSUE.md

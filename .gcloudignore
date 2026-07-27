@@ -1,80 +1,90 @@
 # ===========================================================================
 # .gcloudignore — files excluded from the Cloud Build source upload
 # ===========================================================================
-# This file mirrors .dockerignore so that the gcloud builds submit context
-# upload is as small as possible (target: <50 MiB).
+# Mirrors .dockerignore so the gcloud builds submit context upload is as
+# small as possible (target: <50 MiB).
 # ===========================================================================
 
-.git/
-.gitignore
-.gcloudignore
-.dockerignore
+# ---------------------------------------------------------------------------
+# Python runtime artifacts
+# ---------------------------------------------------------------------------
 .venv/
-.vscode/
-.opencode/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
 .ruff_cache/
+
+# ---------------------------------------------------------------------------
+# VCS & IDE
+# ---------------------------------------------------------------------------
+.git/
+.gitignore
 .history/
+.vscode/
+.opencode/
+
+# ---------------------------------------------------------------------------
+# CI / dev config
+# ---------------------------------------------------------------------------
+.gcloudignore
+.dockerignore
 .checkpoints/
 AGENTS.md
 
-# Data — exclude raw/processed resumes (privacy + size) but KEEP pre-computed
-# ranked score files so the My Project Ranking tab works in production.
-data/original/
-data/processed/
-data/embeddings/
-data/job_descriptions/
-data/candidate_registry.json
-data/scoring_progress.json
-recruiter/data/original/
-recruiter/data/processed/
-recruiter/data/embeddings/
-recruiter/data/job_descriptions/
-recruiter/data/candidate_registry.json
-recruiter/data/scoring_progress.json
-# Exclude per-candidate score subdirs (large) but keep role-level ranked JSONs
-data/scores/composed/BusinessAnalyst/
-data/scores/composed/DataScience/
-data/scores/composed/JavaDeveloper/
-data/scores/composed/ReactDeveloper/
-data/scores/composed/SQLDeveloper/
-data/scores/composed/SalesManager/
-data/scores/composed/SrPythonDeveloper/
-data/scores/composed/WebDesigning/
+# ---------------------------------------------------------------------------
+# Data — ALL runtime data is excluded from upload
+# ---------------------------------------------------------------------------
+data/
+recruiter/data/
 
-# Local model weights — no longer needed (DEC-036: Gemini API embedding)
+# ---------------------------------------------------------------------------
+# Local ML model weights
+# ---------------------------------------------------------------------------
 recruiter/models/
 
-# Experiment tracking & run artifacts
+# ---------------------------------------------------------------------------
+# Experiment tracking & evaluation artifacts
+# ---------------------------------------------------------------------------
 mlruns/
 reports/
 run_reports/
 scratch/
-scratch_diag.py
 
+# ---------------------------------------------------------------------------
 # Developer-only
+# ---------------------------------------------------------------------------
 notebooks/
 tests/
 baseline/
 graphify-out/
 recruiter/src/graphify-out/
 
+# ---------------------------------------------------------------------------
 # Logs
+# ---------------------------------------------------------------------------
 logs/
 recruiter/logs/
 *.log
+scoring_run_log*.txt
 
+# ---------------------------------------------------------------------------
 # Secrets
+# ---------------------------------------------------------------------------
 .env
 .env.*
 
+# ---------------------------------------------------------------------------
 # Documentation
+# ---------------------------------------------------------------------------
 docs/
 
+# ---------------------------------------------------------------------------
 # Legacy
+# ---------------------------------------------------------------------------
 GCP_DEPLOYMENT_GUIDE.md
 gcp_deployment_plan.md
 task.md
 GCP_Deployment_Details.md
+GDRIVE_EXPORT_ISSUE.md

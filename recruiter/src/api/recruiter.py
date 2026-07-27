@@ -1424,37 +1424,18 @@ def _run_pipeline_bg(job_id: str, slug: str, link: Optional[str], n_reqs: int, p
         processed_dir = Path(f"recruiter/data/processed/{slug}")
         resume_dir = Path(f"recruiter/data/original/{slug}")
 
-        # If link changed, clear cache to force rebuild
-        if link_changed:
-            logger.info("Link changed or first run for %s. Clearing cache...", slug)
-            try:
-                import shutil
-                if old_ranked_file.exists():
-                    old_ranked_file.unlink()
-                if old_cand_dir.exists():
-                    shutil.rmtree(old_cand_dir)
-                if Path(idx_path).exists():
-                    Path(idx_path).unlink()
-                if Path(chk_path).exists():
-                    Path(chk_path).unlink()
-                if processed_dir.exists():
-                    shutil.rmtree(processed_dir)
-                if resume_dir.exists():
-                    shutil.rmtree(resume_dir)
-                job["log"].append("✓ Cleared old scores and cache files due to link/configuration change.")
-            except Exception as exc:
-                logger.warning("Failed to clear old files for %s: %s", slug, exc)
-        else:
-            # We always delete scores, but NOT raw/processed/embedding files
-            try:
-                import shutil
-                if old_ranked_file.exists():
-                    old_ranked_file.unlink()
-                if old_cand_dir.exists():
-                    shutil.rmtree(old_cand_dir)
-                job["log"].append("✓ Cleared old score files.")
-            except Exception as exc:
-                logger.warning("Failed to clear old scores: %s", exc)
+        # Clear all previous session score files in composed/ so old rankings never linger in Step 6
+        composed_dir = Path("recruiter/data/scores/composed")
+        if composed_dir.exists():
+            for child in composed_dir.iterdir():
+                try:
+                    if child.is_file():
+                        child.unlink()
+                    elif child.is_dir():
+                        shutil.rmtree(child)
+                except Exception as ce:
+                    logger.warning("Failed to clear old score item %s: %s", child.name, ce)
+        job["log"].append("✓ Cleared all old session rankings and scores.")
 
         resume_dir.mkdir(parents=True, exist_ok=True)
         times = {"download": 0.0, "extract": 0.0, "index": 0.0, "score": 0.0}

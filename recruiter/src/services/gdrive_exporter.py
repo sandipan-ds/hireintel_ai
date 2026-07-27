@@ -16,7 +16,7 @@ import requests
 logger = logging.getLogger(__name__)
 
 # Base directories
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent
 EXPORT_DIR = ROOT / "recruiter" / "data" / "export"
 JOBS_DIR = ROOT / "recruiter" / "data" / "jobs"
 JD_DIR = ROOT / "recruiter" / "data" / "job_descriptions"
@@ -133,7 +133,13 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
         if job_log is not None:
             job_log.append(f"Export: {msg}")
 
-    log_update("Initializing job dataset packaging...")
+    log_update(f"Initializing job dataset packaging for slug='{slug}'...")
+    log_update(f"DIAG ROOT={ROOT}")
+    log_update(f"DIAG JOBS_DIR={JOBS_DIR}  exists={JOBS_DIR.exists()}")
+    log_update(f"DIAG JD_DIR={JD_DIR}  exists={JD_DIR.exists()}")
+    log_update(f"DIAG PROCESSED_DIR={PROCESSED_DIR}  exists={PROCESSED_DIR.exists()}")
+    log_update(f"DIAG SCORES_DIR={SCORES_DIR}  exists={SCORES_DIR.exists()}")
+    log_update(f"DIAG orig_base={ROOT / 'recruiter' / 'data' / 'original'}  exists={(ROOT / 'recruiter' / 'data' / 'original').exists()}")
     
     # 1. Resolve role name from metadata
     meta_file = JOBS_DIR / slug / "metadata.json"
@@ -207,12 +213,21 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     # 4. Copy matching files
     n_jds, n_resumes, n_scores = 0, 0, 0
 
+    # DIAG: Dump directory listings for all base dirs
+    for _label, _base in [("JOBS_DIR", JOBS_DIR), ("JD_DIR", JD_DIR), ("PROCESSED_DIR", PROCESSED_DIR), ("SCORES_DIR", SCORES_DIR), ("ORIGINAL", ROOT / "recruiter" / "data" / "original")]:
+        if _base.exists():
+            children = [c.name for c in _base.iterdir()]
+            log_update(f"DIAG {_label} children ({len(children)}): {children[:30]}")
+        else:
+            log_update(f"DIAG {_label} DOES NOT EXIST")
+
     # A. Job Metadata and extracted JD/REQs (from JOBS_DIR)
     job_dirs = set(_get_matching_slug_dirs(JOBS_DIR, slug))
     if (JOBS_DIR / slug).is_dir():
         job_dirs.add(JOBS_DIR / slug)
-    log_update(f"Found {len(job_dirs)} job directories for JD metadata.")
+    log_update(f"Found {len(job_dirs)} job directories for JD metadata: {[str(d) for d in job_dirs]}")
     for jdir in job_dirs:
+        log_update(f"DIAG scanning job dir: {jdir}, children: {[c.name for c in jdir.iterdir()] if jdir.exists() else 'N/A'}")
         for file_name in ["jd.md", "requirements.json", "subqueries.json", "metadata.json"]:
             src_file = jdir / file_name
             if src_file.exists():
@@ -242,8 +257,10 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     proc_dirs = set(_get_matching_slug_dirs(PROCESSED_DIR, slug))
     if (PROCESSED_DIR / slug).is_dir():
         proc_dirs.add(PROCESSED_DIR / slug)
-    log_update(f"Found {len(proc_dirs)} processed resume directories.")
+    log_update(f"Found {len(proc_dirs)} processed resume directories: {[str(d) for d in proc_dirs]}")
     for pdir in proc_dirs:
+        pdir_children = [c.name for c in pdir.iterdir()] if pdir.exists() else []
+        log_update(f"DIAG proc dir {pdir.name} has {len(pdir_children)} files: {pdir_children[:20]}")
         for item in pdir.iterdir():
             if item.is_file() and item.suffix == ".json":
                 shutil.copy(item, resumes_dest / item.name)
@@ -253,8 +270,10 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     orig_dirs = set(_get_matching_slug_dirs(orig_base, slug))
     if (orig_base / slug).is_dir():
         orig_dirs.add(orig_base / slug)
-    log_update(f"Found {len(orig_dirs)} original source resume directories.")
+    log_update(f"Found {len(orig_dirs)} original source resume directories: {[str(d) for d in orig_dirs]}")
     for odir in orig_dirs:
+        odir_children = [c.name for c in odir.iterdir()] if odir.exists() else []
+        log_update(f"DIAG orig dir {odir.name} has {len(odir_children)} files: {odir_children[:20]}")
         for item in odir.iterdir():
             if item.is_file() and item.suffix.lower() in (".pdf", ".docx", ".doc", ".txt", ".png", ".jpg", ".jpeg"):
                 shutil.copy(item, resumes_dest / item.name)
@@ -266,9 +285,10 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
         score_items.add(SCORES_DIR / f"{slug}_ranked.json")
     if (SCORES_DIR / slug).is_dir():
         score_items.add(SCORES_DIR / slug)
-    log_update(f"Found {len(score_items)} score files/directories.")
+    log_update(f"Found {len(score_items)} score files/directories: {[str(s) for s in score_items]}")
 
     for sitem in score_items:
+        log_update(f"DIAG score item: {sitem}  is_file={sitem.is_file()}  is_dir={sitem.is_dir()}")
         if sitem.is_file():
             if sitem.name.endswith("_ranked.json"):
                 shutil.copy(sitem, dest_dir / f"{slug}_ranked.json")
@@ -289,13 +309,22 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
                 shutil.copy(sitem, scores_dest / sitem.name)
                 n_scores += 1
         elif sitem.is_dir():
-            # Copy all per-candidate trace JSON files from the trace subdirectory
+            dir_children = [c.name for c in sitem.iterdir()]
+            log_update(f"DIAG score subdir {sitem.name} has {len(dir_children)} files: {dir_children[:20]}")
             for trace_file in sitem.iterdir():
                 if trace_file.is_file() and trace_file.suffix == ".json":
                     shutil.copy(trace_file, scores_dest / trace_file.name)
                     n_scores += 1
 
     log_update(f"Packaged {n_jds} JD files, {n_resumes} resume files, and {n_scores} score files into export bundle.")
+
+    # DIAG: List what ended up in the local export bundle
+    for _sub_name, _sub_path in [("resumes", resumes_dest), ("scores", scores_dest)]:
+        if _sub_path.exists():
+            _contents = [c.name for c in _sub_path.iterdir()]
+            log_update(f"DIAG export/{folder_name}/{_sub_name}/ contains {len(_contents)} files: {_contents[:30]}")
+        else:
+            log_update(f"DIAG export/{folder_name}/{_sub_name}/ DOES NOT EXIST")
 
     if job_log is not None:
         log_file = dest_dir / "scoring_run_log.txt"
@@ -329,6 +358,8 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
     else:
         folder_id = clean_folder_id_helper(os.getenv("OWNER_GDRIVE_FOLDER_ID"))
 
+    log_update(f"DIAG env: CLIENT_ID={'set' if client_id else 'MISSING'}, SECRET={'set' if client_secret else 'MISSING'}, REFRESH={'set' if refresh_token else 'MISSING'}, FOLDER_ID={folder_id}, RAW_USER_DATA={raw_user_data_folder}")
+
     if all([client_id, client_secret, refresh_token, folder_id]):
         log_update("Connecting to owner's Google Drive...")
         try:
@@ -339,6 +370,7 @@ def package_and_export_job_run(slug: str, job_log: Optional[List[str]] = None) -
                 parent_folder_id=folder_id,
             )
             uploader.refresh_access_token()
+            log_update("✓ GDrive access token obtained successfully.")
             
             log_update(f"Uploading folder '{folder_name}' to Google Drive data folder ({folder_id})...")
             uploader.upload_directory_recursive(dest_dir, folder_id)
