@@ -2,7 +2,10 @@
 
 An explainable candidate intelligence platform for recruiter-controlled screening, ranking, and interactive resume chatting. Powered by a sandboxed Hybrid Additive Evaluation Engine (Mode 1 + Mode 2, DEC-034).
 
+🌐 **Live Application:** [https://recruiter-app-632852742603.us-central1.run.app](https://recruiter-app-632852742603.us-central1.run.app)
+
 ---
+
 
 ## 🧭 End-to-End System Walkthrough (Steps 1–10)
 
@@ -79,14 +82,17 @@ To launch and test the local web application server using Python:
 ### 1. Run the FastAPI Servers Locally
 
 * **Start the Recruiter Sandbox Server:**
+  ```bash
+  python -m uvicorn recruiter.src.api.app:app --reload --host 127.0.0.1 --port 8000
+  ```
+  *(Or with PowerShell / venv path and reload constraint:)*
   ```powershell
   .venv\Scripts\python -m uvicorn recruiter.src.api.app:app --host 127.0.0.1 --port 8000 --reload --reload-dir recruiter/src
   ```
-  *(Note: The `--reload-dir recruiter/src` constraint is crucial to prevent WatchFiles from restarting the server mid-run when background processes write temporary evaluation files to `recruiter/data/`.)*
 
 * **Or, Start the Main Project Server:**
-  ```powershell
-  .venv\Scripts\python -m uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
+  ```bash
+  python -m uvicorn src.api.app:app --reload --host 127.0.0.1 --port 8000
   ```
 
 * **Verify / Test Locally:**
