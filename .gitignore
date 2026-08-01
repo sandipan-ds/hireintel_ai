@@ -1,25 +1,81 @@
-.venv/
+# ===========================================================================
+# .gitignore — files excluded from version control
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# Runtime data directories (privacy + size — never commit resume/score data)
+# ---------------------------------------------------------------------------
 data/
-.history/
-.checkpoints/
+recruiter/data/scores/
+recruiter/data/processed/
+recruiter/data/original/
+recruiter/data/embeddings/
+recruiter/data/export/
+recruiter/data/jobs/
+recruiter/data/job_descriptions/
+recruiter/data/candidate_registry.json
+recruiter/data/scoring_progress.json
+recruiter/data/*.db
+
+# ---------------------------------------------------------------------------
+# Secrets — never commit API keys, OAuth tokens, or env files
+# ---------------------------------------------------------------------------
 .env
+.env.*
+
+# ---------------------------------------------------------------------------
+# Python runtime artifacts
+# ---------------------------------------------------------------------------
+.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.env
-.env.audit
-.env.test
-.env.gcp
-docs/
+
+# ---------------------------------------------------------------------------
+# Local ML model weights
+# ---------------------------------------------------------------------------
 recruiter/models/
-GCP_Deployment_Details.md
-implementation_plan.md
-implementation_plan_2.md
-walkthrough.md
-walkthrough_2.md
-walkthrough_3.md
-rag_evaluation_investigation.md
-walkthrough_claude_opus_rag_evaluation_fix.md
+
+# ---------------------------------------------------------------------------
+# IDE, VCS, and session state
+# ---------------------------------------------------------------------------
+.history/
+.checkpoints/
+.vscode/
+.opencode/
+
+# ---------------------------------------------------------------------------
+# Scratch scripts and temporary diagnostic files
+# ---------------------------------------------------------------------------
+scratch/
+
+# ---------------------------------------------------------------------------
+# Experiment tracking and evaluation artifacts
+# ---------------------------------------------------------------------------
+mlruns/
+reports/
+run_reports/
+
+# ---------------------------------------------------------------------------
+# Logs
+# ---------------------------------------------------------------------------
+logs/
+recruiter/logs/
+*.log
+scoring_run_log*.txt
+
+# ---------------------------------------------------------------------------
+# Legacy / misc files that should not be tracked
+# ---------------------------------------------------------------------------
+GDRIVE_EXPORT_ISSUE.md
+
+# ---------------------------------------------------------------------------
+# Documentation — proprietary, not for public distribution
+# ---------------------------------------------------------------------------
+docs/
+.agents/
 

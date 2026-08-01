@@ -28,12 +28,12 @@ python scripts/init_database.py
 ### 3. Start Server
 
 ```bash
-python -m uvicorn src.api.app:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn recruiter.src.api.app:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 4. Open Browser
 
-Navigate to http://localhost:8000/configure
+Navigate to http://127.0.0.1:8000/configure or http://127.0.0.1:8000/docs
 
 ## Dual Storage (DB + JSON)
 
@@ -205,15 +205,55 @@ VALUES (1, 1, 25.0);
 2. Run sync: `POST /api/roles/sync-from-subquery`
 3. Or manually: `python scripts/init_database.py`
 
-### Testing
+### Testing & Command Line Usage
 
-```bash
-# Run test script
-python scripts/test_weight_api.py
+#### 1. List All Endpoints Programmatically
 
-# Run API tests
-pytest tests/
+Run this 1-line Python command in your terminal to print all registered HTTP methods and paths:
+
+```powershell
+python -c "from recruiter.src.api.app import app; get_all = lambda app: [(m, sub_r.path) for r in app.router.routes for sub_r in getattr(getattr(r, 'original_router', None), 'routes', [r]) if hasattr(sub_r, 'methods') and sub_r.methods for m in sub_r.methods if m != 'HEAD']; [print(f'{m:<6} {p}') for m, p in get_all(app)]"
 ```
+
+Or view the complete machine-readable OpenAPI schema while the server is running:
+* **`http://127.0.0.1:8000/openapi.json`**
+
+#### 2. Test Endpoints from Command Line (CMD / PowerShell / Bash)
+
+* **Test Health Check (GET):**
+  ```cmd
+  curl http://127.0.0.1:8000/health
+  ```
+
+* **Test List Roles (GET):**
+  ```cmd
+  curl http://127.0.0.1:8000/api/roles/
+  ```
+
+* **Test Get Dashboard Scored Roles (GET):**
+  ```cmd
+  curl http://127.0.0.1:8000/api/v1/roles
+  ```
+
+* **Test Cloud Link Security Validator (POST):**
+  ```cmd
+  curl -X POST "http://127.0.0.1:8000/api/recruiter/validate-link" -H "Content-Type: application/json" -d "{\"url\": \"https://drive.google.com/drive/folders/sample\"}"
+  ```
+
+* **Test Requirement Re-classification (POST):**
+  ```cmd
+  curl -X POST "http://127.0.0.1:8000/api/recruiter/reclassify-req" -H "Content-Type: application/json" -d "{\"name\": \"Python 3+ yrs\", \"description\": \"Requires 3+ years experience in Python\", \"category\": \"Core Skill\", \"requirement_type\": \"required\"}"
+  ```
+
+* **Test Uploading & Parsing a Job Description File (POST):**
+  ```cmd
+  curl -X POST "http://127.0.0.1:8000/api/recruiter/parse-jd-file" -F "file=@path/to/job_description.txt"
+  ```
+
+* **Run Automated Pytest Suite:**
+  ```bash
+  pytest tests/
+  ```
 
 ### Database Migration
 
